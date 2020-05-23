@@ -37,18 +37,18 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     @auth
-                    @if (Helper::passedRole('EDITOR'))
-                    <li class="nav-item {{ Route::is('product') ? 'active' : '' }}">
+                    @if (Auth::user()->is('EDITOR'))
+                    <li class="nav-item {{ Route::is('product*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('product') }}">Product</a>
                     </li>
                     @endif
-                    @if (Helper::passedRole('MANAGER'))
-                    <li class="nav-item {{ Route::is('formula') ? 'active' : '' }}">
+                    @if (Auth::user()->is('MANAGER'))
+                    <li class="nav-item {{ Route::is('formula*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('formula') }}">Formula</a>
                     </li>
                     @endif
-                    @if (Helper::passedRole('ADMIN'))
-                    <li class="nav-item {{ Route::is('user') ? 'active' : '' }}">
+                    @if (Auth::user()->is('ADMIN'))
+                    <li class="nav-item {{ Route::is('user*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('user') }}">User</a>
                     </li>
                     @endif

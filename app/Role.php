@@ -8,6 +8,9 @@ use App\User;
 
 class Role extends Model
 {
+    /**
+     * Set relation tables.
+     */
     public function users()
     {
         return $this->hasMany(User::class);

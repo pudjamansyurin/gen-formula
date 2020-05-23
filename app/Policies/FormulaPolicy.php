@@ -13,7 +13,7 @@ class FormulaPolicy
 
     public function before(User $user)
     {
-        if (Helper::passedRole('ADMIN'))
+        if ($user->is('ADMIN'))
         {
             return true;
         }
@@ -27,7 +27,7 @@ class FormulaPolicy
      */
     public function viewAny(User $user)
     {
-        return Helper::passedRole('MANAGER');
+        return $user->is('MANAGER');
     }
 
     /**
@@ -39,7 +39,7 @@ class FormulaPolicy
      */
     public function view(User $user, Formula $formula)
     {
-        return Helper::passedRole('MANAGER');
+        return $user->is('MANAGER');
     }
 
     /**
@@ -50,7 +50,7 @@ class FormulaPolicy
      */
     public function create(User $user)
     {
-        return Helper::passedRole('MANAGER');
+        return $user->is('MANAGER');
     }
 
     /**
@@ -62,7 +62,7 @@ class FormulaPolicy
      */
     public function update(User $user, Formula $formula)
     {
-        return $user->id == $formula->user_id || Helper::passedRole('ADMIN');
+        return $user->id == $formula->user_id || $user->is('ADMIN');
     }
 
     /**
@@ -74,7 +74,7 @@ class FormulaPolicy
      */
     public function delete(User $user, Formula $formula)
     {
-        return $user->id == $formula->user_id || Helper::passedRole('ADMIN');
+        return $user->id == $formula->user_id || $user->is('ADMIN');
     }
 
     /**

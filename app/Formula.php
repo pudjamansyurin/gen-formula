@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Formula extends Model
 {
     /**
-     * Get the associated table.
+     * Set relation tables.
      */
     public function formulaPrices()
     {

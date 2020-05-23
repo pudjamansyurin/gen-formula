@@ -12,7 +12,7 @@ class UserPolicy
 
     public function before(User $user)
     {
-        return Helper::passedRole('ADMIN');
+        return $user->is('ADMIN');
     }
 
     /**

@@ -13,7 +13,7 @@ class ProductPolicy
 
     public function before(User $user)
     {
-        if (Helper::passedRole('MANAGER'))
+        if ($user->is('MANAGER'))
         {
             return true;
         }
@@ -27,7 +27,7 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        return Helper::passedRole('EDITOR');
+        return $user->is('EDITOR');
     }
 
     /**
@@ -39,7 +39,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        return Helper::passedRole('EDITOR');
+        return $user->is('EDITOR');
     }
 
     /**
@@ -50,7 +50,7 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        return Helper::passedRole('EDITOR');
+        return $user->is('EDITOR');
     }
 
     /**
@@ -62,7 +62,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
-        return $user->id == $product->user_id || Helper::passedRole('MANAGER');
+        return $user->id == $product->user_id || $user->is('MANAGER');
     }
 
     /**
@@ -74,7 +74,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        return $user->id == $product->user_id || Helper::passedRole('MANAGER');
+        return $user->id == $product->user_id || $user->is('MANAGER');
     }
 
     /**

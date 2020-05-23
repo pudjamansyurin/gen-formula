@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     /**
-     * Get the associated table.
+     * Set relation tables.
      */
     public function productPrices()
     {

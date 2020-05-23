@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class Helper
 {
-    public static function passedRole($name)
-    {
-        if (Auth::check())
-        {
-            $role = DB::table('roles')->where('name', $name)->first();
-            return Auth::user()->role->priority <= $role->priority;
-        }
-        return false;
-    }
+    // public static function passedRole($name)
+    // {
+    //     if (Auth::check())
+    //     {
+    //         $role = DB::table('roles')->where('name', $name)->first();
+    //         return Auth::user()->role->priority <= $role->priority;
+    //     }
+    //     return false;
+    // }
 }

@@ -39,7 +39,17 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the associated table.
+     * Extended functions.
+     */
+
+    public function is($roleName)
+    {
+        $role = Role::where('name', $roleName)->first();
+        return $this->role->priority <= $role->priority;
+    }
+
+    /**
+     * Set relation tables.
      */
 
     public function role()
