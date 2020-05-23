@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Product;
+use App\User;
 
-class ProductController extends Controller
+class UserController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Product::class, 'product');
+        $this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -19,19 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.index', [
-            'products' => Product::with('user')->get(),
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('users.index');
     }
 
     /**
@@ -52,17 +40,6 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

@@ -21,7 +21,7 @@ class CreateProductPricesTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('priproduct_pricesces', function (Blueprint $table) {
+        Schema::table('product_prices', function (Blueprint $table) {
             $table->foreign('product_id')
                 ->references('id')
                 ->on('products')

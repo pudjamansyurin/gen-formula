@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Formula;
 use Illuminate\Http\Request;
+use App\Formula;
 
 class FormulaController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Formula::class, 'formula');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,7 @@ class FormulaController extends Controller
      */
     public function index()
     {
-        //
+        return 'Formula Index';
     }
 
     /**
@@ -41,10 +46,10 @@ class FormulaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Formula  $formula
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Formula $formula)
+    public function show($id)
     {
         //
     }
@@ -52,10 +57,10 @@ class FormulaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Formula  $formula
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Formula $formula)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +69,10 @@ class FormulaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Formula  $formula
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Formula $formula)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +80,10 @@ class FormulaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Formula  $formula
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Formula $formula)
+    public function destroy($id)
     {
         //
     }

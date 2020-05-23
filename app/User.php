@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Role;
 
 class User extends Authenticatable
 {
@@ -40,6 +41,12 @@ class User extends Authenticatable
     /**
      * Get the associated table.
      */
+
+    public function role()
+    {
+    	return $this->belongsTo(Role::class);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

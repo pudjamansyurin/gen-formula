@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductPrice;
 use Illuminate\Http\Request;
 
 class ProductPriceController extends Controller
@@ -41,10 +40,10 @@ class ProductPriceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ProductPrice  $productPrice
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(ProductPrice $productPrice)
+    public function show($id)
     {
         //
     }
@@ -52,10 +51,10 @@ class ProductPriceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\ProductPrice  $productPrice
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductPrice $productPrice)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +63,10 @@ class ProductPriceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ProductPrice  $productPrice
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductPrice $productPrice)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +74,10 @@ class ProductPriceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ProductPrice  $productPrice
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductPrice $productPrice)
+    public function destroy($id)
     {
         //
     }
