@@ -19,7 +19,7 @@ class FormulaController extends Controller
      */
     public function index()
     {
-        return 'Formula Index';
+        return view('formula.index');
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Role;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -44,7 +45,12 @@ class User extends Authenticatable
 
     public function is($roleName)
     {
-        $role = Role::where('name', $roleName)->first();
+        $roles = Cache::remember('roles', 3600, function() {
+            return Role::all();
+        });
+
+        $role = $roles->firstWhere('name', $roleName);
+
         return $this->role->priority <= $role->priority;
     }
 
