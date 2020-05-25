@@ -30,7 +30,7 @@ export default {
     },
     methods: {
         show: function(id) {
-            window.location.href = `${Laravel.base_url}/product/${id}`;
+            window.location.href = `${Laravel.url}/product/${id}`;
         }
     }
 };

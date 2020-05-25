@@ -8,10 +8,6 @@ require("./bootstrap");
 
 window.Vue = require("vue");
 
-window.Laravel = {
-    base_url: process.env.MIX_APP_URL
-};
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -33,7 +29,7 @@ Vue.component(
     require("./components/FormulaTable.vue").default
 );
 
-Vue.component("user-table", require("./components/UserTable.vue").default);
+Vue.component("user", require("./components/User.vue").default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -41,6 +37,13 @@ Vue.component("user-table", require("./components/UserTable.vue").default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const app = new Vue({
+import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
+
+Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
+
+Vue.mixin(require("./mixins/user.js").default);
+
+window.app = new Vue({
     el: "#app"
 });

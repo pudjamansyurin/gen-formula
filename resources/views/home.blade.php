@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('header')
-<script src="{{ asset('js/home.js') }}" defer></script>
-@endsection
-
 @section('title', 'Formula')
 
 @section('content')
@@ -23,3 +19,7 @@
 
 <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
 @endsection
+
+@push('styles')
+<script src="{{ asset('js/home.js') }}"></script>
+@endpush

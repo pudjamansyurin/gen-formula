@@ -10,24 +10,15 @@ try {
     window.Popper = require("popper.js").default;
     window.$ = window.jQuery = require("jquery");
 
-    require("bootstrap");
+    // require("bootstrap");
 
     require("datatables.net-bs4");
     require("datatables.net-buttons-bs4");
+    // require("datatables.net-select-bs4");
     require("datatables.net-responsive-bs4");
-
-    require("feather-icons").replace();
 } catch (e) {
     console.log(e);
 }
-
-$(function() {
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-        }
-    });
-});
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -35,10 +26,23 @@ $(function() {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = require("axios");
+window.Axios = require("axios");
 
-window.axios.defaults.baseURL = process.env.MIX_APP_URL;
-window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+window.Axios.defaults.baseURL = process.env.MIX_APP_URL;
+window.Axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+
+$(function() {
+    window.Laravel = {
+        url: process.env.MIX_APP_URL,
+        csrf_token: $('meta[name="csrf-token"]').attr("content")
+    };
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": Laravel.csrf_token
+        }
+    });
+});
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

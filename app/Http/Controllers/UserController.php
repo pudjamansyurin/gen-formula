@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use App\User;
-use Yajra\DataTables\Facades\DataTables;
-use Carbon\Carbon;
+use App\Role;
+use App\DataTables\UserDataTable;
 
 class UserController extends Controller
 {
@@ -19,31 +21,15 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserDataTable $dataTable)
     {
-        if ($request->ajax()) {
-            $users = User::with('role');
+        $roles = Cache::remember('roles', 3600, function() {
+            return Role::all();
+        })->sortByDesc('priority');
 
-            return DataTables::of($users)
-                    // ->addIndexColumn()
-                    ->editColumn('last_at', function ($user){
-                        if ($user->last_at){
-                            return with(new Carbon($user->last_at))->diffForHumans();
-                        }
-                        return $user->last_at;
-                    })
-                    // ->addColumn('action', function($row) {
-                    //     $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm editUser">Edit</a>';
-
-                    //     $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteUser">Delete</a>';
-
-                    //     return $btn;
-                    // })
-                    // ->rawColumns(['action'])
-                    ->make(true);
-        }
-
-        return view('user.index');
+        return $dataTable->render('user.index', [
+            'roles' => $roles
+        ]);
     }
 
     /**
@@ -54,12 +40,30 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        User::updateOrCreate(
-            ['id' => $request->user_id],
-            ['name' => $request->name, 'email' => $request->email]
-        );
+        app('debugbar')->error($_POST);
+
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'nullable|integer',
+            'name' => 'required|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'role_id' => 'required|integer|exists:roles,id',
+            'password' => 'required|string|min:8|confirmed',
+        ])->validateWithBag('user');
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 200);
+        }
 
         return response()->json(['success'=>'User saved successfully.']);
+
+        // User::updateOrCreate(
+        //     ['id' => $request->user_id],
+        //     [
+        //         'name' => $request->name,
+        //         'email' => $request->email
+        //     ]
+        // );
+
     }
 
     /**
@@ -93,7 +97,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        return response()->json($User);
+        //
     }
 
     /**
