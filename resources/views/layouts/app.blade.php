@@ -14,8 +14,8 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    {{-- <link rel="dns-prefetch" href="//fonts.gstatic.com"> --}}
+    {{-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> --}}
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -53,13 +53,26 @@
 
             <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
 
-            <ul class="navbar-nav px-3">
+            {{-- <ul class="navbar-nav px-3">
                 <li class="nav-item text-nowrap">
                     <a class="nav-link" href="{{ route('logout') }}">
+            {{ __('Logout') }}
+            </a>
+            </li>
+            </ul> --}}
+
+            <div class="dropdown">
+                <a class="btn text-light dropdown-toggle" href="#" role="button" id="dropdownLogout"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ Auth::user()->name }}
+                </a>
+
+                <div class="dropdown-menu  dropdown-menu-right" aria-labelledby="dropdownLogout">
+                    <a class="dropdown-item" href="{{ route('logout') }}">
                         {{ __('Logout') }}
                     </a>
-                </li>
-            </ul>
+                </div>
+            </div>
         </nav>
 
         <div class="container-fluid">
@@ -69,7 +82,7 @@
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('home*') ? 'active' : ''}}" href="{{ url('home') }}">
-                                    <span data-feather="home"></span>
+                                    <span data-feather="bar-chart-2"></span>
                                     Home
                                 </a>
                             </li>
@@ -88,15 +101,10 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ Request::is('user*') ? 'active' : ''}}" href="{{ url('user') }}">
+                                <a class="nav-link {{ Request::is('user*') ? 'active' : ''}}" href="
+                                {{ url('user') }}">
                                     <span data-feather="users"></span>
                                     Users
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="bar-chart-2"></span>
-                                    Reports
                                 </a>
                             </li>
                         </ul>
@@ -126,6 +134,8 @@
         </div>
         @endauth
     </div>
+
+    @yield('footer')
 </body>
 
 </html>

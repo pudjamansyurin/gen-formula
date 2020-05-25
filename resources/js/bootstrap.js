@@ -11,7 +11,23 @@ try {
     window.$ = window.jQuery = require("jquery");
 
     require("bootstrap");
-} catch (e) {}
+
+    require("datatables.net-bs4");
+    require("datatables.net-buttons-bs4");
+    require("datatables.net-responsive-bs4");
+
+    require("feather-icons").replace();
+} catch (e) {
+    console.log(e);
+}
+
+$(function() {
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        }
+    });
+});
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -21,6 +37,7 @@ try {
 
 window.axios = require("axios");
 
+window.axios.defaults.baseURL = process.env.MIX_APP_URL;
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 /**
@@ -39,11 +56,3 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
-
-const feather = require("feather-icons");
-
-(function () {
-    "use strict";
-
-    feather.replace();
-})();
