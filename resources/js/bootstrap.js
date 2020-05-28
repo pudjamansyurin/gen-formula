@@ -26,13 +26,6 @@ window.Axios = require("axios");
 window.Axios.defaults.baseURL = process.env.MIX_APP_URL;
 window.Axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-$(function() {
-    window.Laravel = {
-        url: process.env.MIX_APP_URL,
-        csrf_token: $('meta[name="csrf-token"]').attr("content")
-    };
-});
-
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
