@@ -13,50 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Auth::routes(['register' => false]);
-Route::namespace('Auth')->group(function () {
-    // Authentication Routes...
-    Route::get('login', [
-        'as' => 'login',
-        'uses' => 'LoginController@showLoginForm'
-    ]);
-    Route::post('login', [
-        'as' => '',
-        'uses' => 'LoginController@login'
-    ]);
-    Route::get('logout', [
-        'as' => 'logout',
-        'uses' => 'LoginController@logout'
-    ]);
-
-    // Password Reset Routes...
-    Route::post('password/email', [
-        'as' => 'password.email',
-        'uses' => 'ForgotPasswordController@sendResetLinkEmail'
-    ]);
-    Route::get('password/reset', [
-        'as' => 'password.request',
-        'uses' => 'ForgotPasswordController@showLinkRequestForm'
-    ]);
-    Route::post('password/reset', [
-        'as' => 'password.update',
-        'uses' => 'ResetPasswordController@reset'
-    ]);
-    Route::get('password/reset/{token}', [
-        'as' => 'password.reset',
-        'uses' => 'ResetPasswordController@showResetForm'
-    ]);
-
-    // Registration Routes...
-    // Route::get('register', [
-    //     'as' => 'register',
-    //     'uses' => 'RegisterController@showRegistrationForm'
-    // ]);
-    // Route::post('register', [
-    //     'as' => '',
-    //     'uses' => 'RegisterController@register'
-    // ]);
-});
+Auth::routes(['register' => false]);
 
 Route::get('/', function() {
     return redirect('home');

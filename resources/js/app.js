@@ -24,25 +24,11 @@ window.Vue = require("vue");
 //     require("./components/ExampleComponent.vue").default
 // );
 
-Vue.component(
-    "formula-table",
-    require("./components/FormulaTable.vue").default
-);
-
-Vue.component("user", require("./components/User.vue").default);
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
-
-Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons);
-
-Vue.mixin(require("./mixins/user.js").default);
 
 window.app = new Vue({
     el: "#app"

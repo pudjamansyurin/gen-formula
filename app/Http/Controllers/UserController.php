@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Role;
-use App\DataTables\UserDataTable;
 
 class UserController extends Controller
 {
@@ -21,13 +20,13 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserDataTable $dataTable)
+    public function index()
     {
         $roles = Cache::remember('roles', 3600, function() {
             return Role::all();
         })->sortByDesc('priority');
 
-        return $dataTable->render('user.index', [
+        return view('user.index', [
             'roles' => $roles
         ]);
     }

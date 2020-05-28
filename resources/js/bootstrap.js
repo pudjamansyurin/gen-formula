@@ -10,12 +10,7 @@ try {
     window.Popper = require("popper.js").default;
     window.$ = window.jQuery = require("jquery");
 
-    // require("bootstrap");
-
-    require("datatables.net-bs4");
-    require("datatables.net-buttons-bs4");
-    // require("datatables.net-select-bs4");
-    require("datatables.net-responsive-bs4");
+    require("bootstrap");
 } catch (e) {
     console.log(e);
 }
@@ -36,12 +31,6 @@ $(function() {
         url: process.env.MIX_APP_URL,
         csrf_token: $('meta[name="csrf-token"]').attr("content")
     };
-
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": Laravel.csrf_token
-        }
-    });
 });
 
 /**

@@ -178,7 +178,6 @@ return [
         // Added
         Barryvdh\Debugbar\ServiceProvider::class,
         Sven\ArtisanView\ServiceProvider::class,
-        Yajra\DataTables\DataTablesServiceProvider::class,
     ],
 
     /*
@@ -234,7 +233,6 @@ return [
         // Added
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Helper' => App\Helpers\Helper::class,
-        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
 
     ],
 
