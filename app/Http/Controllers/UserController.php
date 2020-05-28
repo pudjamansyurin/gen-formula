@@ -40,15 +40,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        app('debugbar')->error($_POST);
-
         $validator = Validator::make($request->all(), [
             'user_id' => 'nullable|integer',
             'name' => 'required|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'role_id' => 'required|integer|exists:roles,id',
             'password' => 'required|string|min:8|confirmed',
-        ])->validateWithBag('user');
+        ]);
 
         if ($validator->fails()) {
             return response()->json($validator->messages(), 200);
