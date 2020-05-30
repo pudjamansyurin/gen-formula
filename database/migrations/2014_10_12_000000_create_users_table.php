@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->unsignedBigInteger('role_id');
+            // $table->unsignedBigInteger('role_id');
             $table->string('password');
             $table->datetime('last_at')->nullable();
             $table->string('last_ip')->nullable();
@@ -26,12 +26,12 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('role_id')
-                ->references('id')
-                ->on('roles')
-                ->onDelete('cascade');
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->foreign('role_id')
+        //         ->references('id')
+        //         ->on('roles')
+        //         ->onDelete('cascade');
+        // });
     }
 
     /**

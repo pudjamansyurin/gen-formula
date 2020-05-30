@@ -5,13 +5,12 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\HasApiTokens;
-use App\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -40,31 +39,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $with = ['role'];
-
-    /**
-     * Extended functions.
-     */
-
-    public function is($roleName)
-    {
-        $roles = Cache::remember('roles', 3600, function () {
-            return Role::all();
-        });
-
-        $role = $roles->firstWhere('name', $roleName);
-
-        return $this->role->priority <= $role->priority;
-    }
-
     /**
      * Set relation tables.
      */
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
 
     public function products()
     {

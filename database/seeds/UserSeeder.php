@@ -1,10 +1,9 @@
 <?php
 
-use App\Role;
 use App\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 
 class UserSeeder extends Seeder
@@ -16,30 +15,28 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $roles = Role::all();
-
-        User::insert([
-            [
-                'name' => 'Admin',
-                'email' => 'admin@gen-formula.com',
-                'role_id' => $roles->firstWhere('name', 'ADMIN')->id,
-                'password' => Hash::make('userpassword'),
-                'created_at' => now()
-            ],
-            [
-                'name' => 'Manager',
-                'email' => 'manager@gen-formula.com',
-                'role_id' => $roles->firstWhere('name', 'MANAGER')->id,
-                'password' => Hash::make('userpassword'),
-                'created_at' => now()
-            ],
-            [
-                'name' => 'Editor',
-                'email' => 'editor@gen-formula.com',
-                'role_id' => $roles->firstWhere('name', 'EDITOR')->id,
-                'password' => Hash::make('userpassword'),
-                'created_at' => now()
-            ],
+        $user = User::create([
+            'name' => 'Inputor',
+            'email' => 'inputor@gen.com',
+            'password' => Hash::make('inputorpassword'),
+            'created_at' => now()
         ]);
+        $user->assignRole(Role::firstWhere('name', 'inputor'));
+
+        $user = User::create([
+            'name' => 'Manager',
+            'email' => 'manager@gen.com',
+            'password' => Hash::make('managerpassword'),
+            'created_at' => now()
+        ]);
+        $user->assignRole(Role::firstWhere('name', 'manager'));
+
+        $user = User::create([
+            'name' => 'Administrator',
+            'email' => 'administrator@gen.com',
+            'password' => Hash::make('adminpassword'),
+            'created_at' => now()
+        ]);
+        $user->assignRole(Role::firstWhere('name', 'administrator'));
     }
 }

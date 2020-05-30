@@ -10,11 +10,6 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user)
-    {
-        return $user->is('ADMIN');
-    }
-
     /**
      * Determine whether the user can view any models.
      *
@@ -23,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->can('users.view');
     }
 
     /**
@@ -35,7 +30,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        //
+        return $user->can('users.view');
     }
 
     /**
@@ -46,7 +41,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('users.create');
     }
 
     /**
@@ -58,7 +53,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        //
+        return $user->can('users.update');
     }
 
     /**
@@ -70,30 +65,13 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
-    }
+        // user can't delete their own account
+        if ($user->id === $model->id) {
+            return false;
+        }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     * @return mixed
-     */
-    public function restore(User $user, User $model)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     * @return mixed
-     */
-    public function forceDelete(User $user, User $model)
-    {
-        //
+        if ($user->can('users.delete')) {
+            return true;
+        }
     }
 }

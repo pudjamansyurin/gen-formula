@@ -178,6 +178,7 @@ return [
         // Added
         Barryvdh\Debugbar\ServiceProvider::class,
         Sven\ArtisanView\ServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
     ],
 
     /*

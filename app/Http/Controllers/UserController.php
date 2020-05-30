@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use App\User;
-use App\Role;
 
 class UserController extends Controller
 {
@@ -22,13 +20,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = Cache::remember('roles', 3600, function() {
-            return Role::all();
-        })->sortByDesc('priority');
+    }
 
-        return view('user.index', [
-            'roles' => $roles
-        ]);
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+        //
     }
 
     /**
@@ -51,7 +54,7 @@ class UserController extends Controller
             return response()->json($validator->messages(), 200);
         }
 
-        return response()->json(['success'=>'User saved successfully.']);
+        return response()->json(['success' => 'User saved successfully.']);
 
         // User::updateOrCreate(
         //     ['id' => $request->user_id],
@@ -75,17 +78,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -105,8 +97,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        User::delete();
 
-        return response()->json(['success'=>'User deleted successfully.']);
+        return response()->json(['success' => 'User deleted successfully.']);
     }
 }

@@ -14,8 +14,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\User' => 'App\Policies\UserPolicy',
-        'App\Product' => 'App\Policies\ProductPolicy',
-        'App\Formula' => 'App\Policies\FormulaPolicy',
+        // 'App\Product' => 'App\Policies\ProductPolicy',
+        // 'App\Formula' => 'App\Policies\FormulaPolicy',
     ];
 
     /**
@@ -27,6 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // Implicitly grant "administrator" role all permissions
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('administrator') ? true : null;
+        });
     }
 }
