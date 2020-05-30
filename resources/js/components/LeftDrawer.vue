@@ -62,15 +62,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { SET_DRAWER } from "../store/action-types";
+import { mapState, mapMutations } from "vuex";
+import { SET_DRAWER } from "../store/mutation-types";
 
 export default {
     computed: {
         ...mapState("app", ["drawer"])
     },
     methods: {
-        ...mapActions("app", [SET_DRAWER])
+        ...mapMutations("app", [SET_DRAWER])
     },
     data() {
         return {

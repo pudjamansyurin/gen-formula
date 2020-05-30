@@ -24,27 +24,54 @@
         <v-btn icon>
             <v-icon>mdi-bell</v-icon>
         </v-btn>
-        <v-btn icon large>
-            <v-avatar size="32px" item>
-                <v-img
-                    src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-                    alt="Vuetify"
-                ></v-img
-            ></v-avatar>
-        </v-btn>
+
+        <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+                <v-btn icon large v-on="on">
+                    <v-avatar size="32px" item>
+                        <v-img
+                            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
+                            alt="Vuetify"
+                        ></v-img
+                    ></v-avatar>
+                </v-btn>
+            </template>
+            <v-list>
+                <v-list-item :to="{ name: 'profile' }">
+                    <v-list-item-icon>
+                        <v-icon>mdi-face-profile</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Profile</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item @click="logout">
+                    <v-list-item-icon>
+                        <v-icon>mdi-logout</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Logout</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list>
+        </v-menu>
     </v-app-bar>
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import { TOGGLE_DRAWER } from "../store/action-types";
+import { mapState, mapMutations } from "vuex";
+import { TOGGLE_DRAWER } from "../store/mutation-types";
 
 export default {
     computed: {
         ...mapState("app", ["title"])
     },
     methods: {
-        ...mapActions("app", [TOGGLE_DRAWER])
+        ...mapMutations("app", [TOGGLE_DRAWER]),
+        logout: function() {
+            this.$router.push({ name: "login" });
+        }
     }
 };
 </script>

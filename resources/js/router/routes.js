@@ -1,13 +1,14 @@
-import Home from "../layouts/Home";
-import Login from "../pages/home/Login";
-import Forget from "../pages/home/Forget";
-import Reset from "../pages/home/Reset";
-import Dashboard from "../layouts/Dashboard";
-import Reports from "../pages/dashboard/Reports";
-import Product from "../pages/dashboard/Product";
-import Formula from "../pages/dashboard/Formula";
-import User from "../pages/dashboard/User";
-import Settings from "../pages/dashboard/Settings";
+const Home = () => import("../layouts/Home");
+const Login = () => import("../pages/Login");
+const ForgetPassword = () => import("../pages/ForgetPassword");
+const ResetPassword = () => import("../pages/ResetPassword");
+const Dashboard = () => import("../layouts/Dashboard");
+const Settings = () => import("../pages/Settings");
+const User = () => import("../pages/User");
+const Profile = () => import("../pages/Profile");
+const Reports = () => import("../pages/Reports");
+const Product = () => import("../pages/Product");
+const Formula = () => import("../pages/Formula");
 
 export default [
     {
@@ -15,8 +16,8 @@ export default [
         component: Home,
         children: [
             { path: "", name: "login", component: Login },
-            { path: "forget", name: "forget", component: Forget },
-            { path: "reset", name: "reset", component: Reset }
+            { path: "forget", name: "forget", component: ForgetPassword },
+            { path: "reset", name: "reset", component: ResetPassword }
         ]
     },
     {
@@ -27,7 +28,8 @@ export default [
             { path: "product", name: "product", component: Product },
             { path: "formula", name: "formula", component: Formula },
             { path: "user", name: "user", component: User },
-            { path: "settings", name: "settings", component: Settings }
+            { path: "settings", name: "settings", component: Settings },
+            { path: "profile", name: "profile", component: Profile }
         ]
     }
 ];
