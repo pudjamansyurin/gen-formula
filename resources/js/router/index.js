@@ -6,5 +6,6 @@ Vue.use(VueRouter);
 
 export default new VueRouter({
     mode: "history",
+    base: process.env.APP_URL,
     routes
 });

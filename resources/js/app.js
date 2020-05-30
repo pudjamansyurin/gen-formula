@@ -27,15 +27,18 @@ window.Vue = require("vue");
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import vuetify from "./plugins/vuetify";
+import vueLodash from "./plugins/vue-lodash";
 
 import router from "./router";
 import store from "./store";
 import App from "./App";
 
+Vue.config.productionTip = process.env.APP_DEBUG;
+
 const app = new Vue({
     el: "#app",
-    render: (h) => h(App),
+    render: h => h(App),
     router,
     store,
-    vuetify,
+    vuetify
 });

@@ -29,7 +29,7 @@
             <v-card-actions>
                 <v-btn :to="{ name: 'forget' }" text>Forget Password</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn :to="{ name: 'dashboard' }" color="primary" large
+                <v-btn :to="{ name: 'report' }" color="primary" large
                     >Login</v-btn
                 >
             </v-card-actions>
