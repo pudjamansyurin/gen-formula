@@ -1,20 +1,12 @@
 // Fonts
-// @import url("https://fonts.googleapis.com/css?family=Nunito");
+// @import url('https://fonts.googleapis.com/css?family=Nunito');
 
 // Variables
 @import "variables";
 
 // Bootstrap
-// @import "~bootstrap";
+// @import "~bootstrap/scss/bootstrap";
 
 // Vuetify
 @import "~vuetify/dist/vuetify.min.css";
 @import "~@mdi/font/css/materialdesignicons.min.css";
-
-// Others
-.custom-center {
-    min-height: 80%;
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-}

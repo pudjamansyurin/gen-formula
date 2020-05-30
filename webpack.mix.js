@@ -16,6 +16,4 @@ mix.js("resources/js/app.js", "public/js").sass(
     "public/css"
 );
 
-// mix.js("resources/js/home.js", "public/js");
-
 mix.sourceMaps().version();
