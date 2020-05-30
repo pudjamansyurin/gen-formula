@@ -6,11 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
+use Laravel\Sanctum\HasApiTokens;
 use App\Role;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,7 +48,7 @@ class User extends Authenticatable
 
     public function is($roleName)
     {
-        $roles = Cache::remember('roles', 3600, function() {
+        $roles = Cache::remember('roles', 3600, function () {
             return Role::all();
         });
 
@@ -62,7 +63,7 @@ class User extends Authenticatable
 
     public function role()
     {
-    	return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function products()

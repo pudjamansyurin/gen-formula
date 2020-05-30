@@ -1,5 +1,6 @@
 <?php
 
+use App\Role;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,5 +18,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         factory(App\Product::class, 100)->create();
+        factory(App\User::class, 10)->create();
     }
 }

@@ -30,12 +30,15 @@ window.Vue = require("vue");
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import vuetify from "./plugins/vuetify";
+
+import router from "./router";
 import store from "./store";
 import App from "./App";
 
 window.app = new Vue({
     el: "#app",
-    vuetify,
+    render: h => h(App),
+    router,
     store,
-    render: h => h(App)
+    vuetify
 });

@@ -6,14 +6,14 @@ window._ = require("lodash");
  * code may be modified to fit the specific needs of your application.
  */
 
-try {
-    window.Popper = require("popper.js").default;
-    window.$ = window.jQuery = require("jquery");
+// try {
+//     window.Popper = require("popper.js").default;
+//     window.$ = window.jQuery = require("jquery");
 
-    require("bootstrap");
-} catch (e) {
-    console.log(e);
-}
+//     require("bootstrap");
+// } catch (e) {
+//     console.log(e);
+// }
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -23,6 +23,7 @@ try {
 
 window.Axios = require("axios");
 
+// window.Axios.defaults.withCredentials = true;
 window.Axios.defaults.baseURL = process.env.MIX_APP_URL;
 window.Axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 

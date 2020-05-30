@@ -13,17 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes(['register' => false]);
-
-Route::get('/', function() {
-    return redirect('home');
-});
-
-Route::middleware('auth')->group(function() {
-    Route::get('/home', 'HomeController@index')->name('home');
-    Route::resources([
-        'user' => 'UserController',
-        'product' => 'ProductController',
-        'formula'=> 'FormulaController',
-    ]);
-});
+Route::get('/{any}', 'SpaController@index')->where('any', '.*');
