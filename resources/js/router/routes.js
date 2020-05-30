@@ -23,7 +23,7 @@ export default [
         path: "/app",
         component: Dashboard,
         children: [
-            { path: "", name: "reports", component: Reports },
+            { path: "", name: "dashboard", component: Reports },
             { path: "product", name: "product", component: Product },
             { path: "formula", name: "formula", component: Formula },
             { path: "user", name: "user", component: User },

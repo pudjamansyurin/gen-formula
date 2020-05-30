@@ -1,5 +1,4 @@
 const mix = require("laravel-mix");
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -17,3 +16,4 @@ mix.js("resources/js/app.js", "public/js").sass(
 );
 
 mix.sourceMaps().version();
+mix.browserSync(process.env.APP_URL);

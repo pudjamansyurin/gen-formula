@@ -1,12 +1,13 @@
 <template>
-  <div>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      :items-per-page="5"
-      class="elevation-1"
-    ></v-data-table>
-  </div>
+    <v-col cols="12">
+        <v-data-table
+            :headers="headers"
+            :items="desserts"
+            :items-per-page="5"
+            class="elevation-1"
+        >
+        </v-data-table>
+    </v-col>
 </template>
 
 <script>
@@ -109,8 +110,7 @@ export default {
             }
         ]
     })
-}
+};
 </script>
 
-<style>
-</style>
+<style></style>

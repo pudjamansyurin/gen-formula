@@ -7,7 +7,7 @@
     >
         <v-app-bar-nav-icon @click.stop="TOGGLE_DRAWER"></v-app-bar-nav-icon>
         <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-            <span class="hidden-sm-and-down">Google Contacts</span>
+            <span class="hidden-sm-and-down">{{ title }}</span>
         </v-toolbar-title>
         <v-text-field
             flat
@@ -36,10 +36,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { TOGGLE_DRAWER } from "../store/action-types";
 
 export default {
+    computed: {
+        ...mapState("app", ["title"])
+    },
     methods: {
         ...mapActions("app", [TOGGLE_DRAWER])
     }
