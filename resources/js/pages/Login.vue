@@ -48,7 +48,7 @@
 
             <v-switch
               :value="rememberToken"
-              @input="TOGGLE_REMEMBER_TOKEN"
+              @input="TOGGLE_REMEMBER_ME"
               label="Remember me"
             ></v-switch>
           </v-card-text>
@@ -76,7 +76,7 @@ import { mapState, mapMutations } from "vuex";
 import AuthService from "@/services/auth";
 import { _actions, mutations } from "@/store/app/types";
 
-const { TOGGLE_REMEMBER_TOKEN } = mutations;
+const { TOGGLE_REMEMBER_ME } = mutations;
 const { APP_LOGIN } = _actions;
 
 export default {
@@ -99,7 +99,7 @@ export default {
         ...mapState("app", ["loading", "rememberToken"]),
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_REMEMBER_TOKEN]),
+        ...mapMutations("app", [TOGGLE_REMEMBER_ME]),
         submit: function() {
             this.$store
                 .dispatch(APP_LOGIN, this.form)
