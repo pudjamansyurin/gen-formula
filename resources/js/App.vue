@@ -5,18 +5,7 @@
 </template>
 
 <script>
-import AuthService from "./services/auth";
-
 export default {
-    name: "App",
-    mounted() {
-        AuthService.csrf()
-            .then(response => {
-                console.log(response);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
+    name: "App"
 };
 </script>

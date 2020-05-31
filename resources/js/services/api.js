@@ -8,15 +8,17 @@
 */
 
 import axios from "axios";
-import store from "../store";
-import { MapMutation, MapAction } from "../store/modules/app/types";
+import store from "@/store";
+import router from "@/router";
+import { _mutations, _actions } from "@/store/app/types";
 
 export const api = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: `http://localhost:3000/api`,
     withCredentials: true // required to handle the CSRF token
 });
 
-const ls = window.localStorage;
+api.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+api.defaults.headers.post["Content-Type"] = "application/json";
 
 /*
  * Add a request interceptor
@@ -24,18 +26,19 @@ const ls = window.localStorage;
 */
 api.interceptors.request.use(
     config => {
+        store.commit(_mutations.APP_START_LOADING);
         // get token, if user doesn't logout yet
-        const token = ls.getItem("token");
+        const token = window.localStorage.getItem("token");
         if (token != null) {
             config.headers.Authorization = `Bearer ${token}`;
         }
 
-        store.commit(MapMutation.START_LOADING);
         return config;
     },
     error => {
-        store.commit(MapMutation.STOP_LOADING);
-        return Promise.reject(error.response);
+        // console.log(error);
+        store.commit(_mutations.APP_STOP_LOADING);
+        return Promise.reject(response);
     }
 );
 
@@ -44,16 +47,33 @@ api.interceptors.request.use(
  */
 api.interceptors.response.use(
     response => {
-        store.commit(MapMutation.STOP_LOADING);
+        // console.log(response);
+        store.commit(_mutations.APP_STOP_LOADING);
         return response;
     },
     error => {
-        // handle expired token
-        if (error.response.status === 401) {
-            store.dispatch(MapAction.LOGOUT);
+        const { response } = error;
+        // console.log(response);
+
+        store.commit(_mutations.APP_STOP_LOADING);
+        // handle expired token (Unauthorized)
+        if (response.status === 401) {
+            store.commit(_mutations.APP_CLEAR_PROFILE);
+            router.push({ name: "login", query: { redirect: to.fullPath } });
+        } else if (response.status === 500) {
+            store.commit(_mutations.APP_SET_ERROR, {
+                code: response.status,
+                text: response.statusText
+            });
         }
 
-        store.commit(MapMutation.STOP_LOADING);
-        return Promise.reject(error.response);
+        if (response.data.message) {
+            store.commit(_mutations.APP_SET_ERROR, {
+                code: response.status,
+                text: response.data.message
+            });
+        }
+
+        return Promise.reject(response);
     }
 );

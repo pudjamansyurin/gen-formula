@@ -19,19 +19,17 @@ window.Vue = require("vue");
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-import vuetify from "./plugins/vuetify";
-import vueLodash from "./plugins/vue-lodash";
-
-import router from "./router";
-import store from "./store";
 import App from "./App";
+import store from "./store";
+import router from "./router";
+
+import vuetify from "./plugins/vuetify";
+import "./plugins/vee-validate";
 
 Vue.config.productionTip = process.env.APP_DEBUG;
 

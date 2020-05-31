@@ -1,14 +1,14 @@
 import Vue from "vue";
 import Vuex from "vuex";
-// import users from "./modules/users";
-import app from "./modules/app";
+// import user from "./user";
+import app from "./app";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     // namespaced: true,
     modules: {
-        // users
+        // user
         app
     },
     strict: process.env.DEBUG

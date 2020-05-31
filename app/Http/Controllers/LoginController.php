@@ -17,23 +17,32 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
-        $data = ['token' => $token];
+        if (!Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => ['The provided credentials are incorrect.'],
+            ]);
+        }
 
-        return response()->json($data, 200);
+        $response = [
+            'user' => $user,
+            'token' => $user->createToken(now())->plainTextToken
+        ];
+
+        return response($response, 200);
     }
 
     /**

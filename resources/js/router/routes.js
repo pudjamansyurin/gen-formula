@@ -1,23 +1,35 @@
-const Home = () => import("../layouts/Home");
-const Login = () => import("../pages/Login");
-const ForgetPassword = () => import("../pages/ForgetPassword");
-const ResetPassword = () => import("../pages/ResetPassword");
-const Dashboard = () => import("../layouts/Dashboard");
-const Setting = () => import("../pages/Setting");
-const User = () => import("../pages/User");
-const Profile = () => import("../pages/Profile");
-const Report = () => import("../pages/Report");
-const Product = () => import("../pages/Product");
-const Formula = () => import("../pages/Formula");
+const Home = () => import("@/layouts/Home");
+const Login = () => import("@/pages/Login");
+const ForgetPassword = () => import("@/pages/ForgetPassword");
+const ResetPassword = () => import("@/pages/ResetPassword");
+const Dashboard = () => import("@/layouts/Dashboard");
+const Setting = () => import("@/pages/Setting");
+const User = () => import("@/pages/User");
+const Profile = () => import("@/pages/Profile");
+const Report = () => import("@/pages/Report");
+const Product = () => import("@/pages/Product");
+const Formula = () => import("@/pages/Formula");
 
 export default [
     {
         path: "/",
         component: Home,
         children: [
-            { path: "", name: "login", component: Login },
-            { path: "forget", name: "forget", component: ForgetPassword },
-            { path: "reset", name: "reset", component: ResetPassword }
+            {
+                path: "",
+                name: "login",
+                component: Login
+            },
+            {
+                path: "forget",
+                name: "forget",
+                component: ForgetPassword
+            },
+            {
+                path: "reset",
+                name: "reset",
+                component: ResetPassword
+            }
         ]
     },
     {
@@ -27,32 +39,50 @@ export default [
             {
                 path: "",
                 name: "report",
-                component: Report
+                component: Report,
+                meta: {
+                    auth: true
+                }
             },
             {
                 path: "product",
                 name: "product",
-                component: Product
+                component: Product,
+                meta: {
+                    auth: true
+                }
             },
             {
                 path: "formula",
                 name: "formula",
-                component: Formula
+                component: Formula,
+                meta: {
+                    auth: true
+                }
             },
             {
                 path: "user",
                 name: "user",
-                component: User
+                component: User,
+                meta: {
+                    auth: true
+                }
             },
             {
                 path: "setting",
                 name: "setting",
-                component: Setting
+                component: Setting,
+                meta: {
+                    auth: true
+                }
             },
             {
                 path: "profile",
                 name: "profile",
-                component: Profile
+                component: Profile,
+                meta: {
+                    auth: true
+                }
             }
         ]
     }

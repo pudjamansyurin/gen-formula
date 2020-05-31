@@ -9,6 +9,12 @@ const mix = require("laravel-mix");
  | file for the application as well as bundling up all the JS files.
  |
  */
+mix.webpackConfig({
+    resolve: {
+        extensions: [".js", ".vue"],
+        alias: { "@": __dirname + "/resources/js/" }
+    }
+});
 
 mix.js("resources/js/app.js", "public/js").sass(
     "resources/sass/app.scss",
@@ -16,4 +22,6 @@ mix.js("resources/js/app.js", "public/js").sass(
 );
 
 mix.sourceMaps().version();
-mix.browserSync(process.env.APP_URL);
+mix.browserSync({
+    proxy: "localhost:8000"
+});

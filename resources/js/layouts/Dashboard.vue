@@ -90,8 +90,8 @@
 </template>
 
 <script>
-import LeftDrawer from "../components/LeftDrawer";
-import TopBar from "../components/TopBar";
+import LeftDrawer from "@/components/LeftDrawer";
+import TopBar from "@/components/TopBar";
 
 export default {
     name: "Dashboard",

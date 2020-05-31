@@ -46,7 +46,6 @@ class UserController extends Controller
             'user_id' => 'nullable|integer',
             'name' => 'required|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'role_id' => 'required|integer|exists:roles,id',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
