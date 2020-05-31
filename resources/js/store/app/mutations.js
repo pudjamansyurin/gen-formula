@@ -27,6 +27,9 @@ export default {
     [mutations.CLEAR_PROFILE](state) {
         state.token = state.user = null;
         window.localStorage.removeItem("token");
+    },
+    [mutations.TOGGLE_REMEMBER_TOKEN](state) {
+        state.rememberToken = !state.rememberToken;
     }
     // [mutations.SET_MESSAGE](state, message) {
     //     state.message = message;

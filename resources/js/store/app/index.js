@@ -10,6 +10,7 @@ const state = {
         code: null,
         text: ""
     },
+    rememberToken: false,
     token: window.localStorage.getItem("token"),
     profile: null
 };

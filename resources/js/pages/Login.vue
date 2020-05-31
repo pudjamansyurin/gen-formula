@@ -45,6 +45,12 @@
                 prepend-icon="mdi-lock"
               ></v-text-field>
             </validation-provider>
+
+            <v-switch
+              :value="rememberToken"
+              @input="TOGGLE_REMEMBER_TOKEN"
+              label="Remember me"
+            ></v-switch>
           </v-card-text>
 
           <v-card-actions>
@@ -66,10 +72,11 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import AuthService from "@/services/auth";
-import { _actions } from "@/store/app/types";
+import { _actions, mutations } from "@/store/app/types";
 
+const { TOGGLE_REMEMBER_TOKEN } = mutations;
 const { APP_LOGIN } = _actions;
 
 export default {
@@ -89,9 +96,10 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading"])
+        ...mapState("app", ["loading", "rememberToken"]),
     },
     methods: {
+        ...mapMutations("app", [TOGGLE_REMEMBER_TOKEN]),
         submit: function() {
             this.$store
                 .dispatch(APP_LOGIN, this.form)

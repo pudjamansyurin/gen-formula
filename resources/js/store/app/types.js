@@ -8,6 +8,7 @@ export const actions = {
 };
 
 export const mutations = {
+    TOGGLE_REMEMBER_TOKEN: "TOGGLE_REMEMBER_TOKEN",
     SET_DRAWER: "SET_DRAWER",
     TOGGLE_DRAWER: "TOGGLE_DRAWER",
     START_LOADING: "START_LOADING",
