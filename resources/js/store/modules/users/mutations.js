@@ -1,7 +1,7 @@
-import * as types from "../../mutation-types";
+import { Mutation } from "./types";
 
 export default {
-    [types.LOGGED_USER](state, user) {
-        state.logged_user = user;
-    }
+    // [Mutation.LOGGED_USER](state, user) {
+    //     state.logged_user = user;
+    // }
 };

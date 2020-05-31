@@ -61,14 +61,14 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { TOGGLE_DRAWER } from "../store/mutation-types";
+import { Mutation } from "../store/modules/app/types";
 
 export default {
     computed: {
         ...mapState("app", ["title"])
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_DRAWER]),
+        ...mapMutations("app", [Mutation.TOGGLE_DRAWER]),
         logout: function() {
             this.$router.push({ name: "login" });
         }

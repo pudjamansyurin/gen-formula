@@ -31,7 +31,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return response()->json($user, 200);
     }
 
     /**
@@ -50,9 +50,9 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->messages(), 200);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json($validator->messages(), 200);
+        // }
 
         return response()->json(['success' => 'User saved successfully.']);
 

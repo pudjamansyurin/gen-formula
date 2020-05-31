@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('login', 'LoginController@login');
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::post('logout', 'LoginController@logout');
+
     Route::resources([
         'user' => 'UserController',
-        'product' => 'ProductController',
-        'formula' => 'FormulaController',
+        // 'product' => 'ProductController',
+        // 'formula' => 'FormulaController',
     ]);
 });

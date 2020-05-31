@@ -1,3 +1,3 @@
 export default {
-    loggedUser: state => state.logged_user
+    // loggedUser: state => state.logged_user
 };

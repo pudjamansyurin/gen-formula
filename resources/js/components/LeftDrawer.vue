@@ -66,7 +66,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { SET_DRAWER } from "../store/mutation-types";
+import { Mutation } from "../store/modules/app/types";
 
 export default {
     data() {
@@ -113,7 +113,7 @@ export default {
         ...mapState("app", ["drawer"])
     },
     methods: {
-        ...mapMutations("app", [SET_DRAWER])
+        ...mapMutations("app", [Mutation.SET_DRAWER])
     }
 };
 </script>
