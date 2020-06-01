@@ -22,7 +22,6 @@
 // window.axios = require("axios");
 
 // window.axios.defaults.withCredentials = true;
-// window.axios.defaults.baseURL = `${process.env.SANCTUM_STATEFUL_DOMAINS}/api`;
 // window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 // window.axios.defaults.headers.post["Content-Type"] = "application/json";
 

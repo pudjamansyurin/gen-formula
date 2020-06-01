@@ -1,23 +1,45 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import routes from "./routes.js";
+import store from "@/store";
+import { check } from "@/services/auth";
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: "history",
-    base: process.env.APP_URL,
     routes
 });
 
 router.beforeEach((to, from, next) => {
-    const token = window.localStorage.getItem("token");
+    const { token } = store.state.app;
 
-    if (to.matched.some(record => record.meta.auth) && !token) {
-        next({ name: "login", query: { redirect: to.fullPath } });
+    // handle error code
+    // if (to.name === "error") {
+    //     next();
+    // } else {
+    // check is secured page
+    if (to.matched.some(record => record.meta.auth)) {
+        // check is token expired
+        if (!token) {
+            next({ name: "error", params: { code: "401" } });
+        } else {
+            // check token credebility
+            check()
+                .then(() => {
+                    next();
+                })
+                .catch(() => {
+                    next({
+                        name: "login",
+                        query: { redirect: to.fullPath }
+                    });
+                });
+        }
     } else {
-        next(); // make sure to always call next()!
+        next();
     }
+    // }
 });
 
 export default router;

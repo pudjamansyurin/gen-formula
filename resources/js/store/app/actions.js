@@ -1,28 +1,30 @@
 import { actions, mutations } from "./types";
-import AuthService from "@/services/auth";
+import { login, logout } from "@/services/auth";
+import router from "@/router";
+
+const { app } = window;
 
 export default {
     [actions.LOGIN]({ commit }, payload) {
-        return AuthService.login(payload)
-            .then(res => {
-                commit(mutations.SET_PROFILE, res.data);
-
-                return res;
+        return login(payload)
+            .then(response => {
+                commit(mutations.SET_PROFILE, response.data);
+                // redirect
+                router.push({ name: "report" });
             })
-            .catch(e => {
-                if (e.data) {
-                    if (e.data.errors) {
-                        return Promise.reject(e.data.errors);
+            .catch(error => {
+                if (error.data) {
+                    if (error.data.errors) {
+                        return Promise.reject(error.data.errors);
                     }
                 }
-
-                return Promise.reject();
             });
     },
     [actions.LOGOUT]({ commit }) {
-        AuthService.logout().then(() => {
+        logout().then(() => {
             commit(mutations.CLEAR_PROFILE);
-            return;
+            // redirect
+            router.push({ name: "login" });
         });
     }
 };

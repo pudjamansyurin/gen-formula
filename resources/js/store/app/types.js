@@ -8,14 +8,15 @@ export const actions = {
 };
 
 export const mutations = {
-    TOGGLE_REMEMBER_ME: "TOGGLE_REMEMBER_ME",
     SET_DRAWER: "SET_DRAWER",
     TOGGLE_DRAWER: "TOGGLE_DRAWER",
     START_LOADING: "START_LOADING",
     STOP_LOADING: "STOP_LOADING",
     SET_PROFILE: "SET_PROFILE",
     CLEAR_PROFILE: "CLEAR_PROFILE",
-    SET_ERROR: "SET_ERROR"
+    SET_ERROR: "SET_ERROR",
+    CLEAR_ERROR: "CLEAR_ERROR",
+    TOGGLE_REMEMBER_ME: "TOGGLE_REMEMBER_ME"
 };
 
 export const _actions = addNamespace(namespace, actions);

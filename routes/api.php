@@ -14,10 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', 'LoginController@login');
+Route::post('login', 'AuthController@login');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', 'LoginController@logout');
+    Route::post('logout', 'AuthController@logout');
+    Route::get('check', 'AuthController@check');
 
     Route::resources([
         'user' => 'UserController',

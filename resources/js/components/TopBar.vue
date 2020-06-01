@@ -72,9 +72,7 @@ export default {
     methods: {
         ...mapMutations("app", [TOGGLE_DRAWER]),
         logout: function() {
-            this.$store.dispatch(APP_LOGOUT).then(() => {
-                this.$router.push({name: "login"});
-            });
+            this.$store.dispatch(APP_LOGOUT);
         }
     }
 };

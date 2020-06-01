@@ -8,10 +8,10 @@ const state = {
     loading: 0,
     error: {
         code: null,
-        text: ""
+        text: null
     },
-    rememberToken: false,
-    token: window.localStorage.getItem("token"),
+    remember_me: false,
+    token: window.localStorage.getItem("token") || null,
     profile: null
 };
 

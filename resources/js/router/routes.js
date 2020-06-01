@@ -1,7 +1,7 @@
 const Home = () => import("@/layouts/Home");
-const Login = () => import("@/pages/Login");
-const ForgetPassword = () => import("@/pages/ForgetPassword");
-const ResetPassword = () => import("@/pages/ResetPassword");
+const Login = () => import("@/pages/auth/Login");
+const Forget = () => import("@/pages/auth/Forget");
+const Reset = () => import("@/pages/auth/Reset");
 const Dashboard = () => import("@/layouts/Dashboard");
 const Setting = () => import("@/pages/Setting");
 const User = () => import("@/pages/User");
@@ -9,6 +9,7 @@ const Profile = () => import("@/pages/Profile");
 const Report = () => import("@/pages/Report");
 const Product = () => import("@/pages/Product");
 const Formula = () => import("@/pages/Formula");
+const Error = () => import("@/pages/Error");
 
 export default [
     {
@@ -23,12 +24,12 @@ export default [
             {
                 path: "forget",
                 name: "forget",
-                component: ForgetPassword
+                component: Forget
             },
             {
                 path: "reset",
                 name: "reset",
-                component: ResetPassword
+                component: Reset
             }
         ]
     },
@@ -85,5 +86,17 @@ export default [
                 }
             }
         ]
+    },
+    {
+        path: "/error/:code?/:text?",
+        name: "error",
+        props: true,
+        component: Error
+    },
+    {
+        path: "*",
+        redirect: {
+            name: "error"
+        }
     }
 ];

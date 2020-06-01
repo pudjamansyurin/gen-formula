@@ -27,13 +27,13 @@ window.Vue = require("vue");
 import App from "./App";
 import store from "./store";
 import router from "./router";
-
+import config from "./config";
 import vuetify from "./plugins/vuetify";
 import "./plugins/vee-validate";
 
-Vue.config.productionTip = process.env.APP_DEBUG;
+Vue.config.productionTip = config.DEBUG;
 
-const app = new Vue({
+window.app = new Vue({
     el: "#app",
     render: h => h(App),
     router,

@@ -19,17 +19,23 @@ export default {
             text
         };
     },
+    [mutations.CLEAR_ERROR](state) {
+        state.error = {
+            code: null,
+            text: ""
+        };
+    },
     [mutations.SET_PROFILE](state, { user, token }) {
-        state.user = user;
+        state.profile = user;
         state.token = token;
         window.localStorage.setItem("token", token);
     },
     [mutations.CLEAR_PROFILE](state) {
-        state.token = state.user = null;
+        state.profile = state.token = null;
         window.localStorage.removeItem("token");
     },
     [mutations.TOGGLE_REMEMBER_ME](state) {
-        state.rememberToken = !state.rememberToken;
+        state.remember_me = !state.remember_me;
     }
     // [mutations.SET_MESSAGE](state, message) {
     //     state.message = message;
