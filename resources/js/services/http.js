@@ -46,7 +46,7 @@ http.interceptors.request.use(
  */
 http.interceptors.response.use(
     response => {
-        // console.info(response);
+        console.info(response);
         store.commit(_mutations.APP_STOP_LOADING);
         return response;
     },
@@ -64,7 +64,7 @@ http.interceptors.response.use(
         });
 
         // redirect
-        if (code === 401 || code === 500) {
+        if (![200, 201, 202, 422].includes(code)) {
             router.push({ name: "error" });
         }
 

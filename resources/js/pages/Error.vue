@@ -66,7 +66,7 @@ export default {
             }
         }
     },
-    mounted() {
+    beforeDestroy() {
         this.CLEAR_ERROR();
     },
 };

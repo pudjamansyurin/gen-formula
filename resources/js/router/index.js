@@ -22,19 +22,12 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.auth)) {
         // check is token expired
         if (!token) {
-            next({ name: "error", params: { code: "401" } });
+            next({ name: "error", params: { code: 401 } });
         } else {
             // check token credebility
             check()
-                .then(() => {
-                    next();
-                })
-                .catch(() => {
-                    next({
-                        name: "login",
-                        query: { redirect: to.fullPath }
-                    });
-                });
+                .then(() => next())
+                .catch(() => {});
         }
     } else {
         next();
