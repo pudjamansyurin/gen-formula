@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import routes from "./routes.js";
 import store from "@/store";
-import { check } from "@/services/auth";
 
 Vue.use(VueRouter);
 
@@ -12,27 +11,21 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const { token } = store.state.app;
+    const { token } = store.state.app.auth;
 
-    // handle error code
-    // if (to.name === "error") {
-    //     next();
-    // } else {
     // check is secured page
     if (to.matched.some(record => record.meta.auth)) {
         // check is token expired
         if (!token) {
+            console.log("!token");
             next({ name: "error", params: { code: 401 } });
         } else {
-            // check token credebility
-            check()
-                .then(() => next())
-                .catch(() => {});
+            // check token credebility, in Dashboard hook
+            next();
         }
     } else {
         next();
     }
-    // }
 });
 
 export default router;

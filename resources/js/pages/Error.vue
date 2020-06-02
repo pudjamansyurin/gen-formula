@@ -25,7 +25,7 @@
 import { mapState, mapMutations } from 'vuex'
 import { mutations } from '@/store/app/types'
 
-const { CLEAR_ERROR } = mutations
+const { SET_ERROR } = mutations
 
 export default {
     name: "Error",
@@ -57,7 +57,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations('app', [CLEAR_ERROR]),
+        ...mapMutations('app', [SET_ERROR]),
         handleBack: function() {
             if (this.direct) {
                 this.$router.replace({ name: "login" });
@@ -67,7 +67,7 @@ export default {
         }
     },
     beforeDestroy() {
-        this.CLEAR_ERROR();
+        this.SET_ERROR({});
     },
 };
 </script>

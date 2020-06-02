@@ -61,9 +61,10 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { mutations, _actions } from "@/store/app/types";
+import { mutations, actions, ns } from "@/store/app/types";
+
 const { TOGGLE_DRAWER } = mutations;
-const { APP_LOGOUT } = _actions;
+const { LOGOUT } = actions;
 
 export default {
     computed: {
@@ -72,7 +73,7 @@ export default {
     methods: {
         ...mapMutations("app", [TOGGLE_DRAWER]),
         logout: function() {
-            this.$store.dispatch(APP_LOGOUT);
+            this.$store.dispatch(ns('app', LOGOUT));
         }
     }
 };

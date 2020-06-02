@@ -6,13 +6,17 @@ const state = {
     title: "GEN Formula",
     drawer: null,
     loading: 0,
+    message: "",
     error: {
         code: null,
-        text: null
+        text: ""
     },
-    remember_me: false,
-    token: window.localStorage.getItem("token") || null,
-    profile: null
+    auth: {
+        email: "",
+        password: "",
+        token: window.localStorage.getItem("token") || "",
+        remember: true
+    }
 };
 
 export default {

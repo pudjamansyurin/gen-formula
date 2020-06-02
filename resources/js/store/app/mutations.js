@@ -15,29 +15,38 @@ export default {
     },
     [mutations.SET_ERROR](state, { code, text }) {
         state.error = {
-            code,
-            text
+            code: code || null,
+            text: text || ""
         };
     },
-    [mutations.CLEAR_ERROR](state) {
-        state.error = {
-            code: null,
-            text: ""
+    [mutations.SET_MESSAGE](state, message) {
+        state.message = message;
+    },
+    [mutations.SET_AUTH](state, { user, token }) {
+        const { email, password } = user;
+
+        state.auth = {
+            ...state.auth,
+            email,
+            password,
+            token
         };
+
+        // save token, based on remember
+        if (state.auth.remember) {
+            window.localStorage.setItem("token", token);
+        }
     },
-    [mutations.SET_PROFILE](state, { user, token }) {
-        state.profile = user;
-        state.token = token;
-        window.localStorage.setItem("token", token);
-    },
-    [mutations.CLEAR_PROFILE](state) {
-        state.profile = state.token = null;
+    [mutations.CLEAR_AUTH](state) {
+        state.auth = {
+            ...state.auth,
+            email: "",
+            password: "",
+            token: ""
+        };
         window.localStorage.removeItem("token");
     },
-    [mutations.TOGGLE_REMEMBER_ME](state) {
-        state.remember_me = !state.remember_me;
+    [mutations.TOGGLE_REMEMBER](state) {
+        state.auth.remember = !state.auth.remember;
     }
-    // [mutations.SET_MESSAGE](state, message) {
-    //     state.message = message;
-    // },
 };

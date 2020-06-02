@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="authenticated">
     <left-drawer></left-drawer>
     <top-bar></top-bar>
 
@@ -77,6 +77,7 @@
 <script>
 import LeftDrawer from "@/components/LeftDrawer";
 import TopBar from "@/components/TopBar";
+import { check } from "@/services/auth";
 
 export default {
     name: "Dashboard",
@@ -86,9 +87,16 @@ export default {
     },
     data() {
         return {
-            dialog: false
+            dialog: false,
+            authenticated: false
         };
     },
+    mounted() {
+        // check token credebility
+        check()
+        .then(() => this.authenticated = true)
+        .catch(() => {})
+    }
 };
 </script>
 

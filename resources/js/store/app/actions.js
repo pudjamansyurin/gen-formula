@@ -10,7 +10,7 @@ export default {
         return login(payload)
             .then(response => {
                 commit(mutations.STOP_LOADING);
-                commit(mutations.SET_PROFILE, response.data);
+                commit(mutations.SET_AUTH, response.data);
                 // redirect
                 const { redirect } = router.currentRoute.query;
                 if (redirect) {
@@ -30,7 +30,7 @@ export default {
     },
     [actions.LOGOUT]({ commit }) {
         logout().then(() => {
-            commit(mutations.CLEAR_PROFILE);
+            commit(mutations.CLEAR_AUTH);
             // redirect
             router.push({ name: "login" });
         });

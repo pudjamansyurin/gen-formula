@@ -43,9 +43,9 @@
           </validation-provider>
 
           <v-switch
-            :value="remember_me"
-            @input="TOGGLE_REMEMBER_ME"
-            label="Remember me"
+            :input-value="auth.remember"
+            @change="TOGGLE_REMEMBER"
+            label="Keep me logged in"
           ></v-switch>
         </v-card-text>
 
@@ -69,11 +69,10 @@
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { mapState, mapMutations } from "vuex";
-import AuthService from "@/services/auth";
-import { _actions, mutations } from "@/store/app/types";
+import { actions, mutations, ns } from "@/store/app/types";
 
-const { TOGGLE_REMEMBER_ME } = mutations;
-const { APP_LOGIN } = _actions;
+const { TOGGLE_REMEMBER } = mutations;
+const { LOGIN } = actions;
 
 export default {
     name: "Login",
@@ -85,6 +84,7 @@ export default {
         return {
             title: "LOGIN",
             subtitle: "Enter your credentials to going further",
+            logged: true,
             form: {
                 email: "",
                 password: ""
@@ -92,17 +92,15 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "remember_me"]),
+        ...mapState("app", ["loading", "auth"]),
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_REMEMBER_ME]),
+        ...mapMutations("app", [TOGGLE_REMEMBER]),
         submit: function() {
             this.$store
-                .dispatch(APP_LOGIN, this.form)
+                .dispatch(ns('app', LOGIN), this.form)
                 .catch(errors => {
-                    if(errors){
-                        this.$refs.form.setErrors(errors);
-                    }
+                    this.$refs.form.setErrors(errors);
                 });
         }
     }

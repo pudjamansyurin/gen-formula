@@ -10,7 +10,7 @@
 import axios from "axios";
 import store from "@/store";
 import router from "@/router";
-import { _mutations, _actions } from "@/store/app/types";
+import { mutations, ns } from "@/store/app/types";
 
 export const http = axios.create({
     baseURL: `http://localhost:3000/api`,
@@ -27,16 +27,16 @@ http.defaults.headers.post["Content-Type"] = "application/json";
 http.interceptors.request.use(
     config => {
         // get token, if user doesn't logout yet
-        const { token } = store.state.app;
+        const { token } = store.state.app.auth;
 
         config.headers.Authorization = token ? `Bearer ${token}` : null;
 
-        store.commit(_mutations.APP_START_LOADING);
+        store.commit(ns("app", mutations.START_LOADING));
         return config;
     },
     error => {
         console.warn(error);
-        store.commit(_mutations.APP_STOP_LOADING);
+        store.commit(ns("app", mutations.STOP_LOADING));
         return Promise.reject(error);
     }
 );
@@ -46,25 +46,40 @@ http.interceptors.request.use(
  */
 http.interceptors.response.use(
     response => {
+        const { data } = response;
+        const { message } = data;
+
         console.info(response);
-        store.commit(_mutations.APP_STOP_LOADING);
+        store.commit(ns("app", mutations.STOP_LOADING));
+
+        // save api generated message
+        if (message) {
+            store.commit(ns("app", mutations.SET_MESSAGE, message));
+        }
+
         return response;
     },
     error => {
         const { response } = error;
         const { status: code, statusText: text, data } = response;
+        const { message } = data;
 
         console.error(response);
-        store.commit(_mutations.APP_STOP_LOADING);
+        store.commit(ns("app", mutations.STOP_LOADING));
 
-        // handle api message
-        store.commit(_mutations.APP_SET_ERROR, {
+        // save system generated message
+        store.commit(ns("app", mutations.SET_ERROR), {
             code,
-            text: text || data.message
+            text
         });
 
+        // save api generated message
+        if (message) {
+            store.commit(ns("app", mutations.SET_MESSAGE, message));
+        }
+
         // redirect
-        if (![200, 201, 202, 422].includes(code)) {
+        if (![422].includes(code)) {
             router.push({ name: "error" });
         }
 
