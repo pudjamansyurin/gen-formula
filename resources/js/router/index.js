@@ -24,7 +24,12 @@ router.beforeEach((to, from, next) => {
             next();
         }
     } else {
-        next();
+        // redirect if has token
+        if (token) {
+            next({ name: "report" });
+        } else {
+            next();
+        }
     }
 });
 

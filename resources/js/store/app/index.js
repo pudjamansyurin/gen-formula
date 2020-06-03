@@ -1,6 +1,7 @@
 // import getters from "./getters";
 import actions from "./actions";
 import mutations from "./mutations";
+import { ls } from "@/helpers";
 
 const state = {
     title: "GEN Formula",
@@ -14,8 +15,8 @@ const state = {
     auth: {
         email: "",
         password: "",
-        token: window.localStorage.getItem("token") || "",
-        remember: true
+        token: ls.get("auth.token") || "",
+        remember: ls.get("auth.remember") || false
     }
 };
 

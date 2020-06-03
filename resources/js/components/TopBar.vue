@@ -46,7 +46,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-list-item @click="logout">
+        <v-list-item @click="LOGOUT">
           <v-list-item-icon>
             <v-icon>mdi-logout</v-icon>
           </v-list-item-icon>
@@ -60,8 +60,8 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { mutations, actions, ns } from "@/store/app/types";
+import { mapState, mapMutations, mapActions } from "vuex";
+import { mutations, actions } from "@/store/app/types";
 
 const { TOGGLE_DRAWER } = mutations;
 const { LOGOUT } = actions;
@@ -72,9 +72,7 @@ export default {
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DRAWER]),
-        logout: function() {
-            this.$store.dispatch(ns('app', LOGOUT));
-        }
+        ...mapActions("app", [LOGOUT])
     }
 };
 </script>

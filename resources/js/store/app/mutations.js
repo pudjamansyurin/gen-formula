@@ -1,4 +1,5 @@
 import { mutations } from "./types";
+import { ls } from "@/helpers";
 
 export default {
     [mutations.SET_DRAWER](state, open) {
@@ -34,7 +35,7 @@ export default {
 
         // save token, based on remember
         if (state.auth.remember) {
-            window.localStorage.setItem("token", token);
+            ls.set("auth.token", token);
         }
     },
     [mutations.CLEAR_AUTH](state) {
@@ -44,9 +45,11 @@ export default {
             password: "",
             token: ""
         };
-        window.localStorage.removeItem("token");
+        ls.remove("auth.token");
     },
-    [mutations.TOGGLE_REMEMBER](state) {
-        state.auth.remember = !state.auth.remember;
+    [mutations.SET_REMEMBER](state, remember) {
+        state.auth.remember = remember;
+
+        ls.set("auth.remember", remember);
     }
 };
