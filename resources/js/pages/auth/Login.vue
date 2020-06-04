@@ -1,65 +1,71 @@
 <template>
-  <validation-observer ref="form" v-slot="{ invalid, validated, handleSubmit }">
-    <v-card class="elevation-1" :loading="!!loading">
-      <v-card-title>
-        {{ title }}
-      </v-card-title>
-      <v-card-subtitle>
-        {{ subtitle }}
-      </v-card-subtitle>
-      <v-divider></v-divider>
-      <v-form @submit.prevent="handleSubmit(submit())">
-        <v-card-text>
-          <validation-provider
-            name="email"
-            rules="required|email"
-            v-slot="{ errors, valid }"
-          >
-            <v-text-field
-              label="Email"
-              name="email"
-              v-model="form.email"
-              type="email"
-              :error-messages="errors"
-              :success="valid"
-              prepend-icon="mdi-account"
-            ></v-text-field>
-          </validation-provider>
+    <validation-observer
+        ref="form"
+        v-slot="{ invalid, validated, handleSubmit }"
+    >
+        <v-card class="elevation-1" :loading="!!loading">
+            <v-card-title>
+                {{ title }}
+            </v-card-title>
+            <v-card-subtitle>
+                {{ subtitle }}
+            </v-card-subtitle>
+            <v-divider></v-divider>
+            <v-form @submit.prevent="handleSubmit(submit())">
+                <v-card-text>
+                    <validation-provider
+                        name="email"
+                        rules="required|email"
+                        v-slot="{ errors, valid }"
+                    >
+                        <v-text-field
+                            label="Email"
+                            name="email"
+                            v-model="form.email"
+                            type="email"
+                            :error-messages="errors"
+                            :success="valid"
+                            prepend-icon="mdi-account"
+                        ></v-text-field>
+                    </validation-provider>
 
-          <validation-provider
-            name="password"
-            rules="required"
-            v-slot="{ errors, valid }"
-          >
-            <v-text-field
-              label="Password"
-              name="password"
-              v-model="form.password"
-              type="password"
-              :error-messages="errors"
-              :success="valid"
-              prepend-icon="mdi-lock"
-            ></v-text-field>
-          </validation-provider>
+                    <validation-provider
+                        name="password"
+                        rules="required"
+                        v-slot="{ errors, valid }"
+                    >
+                        <v-text-field
+                            label="Password"
+                            name="password"
+                            v-model="form.password"
+                            type="password"
+                            :error-messages="errors"
+                            :success="valid"
+                            prepend-icon="mdi-lock"
+                        ></v-text-field>
+                    </validation-provider>
 
-          <v-checkbox v-model="remember" label="Keep me logged in"></v-checkbox>
-        </v-card-text>
+                    <v-checkbox
+                        v-model="remember"
+                        label="Keep me logged in"
+                    ></v-checkbox>
+                </v-card-text>
 
-        <v-card-actions>
-          <v-btn :to="{ name: 'forget' }" text>Forget Password</v-btn>
+                <v-card-actions>
+                    <v-btn :to="{ name: 'forget' }" text>Forget Password</v-btn>
 
-          <v-spacer></v-spacer>
-          <v-btn
-            type="submit"
-            color="primary"
-            :disabled="invalid || !validated || !!loading"
-            large
-            >Login</v-btn
-          >
-        </v-card-actions>
-      </v-form>
-    </v-card>
-  </validation-observer>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        type="submit"
+                        color="primary"
+                        :disabled="invalid || !validated || !!loading"
+                        large
+                        >Login</v-btn
+                    >
+                </v-card-actions>
+            </v-form>
+        </v-card>
+    </validation-observer>
 </template>
 
 <script>
@@ -90,10 +96,10 @@ export default {
         ...mapState("app", ["loading", "auth"]),
         remember: {
             get: function() {
-                return this.auth.remember
+                return this.auth.remember;
             },
             set: function(val) {
-                this.SET_REMEMBER(val)
+                this.SET_REMEMBER(val);
             }
         }
     },
@@ -101,10 +107,9 @@ export default {
         ...mapMutations("app", [SET_REMEMBER]),
         ...mapActions("app", [LOGIN]),
         submit: function() {
-            this.LOGIN(this.form)
-                .catch(errors => {
-                    this.$refs.form.setErrors(errors);
-                });
+            this.LOGIN(this.form).catch(errors => {
+                this.$refs.form.setErrors(errors);
+            });
         }
     }
 };

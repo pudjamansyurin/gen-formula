@@ -1,12 +1,12 @@
 import { reduce } from "lodash";
 
-export const addNamespace = (namespace, definition) => {
+export const ns = (namespace, definition) => {
     return `${namespace.toLowerCase()}/${definition}`;
 };
 
-export const removeNamespace = (namespace, definition) => {
-    return definition.replace(`${namespace.toLowerCase()}/`, "");
-};
+// export const removeNamespace = (namespace, definition) => {
+//     return definition.replace(`${namespace.toLowerCase()}/`, "");
+// };
 
 export const ls = {
     set: (item, value) => {

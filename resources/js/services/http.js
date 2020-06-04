@@ -10,7 +10,8 @@
 import axios from "axios";
 import store from "@/store";
 import router from "@/router";
-import { mutations, ns } from "@/store/app/types";
+import { mutations } from "@/store/app/types";
+import { ns } from "@/helpers";
 
 export const http = axios.create({
     baseURL: `http://localhost:3000/api`,

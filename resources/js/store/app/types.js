@@ -1,8 +1,3 @@
-import { addNamespace } from "@/helpers";
-
-const namespace = "app";
-export const ns = addNamespace;
-
 export const actions = {
     LOGIN: "LOGIN",
     LOGOUT: "LOGOUT"
