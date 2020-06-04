@@ -11,25 +11,31 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const { token } = store.state.app.auth;
+    const { auth, error } = store.state.app;
+    const { code } = error;
+    const { token } = auth;
 
-    // check is secured page
-    if (to.matched.some(record => record.meta.auth)) {
-        // check is token expired
-        if (!token) {
-            console.log("!token");
-            next({ name: "error", params: { code: 401 } });
+    // if not already handle by axios
+    if (!(code && ![422].includes(code))) {
+        // check is secured page
+        if (to.matched.some(record => record.meta.auth)) {
+            // check is token expired
+            if (!token) {
+                next({ name: "error", params: { code: 401 } });
+            } else {
+                // check token credebility, in Dashboard hook
+                next();
+            }
         } else {
-            // check token credebility, in Dashboard hook
-            next();
+            // redirect if has token
+            if (token) {
+                next({ name: "report" });
+            } else {
+                next();
+            }
         }
     } else {
-        // redirect if has token
-        if (token) {
-            next({ name: "report" });
-        } else {
-            next();
-        }
+        next();
     }
 });
 

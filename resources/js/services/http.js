@@ -29,10 +29,10 @@ http.interceptors.request.use(
     config => {
         // get token, if user doesn't logout yet
         const { token } = store.state.app.auth;
-
         config.headers.Authorization = token ? `Bearer ${token}` : null;
 
         store.commit(ns("app", mutations.START_LOADING));
+        store.commit(ns("app", mutations.SET_ERROR), {});
         return config;
     },
     error => {
@@ -64,6 +64,7 @@ http.interceptors.response.use(
         const { response } = error;
         const { status: code, statusText: text, data } = response;
         const { message } = data;
+        const { token } = store.state.app.auth;
 
         console.error(response);
         store.commit(ns("app", mutations.STOP_LOADING));
@@ -81,7 +82,17 @@ http.interceptors.response.use(
 
         // redirect
         if (![422].includes(code)) {
-            router.push({ name: "error" });
+            if (token && code === 401) {
+                // token expired
+                router.push({
+                    name: "login",
+                    query: {
+                        redirect: router.currentRoute.fullPath
+                    }
+                });
+            } else {
+                router.push({ name: "error" });
+            }
         }
 
         return Promise.reject(response);

@@ -26,6 +26,7 @@
                             :error-messages="errors"
                             :success="valid"
                             prepend-icon="mdi-account"
+                            autocomplete="on"
                         ></v-text-field>
                     </validation-provider>
 
@@ -42,6 +43,7 @@
                             :error-messages="errors"
                             :success="valid"
                             prepend-icon="mdi-lock"
+                            autocomplete="on"
                         ></v-text-field>
                     </validation-provider>
 
