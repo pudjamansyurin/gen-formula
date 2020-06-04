@@ -83,6 +83,8 @@ http.interceptors.response.use(
         // redirect
         if (![422].includes(code)) {
             if (token && code === 401) {
+                // remove token
+                store.commit(ns("app", mutations.CLEAR_AUTH));
                 // token expired
                 router.push({
                     name: "login",
