@@ -46,28 +46,28 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        // Fields validation
         $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        // Authentication
+        $user = User::where('email', $request->email)->first();
 
-        if (Auth::attempt($credentials)) {
-            // Authentication passed...
-            $user = $this->sanctumUser();
-
-            $this->authenticated($request, $user);
-
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
-                'user' => $user,
-                'token' => $user->createToken(now())->plainTextToken
-            ], 200);
-        };
+                'message' => 'The provided credentials are incorrect.',
+            ], 422);
+        }
+
+        // Authentication passed...
+        $this->authenticated($request, $user);
 
         return response([
-            'message' => 'Your credentials are incorrect.'
-        ], 422);
+            'user' => $user,
+            'token' => $user->createToken(now())->plainTextToken
+        ], 200);
     }
 
     /**
@@ -77,7 +77,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $user = $this->sanctumUser();
+        $user = User::where('email', Auth::user()->email)->first();
 
         $user->tokens()->delete();
 
@@ -126,10 +126,5 @@ class AuthController extends Controller
     protected function loggedOut(Request $request)
     {
         //
-    }
-
-    protected function sanctumUser()
-    {
-        return User::where('email', Auth::user()->email)->first();
     }
 }

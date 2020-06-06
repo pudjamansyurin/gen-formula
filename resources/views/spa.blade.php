@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -18,9 +18,12 @@
 
 <body>
     <noscript>
-        <strong>We're sorry but Action Follow Up v2 doesn't work properly without JavaScript enabled. Please enable it
-            to continue.</strong>
+        <strong>
+            We're sorry but Action Follow Up v2 doesn't work properly without JavaScript enabled. Please enable it to
+            continue.
+        </strong>
     </noscript>
+
     <div id="app">
         Loading....
     </div>
