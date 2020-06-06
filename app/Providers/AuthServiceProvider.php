@@ -27,9 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Implicitly grant "administrator" role all permissions
-        Gate::before(function ($user, $ability) {
-            return $user->hasRole('administrator') ? true : null;
-        });
+        // // Implicitly grant "administrator" role all permissions
+        // Gate::before(function ($user, $ability) {
+        //     return $user->hasRole('administrator') ? true : null;
+        // });
     }
 }
