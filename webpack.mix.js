@@ -23,5 +23,7 @@ mix.js("resources/js/app.js", "public/js").sass(
 
 mix.sourceMaps().version();
 mix.browserSync({
-    proxy: "localhost:8000"
+    proxy: "gen-formula.test",
+    // open: "external",
+    port: 8080
 });

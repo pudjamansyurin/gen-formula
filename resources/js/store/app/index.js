@@ -7,7 +7,10 @@ const state = {
     title: "GEN Formula",
     drawer: null,
     loading: 0,
-    message: "",
+    message: {
+        text: "",
+        type: "info"
+    },
     error: {
         code: null,
         text: ""

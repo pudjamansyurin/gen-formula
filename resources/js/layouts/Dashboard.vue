@@ -1,17 +1,17 @@
 <template>
-  <div v-if="authenticated">
-    <left-drawer></left-drawer>
-    <top-bar></top-bar>
+    <div v-if="authenticated">
+        <left-drawer></left-drawer>
+        <top-bar></top-bar>
 
-    <v-content>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-          <router-view></router-view>
-        </v-row>
-      </v-container>
-    </v-content>
+        <v-content>
+            <v-container class="fill-height" fluid>
+                <v-row align="center" justify="center">
+                    <router-view></router-view>
+                </v-row>
+            </v-container>
+        </v-content>
 
-    <v-btn bottom color="pink" dark fab fixed right @click="dialog = !dialog">
+        <!-- <v-btn bottom color="pink" dark fab fixed right @click="dialog = !dialog">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
 
@@ -70,8 +70,8 @@
           <v-btn text @click="dialog = false">Save</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
-  </div>
+    </v-dialog> -->
+    </div>
 </template>
 
 <script>
@@ -94,8 +94,8 @@ export default {
     mounted() {
         // check token credebility
         check()
-        .then(() => this.authenticated = true)
-        .catch(() => {})
+            .then(() => (this.authenticated = true))
+            .catch(() => {});
     }
 };
 </script>

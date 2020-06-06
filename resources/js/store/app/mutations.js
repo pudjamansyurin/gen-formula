@@ -16,12 +16,27 @@ export default {
     },
     [mutations.SET_ERROR](state, { code, text }) {
         state.error = {
-            code: code || null,
-            text: text || ""
+            code,
+            text
         };
     },
-    [mutations.SET_MESSAGE](state, message) {
-        state.message = message;
+    [mutations.CLEAR_ERROR](state) {
+        state.error = {
+            code: null,
+            text: ""
+        };
+    },
+    [mutations.SET_MESSAGE](state, { text, type }) {
+        state.message = {
+            text,
+            type
+        };
+    },
+    [mutations.CLEAR_MESSAGE](state) {
+        state.message = {
+            text: "",
+            type: "info"
+        };
     },
     [mutations.SET_AUTH](state, { user, token }) {
         const { email, password } = user;

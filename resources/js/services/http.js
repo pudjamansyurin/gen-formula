@@ -10,11 +10,12 @@
 import axios from "axios";
 import store from "@/store";
 import router from "@/router";
+import config from "@/config";
 import { mutations } from "@/store/app/types";
 import { ns } from "@/helpers";
 
 export const http = axios.create({
-    baseURL: `http://localhost:3000/api`,
+    baseURL: `${config.APP_URL}/api`,
     withCredentials: true // required to handle the CSRF token
 });
 
@@ -32,7 +33,8 @@ http.interceptors.request.use(
         config.headers.Authorization = token ? `Bearer ${token}` : null;
 
         store.commit(ns("app", mutations.START_LOADING));
-        store.commit(ns("app", mutations.SET_ERROR), {});
+        store.commit(ns("app", mutations.CLEAR_ERROR));
+        store.commit(ns("app", mutations.CLEAR_MESSAGE));
         return config;
     },
     error => {
@@ -55,7 +57,10 @@ http.interceptors.response.use(
 
         // save api generated message
         if (message) {
-            store.commit(ns("app", mutations.SET_MESSAGE, message));
+            store.commit(ns("app", mutations.SET_MESSAGE), {
+                text: message,
+                type: "success"
+            });
         }
 
         return response;
@@ -77,7 +82,10 @@ http.interceptors.response.use(
 
         // save api generated message
         if (message) {
-            store.commit(ns("app", mutations.SET_MESSAGE, message));
+            store.commit(ns("app", mutations.SET_MESSAGE), {
+                text: message,
+                type: "error"
+            });
         }
 
         // redirect
