@@ -1,7 +1,7 @@
 export const actions = {
-    LOGGED_IN: "LOGGED_IN"
+    GET_USERS: "GET_USERS"
 };
 
 export const mutations = {
-    LOGGED_IN: "LOGGED_IN"
+    SET_USERS: "SET_USERS"
 };

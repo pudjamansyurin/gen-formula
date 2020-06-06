@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(User::class, 'user');
+        // $this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -20,6 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        return new UserCollection(User::with('roles:name')->paginate());
     }
 
 

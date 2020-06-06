@@ -3,7 +3,7 @@ import actions from "./actions";
 import mutations from "./mutations";
 
 const state = {
-    // logged_user: {}
+    users: []
 };
 
 export default {

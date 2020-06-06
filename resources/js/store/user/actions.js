@@ -1,7 +1,14 @@
 import { actions, mutations } from "./types";
-import user from "../api/user";
+import { viewAny } from "@/services/user";
 
 export default {
+    [actions.GET_USERS]({ commit }) {
+        viewAny().then(data => {
+            const { data: users } = data;
+
+            commit(mutations.SET_USERS, users);
+        });
+    }
     // [actions.LOGGED_IN]({ commit }) {
     //     return new Promise((resolve, reject) => {
     //         user
