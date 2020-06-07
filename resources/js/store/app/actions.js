@@ -2,8 +2,6 @@ import { actions, mutations } from "./types";
 import { login, logout } from "@/services/auth";
 import router from "@/router";
 
-const { app } = window;
-
 export default {
     [actions.LOGIN]({ commit }, payload) {
         commit(mutations.START_LOADING);

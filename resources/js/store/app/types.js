@@ -1,6 +1,7 @@
 export const actions = {
     LOGIN: "LOGIN",
-    LOGOUT: "LOGOUT"
+    LOGOUT: "LOGOUT",
+    CHECK: "CHECK"
 };
 
 export const mutations = {

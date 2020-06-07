@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::resources([
         'user' => 'UserController',
-        // 'product' => 'ProductController',
+        'product' => 'ProductController',
         // 'formula' => 'FormulaController',
     ]);
 });

@@ -39,7 +39,11 @@
                             label="Password"
                             name="password"
                             v-model="form.password"
-                            type="password"
+                            :type="showPassword ? 'text' : 'password'"
+                            :append-icon="
+                                showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                            "
+                            @click:append="showPassword = !showPassword"
                             :error-messages="errors"
                             :success="valid"
                             prepend-icon="mdi-lock"
@@ -88,6 +92,7 @@ export default {
         return {
             title: "LOGIN",
             subtitle: "Enter your credentials to going further",
+            showPassword: false,
             form: {
                 email: "",
                 password: ""

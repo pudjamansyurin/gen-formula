@@ -231,7 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // Added
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'DebugBar' => Barryvdh\Debugbar\Facade::class,
         'Helper' => App\Helpers\Helper::class,
 
     ],

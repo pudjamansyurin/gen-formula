@@ -16,14 +16,14 @@
                 :headers="headers"
                 :items="users"
                 :search="search"
-                :items-per-page="5"
                 :loading="!!loading"
-                single-select
                 show-select
-                item-key="name"
                 class="elevation-1"
             >
             </v-data-table>
+            <template v-slot:item.last_at="{ item }">
+                {{ item.last_at | moment("from") }}
+            </template>
         </v-card>
     </v-col>
 </template>
@@ -47,9 +47,9 @@ export default {
                     value: "name"
                 },
                 { text: "Email", value: "email" },
-                { text: "Roles", value: "roles[0].name" },
-                { text: "LastAt", value: "last_at" },
-                { text: "LastIp", value: "last_ip" }
+                { text: "Role", value: "role" },
+                { text: "Last At", value: "last_at" },
+                { text: "Last Ip", value: "last_ip" }
             ]
         };
     },
@@ -66,5 +66,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

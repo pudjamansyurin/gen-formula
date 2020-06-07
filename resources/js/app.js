@@ -28,8 +28,7 @@ import App from "./App";
 import store from "./store";
 import router from "./router";
 import config from "./config";
-import vuetify from "./plugins/vuetify";
-import "./plugins/vee-validate";
+import { vuetify } from "./plugins";
 
 Vue.config.productionTip = config.DEBUG;
 

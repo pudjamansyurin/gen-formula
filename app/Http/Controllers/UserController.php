@@ -22,19 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return new UserCollection(User::with('roles:name')->paginate());
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        return response()->json($user, 200);
+        return new UserCollection(User::with('roles:id,name')->paginate());
     }
 
     /**
@@ -69,14 +57,14 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function show(User $user)
     {
-        return response()->json($user);
+        return response()->json($user, 200);
     }
 
     /**
@@ -99,7 +87,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-
         return response()->json(['success' => 'User deleted successfully.']);
     }
 }
