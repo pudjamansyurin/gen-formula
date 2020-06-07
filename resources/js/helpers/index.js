@@ -4,7 +4,7 @@ export const ns = (namespace, definition) => {
     return `${namespace.toLowerCase()}/${definition}`;
 };
 
-// export const removeNamespace = (namespace, definition) => {
+// export const nsRemove = (namespace, definition) => {
 //     return definition.replace(`${namespace.toLowerCase()}/`, "");
 // };
 

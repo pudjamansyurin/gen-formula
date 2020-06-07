@@ -1,5 +1,5 @@
 import { actions, mutations } from "./types";
-import { view } from "@/services/model";
+import { view } from "@/api/model";
 
 export default {
     [actions.GET_USERS]({ commit }) {

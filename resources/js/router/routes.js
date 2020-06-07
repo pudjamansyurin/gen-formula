@@ -1,15 +1,15 @@
 const Home = () => import("@/layouts/Home");
-const Login = () => import("@/pages/auth/Login");
-const Forget = () => import("@/pages/auth/Forget");
-const Reset = () => import("@/pages/auth/Reset");
+const Login = () => import("@/views/auth/Login");
+const Forget = () => import("@/views/auth/Forget");
+const Reset = () => import("@/views/auth/Reset");
 const Dashboard = () => import("@/layouts/Dashboard");
-const Setting = () => import("@/pages/Setting");
-const User = () => import("@/pages/User");
-const Profile = () => import("@/pages/Profile");
-const Report = () => import("@/pages/Report");
-const Product = () => import("@/pages/Product");
-const Formula = () => import("@/pages/Formula");
-const Error = () => import("@/pages/Error");
+const Setting = () => import("@/views/Setting");
+const User = () => import("@/views/User");
+const Profile = () => import("@/views/Profile");
+const Report = () => import("@/views/Report");
+const Product = () => import("@/views/Product");
+const Formula = () => import("@/views/Formula");
+const Error = () => import("@/views/Error");
 
 export default [
     {

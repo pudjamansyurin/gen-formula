@@ -1,10 +1,8 @@
 import { actions, mutations } from "./types";
-import { view } from "@/services/model";
+import { view } from "@/api/model";
 
 export default {
     [actions.GET_PRODUCTS]({ commit }, options) {
-        console.log(options);
-
         return view("product").then(data => {
             const { data: products, meta } = data;
             const { total, per_page, current_page } = meta;

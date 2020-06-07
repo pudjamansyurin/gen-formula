@@ -77,7 +77,7 @@
 <script>
 import LeftDrawer from "@/components/LeftDrawer";
 import TopBar from "@/components/TopBar";
-import { check } from "@/services/auth";
+import { check } from "@/api/auth";
 
 export default {
     name: "Dashboard",

@@ -1,5 +1,5 @@
 import { actions, mutations } from "./types";
-import { login, logout } from "@/services/auth";
+import { login, logout } from "@/api/auth";
 import router from "@/router";
 
 export default {
