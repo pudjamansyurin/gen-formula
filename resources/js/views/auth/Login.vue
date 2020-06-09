@@ -3,15 +3,16 @@
         ref="form"
         v-slot="{ invalid, validated, handleSubmit }"
     >
-        <v-card class="elevation-1" :loading="!!loading">
-            <v-card-title>
-                {{ title }}
-            </v-card-title>
-            <v-card-subtitle>
-                {{ subtitle }}
-            </v-card-subtitle>
-            <v-divider></v-divider>
-            <v-form @submit.prevent="handleSubmit(submit())">
+        <v-form @submit.prevent="handleSubmit(submit())">
+            <v-card class="elevation-1" :loading="!!loading">
+                <v-card-title>
+                    {{ title }}
+                </v-card-title>
+                <v-card-subtitle>
+                    {{ subtitle }}
+                </v-card-subtitle>
+                <v-divider></v-divider>
+
                 <v-card-text>
                     <validation-provider
                         name="email"
@@ -69,8 +70,8 @@
                         >Login</v-btn
                     >
                 </v-card-actions>
-            </v-form>
-        </v-card>
+            </v-card>
+        </v-form>
     </validation-observer>
 </template>
 

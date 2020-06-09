@@ -8,6 +8,7 @@
             :options.sync="options"
             :server-items-length="total"
             :loading="!!loading"
+            :dense="dense"
             show-select
             class="elevation-1"
         >
@@ -119,26 +120,24 @@
                 <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
+                <v-divider></v-divider>
 
                 <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-col cols="12" sm="6" md="4">
-                                <v-text-field
-                                    v-model="editedItem.name"
-                                    label="Product name"
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                    <v-text-field
+                        v-model="editedItem.name"
+                        label="Product name"
+                        hint="This is to identify the product"
+                        persistent-hint
+                    ></v-text-field>
                 </v-card-text>
+                <v-divider></v-divider>
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="close"
                         >Cancel</v-btn
                     >
-                    <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                    <v-btn @click="save" color="green" dark>Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -147,31 +146,20 @@
             <v-card>
                 <v-card-title>Confirmation</v-card-title>
                 <v-divider></v-divider>
-                <v-card-subtitle class="mt-2">
+
+                <v-card-text class="pt-2" style="max-height: 300px;">
                     Are you sure to delete
                     {{
                         singleSelect
                             ? "this product ?"
                             : `these ${selected.length} products ?`
                     }}
-                </v-card-subtitle>
-                <v-card-text style="height: 300px;">
-                    <v-list dense>
-                        <v-list-item-group>
-                            <template v-for="item in selected">
-                                <v-list-item :key="`item-${item.id}`">
-                                    <v-list-item-content>
-                                        <v-list-item-title
-                                            v-text="item.name"
-                                        ></v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-divider
-                                    :key="`divider-${item.id}`"
-                                ></v-divider>
-                            </template>
-                        </v-list-item-group>
-                    </v-list>
+
+                    <v-chip-group column small active-class="primary--text">
+                        <v-chip v-for="item in selected" :key="item.id">
+                            {{ item.name }}
+                        </v-chip>
+                    </v-chip-group>
                 </v-card-text>
 
                 <v-divider></v-divider>
@@ -202,6 +190,7 @@ export default {
     name: "Product",
     data() {
         return {
+            dense: true,
             searchBox: false,
             search: "",
             total: 0,
@@ -260,8 +249,6 @@ export default {
         deleteItem() {
             const indexes = map(this.selected, "id");
             console.log(indexes);
-            let action = confirm("Are you sure you want to delete this item?");
-            console.log(action);
 
             // this.products.splice(index, 1);
             this.deleteDialog = false;
