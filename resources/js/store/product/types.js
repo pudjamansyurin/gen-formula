@@ -1,5 +1,7 @@
 export const actions = {
-    GET_PRODUCTS: "GET_PRODUCTS"
+    GET_PRODUCTS: "GET_PRODUCTS",
+    SAVE_PRODUCT: "SAVE_PRODUCT",
+    DELETE_PRODUCTS: "DELETE_PRODUCTS"
 };
 
 export const mutations = {

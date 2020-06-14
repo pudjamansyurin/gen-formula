@@ -1,302 +1,305 @@
 <template>
-  <v-col cols="12">
-    <v-data-table
-      v-model="selected"
-      :headers="headers"
-      :items="products"
-      :search="search"
-      :options.sync="options"
-      :server-items-length="total"
-      :loading="!!loading"
-      :dense="dense"
-      show-select
-      class="elevation-1"
-    >
-      <template v-slot:top>
-        <v-toolbar :dark="!!selected.length" flat>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-show="selected.length"
-                @click="selected = []"
-                v-on="on"
-                icon
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
+    <v-col cols="12">
+        <v-data-table
+            v-model="selected"
+            :headers="headers"
+            :items="products"
+            :search="search"
+            :options.sync="options"
+            :server-items-length="total"
+            :loading="!!loading"
+            :dense="dense"
+            show-select
+            class="elevation-1"
+        >
+            <template v-slot:top>
+                <v-toolbar :dark="!!selected.length" flat>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-show="selected.length"
+                                @click="selected = []"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Cancel</span>
+                    </v-tooltip>
+
+                    <v-toolbar-title>
+                        {{
+                            selected.length
+                                ? `${selected.length} selected`
+                                : "Products"
+                        }}
+                    </v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+
+                    <v-spacer></v-spacer>
+
+                    <v-scroll-x-transition>
+                        <v-text-field
+                            v-show="!selected.length && searchBox"
+                            v-model="search"
+                            label="Search"
+                            single-line
+                            hide-details
+                        ></v-text-field>
+                    </v-scroll-x-transition>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-show="!selected.length"
+                                @click="toggleSearchBox"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon>{{
+                                    searchBox
+                                        ? "mdi-magnify-close"
+                                        : "mdi-magnify"
+                                }}</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Search</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-show="!selected.length"
+                                @click="dialog = true"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Create</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-show="selected.length"
+                                @click="deleteDialog = true"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Delete</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-show="selected.length == 1"
+                                @click="editItem"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Edit</span>
+                    </v-tooltip>
+                </v-toolbar>
             </template>
-            <span>Cancel</span>
-          </v-tooltip>
-
-          <v-toolbar-title>
-            {{ selected.length ? `${selected.length} selected` : "Products" }}
-          </v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-
-          <v-spacer></v-spacer>
-
-          <v-scroll-x-transition>
-            <v-text-field
-              v-show="!selected.length && searchBox"
-              v-model="search"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-scroll-x-transition>
-
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-show="!selected.length"
-                @click="toggleSearchBox"
-                v-on="on"
-                icon
-              >
-                <v-icon>{{
-                  searchBox ? "mdi-magnify-close" : "mdi-magnify"
-                }}</v-icon>
-              </v-btn>
+            <template v-slot:item.updated_at="{ item }">
+                {{ item.updated_at | moment("from") }}
             </template>
-            <span>Search</span>
-          </v-tooltip>
+        </v-data-table>
 
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-show="!selected.length"
-                @click="dialog = true"
-                v-on="on"
-                icon
-              >
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </template>
-            <span>Create</span>
-          </v-tooltip>
+        <v-dialog v-model="dialog" max-width="500px" persistent>
+            <validation-observer
+                v-slot="{ invalid, validated, handleSubmit }"
+                ref="form"
+            >
+                <v-form @submit.prevent="handleSubmit(save())">
+                    <v-card :loading="!!loading">
+                        <v-card-title>
+                            <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+                        <v-divider></v-divider>
 
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-show="selected.length"
-                @click="deleteDialog = true"
-                v-on="on"
-                icon
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </template>
-            <span>Delete</span>
-          </v-tooltip>
+                        <v-card-text>
+                            <validation-provider
+                                name="name"
+                                rules="required|min:3"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-text-field
+                                    label="Product name"
+                                    name="name"
+                                    type="text"
+                                    v-model="form.name"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    counter
+                                    hint="This is to identify the product"
+                                    persistent-hint
+                                ></v-text-field>
+                            </validation-provider>
+                        </v-card-text>
+                        <v-divider></v-divider>
 
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-show="selected.length == 1"
-                @click="editItem"
-                v-on="on"
-                icon
-              >
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-            </template>
-            <span>Edit</span>
-          </v-tooltip>
-        </v-toolbar>
-      </template>
-      <template v-slot:item.updated_at="{ item }">
-        {{ item.updated_at | moment("from") }}
-      </template>
-    </v-data-table>
+                        <v-card-actions>
+                            <v-btn color="blue darken-1" text @click="close"
+                                >Cancel</v-btn
+                            >
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                :disabled="invalid || !validated || !!loading"
+                                type="submit"
+                                color="primary"
+                                large
+                                >Save</v-btn
+                            >
+                        </v-card-actions>
+                    </v-card>
+                </v-form>
+            </validation-observer>
+        </v-dialog>
 
-    <v-dialog v-model="dialog" max-width="500px">
-      <validation-observer
-        ref="form"
-        v-slot="{ invalid, validated, handleSubmit }"
-      >
-        <v-form @submit.prevent="handleSubmit(save())">
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-            <v-divider></v-divider>
+        <v-dialog v-model="deleteDialog" max-width="290" persistent scrollable>
+            <v-card :loading="!!loading">
+                <v-card-title>Confirmation</v-card-title>
+                <v-divider></v-divider>
 
-            <v-card-text>
-              <validation-provider
-                name="name"
-                rules="required|min:3"
-                v-slot="{ errors, valid }"
-              >
-                <v-text-field
-                  label="Product name"
-                  name="name"
-                  type="text"
-                  v-model="form.name"
-                  :error-messages="errors"
-                  :success="valid"
-                  counter
-                  hint="This is to identify the product"
-                  persistent-hint
-                ></v-text-field>
-              </validation-provider>
-            </v-card-text>
-            <v-divider></v-divider>
+                <v-card-text class="pt-2" style="max-height: 300px;">
+                    Are you sure to delete
+                    {{
+                        singleSelect
+                            ? "this product ?"
+                            : `these ${selected.length} products ?`
+                    }}
 
-            <v-card-actions>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                :disabled="invalid || !validated || !!loading"
-                type="submit"
-                color="primary"
-                large
-                >Save</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-form>
-      </validation-observer>
-    </v-dialog>
+                    <v-chip-group column small active-class="primary--text">
+                        <v-chip v-for="item in selected" :key="item.id">
+                            {{ item.name }}
+                        </v-chip>
+                    </v-chip-group>
+                </v-card-text>
 
-    <v-dialog v-model="deleteDialog" max-width="290" scrollable>
-      <v-card>
-        <v-card-title>Confirmation</v-card-title>
-        <v-divider></v-divider>
-
-        <v-card-text class="pt-2" style="max-height: 300px;">
-          Are you sure to delete
-          {{
-            singleSelect
-              ? "this product ?"
-              : `these ${selected.length} products ?`
-          }}
-
-          <v-chip-group column small active-class="primary--text">
-            <v-chip v-for="item in selected" :key="item.id">
-              {{ item.name }}
-            </v-chip>
-          </v-chip-group>
-        </v-card-text>
-
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-btn color="darken-1" @click="deleteDialog = false" text>
-            Cancel
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="red" @click="deleteItem" dark large>
-            Yes, sure
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-col>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-btn color="darken-1" @click="deleteDialog = false" text>
+                        Cancel
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        :disabled="!!loading"
+                        @click="deleteItem"
+                        color="red"
+                        dark
+                        large
+                    >
+                        Yes, sure
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </v-col>
 </template>
 
 <script>
-import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { mapState, mapActions } from "vuex";
 import { actions } from "@/store/product/types";
 import { map, cloneDeep } from "lodash";
 import Product from "@/models/product";
 
-const { GET_PRODUCTS } = actions;
+const { GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS } = actions;
 
 export default {
-  name: "Product",
-  components: {
-    ValidationProvider,
-    ValidationObserver
-  },
-  data() {
-    return {
-      dense: true,
-      searchBox: false,
-      search: "",
-      total: 0,
-      options: {},
-      selected: [],
-      headers: [
-        {
-          text: "Name",
-          // align: "start",
-          // sortable: false,
-          value: "name"
+    name: "Product",
+    data() {
+        return {
+            dense: true,
+            searchBox: false,
+            search: "",
+            total: 0,
+            options: {},
+            selected: [],
+            headers: [
+                {
+                    text: "Name",
+                    // align: "start",
+                    // sortable: false,
+                    value: "name"
+                },
+                { text: "Creator", value: "creator" },
+                { text: "Updated At", value: "updated_at" }
+            ],
+            dialog: false,
+            deleteDialog: false,
+            form: cloneDeep(Product)
+        };
+    },
+    computed: {
+        ...mapState("app", ["loading"]),
+        ...mapState("product", ["products"]),
+        formTitle() {
+            return this.form.id === -1 ? "New Item" : "Edit Item";
         },
-        { text: "Creator", value: "creator" },
-        { text: "Updated At", value: "updated_at" }
-      ],
-      dialog: false,
-      deleteDialog: false,
-      form: cloneDeep(Product)
-    };
-  },
-  computed: {
-    ...mapState("app", ["loading"]),
-    ...mapState("product", ["products"]),
-    formTitle() {
-      return this.form.id === -1 ? "New Item" : "Edit Item";
+        singleSelect() {
+            return this.selected.length === 1;
+        }
     },
-    singleSelect() {
-      return this.selected.length === 1;
+    methods: {
+        ...mapActions("product", [GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS]),
+        fetch() {
+            this.GET_PRODUCTS(this.options).then(total => {
+                this.total = total;
+            });
+        },
+        toggleSearchBox() {
+            this.searchBox = !this.searchBox;
+            if (!this.searchBox) {
+                this.search = "";
+            }
+        },
+        editItem() {
+            this.form = cloneDeep(this.selected[0]);
+            this.dialog = true;
+        },
+        deleteItem() {
+            const ids = map(this.selected, "id");
+            this.DELETE_PRODUCTS(ids).then(_ => {
+                this.deleteDialog = false;
+            });
+        },
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => {
+                this.form = cloneDeep(Product);
+                this.$refs.form.reset();
+            });
+        },
+        save() {
+            this.SAVE_PRODUCT(this.form).then(_ => {
+                this.close();
+            });
+        }
+    },
+    mounted() {
+        this.fetch();
+    },
+    watch: {
+        // options: {
+        //     handler() {
+        //         this.fetch();
+        //     },
+        //     deep: true
+        // }
+        // dialog(val) {
+        //     val || this.close();
+        // }
     }
-  },
-  methods: {
-    ...mapActions("product", [GET_PRODUCTS]),
-    fetch() {
-      this.GET_PRODUCTS(this.options).then(total => {
-        this.total = total;
-      });
-    },
-    toggleSearchBox() {
-      this.searchBox = !this.searchBox;
-      if (!this.searchBox) {
-        this.search = "";
-      }
-    },
-    editItem() {
-      const item = this.selected[0];
-      this.form = cloneDeep(item);
-      this.dialog = true;
-    },
-    deleteItem() {
-      const ids = map(this.selected, "id");
-      console.log(ids);
-
-      // this.products.splice(index, 1);
-      this.deleteDialog = false;
-    },
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.form = cloneDeep(Product);
-      });
-    },
-    save() {
-      if (this.form.id > -1) {
-        console.log("updating...");
-        // Object.assign(this.products[this.form.id], this.form);
-      } else {
-        console.log("creating...");
-        // this.products.push(this.form);
-      }
-      this.close();
-    }
-  },
-  mounted() {
-    this.fetch();
-  },
-  watch: {
-    // options: {
-    //     handler() {
-    //         this.fetch();
-    //     },
-    //     deep: true
-    // }
-    // dialog(val) {
-    //     val || this.close();
-    // }
-  }
 };
 </script>
 

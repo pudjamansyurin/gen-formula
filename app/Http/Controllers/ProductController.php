@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return new ProductCollection(Product::with('user:id,name')->paginate(10));
+        return new ProductCollection(Product::with('user:id,name')->paginate());
     }
 
     /**
@@ -27,16 +27,28 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return response('', Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function show($product)
+    public function show(Product $product)
+    {
+        return response($product, Response::HTTP_OK);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Product $product)
     {
         return response($product, Response::HTTP_OK);
     }
@@ -44,11 +56,11 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        return response($product, Response::HTTP_OK);
     }
 }

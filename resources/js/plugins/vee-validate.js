@@ -1,6 +1,8 @@
+import Vue from "vue";
 import * as rules from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
 import { messages } from "vee-validate/dist/locale/en.json";
+import { ValidationProvider, ValidationObserver } from "vee-validate";
 
 Object.keys(rules).forEach(rule => {
     extend(rule, {
@@ -8,3 +10,6 @@ Object.keys(rules).forEach(rule => {
         message: messages[rule] // assign message
     });
 });
+
+Vue.component("ValidationProvider", ValidationProvider);
+Vue.component("ValidationObserver", ValidationObserver);

@@ -1,9 +1,13 @@
 import { actions, mutations } from "./types";
-import { view } from "@/api/model";
+import * as api from "@/api/model";
+import store from "../index";
+
+const model = "product";
 
 export default {
     [actions.GET_PRODUCTS]({ commit }, options) {
-        return view("product")
+        return api
+            .viewAny(model)
             .then(data => {
                 const { data: products, meta } = data;
                 const { total, per_page, current_page } = meta;
@@ -22,6 +26,23 @@ export default {
                 // };
 
                 return total;
+            })
+            .catch(e => {});
+    },
+    [actions.SAVE_PRODUCT]({ commit }, payload) {
+        const action = payload.id > -1 ? "update" : "create";
+
+        return api[action](model, payload)
+            .then(data => {
+                console.log(data);
+            })
+            .catch(e => {});
+    },
+    [actions.DELETE_PRODUCTS]({ commit }, ids) {
+        return api
+            .remove(model, ids)
+            .then(data => {
+                console.log(data);
             })
             .catch(e => {});
     }

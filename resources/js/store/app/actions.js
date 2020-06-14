@@ -15,7 +15,7 @@ export default {
 
                 // redirect
                 const { redirect } = router.currentRoute.query;
-                router.push("/app");
+                router.push({ path: redirect || "/app" });
             })
             .catch(error => {
                 commit(mutations.STOP_LOADING);
@@ -27,7 +27,7 @@ export default {
             });
     },
     [actions.LOGOUT]({ commit }) {
-        logout().then(() => {
+        logout().then(_ => {
             commit(mutations.CLEAR_AUTH);
             // redirect
             router.push({ name: "login" });
