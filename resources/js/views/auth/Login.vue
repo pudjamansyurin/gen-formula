@@ -19,8 +19,8 @@
             <v-text-field
               label="Email"
               name="email"
-              v-model="form.email"
               type="email"
+              v-model="form.email"
               :error-messages="errors"
               :success="valid"
               prepend-icon="mdi-account"
@@ -58,9 +58,9 @@
 
           <v-spacer></v-spacer>
           <v-btn
+            :disabled="invalid || !validated || !!loading"
             type="submit"
             color="primary"
-            :disabled="invalid || !validated || !!loading"
             large
             >Login</v-btn
           >

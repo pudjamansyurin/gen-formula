@@ -110,28 +110,52 @@
     </v-data-table>
 
     <v-dialog v-model="dialog" max-width="500px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">{{ formTitle }}</span>
-        </v-card-title>
-        <v-divider></v-divider>
+      <validation-observer
+        ref="form"
+        v-slot="{ invalid, validated, handleSubmit }"
+      >
+        <v-form @submit.prevent="handleSubmit(save())">
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
+            <v-divider></v-divider>
 
-        <v-card-text>
-          <v-text-field
-            v-model="editedItem.name"
-            label="Product name"
-            hint="This is to identify the product"
-            persistent-hint
-          ></v-text-field>
-        </v-card-text>
-        <v-divider></v-divider>
+            <v-card-text>
+              <validation-provider
+                name="name"
+                rules="required|min:3"
+                v-slot="{ errors, valid }"
+              >
+                <v-text-field
+                  label="Product name"
+                  name="name"
+                  type="text"
+                  v-model="form.name"
+                  :error-messages="errors"
+                  :success="valid"
+                  counter
+                  hint="This is to identify the product"
+                  persistent-hint
+                ></v-text-field>
+              </validation-provider>
+            </v-card-text>
+            <v-divider></v-divider>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-          <v-btn @click="save" color="green" dark>Save</v-btn>
-        </v-card-actions>
-      </v-card>
+            <v-card-actions>
+              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                :disabled="invalid || !validated || !!loading"
+                type="submit"
+                color="primary"
+                large
+                >Save</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </validation-observer>
     </v-dialog>
 
     <v-dialog v-model="deleteDialog" max-width="290" scrollable>
@@ -156,13 +180,11 @@
 
         <v-divider></v-divider>
         <v-card-actions>
-          <v-spacer></v-spacer>
-
           <v-btn color="darken-1" @click="deleteDialog = false" text>
             Cancel
           </v-btn>
-
-          <v-btn color="red" @click="deleteItem" dark>
+          <v-spacer></v-spacer>
+          <v-btn color="red" @click="deleteItem" dark large>
             Yes, sure
           </v-btn>
         </v-card-actions>
@@ -172,14 +194,20 @@
 </template>
 
 <script>
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { mapState, mapActions } from "vuex";
 import { actions } from "@/store/product/types";
-import { map } from "lodash";
+import { map, cloneDeep } from "lodash";
+import Product from "@/models/product";
 
 const { GET_PRODUCTS } = actions;
 
 export default {
   name: "Product",
+  components: {
+    ValidationProvider,
+    ValidationObserver
+  },
   data() {
     return {
       dense: true,
@@ -200,20 +228,14 @@ export default {
       ],
       dialog: false,
       deleteDialog: false,
-      editedIndex: -1,
-      defaultItem: {
-        name: ""
-      },
-      editedItem: {
-        name: ""
-      }
+      form: cloneDeep(Product)
     };
   },
   computed: {
     ...mapState("app", ["loading"]),
     ...mapState("product", ["products"]),
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.form.id === -1 ? "New Item" : "Edit Item";
     },
     singleSelect() {
       return this.selected.length === 1;
@@ -234,13 +256,12 @@ export default {
     },
     editItem() {
       const item = this.selected[0];
-      this.editedIndex = item.id;
-      this.editedItem = Object.assign({}, item);
+      this.form = cloneDeep(item);
       this.dialog = true;
     },
     deleteItem() {
-      const indexes = map(this.selected, "id");
-      console.log(indexes);
+      const ids = map(this.selected, "id");
+      console.log(ids);
 
       // this.products.splice(index, 1);
       this.deleteDialog = false;
@@ -248,17 +269,16 @@ export default {
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
+        this.form = cloneDeep(Product);
       });
     },
     save() {
-      if (this.editedIndex > -1) {
+      if (this.form.id > -1) {
         console.log("updating...");
-        // Object.assign(this.products[this.editedIndex], this.editedItem);
+        // Object.assign(this.products[this.form.id], this.form);
       } else {
         console.log("creating...");
-        // this.products.push(this.editedItem);
+        // this.products.push(this.form);
       }
       this.close();
     }
