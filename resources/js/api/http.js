@@ -19,7 +19,8 @@ export const http = axios.create({
 });
 
 // http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-// http.defaults.headers.post["Content-Type"] = "application/json";
+http.defaults.headers.common["Content-Type"] = "application/json";
+http.defaults.headers.common["Accept"] = "application/json";
 
 /*
  * Add a request interceptor

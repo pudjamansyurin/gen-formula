@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resources([
+    Route::apiResources([
         'user' => 'UserController',
         'product' => 'ProductController',
         // 'formula' => 'FormulaController',
+    ], [
+        'except' => ['update']
     ]);
 });

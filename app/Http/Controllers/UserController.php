@@ -6,6 +6,7 @@ use App\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -64,19 +65,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json($user, 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
+        return response($user, Response::HTTP_OK);
     }
 
     /**
@@ -87,6 +76,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        return response()->json(['success' => 'User deleted successfully.']);
+        return response(['success' => 'User deleted successfully.']);
     }
 }
