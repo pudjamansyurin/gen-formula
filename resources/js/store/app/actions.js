@@ -7,15 +7,15 @@ export default {
         commit(mutations.START_LOADING);
         return login(payload)
             .then(response => {
+                const { user } = response.data;
+                const { remember } = payload;
+
                 commit(mutations.STOP_LOADING);
-                commit(mutations.SET_AUTH, response.data);
+                commit(mutations.SET_AUTH, { user, remember });
+
                 // redirect
                 const { redirect } = router.currentRoute.query;
-                if (redirect) {
-                    router.push({ path: redirect });
-                } else {
-                    router.push({ name: "report" });
-                }
+                router.push("/app");
             })
             .catch(error => {
                 commit(mutations.STOP_LOADING);

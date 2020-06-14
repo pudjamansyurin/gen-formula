@@ -1,7 +1,6 @@
 export const actions = {
     LOGIN: "LOGIN",
-    LOGOUT: "LOGOUT",
-    CHECK: "CHECK"
+    LOGOUT: "LOGOUT"
 };
 
 export const mutations = {
@@ -14,6 +13,5 @@ export const mutations = {
     SET_MESSAGE: "SET_MESSAGE",
     CLEAR_MESSAGE: "CLEAR_MESSAGE",
     SET_AUTH: "SET_AUTH",
-    CLEAR_AUTH: "CLEAR_AUTH",
-    SET_REMEMBER: "SET_REMEMBER"
+    CLEAR_AUTH: "CLEAR_AUTH"
 };

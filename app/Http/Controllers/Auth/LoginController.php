@@ -39,19 +39,4 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
-    /**
-     * The user has been authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
-    protected function authenticated(Request $request, $user)
-    {
-        $user->forceFill([
-            'last_at' => Carbon::now()->toDateTimeString(),
-            'last_ip' => $request->getClientIp()
-        ])->save();
-    }
 }

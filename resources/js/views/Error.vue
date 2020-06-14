@@ -22,53 +22,59 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { mutations } from '@/store/app/types'
+import { mapState, mapMutations } from "vuex";
+import { mutations } from "@/store/app/types";
 
-const { SET_ERROR } = mutations
+const { CLEAR_ERROR, CLEAR_MESSAGE } = mutations;
 
 export default {
-    name: "Error",
-    props: {
-        code: { default: 404 },
-        text: { default: null}
+  name: "Error",
+  props: {
+    code: { default: 404 },
+    text: { default: null }
+  },
+  data() {
+    return {
+      errors: {
+        404: "Page not found",
+        401: "Unauthorized access"
+      }
+    };
+  },
+  computed: {
+    ...mapState("app", ["error"]),
+    error_code: function() {
+      if (this.error.code) {
+        return this.error.code;
+      }
+      return this.errors[this.code] ? this.code : null;
     },
-    data() {
-        return {
-            errors: {
-                404: "Page not found",
-                401: "Unauthorized access"
-            }
-        };
+    error_text: function() {
+      return (
+        this.error.text ||
+        this.text ||
+        this.errors[this.code] ||
+        "Opps, something not right"
+      );
     },
-    computed: {
-        ...mapState('app', ['error']),
-        error_code: function(){
-            if(this.error.code ){
-                return this.error.code
-            }
-            return this.errors[this.code] ? this.code : null
-        },
-        error_text: function () {
-            return this.error.text || this.text || this.errors[this.code] || "Opps, something not right"
-        },
-        direct: function() {
-            return window.history.length <= 2;
-        }
-    },
-    methods: {
-        ...mapMutations('app', [SET_ERROR]),
-        handleBack: function() {
-            if (this.direct) {
-                this.$router.replace({ name: "login" });
-            } else {
-                this.$router.back();
-            }
-        }
-    },
-    beforeDestroy() {
-        this.SET_ERROR({});
-    },
+    direct: function() {
+      return window.history.length <= 2;
+    }
+  },
+  methods: {
+    ...mapMutations("app", [CLEAR_ERROR, CLEAR_MESSAGE]),
+    handleBack: function() {
+      if (this.direct) {
+        this.$router.replace({ name: "login" });
+      } else {
+        this.$router.back();
+      }
+    }
+  },
+  beforeDestroy() {
+    this.CLEAR_MESSAGE();
+    this.CLEAR_ERROR();
+  }
 };
 </script>
 

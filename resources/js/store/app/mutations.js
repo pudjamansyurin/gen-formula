@@ -38,33 +38,27 @@ export default {
             type: "info"
         };
     },
-    [mutations.SET_AUTH](state, { user, token }) {
+    [mutations.SET_AUTH](state, { user, remember }) {
         const { email, password } = user;
 
         state.auth = {
-            ...state.auth,
             email,
             password,
-            token
+            remember,
+            authenticated: true
         };
 
-        // save token, based on remember
-        if (state.auth.remember) {
-            ls.set("auth.token", token);
-        }
+        ls.set("auth.remember", remember);
+        ls.set("auth.authenticated", true);
     },
     [mutations.CLEAR_AUTH](state) {
         state.auth = {
             ...state.auth,
             email: "",
             password: "",
-            token: ""
+            authenticated: false
         };
-        ls.remove("auth.token");
-    },
-    [mutations.SET_REMEMBER](state, remember) {
-        state.auth.remember = remember;
 
-        ls.set("auth.remember", remember);
+        ls.remove("auth.authenticated");
     }
 };

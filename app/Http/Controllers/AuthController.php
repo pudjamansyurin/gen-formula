@@ -2,39 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
+use App\Traits\ThrottlesLogins;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // /**
-    //  * See: https://github.com/laravel/airlock#authenticating-mobile-applications.
-    //  * @param Request $request
-    //  * @return mixed
-    //  * @throws ValidationException
-    //  */
-    // public function login(Request $request)
-    // {
-    //     // validate inputs
-    //     // $this->validator($request->all())->validate();
-
-    //     // $user = User::where('email', $request->email)->first();
-    //     // if (!$user) {
-    //     //     throw ValidationException::withMessages([
-    //     //         'email' => ['The provided credentials are incorrect.'],
-    //     //     ]);
-    //     // }
-
-    //     // if (!Hash::check($request->password, $user->password)) {
-    //     //     throw ValidationException::withMessages([
-    //     //         'password' => ['The provided credentials are incorrect.'],
-    //     //     ]);
-    //     // }
-    // }
+    use ThrottlesLogins;
 
     /**
      * Handle a login request to the application.
@@ -46,61 +23,87 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // Fields validation
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $this->validateLogin($request);
 
-        // Authentication
-        $user = User::where('email', $request->email)->first();
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if (
+            method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)
+        ) {
+            $this->fireLockoutEvent($request);
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => 'The provided credentials are incorrect.',
-            ], 422);
+            return $this->sendLockoutResponse($request);
         }
 
-        // Authentication passed...
-        $this->authenticated($request, $user);
+        if ($this->attemptLogin($request)) {
+            return $this->sendLoginResponse($request);
+        }
 
-        return response([
-            'user' => $user,
-            'token' => $user->createToken(now())->plainTextToken
-        ], 200);
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
     }
 
     /**
-     * Log a user out.
+     * Validate the user login request.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function logout(Request $request)
+    protected function validateLogin(Request $request)
     {
-        $user = User::where('email', Auth::user()->email)->first();
-
-        $user->tokens()->delete();
-
-        $this->loggedOut($request);
-
-        return response([
-            'message' => 'Logged out successfully'
-        ], 200);
+        $request->validate([
+            $this->username() => 'required|string|email',
+            'password' => 'required|string',
+        ]);
     }
 
     /**
-     * Log a user out.
+     * Attempt to log the user into the application.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
      */
-    public function check()
+    protected function attemptLogin(Request $request)
     {
-        // no validation, already handled by middleware
-        return response([
-            'message' => 'Logged in successfully'
-        ], 200);
+        return $this->guard()->attempt(
+            $this->credentials($request),
+            $request->filled('remember')
+        );
     }
 
+    /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->username(), 'password');
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        return $this->authenticated($request, $this->guard()->user());
+    }
 
     /**
      * The user has been authenticated.
@@ -111,10 +114,50 @@ class AuthController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        // record last login information
         $user->forceFill([
             'last_at' => now(),
             'last_ip' => $request->getClientIp()
         ])->save();
+
+        return response([
+            'user' => $user,
+            'message' => Lang::get('auth.authenticated', [
+                'name' => $user->name
+            ])
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        throw ValidationException::withMessages([
+            'message' => trans('auth.failed'),
+        ]);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return $this->loggedOut($request);
     }
 
     /**
@@ -125,6 +168,28 @@ class AuthController extends Controller
      */
     protected function loggedOut(Request $request)
     {
-        //
+        return response([
+            'message' => trans('auth.logout')
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'email';
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard('web');
     }
 }

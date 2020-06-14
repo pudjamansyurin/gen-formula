@@ -18,8 +18,8 @@ const state = {
     auth: {
         email: "",
         password: "",
-        token: ls.get("auth.token") || "",
-        remember: ls.get("auth.remember") || false
+        remember: ls.get("auth.remember") || false,
+        authenticated: ls.get("auth.authenticated") || false
     }
 };
 

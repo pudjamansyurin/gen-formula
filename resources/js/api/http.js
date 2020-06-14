@@ -1,7 +1,6 @@
 /*
  * This is the initial API interface
  * we set the base URL for the API
- * store the token in local storage
  * append the token to all requests
  ? Both request & response are logged to the console.
  ! Remove the console logs for production.
@@ -15,12 +14,12 @@ import { mutations } from "@/store/app/types";
 import { ns } from "@/helpers";
 
 export const http = axios.create({
-    baseURL: `${config.APP_URL}/api`,
+    baseURL: `${config.APP_URL}/`,
     withCredentials: true // required to handle the CSRF token
 });
 
-http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-http.defaults.headers.post["Content-Type"] = "application/json";
+// http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+// http.defaults.headers.post["Content-Type"] = "application/json";
 
 /*
  * Add a request interceptor
@@ -29,8 +28,8 @@ http.defaults.headers.post["Content-Type"] = "application/json";
 http.interceptors.request.use(
     config => {
         // get token, if user doesn't logout yet
-        const { token } = store.state.app.auth;
-        config.headers.Authorization = token ? `Bearer ${token}` : null;
+        // const { token } = store.state.app.auth;
+        // config.headers.Authorization = token ? `Bearer ${token}` : null;
 
         store.commit(ns("app", mutations.START_LOADING));
         store.commit(ns("app", mutations.CLEAR_ERROR));
@@ -69,7 +68,7 @@ http.interceptors.response.use(
         const { response } = error;
         const { status: code, statusText: text, data } = response;
         const { message } = data;
-        const { token } = store.state.app.auth;
+        const { authenticated } = store.state.app.auth;
 
         console.error(response);
         store.commit(ns("app", mutations.STOP_LOADING));
@@ -90,10 +89,10 @@ http.interceptors.response.use(
 
         // redirect
         if (![422].includes(code)) {
-            if (token && code === 401) {
-                // remove token
+            if (authenticated && code === 401) {
+                // remove session
                 store.commit(ns("app", mutations.CLEAR_AUTH));
-                // token expired
+                // session expired
                 router.push({
                     name: "login",
                     query: {
