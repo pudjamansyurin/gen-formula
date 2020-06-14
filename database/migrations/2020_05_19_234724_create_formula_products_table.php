@@ -15,10 +15,10 @@ class CreateFormulaProductsTable extends Migration
     {
         Schema::create('formula_products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('formula_id');
-            $table->unsignedBigInteger('product_id');
+            $table->foreignId('formula_id');
+            $table->foreignId('product_id');
             $table->integer('portion');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
 

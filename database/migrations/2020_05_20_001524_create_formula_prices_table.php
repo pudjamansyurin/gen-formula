@@ -15,9 +15,9 @@ class CreateFormulaPricesTable extends Migration
     {
         Schema::create('formula_prices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('formula_id');
+            $table->foreignId('formula_id');
             $table->double('total');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
 
