@@ -40,7 +40,7 @@ export default {
     },
     [actions.DELETE_PRODUCTS]({ commit }, ids) {
         return api
-            .remove(model, ids)
+            .destroy(model, ids)
             .then(data => {
                 console.log(data);
             })

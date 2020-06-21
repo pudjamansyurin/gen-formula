@@ -19,5 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'user' => 'UserController',
         'product' => 'ProductController',
         // 'formula' => 'FormulaController',
+    ], [
+        'except' => ['']
     ]);
 });

@@ -16,7 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return new ProductCollection(Product::with('user:id,name')->paginate());
+        $q = Product::with('user:id,name')->paginate();
+        return new ProductCollection($q);
     }
 
     /**
@@ -27,7 +28,19 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        return response('', Response::HTTP_CREATED);
+        $request->validate([
+            'name'          => 'required|min:3',
+            'description'   => 'required|min:5'
+        ]);
+
+        $product = Product::create(
+            array_merge(
+                $request->all(),
+                ['user_id' => auth()->id()]
+            )
+        );
+
+        return response($product, Response::HTTP_CREATED);
     }
 
     /**
@@ -59,8 +72,8 @@ class ProductController extends Controller
      * @param  \App\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Request $request, Product $product)
     {
-        return response($product, Response::HTTP_OK);
+        return response($request, Response::HTTP_OK);
     }
 }

@@ -26,14 +26,15 @@ const update = async (model, payload) => {
     });
 };
 
-const remove = async (model, ids) => {
+const destroy = async (model, ids) => {
+    const multiple = ids.length > 1;
+    const data = multiple ? { ids } : null;
+
     return await http
-        .delete(`api/${model}/${ids}`, {
-            ids
-        })
+        .delete(`api/${model}/${ids[0]}`, { data })
         .then(response => {
             return response.data;
         });
 };
 
-export { viewAny, create, view, update, remove };
+export { viewAny, create, view, update, destroy };

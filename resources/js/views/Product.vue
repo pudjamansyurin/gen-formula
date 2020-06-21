@@ -16,25 +16,14 @@
                 <v-toolbar :dark="!!selected.length" flat>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length"
-                                @click="selected = []"
-                                v-on="on"
-                                icon
-                            >
+                            <v-btn v-show="selected.length" @click="selected = []" v-on="on" icon>
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </template>
                         <span>Cancel</span>
                     </v-tooltip>
 
-                    <v-toolbar-title>
-                        {{
-                            selected.length
-                                ? `${selected.length} selected`
-                                : "Products"
-                        }}
-                    </v-toolbar-title>
+                    <v-toolbar-title>{{toolbarTitle}}</v-toolbar-title>
                     <v-divider class="mx-4" inset vertical></v-divider>
 
                     <v-spacer></v-spacer>
@@ -57,11 +46,7 @@
                                 v-on="on"
                                 icon
                             >
-                                <v-icon>{{
-                                    searchBox
-                                        ? "mdi-magnify-close"
-                                        : "mdi-magnify"
-                                }}</v-icon>
+                                <v-icon>mdi-magnify{{ searchBox ? "-close" : "" }}</v-icon>
                             </v-btn>
                         </template>
                         <span>Search</span>
@@ -69,12 +54,7 @@
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="dialog = true"
-                                v-on="on"
-                                icon
-                            >
+                            <v-btn v-show="!selected.length" @click="dialog = true" v-on="on" icon>
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                         </template>
@@ -97,12 +77,7 @@
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length == 1"
-                                @click="editItem"
-                                v-on="on"
-                                icon
-                            >
+                            <v-btn v-show="selected.length == 1" @click="editItem" v-on="on" icon>
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                         </template>
@@ -110,16 +85,11 @@
                     </v-tooltip>
                 </v-toolbar>
             </template>
-            <template v-slot:item.updated_at="{ item }">
-                {{ item.updated_at | moment("from") }}
-            </template>
+            <template v-slot:item.updated_at="{ item }">{{ item.updated_at | moment("from") }}</template>
         </v-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
-            <validation-observer
-                v-slot="{ invalid, validated, handleSubmit }"
-                ref="form"
-            >
+            <validation-observer v-slot="{ invalid, validated, handleSubmit }" ref="form">
                 <v-form @submit.prevent="handleSubmit(save())">
                     <v-card :loading="!!loading">
                         <v-card-title>
@@ -145,21 +115,36 @@
                                     persistent-hint
                                 ></v-text-field>
                             </validation-provider>
-                        </v-card-text>
-                        <v-divider></v-divider>
 
-                        <v-card-actions>
-                            <v-btn color="blue darken-1" text @click="close"
-                                >Cancel</v-btn
+                            <validation-provider
+                                name="description"
+                                rules="required|min:5"
+                                v-slot="{ errors, valid }"
                             >
+                                <v-text-field
+                                    label="Product description"
+                                    name="description"
+                                    type="text"
+                                    v-model="form.description"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    counter
+                                    hint="Short description about the product"
+                                    persistent-hint
+                                ></v-text-field>
+                            </validation-provider>
+                        </v-card-text>
+
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
                             <v-spacer></v-spacer>
                             <v-btn
                                 :disabled="invalid || !validated || !!loading"
                                 type="submit"
                                 color="primary"
                                 large
-                                >Save</v-btn
-                            >
+                            >Save</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-form>
@@ -172,25 +157,15 @@
                 <v-divider></v-divider>
 
                 <v-card-text class="pt-2" style="max-height: 300px;">
-                    Are you sure to delete
-                    {{
-                        singleSelect
-                            ? "this product ?"
-                            : `these ${selected.length} products ?`
-                    }}
-
+                    Are you sure to delete {{ formDeleteContent }}
                     <v-chip-group column small active-class="primary--text">
-                        <v-chip v-for="item in selected" :key="item.id">
-                            {{ item.name }}
-                        </v-chip>
+                        <v-chip v-for="item in selected" :key="item.id">{{ item.name }}</v-chip>
                     </v-chip-group>
                 </v-card-text>
 
                 <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn color="darken-1" @click="deleteDialog = false" text>
-                        Cancel
-                    </v-btn>
+                    <v-btn color="darken-1" @click="deleteDialog = false" text>Cancel</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
                         :disabled="!!loading"
@@ -198,9 +173,7 @@
                         color="red"
                         dark
                         large
-                    >
-                        Yes, sure
-                    </v-btn>
+                    >Yes, sure</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -221,33 +194,44 @@ export default {
         return {
             dense: true,
             searchBox: false,
-            search: "",
+            dialog: false,
+            deleteDialog: false,
             total: 0,
+            search: "",
             options: {},
             selected: [],
             headers: [
-                {
-                    text: "Name",
-                    // align: "start",
-                    // sortable: false,
-                    value: "name"
-                },
+                { text: "Name", value: "name" },
+                { text: "Description", value: "description" },
                 { text: "Creator", value: "creator" },
                 { text: "Updated At", value: "updated_at" }
             ],
-            dialog: false,
-            deleteDialog: false,
             form: cloneDeep(Product)
         };
     },
     computed: {
         ...mapState("app", ["loading"]),
         ...mapState("product", ["products"]),
-        formTitle() {
-            return this.form.id === -1 ? "New Item" : "Edit Item";
+        toolbarTitle() {
+            const { length } = this.selected;
+
+            if (length > 0) {
+                return `${length} selected`;
+            }
+            return "Products";
         },
-        singleSelect() {
-            return this.selected.length === 1;
+        formTitle() {
+            const { id } = this.form;
+            return id === -1 ? "New Item" : "Edit Item";
+        },
+        formDeleteContent() {
+            const { length } = this.selected;
+            const single = length === 1;
+
+            if (single) {
+                return "this product ?";
+            }
+            return `these ${length} products ?`;
         }
     },
     methods: {

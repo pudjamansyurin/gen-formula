@@ -17,6 +17,7 @@ class Product extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
             'creator' => $this->whenLoaded('user', function () {
                 return $this->user->name;
             }),

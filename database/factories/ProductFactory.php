@@ -13,6 +13,7 @@ $factory->define(Product::class, function (Faker $faker) {
 
     return [
         'name' => $faker->unique()->word,
+        'description' => $faker->sentence,
         'created_at' => $faker->dateTimeBetween('-6 days', 'this week'),
         'user_id' => Arr::random($user_ids),
     ];
