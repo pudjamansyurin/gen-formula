@@ -5,12 +5,14 @@ import store from "../index";
 const model = "product";
 
 export default {
-    [actions.GET_PRODUCTS]({ commit }, options) {
+    [actions.GET_PRODUCTS]({ commit }, params) {
         return api
-            .viewAny(model, options)
+            .viewAny(model, params)
             .then(data => {
                 const { data: products, meta } = data;
-                const { total, per_page, current_page } = meta;
+                const { total } = meta;
+
+                console.log(data);
 
                 commit(mutations.SET_PRODUCTS, products);
 

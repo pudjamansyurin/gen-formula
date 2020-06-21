@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Resources\ProductCollection;
-use App\Http\Resources\Product as ProductItem;
+use App\Http\Resources\ProductItem;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,10 +18,69 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        debug($request);
+        // default parameters
+        $page = 1;
+        $itemsPerPage = 10;
+        $sortBy = "updated_at";
+        $sortDesc = true;
 
-        $q = Product::paginate();
-        return new ProductCollection($q);
+        // client side parameters request
+        $options = json_decode($request->input('options'));
+        $search = $request->input('search');
+        debug($options);
+        debug($search);
+
+        if ($options) {
+            $page = $options->page;
+            $itemsPerPage = $options->itemsPerPage;
+            if (count($options->sortBy)) {
+                $sortBy = $options->sortBy[0];
+                $sortDesc = $options->sortDesc[0];
+            }
+        }
+
+        // Make product instance
+        $q = new Product();
+        $total = $q->count();
+
+        // filtering
+        if ($search) {
+            $fields = ['name', 'description'];
+            $relations = ['user' => ['name']];
+
+            // handle this model
+            $q = $q->where(function ($q) use ($fields, $search) {
+                foreach ($fields as $field) {
+                    $q->orWhere($field, 'LIKE', "%{$search}%");
+                }
+            });
+            // handle model relations
+            foreach ($relations as $relation => $fields) {
+                $q = $q->orWhereHas($relation, function ($q) use ($fields, $search) {
+                    $q->where(function ($q) use ($fields, $search) {
+                        foreach ($fields as $field) {
+                            $q->orWhere($field, 'LIKE', "%{$search}%");
+                        }
+                    });
+                });
+            };
+            // update total records
+            $total = $q->count();
+        }
+        // paginating
+        if ($itemsPerPage > 0) {
+            $q = $q->take($itemsPerPage)->skip(($page - 1) * $itemsPerPage);
+        }
+        // ordering
+        if (isset($sortBy)) {
+            $q = $q->orderBy($sortBy, $sortDesc ? 'desc' : 'asc');
+        }
+
+        return (new ProductCollection($q->get()))->additional([
+            'meta' => [
+                'total' => $total
+            ]
+        ]);
     }
 
     /**

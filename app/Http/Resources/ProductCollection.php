@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\Product as ProductItem;
+use App\Http\Resources\ProductItem;
 
 class ProductCollection extends ResourceCollection
 {
@@ -16,7 +16,7 @@ class ProductCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' =>  ProductItem::collection($this->collection)
+            'data' =>  ProductItem::collection($this->collection),
         ];
     }
 }

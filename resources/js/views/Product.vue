@@ -28,7 +28,7 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-scroll-x-transition>
+                    <v-slide-x-reverse-transition>
                         <v-text-field
                             v-show="!selected.length && searchBox"
                             v-model="search"
@@ -36,7 +36,7 @@
                             single-line
                             hide-details
                         ></v-text-field>
-                    </v-scroll-x-transition>
+                    </v-slide-x-reverse-transition>
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -175,7 +175,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { actions } from "@/store/product/types";
-import { map, cloneDeep } from "lodash";
+import { map, cloneDeep, debounce } from "lodash";
 import Product from "@/models/product";
 
 const { GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS } = actions;
@@ -195,7 +195,11 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
-                { text: "Creator", value: "creator" },
+                {
+                    text: "Creator",
+                    value: "creator",
+                    sortable: false
+                },
                 { text: "Updated At", value: "updated_at" }
             ],
             form: cloneDeep(Product)
@@ -229,7 +233,10 @@ export default {
     methods: {
         ...mapActions("product", [GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS]),
         fetch() {
-            this.GET_PRODUCTS(this.options).then(total => {
+            const { options, search } = this;
+            const params = { options, search };
+
+            this.GET_PRODUCTS(params).then(total => {
                 this.total = total;
             });
         },
@@ -273,7 +280,10 @@ export default {
                 this.fetch();
             },
             deep: true
-        }
+        },
+        search: debounce(function() {
+            this.fetch();
+        }, 500)
         // dialog(val) {
         //     val || this.close();
         // }
