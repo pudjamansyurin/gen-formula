@@ -1,24 +1,13 @@
 <template>
-    <validation-observer
-        ref="form"
-        v-slot="{ invalid, validated, handleSubmit }"
-    >
+    <validation-observer ref="form" v-slot="{ invalid, handleSubmit }">
         <v-form @submit.prevent="handleSubmit(submit())">
             <v-card class="elevation-1" :loading="!!loading">
-                <v-card-title>
-                    {{ title }}
-                </v-card-title>
-                <v-card-subtitle>
-                    {{ subtitle }}
-                </v-card-subtitle>
+                <v-card-title>{{ title }}</v-card-title>
+                <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
                 <v-divider></v-divider>
 
                 <v-card-text>
-                    <validation-provider
-                        name="email"
-                        rules="required|email"
-                        v-slot="{ errors, valid }"
-                    >
+                    <validation-provider name="email" v-slot="{ errors, valid }">
                         <v-text-field
                             label="Email"
                             name="email"
@@ -31,11 +20,7 @@
                         ></v-text-field>
                     </validation-provider>
 
-                    <validation-provider
-                        name="password"
-                        rules="required"
-                        v-slot="{ errors, valid }"
-                    >
+                    <validation-provider name="password" v-slot="{ errors, valid }">
                         <v-text-field
                             label="Password"
                             name="password"
@@ -52,10 +37,7 @@
                         ></v-text-field>
                     </validation-provider>
 
-                    <v-checkbox
-                        v-model="remember_me"
-                        label="Keep me logged in"
-                    ></v-checkbox>
+                    <v-checkbox v-model="remember_me" label="Keep me logged in"></v-checkbox>
                 </v-card-text>
 
                 <v-card-actions>
@@ -63,12 +45,11 @@
 
                     <v-spacer></v-spacer>
                     <v-btn
-                        :disabled="invalid || !validated || !!loading"
+                        :disabled="invalid || !!loading"
                         type="submit"
                         color="primary"
                         large
-                        >Login</v-btn
-                    >
+                    >Login</v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>

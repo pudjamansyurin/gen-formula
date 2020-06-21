@@ -10,7 +10,6 @@ export default {
                 const { user } = response.data;
                 const { remember } = payload;
 
-                commit(mutations.STOP_LOADING);
                 commit(mutations.SET_AUTH, { user, remember });
 
                 // redirect
@@ -18,18 +17,19 @@ export default {
                 router.push({ path: redirect || "/app" });
             })
             .catch(error => {
-                commit(mutations.STOP_LOADING);
                 if (error.data) {
                     if (error.data.errors) {
                         return Promise.reject(error.data.errors);
                     }
                 }
+            })
+            .then(_ => {
+                commit(mutations.STOP_LOADING);
             });
     },
     [actions.LOGOUT]({ commit }) {
         logout().then(_ => {
             commit(mutations.CLEAR_AUTH);
-            // redirect
             router.push({ name: "login" });
         });
     }

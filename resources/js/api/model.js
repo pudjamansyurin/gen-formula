@@ -27,11 +27,10 @@ const update = async (model, payload) => {
 };
 
 const destroy = async (model, ids) => {
-    const multiple = ids.length > 1;
-    const data = multiple ? { ids } : null;
+    const id = ids[0];
 
     return await http
-        .delete(`api/${model}/${ids[0]}`, { data })
+        .delete(`api/${model}/${id}`, { data: { ids } })
         .then(response => {
             return response.data;
         });

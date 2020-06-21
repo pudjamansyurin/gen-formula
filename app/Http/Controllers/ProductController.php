@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
 use App\Http\Resources\ProductCollection;
 use App\Product;
 use Illuminate\Http\Request;
@@ -26,13 +27,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $request->validate([
-            'name'          => 'required|min:3',
-            'description'   => 'required|min:5'
-        ]);
-
         $product = Product::create(
             array_merge(
                 $request->all(),
@@ -61,8 +57,10 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductStoreRequest $request, Product $product)
     {
+        $product->update($request->all());
+
         return response($product, Response::HTTP_OK);
     }
 
@@ -74,6 +72,11 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, Product $product)
     {
-        return response($request, Response::HTTP_OK);
+        $ids = $request->input('ids');
+        if (is_array($ids)) {
+            Product::destroy($ids);
+        }
+
+        return response($ids, Response::HTTP_OK);
     }
 }

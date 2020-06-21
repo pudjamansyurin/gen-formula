@@ -36,7 +36,13 @@ export default {
             .then(data => {
                 console.log(data);
             })
-            .catch(e => {});
+            .catch(error => {
+                if (error.data) {
+                    if (error.data.errors) {
+                        return Promise.reject(error.data.errors);
+                    }
+                }
+            });
     },
     [actions.DELETE_PRODUCTS]({ commit }, ids) {
         return api

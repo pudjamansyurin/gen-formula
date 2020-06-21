@@ -89,7 +89,7 @@
         </v-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
-            <validation-observer v-slot="{ invalid, validated, handleSubmit }" ref="form">
+            <validation-observer v-slot="{ invalid, handleSubmit }" ref="form">
                 <v-form @submit.prevent="handleSubmit(save())">
                     <v-card :loading="!!loading">
                         <v-card-title>
@@ -98,11 +98,7 @@
                         <v-divider></v-divider>
 
                         <v-card-text>
-                            <validation-provider
-                                name="name"
-                                rules="required|min:3"
-                                v-slot="{ errors, valid }"
-                            >
+                            <validation-provider name="name" v-slot="{ errors, valid }">
                                 <v-text-field
                                     label="Product name"
                                     name="name"
@@ -116,11 +112,7 @@
                                 ></v-text-field>
                             </validation-provider>
 
-                            <validation-provider
-                                name="description"
-                                rules="required|min:5"
-                                v-slot="{ errors, valid }"
-                            >
+                            <validation-provider name="description" v-slot="{ errors, valid }">
                                 <v-text-field
                                     label="Product description"
                                     name="description"
@@ -140,7 +132,7 @@
                             <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
                             <v-spacer></v-spacer>
                             <v-btn
-                                :disabled="invalid || !validated || !!loading"
+                                :disabled="invalid || !!loading"
                                 type="submit"
                                 color="primary"
                                 large
@@ -265,9 +257,13 @@ export default {
             });
         },
         save() {
-            this.SAVE_PRODUCT(this.form).then(_ => {
-                this.close();
-            });
+            this.SAVE_PRODUCT(this.form)
+                .then(_ => {
+                    this.close();
+                })
+                .catch(errors => {
+                    this.$refs.form.setErrors(errors);
+                });
         }
     },
     mounted() {
