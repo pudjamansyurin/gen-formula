@@ -5,5 +5,8 @@ export const actions = {
 };
 
 export const mutations = {
-    SET_PRODUCTS: "SET_PRODUCTS"
+    SET_PRODUCTS: "SET_PRODUCTS",
+    ADD_PRODUCT: "ADD_PRODUCT",
+    UPDATE_PRODUCT: "UPDATE_PRODUCT",
+    DELETE_PRODUCTS: "DELETE_PRODUCTS"
 };

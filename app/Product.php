@@ -25,6 +25,13 @@ class Product extends Model
     protected $hidden = [];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['user'];
+
+    /**
      * Set relation tables.
      */
     public function productPrices()

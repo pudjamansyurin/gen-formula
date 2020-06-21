@@ -1,9 +1,11 @@
 import { http } from "./http";
 
-const viewAny = async model => {
-    return await http.get(`api/${model}`).then(response => {
-        return response.data;
-    });
+const viewAny = async (model, options) => {
+    return await http
+        .get(`api/${model}`, { params: { options } })
+        .then(response => {
+            return response.data;
+        });
 };
 
 const view = async (model, id) => {

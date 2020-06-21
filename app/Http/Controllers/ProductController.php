@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Resources\ProductCollection;
+use App\Http\Resources\Product as ProductItem;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,9 +16,11 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $q = Product::with('user:id,name')->paginate();
+        debug($request);
+
+        $q = Product::paginate();
         return new ProductCollection($q);
     }
 
@@ -36,7 +39,10 @@ class ProductController extends Controller
             )
         );
 
-        return response($product, Response::HTTP_CREATED);
+        return response(
+            new ProductItem($product->load('user')),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -47,7 +53,10 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return response($product, Response::HTTP_OK);
+        return response(
+            new ProductItem($product),
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -61,7 +70,10 @@ class ProductController extends Controller
     {
         $product->update($request->all());
 
-        return response($product, Response::HTTP_OK);
+        return response(
+            new ProductItem($product),
+            Response::HTTP_OK
+        );
     }
 
     /**

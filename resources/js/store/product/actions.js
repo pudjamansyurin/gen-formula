@@ -7,7 +7,7 @@ const model = "product";
 export default {
     [actions.GET_PRODUCTS]({ commit }, options) {
         return api
-            .viewAny(model)
+            .viewAny(model, options)
             .then(data => {
                 const { data: products, meta } = data;
                 const { total, per_page, current_page } = meta;
@@ -30,11 +30,13 @@ export default {
             .catch(e => {});
     },
     [actions.SAVE_PRODUCT]({ commit }, payload) {
-        const action = payload.id > -1 ? "update" : "create";
+        const update = payload.id > -1;
 
-        return api[action](model, payload)
+        return api[update ? "update" : "create"](model, payload)
             .then(data => {
-                console.log(data);
+                const { ADD_PRODUCT, UPDATE_PRODUCT } = mutations;
+
+                commit(update ? UPDATE_PRODUCT : ADD_PRODUCT, data);
             })
             .catch(error => {
                 if (error.data) {
@@ -47,8 +49,8 @@ export default {
     [actions.DELETE_PRODUCTS]({ commit }, ids) {
         return api
             .destroy(model, ids)
-            .then(data => {
-                console.log(data);
+            .then(indexes => {
+                commit(mutations.DELETE_PRODUCTS, indexes);
             })
             .catch(e => {});
     }

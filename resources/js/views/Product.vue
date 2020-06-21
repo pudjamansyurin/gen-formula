@@ -246,6 +246,7 @@ export default {
         deleteItem() {
             const ids = map(this.selected, "id");
             this.DELETE_PRODUCTS(ids).then(_ => {
+                this.selected = [];
                 this.deleteDialog = false;
             });
         },
@@ -266,16 +267,13 @@ export default {
                 });
         }
     },
-    mounted() {
-        this.fetch();
-    },
     watch: {
-        // options: {
-        //     handler() {
-        //         this.fetch();
-        //     },
-        //     deep: true
-        // }
+        options: {
+            handler() {
+                this.fetch();
+            },
+            deep: true
+        }
         // dialog(val) {
         //     val || this.close();
         // }
