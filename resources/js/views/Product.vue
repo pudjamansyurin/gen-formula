@@ -40,12 +40,7 @@
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="toggleSearchBox"
-                                v-on="on"
-                                icon
-                            >
+                            <v-btn v-show="!selected.length" @click="toggleSearch" v-on="on" icon>
                                 <v-icon>mdi-magnify{{ searchBox ? "-close" : "" }}</v-icon>
                             </v-btn>
                         </template>
@@ -65,7 +60,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                 v-show="selected.length"
-                                @click="deleteDialog = true"
+                                @click="dialogDelete = true"
                                 v-on="on"
                                 icon
                             >
@@ -77,7 +72,7 @@
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn v-show="selected.length == 1" @click="editItem" v-on="on" icon>
+                            <v-btn v-show="selected.length == 1" @click="edit" v-on="on" icon>
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                         </template>
@@ -90,7 +85,7 @@
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
             <validation-observer v-slot="{ invalid, handleSubmit }" ref="form">
-                <v-form @submit.prevent="handleSubmit(save())">
+                <v-form @submit.prevent="handleSubmit(saveItem())">
                     <v-card :loading="!!loading">
                         <v-card-title>
                             <span class="headline">{{ formTitle }}</span>
@@ -143,7 +138,7 @@
             </validation-observer>
         </v-dialog>
 
-        <v-dialog v-model="deleteDialog" max-width="290" persistent scrollable>
+        <v-dialog v-model="dialogDelete" max-width="290" persistent scrollable>
             <v-card :loading="!!loading">
                 <v-card-title>Confirmation</v-card-title>
                 <v-divider></v-divider>
@@ -157,7 +152,7 @@
 
                 <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn color="darken-1" @click="deleteDialog = false" text>Cancel</v-btn>
+                    <v-btn color="darken-1" @click="dialogDelete = false" text>Cancel</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
                         :disabled="!!loading"
@@ -187,7 +182,7 @@ export default {
             dense: true,
             searchBox: false,
             dialog: false,
-            deleteDialog: false,
+            dialogDelete: false,
             total: 0,
             search: "",
             options: {},
@@ -195,11 +190,7 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
-                {
-                    text: "Creator",
-                    value: "creator",
-                    sortable: false
-                },
+                { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],
             form: cloneDeep(Product)
@@ -232,30 +223,23 @@ export default {
     },
     methods: {
         ...mapActions("product", [GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS]),
-        fetch() {
+        fetch: async function() {
             const { options, search } = this;
             const params = { options, search };
 
-            this.GET_PRODUCTS(params).then(total => {
+            await this.GET_PRODUCTS(params).then(total => {
                 this.total = total;
             });
         },
-        toggleSearchBox() {
+        toggleSearch() {
             this.searchBox = !this.searchBox;
             if (!this.searchBox) {
                 this.search = "";
             }
         },
-        editItem() {
+        edit() {
             this.form = cloneDeep(this.selected[0]);
             this.dialog = true;
-        },
-        deleteItem() {
-            const ids = map(this.selected, "id");
-            this.DELETE_PRODUCTS(ids).then(_ => {
-                this.selected = [];
-                this.deleteDialog = false;
-            });
         },
         close() {
             this.dialog = false;
@@ -264,9 +248,18 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        save() {
+        deleteItem: async function() {
+            const ids = map(this.selected, "id");
+            await this.DELETE_PRODUCTS(ids);
+            await this.fetch();
+            this.selected = [];
+            this.dialogDelete = false;
+        },
+        saveItem() {
             this.SAVE_PRODUCT(this.form)
-                .then(_ => {
+                .then(async () => {
+                    await this.fetch();
+                    this.selected = [];
                     this.close();
                 })
                 .catch(errors => {
@@ -284,9 +277,6 @@ export default {
         search: debounce(function() {
             this.fetch();
         }, 500)
-        // dialog(val) {
-        //     val || this.close();
-        // }
     }
 };
 </script>

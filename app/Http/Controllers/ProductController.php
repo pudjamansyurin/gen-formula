@@ -25,10 +25,8 @@ class ProductController extends Controller
         $sortDesc = true;
 
         // client side parameters request
-        $options = json_decode($request->input('options'));
         $search = $request->input('search');
-        debug($options);
-        debug($search);
+        $options = json_decode($request->input('options'));
 
         if ($options) {
             $page = $options->page;
@@ -46,7 +44,7 @@ class ProductController extends Controller
         // filtering
         if ($search) {
             $fields = ['name', 'description'];
-            $relations = ['user' => ['name']];
+            $relations = ['user' => ['name' => 'user.name']];
 
             // handle this model
             $q = $q->where(function ($q) use ($fields, $search) {
@@ -58,7 +56,7 @@ class ProductController extends Controller
             foreach ($relations as $relation => $fields) {
                 $q = $q->orWhereHas($relation, function ($q) use ($fields, $search) {
                     $q->where(function ($q) use ($fields, $search) {
-                        foreach ($fields as $field) {
+                        foreach ($fields as $field => $alias) {
                             $q->orWhere($field, 'LIKE', "%{$search}%");
                         }
                     });
@@ -73,6 +71,11 @@ class ProductController extends Controller
         }
         // ordering
         if (isset($sortBy)) {
+            $alias = ['user.name' => 'user_id'];
+            if (array_key_exists($sortBy, $alias)) {
+                $sortBy = $alias[$sortBy];
+            }
+
             $q = $q->orderBy($sortBy, $sortDesc ? 'desc' : 'asc');
         }
 

@@ -12,20 +12,7 @@ export default {
                 const { data: products, meta } = data;
                 const { total } = meta;
 
-                console.log(data);
-
                 commit(mutations.SET_PRODUCTS, products);
-
-                // let options = {
-                //     page: current_page,
-                //     itemsPerPage: per_page
-                //     //   sortBy: string[],
-                //     //   sortDesc: boolean[],
-                //     //   groupBy: string[],
-                //     //   groupDesc: boolean[],
-                //     //   multiSort: boolean,
-                //     //   mustSort: boolean,
-                // };
 
                 return total;
             })
@@ -36,9 +23,8 @@ export default {
 
         return api[update ? "update" : "create"](model, payload)
             .then(data => {
-                const { ADD_PRODUCT, UPDATE_PRODUCT } = mutations;
-
-                commit(update ? UPDATE_PRODUCT : ADD_PRODUCT, data);
+                // const { ADD_PRODUCT, UPDATE_PRODUCT } = mutations;
+                // commit(update ? UPDATE_PRODUCT : ADD_PRODUCT, data);
             })
             .catch(error => {
                 if (error.data) {
@@ -52,7 +38,7 @@ export default {
         return api
             .destroy(model, ids)
             .then(indexes => {
-                commit(mutations.DELETE_PRODUCTS, indexes);
+                // commit(mutations.DELETE_PRODUCTS, indexes);
             })
             .catch(e => {});
     }
