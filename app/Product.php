@@ -2,12 +2,12 @@
 
 namespace App;
 
-use App\Traits\RequestQueryBuilder;
+use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use RequestQueryBuilder;
+    use ClientQueryScope;
 
     /**
      * The attributes that are mass assignable.

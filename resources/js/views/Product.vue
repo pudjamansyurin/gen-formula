@@ -9,7 +9,12 @@
             :server-items-length="total"
             :loading="!!loading"
             :dense="dense"
+            :page="1"
+            :items-per-page="10"
+            sort-by="updated_at"
+            sort-desc
             show-select
+            must-sort
             class="elevation-1"
         >
             <template v-slot:top>
@@ -226,7 +231,7 @@ export default {
         fetch: async function() {
             const { options, search } = this;
 
-            await this.GET_PRODUCTS({ options, search }).then(total => {
+            await this.GET_PRODUCTS({ ...options, search }).then(total => {
                 this.total = total;
             });
         },

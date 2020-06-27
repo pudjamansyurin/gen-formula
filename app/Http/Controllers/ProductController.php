@@ -19,11 +19,15 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         // Model instance
-        $q = new Product();
-        // Request Query
-        [$query, $total] = $q->applyRequestQuery($request, $q);
+        $q = new Product;
+        // Client Query
+        $q = $q->clientFilter($request);
+        $total = $q->count();
+        $q = $q->clientSorter($request);
+        $q = $q->clientLimiter($request);
+
         // Response
-        return (new ProductCollection($query->get()))
+        return (new ProductCollection($q->get()))
             ->additional([
                 'meta' => [
                     'total' => $total
