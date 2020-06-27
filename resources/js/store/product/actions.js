@@ -21,25 +21,17 @@ export default {
     [actions.SAVE_PRODUCT]({ commit }, payload) {
         const update = payload.id > -1;
 
-        return api[update ? "update" : "create"](model, payload)
-            .then(data => {
-                // const { ADD_PRODUCT, UPDATE_PRODUCT } = mutations;
-                // commit(update ? UPDATE_PRODUCT : ADD_PRODUCT, data);
-            })
-            .catch(error => {
+        return api[update ? "update" : "create"](model, payload).catch(
+            error => {
                 if (error.data) {
                     if (error.data.errors) {
                         return Promise.reject(error.data.errors);
                     }
                 }
-            });
+            }
+        );
     },
     [actions.DELETE_PRODUCTS]({ commit }, ids) {
-        return api
-            .destroy(model, ids)
-            .then(indexes => {
-                // commit(mutations.DELETE_PRODUCTS, indexes);
-            })
-            .catch(e => {});
+        return api.destroy(model, ids).catch(e => {});
     }
 };

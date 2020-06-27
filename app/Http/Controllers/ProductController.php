@@ -25,7 +25,6 @@ class ProductController extends Controller
         $total = $q->count();
         $q = $q->clientSorter($request);
         $q = $q->clientLimiter($request);
-
         // Response
         return (new ProductCollection($q->get()))
             ->additional([
@@ -50,7 +49,7 @@ class ProductController extends Controller
         ]);
 
         return response(
-            new ProductItem($product->load('user')),
+            new ProductItem($product),
             Response::HTTP_CREATED
         );
     }
