@@ -39,12 +39,11 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
-        $product = Product::create(
-            array_merge(
-                $request->all(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        $product = Product::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => auth()->id()
+        ]);
 
         return response(
             new ProductItem($product->load('user')),
@@ -75,7 +74,10 @@ class ProductController extends Controller
      */
     public function update(ProductStoreRequest $request, Product $product)
     {
-        $product->update($request->all());
+        $product->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
 
         return response(
             new ProductItem($product),
@@ -91,7 +93,7 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, Product $product)
     {
-        $ids = $request->input('ids');
+        $ids = $request->ids;
         if (is_array($ids)) {
             Product::destroy($ids);
         }

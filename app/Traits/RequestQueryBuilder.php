@@ -32,8 +32,8 @@ trait RequestQueryBuilder
     private function convertRequestQuery(Request $request)
     {
         // client parameters request
-        $this->search = $request->input('search');
-        $options = json_decode($request->input('options'));
+        $this->search = $request->search;
+        $options = json_decode($request->options);
         // append if any
         if ($options) {
             $this->options['page'] = $options->page;
@@ -100,7 +100,12 @@ trait RequestQueryBuilder
 
     private function fields()
     {
-        return property_exists($this, 'fillable') ? $this->fillable : [];
+        if (property_exists($this, 'fillable')) {
+            return array_filter($this->fillable, function ($item) {
+                return strpos($item, "_id") === false;
+            });
+        }
+        return [];
     }
 
     private function aFilter()
