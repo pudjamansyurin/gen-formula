@@ -225,9 +225,8 @@ export default {
         ...mapActions("product", [GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS]),
         fetch: async function() {
             const { options, search } = this;
-            const params = { options, search };
 
-            await this.GET_PRODUCTS(params).then(total => {
+            await this.GET_PRODUCTS({ options, search }).then(total => {
                 this.total = total;
             });
         },

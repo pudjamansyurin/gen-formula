@@ -18,72 +18,17 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        // default parameters
-        $page = 1;
-        $itemsPerPage = 10;
-        $sortBy = "updated_at";
-        $sortDesc = true;
-
-        // client side parameters request
-        $search = $request->input('search');
-        $options = json_decode($request->input('options'));
-
-        if ($options) {
-            $page = $options->page;
-            $itemsPerPage = $options->itemsPerPage;
-            if (count($options->sortBy)) {
-                $sortBy = $options->sortBy[0];
-                $sortDesc = $options->sortDesc[0];
-            }
-        }
-
-        // Make product instance
+        // Model instance
         $q = new Product();
-        $total = $q->count();
-
-        // filtering
-        if ($search) {
-            $fields = ['name', 'description'];
-            $relations = ['user' => ['name' => 'user.name']];
-
-            // handle this model
-            $q = $q->where(function ($q) use ($fields, $search) {
-                foreach ($fields as $field) {
-                    $q->orWhere($field, 'LIKE', "%{$search}%");
-                }
-            });
-            // handle model relations
-            foreach ($relations as $relation => $fields) {
-                $q = $q->orWhereHas($relation, function ($q) use ($fields, $search) {
-                    $q->where(function ($q) use ($fields, $search) {
-                        foreach ($fields as $field => $alias) {
-                            $q->orWhere($field, 'LIKE', "%{$search}%");
-                        }
-                    });
-                });
-            };
-            // update total records
-            $total = $q->count();
-        }
-        // paginating
-        if ($itemsPerPage > 0) {
-            $q = $q->take($itemsPerPage)->skip(($page - 1) * $itemsPerPage);
-        }
-        // ordering
-        if (isset($sortBy)) {
-            $alias = ['user.name' => 'user_id'];
-            if (array_key_exists($sortBy, $alias)) {
-                $sortBy = $alias[$sortBy];
-            }
-
-            $q = $q->orderBy($sortBy, $sortDesc ? 'desc' : 'asc');
-        }
-
-        return (new ProductCollection($q->get()))->additional([
-            'meta' => [
-                'total' => $total
-            ]
-        ]);
+        // Request Query
+        [$query, $total] = $q->applyRequestQuery($request, $q);
+        // Response
+        return (new ProductCollection($query->get()))
+            ->additional([
+                'meta' => [
+                    'total' => $total
+                ]
+            ]);
     }
 
     /**

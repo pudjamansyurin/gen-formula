@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\RequestQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use RequestQueryBuilder;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -14,7 +17,6 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'user_id'
     ];
 
     /**
@@ -30,6 +32,20 @@ class Product extends Model
      * @var array
      */
     protected $with = ['user'];
+
+    /**
+     * Custom fields
+     */
+    protected $aQuery = [
+        'filter' => [
+            'user' => [
+                'name' => 'user.name'
+            ]
+        ],
+        'sorter' =>  [
+            'user.name' => 'user_id'
+        ]
+    ];
 
     /**
      * Set relation tables.
