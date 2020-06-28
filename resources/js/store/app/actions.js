@@ -1,6 +1,8 @@
-import { actions, mutations } from "./types";
+import { get } from "lodash";
 import { login, logout } from "@/api/auth";
 import router from "@/router";
+import * as actions from "./action-types";
+import * as mutations from "./mutation-types";
 
 export default {
     [actions.LOGIN]({ commit }, payload) {
@@ -16,11 +18,9 @@ export default {
                 const { redirect } = router.currentRoute.query;
                 router.push({ path: redirect || "/app" });
             })
-            .catch(error => {
-                if (error.data) {
-                    if (error.data.errors) {
-                        return Promise.reject(error.data.errors);
-                    }
+            .catch(e => {
+                if (get(e, "data.errors")) {
+                    return Promise.reject(e.data.errors);
                 }
             })
             .then(_ => {

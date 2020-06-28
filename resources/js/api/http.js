@@ -10,8 +10,16 @@ import axios from "axios";
 import store from "@/store";
 import router from "@/router";
 import config from "@/config";
-import { mutations } from "@/store/app/types";
 import { ns } from "@/helpers";
+import {
+    START_LOADING,
+    STOP_LOADING,
+    SET_MESSAGE,
+    SET_ERROR,
+    CLEAR_ERROR,
+    CLEAR_MESSAGE,
+    CLEAR_AUTH
+} from "@/store/app/mutation-types";
 
 export const http = axios.create({
     baseURL: `${config.APP_URL}/`,
@@ -32,14 +40,14 @@ http.interceptors.request.use(
         // const { token } = store.state.app.auth;
         // config.headers.Authorization = token ? `Bearer ${token}` : null;
 
-        store.commit(ns("app", mutations.START_LOADING));
-        store.commit(ns("app", mutations.CLEAR_ERROR));
-        store.commit(ns("app", mutations.CLEAR_MESSAGE));
+        store.commit(ns("app", START_LOADING));
+        store.commit(ns("app", CLEAR_ERROR));
+        store.commit(ns("app", CLEAR_MESSAGE));
         return config;
     },
     error => {
         console.warn(error);
-        store.commit(ns("app", mutations.STOP_LOADING));
+        store.commit(ns("app", STOP_LOADING));
         return Promise.reject(error);
     }
 );
@@ -53,11 +61,11 @@ http.interceptors.response.use(
         const { message } = data;
 
         console.info(response);
-        store.commit(ns("app", mutations.STOP_LOADING));
+        store.commit(ns("app", STOP_LOADING));
 
         // save api generated message
         if (message) {
-            store.commit(ns("app", mutations.SET_MESSAGE), {
+            store.commit(ns("app", SET_MESSAGE), {
                 text: message,
                 type: "success"
             });
@@ -72,17 +80,17 @@ http.interceptors.response.use(
         const { authenticated } = store.state.app.auth;
 
         console.error(response);
-        store.commit(ns("app", mutations.STOP_LOADING));
+        store.commit(ns("app", STOP_LOADING));
 
         // save system generated message
-        store.commit(ns("app", mutations.SET_ERROR), {
+        store.commit(ns("app", SET_ERROR), {
             code,
             text
         });
 
         // save api generated message
         if (message) {
-            store.commit(ns("app", mutations.SET_MESSAGE), {
+            store.commit(ns("app", SET_MESSAGE), {
                 text: message,
                 type: "error"
             });
@@ -92,7 +100,7 @@ http.interceptors.response.use(
         if (![422].includes(code)) {
             if (authenticated && code === 401) {
                 // remove session
-                store.commit(ns("app", mutations.CLEAR_AUTH));
+                store.commit(ns("app", CLEAR_AUTH));
                 // session expired
                 router.push({
                     name: "login",

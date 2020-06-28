@@ -1,24 +1,24 @@
 import { http } from "./http";
 
-const viewAny = async (model, params) => {
+export const viewAny = async (model, params) => {
     return await http.get(`api/${model}`, { params }).then(response => {
         return response.data;
     });
 };
 
-const view = async (model, id) => {
+export const view = async (model, id) => {
     return await http.get(`api/${model}/${id}`).then(response => {
         return response.data;
     });
 };
 
-const create = async (model, payload) => {
+export const create = async (model, payload) => {
     return await http.post(`api/${model}`, payload).then(response => {
         return response.data;
     });
 };
 
-const update = async (model, payload) => {
+export const update = async (model, payload) => {
     const { id } = payload;
 
     return await http.put(`api/${model}/${id}`, payload).then(response => {
@@ -26,7 +26,7 @@ const update = async (model, payload) => {
     });
 };
 
-const destroy = async (model, ids) => {
+export const destroy = async (model, ids) => {
     const id = ids[0];
 
     return await http
@@ -35,5 +35,3 @@ const destroy = async (model, ids) => {
             return response.data;
         });
 };
-
-export { viewAny, create, view, update, destroy };

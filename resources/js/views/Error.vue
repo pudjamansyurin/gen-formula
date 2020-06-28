@@ -29,9 +29,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { mutations } from "@/store/app/types";
-
-const { CLEAR_ERROR, CLEAR_MESSAGE } = mutations;
+import { CLEAR_ERROR, CLEAR_MESSAGE } from "@/store/app/mutation-types";
 
 export default {
     name: "Error",

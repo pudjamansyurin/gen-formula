@@ -21,14 +21,19 @@
                 <v-toolbar :dark="!!selected.length" flat>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn v-show="selected.length" @click="selected = []" v-on="on" icon>
+                            <v-btn
+                                v-show="selected.length"
+                                @click="selected = []"
+                                v-on="on"
+                                icon
+                            >
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </template>
                         <span>Cancel</span>
                     </v-tooltip>
 
-                    <v-toolbar-title>{{toolbarTitle}}</v-toolbar-title>
+                    <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title>
                     <v-divider class="mx-4" inset vertical></v-divider>
 
                     <v-spacer></v-spacer>
@@ -45,8 +50,17 @@
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn v-show="!selected.length" @click="toggleSearch" v-on="on" icon>
-                                <v-icon>mdi-magnify{{ searchBox ? "-close" : "" }}</v-icon>
+                            <v-btn
+                                v-show="!selected.length"
+                                @click="toggleSearch"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon
+                                    >mdi-magnify{{
+                                        searchBox ? "-close" : ""
+                                    }}</v-icon
+                                >
                             </v-btn>
                         </template>
                         <span>Search</span>
@@ -54,7 +68,12 @@
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn v-show="!selected.length" @click="dialog = true" v-on="on" icon>
+                            <v-btn
+                                v-show="!selected.length"
+                                @click="dialog = true"
+                                v-on="on"
+                                icon
+                            >
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
                         </template>
@@ -77,7 +96,12 @@
 
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-btn v-show="selected.length == 1" @click="edit" v-on="on" icon>
+                            <v-btn
+                                v-show="selected.length == 1"
+                                @click="edit"
+                                v-on="on"
+                                icon
+                            >
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                         </template>
@@ -85,7 +109,9 @@
                     </v-tooltip>
                 </v-toolbar>
             </template>
-            <template v-slot:item.updated_at="{ item }">{{ item.updated_at | moment("from") }}</template>
+            <template v-slot:item.updated_at="{ item }">{{
+                item.updated_at | moment("from")
+            }}</template>
         </v-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
@@ -93,12 +119,15 @@
                 <v-form @submit.prevent="handleSubmit(saveItem())">
                     <v-card :loading="!!loading">
                         <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
+                            <span class="headline">{{ formTitle }} Item</span>
                         </v-card-title>
                         <v-divider></v-divider>
 
                         <v-card-text>
-                            <validation-provider name="name" v-slot="{ errors, valid }">
+                            <validation-provider
+                                name="name"
+                                v-slot="{ errors, valid }"
+                            >
                                 <v-text-field
                                     label="Product name"
                                     name="name"
@@ -112,7 +141,10 @@
                                 ></v-text-field>
                             </validation-provider>
 
-                            <validation-provider name="description" v-slot="{ errors, valid }">
+                            <validation-provider
+                                name="description"
+                                v-slot="{ errors, valid }"
+                            >
                                 <v-text-field
                                     label="Product description"
                                     name="description"
@@ -129,14 +161,17 @@
 
                         <v-divider></v-divider>
                         <v-card-actions>
-                            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                            <v-btn color="blue darken-1" text @click="close"
+                                >Cancel</v-btn
+                            >
                             <v-spacer></v-spacer>
                             <v-btn
                                 :disabled="invalid || !!loading"
                                 type="submit"
                                 color="primary"
                                 large
-                            >Save</v-btn>
+                                >Save</v-btn
+                            >
                         </v-card-actions>
                     </v-card>
                 </v-form>
@@ -151,13 +186,17 @@
                 <v-card-text class="pt-2" style="max-height: 300px;">
                     Are you sure to delete {{ formDeleteContent }}
                     <v-chip-group column small active-class="primary--text">
-                        <v-chip v-for="item in selected" :key="item.id">{{ item.name }}</v-chip>
+                        <v-chip v-for="item in selected" :key="item.id">{{
+                            item.name
+                        }}</v-chip>
                     </v-chip-group>
                 </v-card-text>
 
                 <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn color="darken-1" @click="dialogDelete = false" text>Cancel</v-btn>
+                    <v-btn color="darken-1" @click="dialogDelete = false" text
+                        >Cancel</v-btn
+                    >
                     <v-spacer></v-spacer>
                     <v-btn
                         :disabled="!!loading"
@@ -165,7 +204,8 @@
                         color="red"
                         dark
                         large
-                    >Yes, sure</v-btn>
+                        >Yes, sure</v-btn
+                    >
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -174,14 +214,19 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { actions } from "@/store/product/types";
-import { map, cloneDeep, debounce } from "lodash";
-import Product from "@/models/product";
+import { map, clone, cloneDeep, debounce, upperFirst } from "lodash";
+import {
+    GET_MODELS,
+    SAVE_MODEL,
+    DELETE_MODELS
+} from "@/store/model/action-types";
+import pluralize from "pluralize";
+import { Product } from "@/models";
 
-const { GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS } = actions;
+const model = "product";
 
 export default {
-    name: "Product",
+    name: upperFirst(model),
     data() {
         return {
             dense: true,
@@ -203,35 +248,39 @@ export default {
     },
     computed: {
         ...mapState("app", ["loading"]),
-        ...mapState("product", ["products"]),
+        ...mapState("model", [pluralize(model)]),
         toolbarTitle() {
             const { length } = this.selected;
 
             if (length > 0) {
                 return `${length} selected`;
             }
-            return "Products";
+            return `${upperFirst(pluralize(model))}`;
         },
         formTitle() {
             const { id } = this.form;
-            return id === -1 ? "New Item" : "Edit Item";
+            return id === -1 ? "New" : "Edit";
         },
         formDeleteContent() {
             const { length } = this.selected;
             const single = length === 1;
 
             if (single) {
-                return "this product ?";
+                return `this ${model} ?`;
             }
-            return `these ${length} products ?`;
+            return `these ${length} ${pluralize(model)} ?`;
         }
     },
     methods: {
-        ...mapActions("product", [GET_PRODUCTS, SAVE_PRODUCT, DELETE_PRODUCTS]),
+        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         fetch: async function() {
-            const { options, search } = this;
-
-            await this.GET_PRODUCTS({ ...options, search }).then(total => {
+            await this.GET_MODELS({
+                model,
+                params: {
+                    ...this.options,
+                    search: this.search
+                }
+            }).then(total => {
                 this.total = total;
             });
         },
@@ -253,14 +302,19 @@ export default {
             });
         },
         deleteItem: async function() {
-            const ids = map(this.selected, "id");
-            await this.DELETE_PRODUCTS(ids);
+            await this.DELETE_MODELS({
+                model,
+                ids: map(this.selected, "id")
+            });
             await this.fetch();
             this.selected = [];
             this.dialogDelete = false;
         },
         saveItem() {
-            this.SAVE_PRODUCT(this.form)
+            this.SAVE_MODEL({
+                model,
+                payload: this.form
+            })
                 .then(async () => {
                     await this.fetch();
                     this.selected = [];

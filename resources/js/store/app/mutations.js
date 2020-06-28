@@ -1,5 +1,5 @@
-import { mutations } from "./types";
 import { ls } from "@/helpers";
+import * as mutations from "./mutation-types";
 
 export default {
     [mutations.SET_DRAWER](state, open) {

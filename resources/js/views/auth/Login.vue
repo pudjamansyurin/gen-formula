@@ -7,7 +7,10 @@
                 <v-divider></v-divider>
 
                 <v-card-text>
-                    <validation-provider name="email" v-slot="{ errors, valid }">
+                    <validation-provider
+                        name="email"
+                        v-slot="{ errors, valid }"
+                    >
                         <v-text-field
                             label="Email"
                             name="email"
@@ -20,7 +23,10 @@
                         ></v-text-field>
                     </validation-provider>
 
-                    <validation-provider name="password" v-slot="{ errors, valid }">
+                    <validation-provider
+                        name="password"
+                        v-slot="{ errors, valid }"
+                    >
                         <v-text-field
                             label="Password"
                             name="password"
@@ -37,7 +43,10 @@
                         ></v-text-field>
                     </validation-provider>
 
-                    <v-checkbox v-model="remember_me" label="Keep me logged in"></v-checkbox>
+                    <v-checkbox
+                        v-model="remember_me"
+                        label="Keep me logged in"
+                    ></v-checkbox>
                 </v-card-text>
 
                 <v-card-actions>
@@ -49,7 +58,8 @@
                         type="submit"
                         color="primary"
                         large
-                    >Login</v-btn>
+                        >Login</v-btn
+                    >
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -58,9 +68,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { actions } from "@/store/app/types";
-
-const { LOGIN } = actions;
+import { LOGIN } from "@/store/app/action-types";
 
 export default {
     name: "Login",
