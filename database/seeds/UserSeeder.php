@@ -15,28 +15,35 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'Inputor',
-            'email' => 'inputor@gen.com',
-            'password' => Hash::make('inputorpassword'),
-            'created_at' => now()
-        ]);
-        $user->assignRole(Role::firstWhere('name', 'inputor'));
+        $users = [
+            [
+                'name' => 'Inputor',
+                'email' => 'inputor@gen.com',
+                'password' => 'inputorpassword',
+                'role' => 'inputor'
+            ],
+            [
+                'name' => 'Manager',
+                'email' => 'manager@gen.com',
+                'password' => 'managerpassword',
+                'role' => 'manager'
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin@gen.com',
+                'password' => 'adminpassword',
+                'role' => 'administrator'
+            ],
+        ];
 
-        $user = User::create([
-            'name' => 'Manager',
-            'email' => 'manager@gen.com',
-            'password' => Hash::make('managerpassword'),
-            'created_at' => now()
-        ]);
-        $user->assignRole(Role::firstWhere('name', 'manager'));
-
-        $user = User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@gen.com',
-            'password' => Hash::make('adminpassword'),
-            'created_at' => now()
-        ]);
-        $user->assignRole(Role::firstWhere('name', 'administrator'));
+        foreach ($users as $user) {
+            $user = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => Hash::make($user['password']),
+                'created_at' => now()
+            ]);
+            $user->assignRole(Role::firstWhere('name', $user['role']));
+        }
     }
 }

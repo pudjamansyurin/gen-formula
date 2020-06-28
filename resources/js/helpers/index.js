@@ -13,3 +13,9 @@ export const ls = {
         window.localStorage.removeItem(item);
     }
 };
+
+export const castRouteParamsId = route => {
+    return {
+        id: Number(route.params.id)
+    };
+};

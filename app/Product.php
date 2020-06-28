@@ -49,6 +49,14 @@ class Product extends Model
     ];
 
     /**
+     * Accessors
+     */
+    public function getNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+    /**
      * Set relation tables.
      */
     public function productPrices()

@@ -1,11 +1,7 @@
 <template>
     <v-card class="elevation-1">
-        <v-card-title>
-            {{ title }}
-        </v-card-title>
-        <v-card-subtitle>
-            {{ subtitle }}
-        </v-card-subtitle>
+        <v-card-title>{{ title }}</v-card-title>
+        <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
         <v-divider></v-divider>
         <v-card-text>
             <v-form>
@@ -36,7 +32,7 @@
 
 <script>
 export default {
-    name: "Reset",
+    name: "reset",
     data() {
         return {
             title: "RESET PASSWORD",

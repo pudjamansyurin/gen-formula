@@ -4,22 +4,10 @@
             <v-row align="center" justify="center">
                 <v-col cols="12" sm="8" md="4">
                     <p class="display-2 font-weight-thin">{{ error_code }}</p>
-                    <p class="display-1 font-weight-thin">
-                        {{ error_text }}
-                    </p>
+                    <p class="display-1 font-weight-thin">{{ error_text }}</p>
                     <div>
-                        <v-btn
-                            @click="handleBack"
-                            :disabled="direct"
-                            elevation="1"
-                            >Back</v-btn
-                        >
-                        <v-btn
-                            :to="{ name: 'login' }"
-                            elevation="1"
-                            color="primary"
-                            >Login</v-btn
-                        >
+                        <v-btn @click="handleBack" :disabled="direct" elevation="1">Back</v-btn>
+                        <v-btn :to="{ name: 'login' }" elevation="1" color="primary">Login</v-btn>
                     </div>
                 </v-col>
             </v-row>
@@ -32,7 +20,7 @@ import { mapState, mapMutations } from "vuex";
 import { CLEAR_ERROR, CLEAR_MESSAGE } from "@/store/app/mutation-types";
 
 export default {
-    name: "Error",
+    name: "error",
     props: {
         code: { default: 404 },
         text: { default: null }

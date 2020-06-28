@@ -1,3 +1,5 @@
+import { castRouteParamsId } from "@/helpers";
+
 const Home = () => import("@/layouts/Home");
 const Login = () => import("@/views/auth/Login");
 const Forget = () => import("@/views/auth/Forget");
@@ -8,6 +10,7 @@ const User = () => import("@/views/User");
 const Profile = () => import("@/views/Profile");
 const Report = () => import("@/views/Report");
 const Product = () => import("@/views/Product");
+const ProductPrice = () => import("@/views/ProductPrice");
 const Formula = () => import("@/views/Formula");
 const Error = () => import("@/views/Error");
 
@@ -41,6 +44,15 @@ export default [
                 path: "",
                 name: "report",
                 component: Report,
+                meta: {
+                    auth: true
+                }
+            },
+            {
+                path: "product/:id",
+                props: castRouteParamsId,
+                name: "productPrice",
+                component: ProductPrice,
                 meta: {
                     auth: true
                 }

@@ -4,6 +4,11 @@ export const Product = {
     description: ""
 };
 
+export const ProductPrice = {
+    id: -1,
+    price: 0
+};
+
 export const User = {
     id: -1,
     name: "",

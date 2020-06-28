@@ -56,11 +56,13 @@
                                 v-on="on"
                                 icon
                             >
-                                <v-icon
-                                    >mdi-magnify{{
-                                        searchBox ? "-close" : ""
-                                    }}</v-icon
-                                >
+                                <v-icon>
+                                    {{
+                                        searchBox
+                                            ? "mdi-magnify-close"
+                                            : "mdi-magnify"
+                                    }}
+                                </v-icon>
                             </v-btn>
                         </template>
                         <span>Search</span>
@@ -108,6 +110,15 @@
                         <span>Edit</span>
                     </v-tooltip>
                 </v-toolbar>
+            </template>
+
+            <template v-slot:item.name="{ item }">
+                <v-chip
+                    :to="childRoute(item.id)"
+                    color="primary"
+                    :small="dense"
+                    >{{ item.name }}</v-chip
+                >
             </template>
             <template v-slot:item.updated_at="{ item }">{{
                 item.updated_at | moment("from")
@@ -226,7 +237,7 @@ import { Product } from "@/models";
 const model = "product";
 
 export default {
-    name: upperFirst(model),
+    name: model,
     data() {
         return {
             dense: true,
@@ -323,6 +334,12 @@ export default {
                 .catch(errors => {
                     this.$refs.form.setErrors(errors);
                 });
+        },
+        childRoute(id) {
+            return {
+                name: "productPrice",
+                params: { id }
+            };
         }
     },
     watch: {

@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResources([
         'user' => 'UserController',
         'product' => 'ProductController',
+        'product-price' => 'ProductPriceController'
         // 'formula' => 'FormulaController',
     ], [
         'except' => ['']

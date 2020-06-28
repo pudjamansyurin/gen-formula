@@ -29,7 +29,6 @@ class RolesAndPermissionSeeder extends Seeder
             'delete',
             '*'
         ];
-
         $roles = [
             'inputor' => ['products'],
             'manager' => ['products', 'formulas'],

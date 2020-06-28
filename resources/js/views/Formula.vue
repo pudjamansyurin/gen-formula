@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    name: "Formula"
+    name: "formula"
 }
 </script>
 

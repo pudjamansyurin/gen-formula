@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class
         ]);
 
-        factory(App\Product::class, 100)->create();
+        factory(App\Product::class, 50)->create();
+        factory(App\ProductPrice::class, 250)->create();
     }
 }
