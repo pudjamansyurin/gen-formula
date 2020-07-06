@@ -15,12 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResources([
-        'user' => 'UserController',
-        'product' => 'ProductController',
-        'product-price' => 'ProductPriceController'
-        // 'formula' => 'FormulaController',
-    ], [
-        'except' => ['']
-    ]);
+    Route::apiResource('user', 'UserController');
+    Route::apiResource('product', 'ProductController');
+    Route::apiResource('product.price', 'ProductPriceController');
 });

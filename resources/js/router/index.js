@@ -12,8 +12,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     const { auth, error } = store.state.app;
-    const { code } = error;
     const { authenticated } = auth;
+    const { code } = error;
 
     if (code && ![422].includes(code)) {
         // forward, already handle by axios

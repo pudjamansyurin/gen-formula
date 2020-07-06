@@ -23,12 +23,12 @@ trait ClientQueryScope
             });
             // handle relations model
             $aFilter = $this->aFilter();
-            foreach ($aFilter as $relation => $fields) {
-                $q = $q->orWhereHas($relation, function ($q) use ($fields, $search) {
-                    $q->where(function ($q) use ($fields, $search) {
-                        foreach ($fields as $field => $alias) {
-                            $q->orWhere($field, 'LIKE', "%{$search}%");
-                        }
+            foreach ($aFilter as $key => $relationFields) {
+                [$relation, $field] = explode(".", $relationFields);
+
+                $q = $q->orWhereHas($relation, function ($q) use ($field, $search) {
+                    $q->where(function ($q) use ($field, $search) {
+                        $q->orWhere($field, 'LIKE', "%{$search}%");
                     });
                 });
             };
@@ -78,7 +78,8 @@ trait ClientQueryScope
     private function aFilter()
     {
         if (property_exists($this, 'aQuery')) {
-            if (array_key_exists('fitler', $this->aQuery)) {
+            if (array_key_exists('filter', $this->aQuery)) {
+                debug($this->aQuery);
                 return $this->aQuery['filter'];
             }
         }

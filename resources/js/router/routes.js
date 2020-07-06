@@ -39,63 +39,45 @@ export default [
     {
         path: "/app",
         component: Dashboard,
+        meta: {
+            auth: true
+        },
         children: [
             {
                 path: "",
                 name: "report",
-                component: Report,
-                meta: {
-                    auth: true
-                }
+                component: Report
             },
             {
                 path: "product/:id",
                 props: castRouteParamsId,
                 name: "productPrice",
-                component: ProductPrice,
-                meta: {
-                    auth: true
-                }
+                component: ProductPrice
             },
             {
                 path: "product",
                 name: "product",
-                component: Product,
-                meta: {
-                    auth: true
-                }
+                component: Product
             },
             {
                 path: "formula",
                 name: "formula",
-                component: Formula,
-                meta: {
-                    auth: true
-                }
+                component: Formula
             },
             {
                 path: "user",
                 name: "user",
-                component: User,
-                meta: {
-                    auth: true
-                }
+                component: User
             },
             {
                 path: "setting",
                 name: "setting",
-                component: Setting,
-                meta: {
-                    auth: true
-                }
+                component: Setting
             },
             {
                 path: "profile",
                 name: "profile",
-                component: Profile,
-                meta: {
-                    auth: true
-                }
+                component: Profile
             }
         ]
     },

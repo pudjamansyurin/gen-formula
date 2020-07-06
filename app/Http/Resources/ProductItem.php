@@ -18,9 +18,7 @@ class ProductItem extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'user.name' => $this->whenLoaded('user', function () {
-                return $this->user->name;
-            }),
+            'user.name' => $this->user->name,
             'updated_at' => $this->updated_at
         ];
     }

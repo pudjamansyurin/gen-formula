@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
 use App\ProductPrice;
 use Illuminate\Http\Request;
+use App\Http\Resources\ProductPriceCollection;
 
 class ProductPriceController extends Controller
 {
@@ -12,9 +14,26 @@ class ProductPriceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, Product $product)
     {
-        //
+        // Model instance
+        $q = new ProductPrice;
+        // Parent Query
+        $q = $q->whereHas('product', function ($q) use ($product) {
+            $q->where('id', $product->id);
+        });
+        // Client Query
+        $q = $q->clientFilter($request);
+        $total = $q->count();
+        $q = $q->clientSorter($request);
+        $q = $q->clientLimiter($request);
+        // Response
+        return (new ProductPriceCollection($q->get()))
+            ->additional([
+                'meta' => [
+                    'total' => $total
+                ]
+            ]);
     }
 
     /**

@@ -35,13 +35,11 @@ class Product extends Model
     protected $with = ['user'];
 
     /**
-     * Custom fields
+     * Client query scope
      */
     protected $aQuery = [
         'filter' => [
-            'user' => [
-                'name' => 'user.name'
-            ]
+            'user.name'
         ],
         'sorter' =>  [
             'user.name' => 'user_id'

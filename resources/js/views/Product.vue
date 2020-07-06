@@ -225,7 +225,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { map, clone, cloneDeep, debounce, upperFirst } from "lodash";
+import { map, clone, cloneDeep, debounce, startCase } from "lodash";
 import {
     GET_MODELS,
     SAVE_MODEL,
@@ -259,14 +259,14 @@ export default {
     },
     computed: {
         ...mapState("app", ["loading"]),
-        ...mapState("model", [pluralize(model)]),
+        ...mapState("model", ["products"]),
         toolbarTitle() {
             const { length } = this.selected;
 
             if (length > 0) {
                 return `${length} selected`;
             }
-            return `${upperFirst(pluralize(model))}`;
+            return `${startCase(pluralize(model))}`;
         },
         formTitle() {
             const { id } = this.form;
@@ -284,6 +284,23 @@ export default {
     },
     methods: {
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        toggleSearch() {
+            this.searchBox = !this.searchBox;
+            if (!this.searchBox) {
+                this.search = "";
+            }
+        },
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => {
+                this.form = cloneDeep(Product);
+                this.$refs.form.reset();
+            });
+        },
+        edit() {
+            this.form = cloneDeep(this.selected[0]);
+            this.dialog = true;
+        },
         fetch: async function() {
             await this.GET_MODELS({
                 model,
@@ -294,32 +311,6 @@ export default {
             }).then(total => {
                 this.total = total;
             });
-        },
-        toggleSearch() {
-            this.searchBox = !this.searchBox;
-            if (!this.searchBox) {
-                this.search = "";
-            }
-        },
-        edit() {
-            this.form = cloneDeep(this.selected[0]);
-            this.dialog = true;
-        },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => {
-                this.form = cloneDeep(Product);
-                this.$refs.form.reset();
-            });
-        },
-        deleteItem: async function() {
-            await this.DELETE_MODELS({
-                model,
-                ids: map(this.selected, "id")
-            });
-            await this.fetch();
-            this.selected = [];
-            this.dialogDelete = false;
         },
         saveItem() {
             this.SAVE_MODEL({
@@ -334,6 +325,15 @@ export default {
                 .catch(errors => {
                     this.$refs.form.setErrors(errors);
                 });
+        },
+        deleteItem: async function() {
+            await this.DELETE_MODELS({
+                model,
+                ids: map(this.selected, "id")
+            });
+            await this.fetch();
+            this.selected = [];
+            this.dialogDelete = false;
         },
         childRoute(id) {
             return {

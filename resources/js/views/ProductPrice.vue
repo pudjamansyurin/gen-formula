@@ -3,7 +3,7 @@
         <v-data-table
             v-model="selected"
             :headers="headers"
-            :items="products"
+            :items="productPrices"
             :search="search"
             :options.sync="options"
             :server-items-length="total"
@@ -112,14 +112,10 @@
                 </v-toolbar>
             </template>
 
-            <template v-slot:item.name="{ item }">
-                <v-chip
-                    :to="childRoute(item.id)"
-                    color="primary"
-                    :small="dense"
-                    >{{ item.name }}</v-chip
-                >
-            </template>
+            <template v-slot:item.price="{ item }">{{
+                item.price | currency
+            }}</template>
+
             <template v-slot:item.updated_at="{ item }">{{
                 item.updated_at | moment("from")
             }}</template>
@@ -225,7 +221,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { map, clone, cloneDeep, debounce, upperFirst } from "lodash";
+import { map, clone, cloneDeep, debounce, kebabCase, startCase } from "lodash";
 import {
     GET_MODELS,
     SAVE_MODEL,
@@ -238,6 +234,9 @@ const model = "productPrice";
 
 export default {
     name: model,
+    props: {
+        id: Number
+    },
     data() {
         return {
             dense: true,
@@ -249,24 +248,23 @@ export default {
             options: {},
             selected: [],
             headers: [
-                { text: "Name", value: "name" },
-                { text: "Description", value: "description" },
-                { text: "Creator", value: "user.name" },
-                { text: "Updated At", value: "updated_at" }
+                { text: "Updated At", value: "updated_at" },
+                { text: "Price", value: "price", align: "right" },
+                { text: "Updater", value: "user.name" }
             ],
             form: cloneDeep(ProductPrice)
         };
     },
     computed: {
         ...mapState("app", ["loading"]),
-        ...mapState("model", [pluralize(model)]),
+        ...mapState("model", ["productPrices"]),
         toolbarTitle() {
             const { length } = this.selected;
 
             if (length > 0) {
                 return `${length} selected`;
             }
-            return `${upperFirst(pluralize(model))}`;
+            return `${startCase(pluralize(model))}`;
         },
         formTitle() {
             const { id } = this.form;
@@ -280,30 +278,20 @@ export default {
                 return `this ${model} ?`;
             }
             return `these ${length} ${pluralize(model)} ?`;
+        },
+        apiUrl() {
+            let models = kebabCase(model).split("-");
+
+            return `${models[0]}/${this.id}/${models[1]}`;
         }
     },
     methods: {
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
-        fetch: async function() {
-            await this.GET_MODELS({
-                model,
-                params: {
-                    ...this.options,
-                    search: this.search
-                }
-            }).then(total => {
-                this.total = total;
-            });
-        },
         toggleSearch() {
             this.searchBox = !this.searchBox;
             if (!this.searchBox) {
                 this.search = "";
             }
-        },
-        edit() {
-            this.form = cloneDeep(this.selected[0]);
-            this.dialog = true;
         },
         close() {
             this.dialog = false;
@@ -312,18 +300,26 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        deleteItem: async function() {
-            await this.DELETE_MODELS({
+        edit() {
+            this.form = cloneDeep(this.selected[0]);
+            this.dialog = true;
+        },
+        fetch: async function() {
+            await this.GET_MODELS({
                 model,
-                ids: map(this.selected, "id")
+                apiUrl: this.apiUrl,
+                params: {
+                    ...this.options,
+                    search: this.search
+                }
+            }).then(total => {
+                this.total = total;
             });
-            await this.fetch();
-            this.selected = [];
-            this.dialogDelete = false;
         },
         saveItem() {
             this.SAVE_MODEL({
                 model,
+                apiUrl: this.apiUrl,
                 payload: this.form
             })
                 .then(async () => {
@@ -335,11 +331,15 @@ export default {
                     this.$refs.form.setErrors(errors);
                 });
         },
-        childRoute(id) {
-            return {
-                name: "productPrice",
-                params: { id }
-            };
+        deleteItem: async function() {
+            await this.DELETE_MODELS({
+                model,
+                apiUrl: this.apiUrl,
+                ids: map(this.selected, "id")
+            });
+            await this.fetch();
+            this.selected = [];
+            this.dialogDelete = false;
         }
     },
     watch: {

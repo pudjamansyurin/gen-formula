@@ -4,9 +4,11 @@ import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 
 export default {
-    [actions.GET_MODELS]({ commit }, { model, params }) {
+    [actions.GET_MODELS]({ commit }, { model, params, apiUrl }) {
+        const url = apiUrl ? apiUrl : model;
+
         return api
-            .viewAny(model, params)
+            .viewAny(url, params)
             .then(data => {
                 const { data: payload, meta } = data;
                 const { total } = meta;
@@ -17,16 +19,19 @@ export default {
             })
             .catch(e => {});
     },
-    [actions.SAVE_MODEL]({ commit }, { model, payload }) {
+    [actions.SAVE_MODEL]({ commit }, { model, payload, apiUrl }) {
+        const url = apiUrl ? apiUrl : model;
         const update = payload.id > -1;
 
-        return api[update ? "update" : "create"](model, payload).catch(e => {
+        return api[update ? "update" : "create"](url, payload).catch(e => {
             if (get(e, "data.errors")) {
                 return Promise.reject(e.data.errors);
             }
         });
     },
-    [actions.DELETE_MODELS]({ commit }, { model, ids }) {
-        return api.destroy(model, ids).catch(e => {});
+    [actions.DELETE_MODELS]({ commit }, { model, ids, apiUrl }) {
+        const url = apiUrl ? apiUrl : model;
+
+        return api.destroy(url, ids).catch(e => {});
     }
 };
