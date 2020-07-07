@@ -16,7 +16,8 @@ class ProductPriceItem extends JsonResource
     {
         return [
             'id' => $this->id,
-            // 'product.name' => $this->product->name,
+            'product_id' => $this->product_id,
+            'product.name' => $this->product->name,
             'price' => $this->price,
             'user.name' => $this->user->name,
             'updated_at' => $this->updated_at

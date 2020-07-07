@@ -54,19 +54,19 @@ class ProductController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Product $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        return response(
-            new ProductItem($product),
-            Response::HTTP_OK
-        );
-    }
+    // /**
+    //  * Display the specified resource.
+    //  *
+    //  * @param  \App\Product $product
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function show(Product $product)
+    // {
+    //     return response(
+    //         new ProductItem($product),
+    //         Response::HTTP_OK
+    //     );
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -94,13 +94,13 @@ class ProductController extends Controller
      * @param  \App\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Product $product)
+    public function destroy(Request $request)
     {
         $ids = $request->ids;
         if (is_array($ids)) {
             Product::destroy($ids);
+            return response($ids, Response::HTTP_OK);
         }
-
-        return response($ids, Response::HTTP_OK);
+        return response($ids, Response::HTTP_BAD_REQUEST);
     }
 }

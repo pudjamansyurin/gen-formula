@@ -13,9 +13,11 @@ export default {
                 const { data: payload, meta } = data;
                 const { total } = meta;
 
-                commit(mutations.SET_MODELS, { model, payload });
+                if (!params.filterFields) {
+                    commit(mutations.SET_MODELS, { model, payload });
+                }
 
-                return total;
+                return { payload, total };
             })
             .catch(e => {});
     },

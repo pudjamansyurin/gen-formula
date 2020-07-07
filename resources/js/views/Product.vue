@@ -198,7 +198,7 @@
                     Are you sure to delete {{ formDeleteContent }}
                     <v-chip-group column small active-class="primary--text">
                         <v-chip v-for="item in selected" :key="item.id">{{
-                            item.name
+                            item[headerId]
                         }}</v-chip>
                     </v-chip-group>
                 </v-card-text>
@@ -245,7 +245,7 @@ export default {
             dialog: false,
             dialogDelete: false,
             total: 0,
-            search: "",
+            search: null,
             options: {},
             selected: [],
             headers: [
@@ -254,6 +254,7 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],
+            headerId: "name",
             form: cloneDeep(Product)
         };
     },
@@ -266,7 +267,7 @@ export default {
             if (length > 0) {
                 return `${length} selected`;
             }
-            return `${startCase(pluralize(model))}`;
+            return `${pluralize(startCase(model))}`;
         },
         formTitle() {
             const { id } = this.form;
@@ -308,7 +309,7 @@ export default {
                     ...this.options,
                     search: this.search
                 }
-            }).then(total => {
+            }).then(({ total }) => {
                 this.total = total;
             });
         },

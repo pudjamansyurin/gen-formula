@@ -32,11 +32,11 @@ class ProductPrice extends Model
      */
     protected $aQuery = [
         'filter' => [
-            // 'product.name',
+            'product.name',
             'user.name'
         ],
         'sorter' =>  [
-            // 'product.name' => 'product_id',
+            'product.name' => 'product_id',
             'user.name' => 'user_id'
         ]
     ];

@@ -6,6 +6,8 @@ export const Product = {
 
 export const ProductPrice = {
     id: -1,
+    product_id: -1,
+    "product.name": "",
     price: 0
 };
 

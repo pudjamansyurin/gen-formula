@@ -49,15 +49,15 @@ export default [
                 component: Report
             },
             {
-                path: "product/:id",
-                props: castRouteParamsId,
-                name: "productPrice",
-                component: ProductPrice
-            },
-            {
                 path: "product",
                 name: "product",
                 component: Product
+            },
+            {
+                path: "product-price/:id?",
+                name: "productPrice",
+                component: ProductPrice,
+                props: castRouteParamsId
             },
             {
                 path: "formula",

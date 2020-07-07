@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductPriceStoreRequest;
 use App\Product;
 use App\ProductPrice;
-use Illuminate\Http\Request;
 use App\Http\Resources\ProductPriceCollection;
+use App\Http\Resources\ProductPriceItem;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductPriceController extends Controller
 {
@@ -14,14 +17,16 @@ class ProductPriceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, Product $product)
+    public function index(Request $request, $productId)
     {
         // Model instance
         $q = new ProductPrice;
         // Parent Query
-        $q = $q->whereHas('product', function ($q) use ($product) {
-            $q->where('id', $product->id);
-        });
+        if ($productId > 0) {
+            $q = $q->whereHas('product', function ($q) use ($productId) {
+                $q->where('id', $productId);
+            });
+        }
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -47,16 +52,16 @@ class ProductPriceController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ProductPrice  $productPrice
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ProductPrice $productPrice)
-    {
-        //
-    }
+    // /**
+    //  * Display the specified resource.
+    //  *
+    //  * @param  \App\ProductPrice  $productPrice
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function show(ProductPrice $productPrice)
+    // {
+    //     //
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -65,9 +70,19 @@ class ProductPriceController extends Controller
      * @param  \App\ProductPrice  $productPrice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductPrice $productPrice)
+    public function update(ProductPriceStoreRequest $request, ProductPrice $productPrice)
     {
-        //
+        debug($productPrice);
+
+        $productPrice->update([
+            'product_id' => $request->product_id,
+            'price' => $request->price,
+        ]);
+
+        return response(
+            new ProductPriceItem($productPrice),
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -76,8 +91,13 @@ class ProductPriceController extends Controller
      * @param  \App\ProductPrice  $productPrice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductPrice $productPrice)
+    public function destroy(Request $request)
     {
-        //
+        $ids = $request->ids;
+        if (is_array($ids)) {
+            ProductPrice::destroy($ids);
+            return response($ids, Response::HTTP_OK);
+        }
+        return response($ids, Response::HTTP_BAD_REQUEST);
     }
 }

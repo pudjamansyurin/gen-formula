@@ -15,7 +15,9 @@ export const ls = {
 };
 
 export const castRouteParamsId = route => {
+    let id = Number(route.params.id);
+
     return {
-        id: Number(route.params.id)
+        id: Number.isInteger(id) ? id : -1
     };
 };

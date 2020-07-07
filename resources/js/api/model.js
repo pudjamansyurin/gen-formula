@@ -6,11 +6,11 @@ export const viewAny = async (model, params) => {
     });
 };
 
-export const view = async (model, id) => {
-    return await http.get(`api/${model}/${id}`).then(response => {
-        return response.data;
-    });
-};
+// export const view = async (model, id) => {
+//     return await http.get(`api/${model}/${id}`).then(response => {
+//         return response.data;
+//     });
+// };
 
 export const create = async (model, payload) => {
     return await http.post(`api/${model}`, payload).then(response => {
@@ -27,10 +27,8 @@ export const update = async (model, payload) => {
 };
 
 export const destroy = async (model, ids) => {
-    const id = ids[0];
-
     return await http
-        .delete(`api/${model}/${id}`, { data: { ids } })
+        .delete(`api/${model}/-1`, { data: { ids } })
         .then(response => {
             return response.data;
         });

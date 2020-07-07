@@ -13,25 +13,36 @@ trait ClientQueryScope
     {
         // filtering
         $search = $request->input('search', '');
+        $filterFields = $request->input('filterFields', []);
+
         if ($search) {
-            $fields = $this->fields();
+            // handle select options request
+            if (count($filterFields) == 0) {
+                $fields = $this->fields();
+            } else {
+                $fields = $filterFields;
+            }
+
             // handle this model
             $q = $q->where(function ($q) use ($fields, $search) {
                 foreach ($fields as $field) {
                     $q->orWhere($field, 'LIKE', "%{$search}%");
                 }
             });
-            // handle relations model
-            $aFilter = $this->aFilter();
-            foreach ($aFilter as $key => $relationFields) {
-                [$relation, $field] = explode(".", $relationFields);
 
-                $q = $q->orWhereHas($relation, function ($q) use ($field, $search) {
-                    $q->where(function ($q) use ($field, $search) {
-                        $q->orWhere($field, 'LIKE', "%{$search}%");
+            // handle relations model
+            if (count($filterFields) == 0) {
+                $aFilter = $this->aFilter();
+                foreach ($aFilter as $key => $relationFields) {
+                    [$relation, $field] = explode(".", $relationFields);
+
+                    $q = $q->orWhereHas($relation, function ($q) use ($field, $search) {
+                        $q->where(function ($q) use ($field, $search) {
+                            $q->orWhere($field, 'LIKE', "%{$search}%");
+                        });
                     });
-                });
-            };
+                };
+            }
         }
 
         return $q;

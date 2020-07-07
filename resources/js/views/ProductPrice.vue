@@ -132,35 +132,48 @@
 
                         <v-card-text>
                             <validation-provider
-                                name="name"
+                                name="price"
                                 v-slot="{ errors, valid }"
                             >
-                                <v-text-field
-                                    label="Product name"
-                                    name="name"
-                                    type="text"
-                                    v-model="form.name"
+                                <v-autocomplete
+                                    v-model="form.product_id"
+                                    :items="parentItems"
+                                    :loading="!!loading"
+                                    :search-input.sync="parentSearch"
                                     :error-messages="errors"
                                     :success="valid"
-                                    counter
-                                    hint="This is to identify the product"
+                                    hide-no-data
+                                    hide-selected
+                                    item-text="name"
+                                    item-value="id"
+                                    label="Product"
+                                    hint="The product being updated"
                                     persistent-hint
-                                ></v-text-field>
+                                ></v-autocomplete>
                             </validation-provider>
 
+                            <v-text-field
+                                label="Product ID"
+                                name="product_id"
+                                type="number"
+                                v-model="form.product_id"
+                                hint="The product ID"
+                                persistent-hint
+                            ></v-text-field>
+
                             <validation-provider
-                                name="description"
+                                name="price"
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
-                                    label="Product description"
-                                    name="description"
+                                    label="Product price"
+                                    name="price"
                                     type="text"
-                                    v-model="form.description"
+                                    v-model="form.price"
                                     :error-messages="errors"
                                     :success="valid"
                                     counter
-                                    hint="Short description about the product"
+                                    hint="The updated product price"
                                     persistent-hint
                                 ></v-text-field>
                             </validation-provider>
@@ -193,9 +206,10 @@
                 <v-card-text class="pt-2" style="max-height: 300px;">
                     Are you sure to delete {{ formDeleteContent }}
                     <v-chip-group column small active-class="primary--text">
-                        <v-chip v-for="item in selected" :key="item.id">{{
-                            item.name
-                        }}</v-chip>
+                        <v-chip v-for="item in selected" :key="item.id">
+                            {{ item[headerId] }} |
+                            {{ item["price"] | currency }}
+                        </v-chip>
                     </v-chip-group>
                 </v-card-text>
 
@@ -244,14 +258,18 @@ export default {
             dialog: false,
             dialogDelete: false,
             total: 0,
-            search: "",
+            search: null,
             options: {},
             selected: [],
             headers: [
-                { text: "Updated At", value: "updated_at" },
+                { text: "Product", value: "product.name" },
                 { text: "Price", value: "price", align: "right" },
+                { text: "Updated At", value: "updated_at" },
                 { text: "Updater", value: "user.name" }
             ],
+            parentSearch: null,
+            parentItems: [],
+            headerId: "product.name",
             form: cloneDeep(ProductPrice)
         };
     },
@@ -264,7 +282,7 @@ export default {
             if (length > 0) {
                 return `${length} selected`;
             }
-            return `${startCase(pluralize(model))}`;
+            return `${pluralize(startCase(model))}`;
         },
         formTitle() {
             const { id } = this.form;
@@ -275,9 +293,9 @@ export default {
             const single = length === 1;
 
             if (single) {
-                return `this ${model} ?`;
+                return `this ${startCase(model)} ?`;
             }
-            return `these ${length} ${pluralize(model)} ?`;
+            return `these ${length} ${pluralize(startCase(model))} ?`;
         },
         apiUrl() {
             let models = kebabCase(model).split("-");
@@ -304,6 +322,17 @@ export default {
             this.form = cloneDeep(this.selected[0]);
             this.dialog = true;
         },
+        fetchParent: async function() {
+            await this.GET_MODELS({
+                model: "product",
+                params: {
+                    itemsPerPage: -1,
+                    filterFields: ["name"]
+                }
+            }).then(({ payload }) => {
+                this.parentItems = payload;
+            });
+        },
         fetch: async function() {
             await this.GET_MODELS({
                 model,
@@ -312,7 +341,7 @@ export default {
                     ...this.options,
                     search: this.search
                 }
-            }).then(total => {
+            }).then(({ total }) => {
                 this.total = total;
             });
         },
@@ -351,6 +380,9 @@ export default {
         },
         search: debounce(function() {
             this.fetch();
+        }, 500),
+        parentSearch: debounce(function(val) {
+            this.fetchParent();
         }, 500)
     }
 };
