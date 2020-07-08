@@ -20,3 +20,10 @@ export const ProductPrice = {
     product: Product,
     user: User
 };
+
+export const Formula = {
+    id: -1,
+    name: "",
+    description: "",
+    user: User
+};

@@ -17,7 +17,7 @@ class CreateFormulaProductsTable extends Migration
             $table->id();
             $table->foreignId('formula_id');
             $table->foreignId('product_id');
-            $table->integer('portion');
+            $table->integer('percent');
             $table->foreignId('user_id');
             $table->timestamps();
         });

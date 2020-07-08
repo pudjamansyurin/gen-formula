@@ -59,7 +59,7 @@
                                 <v-icon>
                                     {{
                                         searchBox
-                                            ? "mdi-magnify-close"
+                                            ? "mdi-close-circle"
                                             : "mdi-magnify"
                                     }}
                                 </v-icon>
@@ -80,6 +80,22 @@
                             </v-btn>
                         </template>
                         <span>Create</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-show="!selected.length"
+                                @click="dense = !dense"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon>{{
+                                    dense ? "mdi-table" : "mdi-table-large"
+                                }}</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>{{ dense ? "Larger" : "Smaller" }}</span>
                     </v-tooltip>
 
                     <v-tooltip bottom>
@@ -238,7 +254,7 @@ export default {
     name: model,
     data() {
         return {
-            dense: true,
+            dense: false,
             searchBox: false,
             dialog: false,
             dialogDelete: false,
