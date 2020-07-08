@@ -360,7 +360,7 @@ export default {
         fetchItem: async function() {
             await this.GET_MODELS({
                 model,
-                apiUrl: this.apiUrl,
+                url: this.apiUrl,
                 params: {
                     ...this.options,
                     search: this.search
@@ -377,7 +377,7 @@ export default {
         saveItem() {
             this.SAVE_MODEL({
                 model,
-                apiUrl: this.apiUrl,
+                url: this.apiUrl,
                 payload: this.form
             })
                 .then(async () => {
@@ -392,7 +392,7 @@ export default {
         deleteItem: async function() {
             await this.DELETE_MODELS({
                 model,
-                apiUrl: this.apiUrl,
+                url: this.apiUrl,
                 ids: map(this.selected, "id")
             });
             await this.fetchItem();
