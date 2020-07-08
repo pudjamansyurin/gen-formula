@@ -17,6 +17,7 @@ class CreateProductPricesTable extends Migration
             $table->id();
             $table->foreignId('product_id');
             $table->double('price');
+            $table->date('changed_at');
             $table->foreignId('user_id');
             $table->timestamps();
         });

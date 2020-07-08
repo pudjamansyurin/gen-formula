@@ -16,6 +16,7 @@ $factory->define(ProductPrice::class, function (Faker $faker) {
     return [
         'product_id' => Arr::random($product_ids),
         'price' => $faker->randomNumber(6),
+        'changed_at' => $faker->dateTimeBetween('-6 months', 'now'),
         'user_id' => Arr::random($user_ids),
         'created_at' => $faker->dateTimeBetween('-15 days', 'now'),
     ];

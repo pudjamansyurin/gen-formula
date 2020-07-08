@@ -11,7 +11,7 @@
             :dense="dense"
             :page="1"
             :items-per-page="10"
-            sort-by="updated_at"
+            sort-by="changed_at"
             sort-desc
             show-select
             must-sort
@@ -116,8 +116,8 @@
                 item.price | currency
             }}</template>
 
-            <template v-slot:item.updated_at="{ item }">{{
-                item.updated_at | moment("from")
+            <template v-slot:item.changed_at="{ item }">{{
+                item.changed_at | moment("from")
             }}</template>
         </v-data-table>
 
@@ -140,9 +140,9 @@
                                     @keydown="searchParent"
                                     :items="parentItems"
                                     :search-input.sync="parentSearch"
+                                    :readonly="id > 0"
                                     :error-messages="errors"
                                     :success="valid"
-                                    :readonly="id > 0"
                                     :loading="!!loading"
                                     chips
                                     hide-no-data
@@ -154,6 +154,57 @@
                                     persistent-hint
                                 ></v-autocomplete>
                             </validation-provider>
+
+                            <v-menu
+                                ref="menuChangedAt"
+                                v-model="menuChangedAt"
+                                :return-value.sync="form.changed_at"
+                                :close-on-content-click="false"
+                                min-width="290px"
+                                offset-y
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <validation-provider
+                                        name="changed_at"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            v-model="form.changed_at"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            label="Changed At"
+                                            hint="When the price changed"
+                                            readonly
+                                            v-bind="attrs"
+                                            v-on="on"
+                                        ></v-text-field>
+                                    </validation-provider>
+                                </template>
+                                <v-date-picker
+                                    v-model="form.changed_at"
+                                    :max="$moment().format('YYYY-MM-DD')"
+                                    no-title
+                                    scrollable
+                                >
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                        text
+                                        color="primary"
+                                        @click="menuChangedAt = false"
+                                        >Cancel</v-btn
+                                    >
+                                    <v-btn
+                                        text
+                                        color="primary"
+                                        @click="
+                                            $refs.menuChangedAt.save(
+                                                form.changed_at
+                                            )
+                                        "
+                                        >OK</v-btn
+                                    >
+                                </v-date-picker>
+                            </v-menu>
 
                             <validation-provider
                                 name="price"
@@ -203,7 +254,7 @@
                         <v-chip v-for="item in selected" :key="item.id">
                             <span v-if="id > 0">
                                 <strong>{{ item.price | currency }}</strong>
-                                {{ item.updated_at | moment("from") }}
+                                {{ item.changed_at | moment("from") }}
                             </span>
                             <span v-else>
                                 <strong>{{ item.product.name }}</strong>
@@ -266,9 +317,10 @@ export default {
             headers: [
                 { text: "Product", value: "product.name" },
                 { text: "Price", value: "price", align: "right" },
-                { text: "Updated At", value: "updated_at" },
+                { text: "Changed At", value: "changed_at" },
                 { text: "Updater", value: "user.name" }
             ],
+            menuChangedAt: false,
             parentSearch: null,
             parentItems: [],
             form: null

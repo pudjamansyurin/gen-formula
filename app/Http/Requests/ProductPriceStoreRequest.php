@@ -35,6 +35,10 @@ class ProductPriceStoreRequest extends FormRequest
                 'integer',
                 'min:1',
             ],
+            'changed_at' => [
+                'required',
+                'date_format:"Y-m-d"'
+            ]
         ];
     }
 }

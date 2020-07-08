@@ -57,6 +57,7 @@ class ProductPriceController extends Controller
             $productPrice = ProductPrice::create([
                 'product_id' => $request->product_id,
                 'price' => $request->price,
+                'changed_at' => $request->changed_at,
                 'user_id' => auth()->id()
             ]);
 
@@ -97,6 +98,7 @@ class ProductPriceController extends Controller
         $price->update([
             'product_id' => $request->product_id,
             'price' => $request->price,
+            'changed_at' => $request->changed_at,
         ]);
 
         return response(

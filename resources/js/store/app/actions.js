@@ -21,9 +21,6 @@ export default {
                 if (get(e, "data.errors")) {
                     return Promise.reject(e.data.errors);
                 }
-            })
-            .then(_ => {
-                commit(mutations.STOP_LOADING);
             });
     },
     [actions.LOGOUT]({ commit }) {
