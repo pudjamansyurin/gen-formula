@@ -9,23 +9,33 @@ export default {
 
         return api
             .viewAny(url, params)
-            .then(data => {
-                const { data: payload, meta } = data;
-                const { total } = meta;
-
+            .then(res => {
                 if (!params.filterFields) {
-                    commit(mutations.SET_MODELS, { model, payload });
+                    commit(mutations.SET_MODELS, {
+                        model,
+                        data: res.data
+                    });
                 }
 
-                return { payload, total };
+                return res;
+            })
+            .catch(e => {});
+    },
+    [actions.GET_MODEL]({ commit }, { model, id, apiUrl }) {
+        const url = apiUrl ? apiUrl : model;
+
+        return api
+            .view(url, id)
+            .then(data => {
+                return data;
             })
             .catch(e => {});
     },
     [actions.SAVE_MODEL]({ commit }, { model, payload, apiUrl }) {
         const url = apiUrl ? apiUrl : model;
-        const update = payload.id > -1;
+        const action = payload.id > -1 ? "update" : "create";
 
-        return api[update ? "update" : "create"](url, payload).catch(e => {
+        return api[action](url, payload).catch(e => {
             if (get(e, "data.errors")) {
                 return Promise.reject(e.data.errors);
             }

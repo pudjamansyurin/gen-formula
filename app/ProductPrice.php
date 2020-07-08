@@ -25,7 +25,10 @@ class ProductPrice extends Model
      *
      * @var array
      */
-    protected $with = ['product', 'user'];
+    protected $with = [
+        'product:id,name',
+        'user:id,name'
+    ];
 
     /**
      * Client query scope

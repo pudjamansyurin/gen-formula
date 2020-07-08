@@ -72,7 +72,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                 v-show="!selected.length"
-                                @click="dialog = true"
+                                @click="create"
                                 v-on="on"
                                 icon
                             >
@@ -198,7 +198,7 @@
                     Are you sure to delete {{ formDeleteContent }}
                     <v-chip-group column small active-class="primary--text">
                         <v-chip v-for="item in selected" :key="item.id">{{
-                            item[headerId]
+                            item.name
                         }}</v-chip>
                     </v-chip-group>
                 </v-card-text>
@@ -254,8 +254,7 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],
-            headerId: "name",
-            form: cloneDeep(Product)
+            form: null
         };
     },
     computed: {
@@ -291,26 +290,29 @@ export default {
                 this.search = "";
             }
         },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => {
-                this.form = cloneDeep(Product);
-                this.$refs.form.reset();
-            });
+        create() {
+            this.form = cloneDeep(Product);
+            this.dialog = true;
         },
         edit() {
             this.form = cloneDeep(this.selected[0]);
             this.dialog = true;
         },
-        fetch: async function() {
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => {
+                this.$refs.form.reset();
+            });
+        },
+        fetchItem: async function() {
             await this.GET_MODELS({
                 model,
                 params: {
                     ...this.options,
                     search: this.search
                 }
-            }).then(({ total }) => {
-                this.total = total;
+            }).then(({ meta }) => {
+                this.total = meta.total;
             });
         },
         saveItem() {
@@ -319,8 +321,12 @@ export default {
                 payload: this.form
             })
                 .then(async () => {
-                    await this.fetch();
+                    console.log("fetching");
+
+                    await this.fetchItem();
                     this.selected = [];
+
+                    console.log("closing");
                     this.close();
                 })
                 .catch(errors => {
@@ -332,7 +338,7 @@ export default {
                 model,
                 ids: map(this.selected, "id")
             });
-            await this.fetch();
+            await this.fetchItem();
             this.selected = [];
             this.dialogDelete = false;
         },
@@ -346,12 +352,12 @@ export default {
     watch: {
         options: {
             handler() {
-                this.fetch();
+                this.fetchItem();
             },
             deep: true
         },
         search: debounce(function() {
-            this.fetch();
+            this.fetchItem();
         }, 500)
     }
 };

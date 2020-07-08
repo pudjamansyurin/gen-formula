@@ -72,7 +72,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                 v-show="!selected.length"
-                                @click="dialog = true"
+                                @click="create"
                                 v-on="on"
                                 icon
                             >
@@ -138,10 +138,12 @@
                                 <v-autocomplete
                                     v-model="form.product_id"
                                     :items="parentItems"
-                                    :loading="!!loading"
                                     :search-input.sync="parentSearch"
                                     :error-messages="errors"
                                     :success="valid"
+                                    :readonly="id > 0"
+                                    :loading="!!loading"
+                                    :disabled="!!loading"
                                     hide-no-data
                                     hide-selected
                                     item-text="name"
@@ -207,8 +209,14 @@
                     Are you sure to delete {{ formDeleteContent }}
                     <v-chip-group column small active-class="primary--text">
                         <v-chip v-for="item in selected" :key="item.id">
-                            {{ item[headerId] }} |
-                            {{ item["price"] | currency }}
+                            <span v-if="id > 0">
+                                {{ item.price | currency }} |
+                                {{ item.updated_at | moment("from") }}
+                            </span>
+                            <span v-else>
+                                {{ item.product.name }} |
+                                {{ item.price | currency }}
+                            </span>
                         </v-chip>
                     </v-chip-group>
                 </v-card-text>
@@ -237,6 +245,7 @@
 import { mapState, mapActions } from "vuex";
 import { map, clone, cloneDeep, debounce, kebabCase, startCase } from "lodash";
 import {
+    GET_MODEL,
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
@@ -269,8 +278,7 @@ export default {
             ],
             parentSearch: null,
             parentItems: [],
-            headerId: "product.name",
-            form: cloneDeep(ProductPrice)
+            form: null
         };
     },
     computed: {
@@ -304,23 +312,37 @@ export default {
         }
     },
     methods: {
-        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        ...mapActions("model", [
+            GET_MODEL,
+            GET_MODELS,
+            SAVE_MODEL,
+            DELETE_MODELS
+        ]),
         toggleSearch() {
             this.searchBox = !this.searchBox;
             if (!this.searchBox) {
                 this.search = "";
             }
         },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => {
-                this.form = cloneDeep(ProductPrice);
-                this.$refs.form.reset();
-            });
+        create() {
+            this.form = cloneDeep(ProductPrice);
+            if (this.id > 0) {
+                this.form.product_id = this.id;
+            }
+
+            this.dialog = true;
         },
         edit() {
             this.form = cloneDeep(this.selected[0]);
+            this.parentItems.splice(0, 1, this.form.product);
+
             this.dialog = true;
+        },
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => {
+                this.$refs.form.reset();
+            });
         },
         fetchParent: async function() {
             await this.GET_MODELS({
@@ -329,11 +351,11 @@ export default {
                     itemsPerPage: -1,
                     filterFields: ["name"]
                 }
-            }).then(({ payload }) => {
-                this.parentItems = payload;
+            }).then(({ data }) => {
+                this.parentItems = data;
             });
         },
-        fetch: async function() {
+        fetchItem: async function() {
             await this.GET_MODELS({
                 model,
                 apiUrl: this.apiUrl,
@@ -341,8 +363,13 @@ export default {
                     ...this.options,
                     search: this.search
                 }
-            }).then(({ total }) => {
+            }).then(({ meta }) => {
+                const { total, parent } = meta;
+
                 this.total = total;
+                if (parent) {
+                    this.parentItems.splice(0, 1, parent);
+                }
             });
         },
         saveItem() {
@@ -352,7 +379,7 @@ export default {
                 payload: this.form
             })
                 .then(async () => {
-                    await this.fetch();
+                    await this.fetchItem();
                     this.selected = [];
                     this.close();
                 })
@@ -366,7 +393,7 @@ export default {
                 apiUrl: this.apiUrl,
                 ids: map(this.selected, "id")
             });
-            await this.fetch();
+            await this.fetchItem();
             this.selected = [];
             this.dialogDelete = false;
         }
@@ -374,12 +401,12 @@ export default {
     watch: {
         options: {
             handler() {
-                this.fetch();
+                this.fetchItem();
             },
             deep: true
         },
         search: debounce(function() {
-            this.fetch();
+            this.fetchItem();
         }, 500),
         parentSearch: debounce(function(val) {
             this.fetchParent();

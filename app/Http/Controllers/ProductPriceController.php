@@ -21,8 +21,11 @@ class ProductPriceController extends Controller
     {
         // Model instance
         $q = new ProductPrice;
-        // Parent Query
+        // Parent
+        $parent = null;
         if ($productId > 0) {
+            $parent = Product::find($productId);
+
             $q = $q->whereHas('product', function ($q) use ($productId) {
                 $q->where('id', $productId);
             });
@@ -36,7 +39,8 @@ class ProductPriceController extends Controller
         return (new ProductPriceCollection($q->get()))
             ->additional([
                 'meta' => [
-                    'total' => $total
+                    'total' => $total,
+                    'parent' => $parent
                 ]
             ]);
     }
@@ -47,21 +51,24 @@ class ProductPriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Product $product, ProductPrice $productPrice)
+    {
+        return response(
+            new ProductPriceItem($productPrice),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\ProductPrice  $productPrice
+     * @return \Illuminate\Http\Response
+     */
+    public function show(ProductPrice $productPrice)
     {
         //
     }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\ProductPrice  $productPrice
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(ProductPrice $productPrice)
-    // {
-    //     //
-    // }
 
     /**
      * Update the specified resource in storage.

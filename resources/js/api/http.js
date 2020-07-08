@@ -73,8 +73,7 @@ http.interceptors.response.use(
 
         return response;
     },
-    error => {
-        const { response } = error;
+    ({ response }) => {
         const { status: code, statusText: text, data } = response;
         const { message } = data;
         const { authenticated } = store.state.app.auth;

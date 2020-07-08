@@ -2,17 +2,17 @@ import pluralize from "pluralize";
 import * as mutations from "./mutation-types";
 
 export default {
-    [mutations.SET_MODELS](state, { model, payload }) {
-        state[pluralize(model)] = payload;
+    [mutations.SET_MODELS](state, { model, data }) {
+        state[pluralize(model)] = data;
     }
-    // [mutations.ADD_MODEL](state, {model, payload}) {
-    //     state[pluralize(model)].unshift(payload);
+    // [mutations.ADD_MODEL](state, {model, data}) {
+    //     state[pluralize(model)].unshift(data);
     // },
-    // [mutations.UPDATE_MODEL](state, {model, payload}) {
+    // [mutations.UPDATE_MODEL](state, {model, data}) {
     //     let index = state[pluralize(model)].findIndex(
-    //         m => m.id === payload.id
+    //         m => m.id === data.id
     //     );
-    //     state[pluralize(model)].splice(index, 1, {model, payload});
+    //     state[pluralize(model)].splice(index, 1, {model, data});
     // },
     // [mutations.DELETE_MODELS](state, ids) {
     //     state[pluralize(model)] = [

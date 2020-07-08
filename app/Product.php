@@ -32,7 +32,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $with = ['user'];
+    protected $with = ['user:id,name'];
 
     /**
      * Client query scope

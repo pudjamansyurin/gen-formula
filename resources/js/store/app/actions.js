@@ -6,10 +6,9 @@ import * as mutations from "./mutation-types";
 
 export default {
     [actions.LOGIN]({ commit }, payload) {
-        commit(mutations.START_LOADING);
         return login(payload)
-            .then(response => {
-                const { user } = response.data;
+            .then(({ data }) => {
+                const { user } = data;
                 const { remember } = payload;
 
                 commit(mutations.SET_AUTH, { user, remember });

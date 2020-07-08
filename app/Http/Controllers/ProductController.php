@@ -54,19 +54,19 @@ class ProductController extends Controller
         );
     }
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Product $product
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(Product $product)
-    // {
-    //     return response(
-    //         new ProductItem($product),
-    //         Response::HTTP_OK
-    //     );
-    // }
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Product $product
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Product $product)
+    {
+        return response(
+            new ProductItem($product),
+            Response::HTTP_OK
+        );
+    }
 
     /**
      * Update the specified resource in storage.
