@@ -22,10 +22,8 @@ class ProductPriceController extends Controller
         // Model instance
         $q = new ProductPrice;
         // Parent
-        $parent = null;
-        if ($productId > 0) {
-            $parent = Product::find($productId);
-
+        $parent = Product::find($productId);
+        if ($parent) {
             $q = $q->whereHas('product', function ($q) use ($productId) {
                 $q->where('id', $productId);
             });
@@ -51,12 +49,26 @@ class ProductPriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Product $product, ProductPrice $productPrice)
+    public function store(ProductPriceStoreRequest $request)
     {
-        return response(
-            new ProductPriceItem($productPrice),
-            Response::HTTP_OK
-        );
+        $product = Product::find($request->product_id);
+
+        if ($product) {
+            $productPrice = ProductPrice::create([
+                'product_id' => $request->product_id,
+                'price' => $request->price,
+                'user_id' => auth()->id()
+            ]);
+
+            return response(
+                new ProductPriceItem($productPrice),
+                Response::HTTP_CREATED
+            );
+        }
+
+        return response([
+            'message' => 'Product category not found'
+        ], Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -67,7 +79,10 @@ class ProductPriceController extends Controller
      */
     public function show(ProductPrice $productPrice)
     {
-        //
+        return response(
+            new ProductPriceItem($productPrice),
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -77,17 +92,15 @@ class ProductPriceController extends Controller
      * @param  \App\ProductPrice  $productPrice
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductPriceStoreRequest $request, ProductPrice $productPrice)
+    public function update(ProductPriceStoreRequest $request, $productId, ProductPrice $price)
     {
-        debug($productPrice);
-
-        $productPrice->update([
+        $price->update([
             'product_id' => $request->product_id,
             'price' => $request->price,
         ]);
 
         return response(
-            new ProductPriceItem($productPrice),
+            new ProductPriceItem($price),
             Response::HTTP_OK
         );
     }

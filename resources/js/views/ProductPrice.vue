@@ -132,7 +132,7 @@
 
                         <v-card-text>
                             <validation-provider
-                                name="price"
+                                name="product_id"
                                 v-slot="{ errors, valid }"
                             >
                                 <v-autocomplete
@@ -155,26 +155,17 @@
                                 ></v-autocomplete>
                             </validation-provider>
 
-                            <v-text-field
-                                label="Product ID"
-                                name="product_id"
-                                type="number"
-                                v-model="form.product_id"
-                                hint="The product ID"
-                                persistent-hint
-                            ></v-text-field>
-
                             <validation-provider
                                 name="price"
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
                                     label="Product price"
-                                    name="price"
-                                    type="text"
-                                    v-model="form.price"
+                                    type="number"
+                                    v-model.number="form.price"
                                     :error-messages="errors"
                                     :success="valid"
+                                    prefix="Rp"
                                     counter
                                     hint="The updated product price"
                                     persistent-hint
@@ -211,11 +202,11 @@
                     <v-chip-group column small active-class="primary--text">
                         <v-chip v-for="item in selected" :key="item.id">
                             <span v-if="id > 0">
-                                {{ item.price | currency }} |
+                                <strong>{{ item.price | currency }}</strong>
                                 {{ item.updated_at | moment("from") }}
                             </span>
                             <span v-else>
-                                {{ item.product.name }} |
+                                <strong>{{ item.product.name }}</strong>
                                 {{ item.price | currency }}
                             </span>
                         </v-chip>
@@ -244,6 +235,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+123;
 import { map, clone, cloneDeep, debounce, kebabCase, startCase } from "lodash";
 import {
     GET_MODEL,
@@ -336,6 +328,8 @@ export default {
         edit() {
             this.form = cloneDeep(this.selected[0]);
             this.parentItems.splice(0, 1, this.form.product);
+
+            console.log(this.form);
 
             this.dialog = true;
         },

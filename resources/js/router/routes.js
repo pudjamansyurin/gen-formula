@@ -45,6 +45,12 @@ export default [
         children: [
             {
                 path: "",
+                redirect: {
+                    name: "report"
+                }
+            },
+            {
+                path: "report",
                 name: "report",
                 component: Report
             },

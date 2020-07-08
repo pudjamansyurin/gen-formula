@@ -28,12 +28,12 @@ class ProductPriceStoreRequest extends FormRequest
                 'required',
                 'integer',
                 'min:1',
-                'exists:products'
+                'exists:products,id'
             ],
             'price' => [
                 'required',
                 'integer',
-                'min:0',
+                'min:1',
             ],
         ];
     }

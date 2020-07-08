@@ -7,7 +7,9 @@
     >
         <v-list>
             <template v-for="(item, index) in items">
-                <v-subheader v-if="item.heading" :key="index">{{ item.heading }}</v-subheader>
+                <v-subheader v-if="item.heading" :key="index">{{
+                    item.heading
+                }}</v-subheader>
                 <v-divider v-else-if="item.divider" :key="index"></v-divider>
                 <v-list-group
                     v-else-if="item.children"
@@ -18,7 +20,9 @@
                 >
                     <template v-slot:activator>
                         <v-list-item-content>
-                            <v-list-item-title>{{ item.text }}</v-list-item-title>
+                            <v-list-item-title>{{
+                                item.text
+                            }}</v-list-item-title>
                         </v-list-item-content>
                     </template>
                     <v-list-item
@@ -32,11 +36,19 @@
                             <v-icon>{{ child.icon }}</v-icon>
                         </v-list-item-action>
                         <v-list-item-content>
-                            <v-list-item-title>{{ child.text }}</v-list-item-title>
+                            <v-list-item-title>{{
+                                child.text
+                            }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-group>
-                <v-list-item v-else :key="index" :to="{ name: item.to }" color="primary" exact link>
+                <v-list-item
+                    v-else
+                    :key="index"
+                    :to="{ name: item.to }"
+                    color="primary"
+                    link
+                >
                     <v-list-item-action>
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-item-action>
@@ -60,12 +72,13 @@ export default {
                 { divider: true },
                 { heading: "DASHBOARD" },
                 { icon: "mdi-chart-areaspline", text: "Report", to: "report" },
+                { icon: "mdi-microsoft-excel", text: "Formula", to: "formula" },
                 {
                     icon: "mdi-package-variant-closed",
                     text: "Product",
                     to: "product"
                 },
-                { icon: "mdi-microsoft-excel", text: "Formula", to: "formula" },
+                { icon: "mdi-currency-usd", text: "Price", to: "productPrice" },
                 { divider: true },
                 { heading: "CONFIGURATION" },
                 { icon: "mdi-account-group", text: "User", to: "user" },

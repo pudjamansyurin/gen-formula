@@ -141,7 +141,6 @@
                             >
                                 <v-text-field
                                     label="Product name"
-                                    name="name"
                                     type="text"
                                     v-model="form.name"
                                     :error-messages="errors"
@@ -158,7 +157,6 @@
                             >
                                 <v-text-field
                                     label="Product description"
-                                    name="description"
                                     type="text"
                                     v-model="form.description"
                                     :error-messages="errors"
