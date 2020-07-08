@@ -137,13 +137,14 @@
                             >
                                 <v-autocomplete
                                     v-model="form.product_id"
+                                    @keydown="searchParent"
                                     :items="parentItems"
                                     :search-input.sync="parentSearch"
                                     :error-messages="errors"
                                     :success="valid"
                                     :readonly="id > 0"
                                     :loading="!!loading"
-                                    :disabled="!!loading"
+                                    chips
                                     hide-no-data
                                     hide-selected
                                     item-text="name"
@@ -349,7 +350,8 @@ export default {
                 model: "product",
                 params: {
                     itemsPerPage: -1,
-                    filterFields: ["name"]
+                    filterFields: ["name"],
+                    search: this.parentSearch
                 }
             }).then(({ data }) => {
                 this.parentItems = data;
@@ -396,7 +398,10 @@ export default {
             await this.fetchItem();
             this.selected = [];
             this.dialogDelete = false;
-        }
+        },
+        searchParent: debounce(function() {
+            this.fetchParent();
+        }, 500)
     },
     watch: {
         options: {
@@ -407,9 +412,6 @@ export default {
         },
         search: debounce(function() {
             this.fetchItem();
-        }, 500),
-        parentSearch: debounce(function(val) {
-            this.fetchParent();
         }, 500)
     }
 };
