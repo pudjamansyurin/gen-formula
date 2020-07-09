@@ -239,7 +239,7 @@
         <v-dialog v-model="dialogChild" max-width="700px" persistent scrollable>
             <v-card :loading="!!loading">
                 <v-card-title>
-                    <span class="headline">Related Products</span>
+                    <span class="headline">{{ formChildTitle }}</span>
                 </v-card-title>
                 <v-divider></v-divider>
 
@@ -248,25 +248,6 @@
                         <v-form>
                             <v-row>
                                 <v-col>
-                                    <validation-provider
-                                        rules="min_value:100|max_value:100"
-                                        name="total_percentage"
-                                        v-slot="{ errors, valid }"
-                                    >
-                                        <v-text-field
-                                            label="Total percentage"
-                                            type="number"
-                                            :value="totalPercentage"
-                                            :error-messages="errors"
-                                            :success="valid"
-                                            suffix="%"
-                                            hint="This value should be 100%"
-                                            filled
-                                            readonly
-                                            persistent-hint
-                                        ></v-text-field>
-                                    </validation-provider>
-
                                     <validation-provider
                                         name="products"
                                         rules="required"
@@ -291,13 +272,33 @@
                                             return-object
                                         ></v-autocomplete>
                                     </validation-provider>
+
+                                    <validation-provider
+                                        rules="min_value:100|max_value:100"
+                                        name="Total Percentage"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            class="mt-3"
+                                            label="Total Percentage"
+                                            type="number"
+                                            :value="totalPercentage"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            suffix="%"
+                                            hint="This shoudl be 100%"
+                                            readonly
+                                            filled
+                                            persistent-hint
+                                        ></v-text-field>
+                                    </validation-provider>
                                 </v-col>
                                 <v-col>
                                     <validation-provider
-                                        v-for="(el, i) in formChild"
+                                        v-for="(el, key) in formChild"
                                         :key="el.id"
-                                        rules="required|min_value:1"
-                                        :name="`percent[${i}]`"
+                                        rules="required|min_value:1|max_value:100"
+                                        :name="el.name"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-text-field
@@ -341,7 +342,8 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import {
     map,
     find,
-    sumBy,
+    reduce,
+    get,
     clone,
     cloneDeep,
     debounce,
@@ -396,6 +398,9 @@ export default {
             const { id } = this.form;
             return id === -1 ? "New" : "Edit";
         },
+        formChildTitle() {
+            return get(this.form, "name") || "Related products";
+        },
         formDeleteContent() {
             const { length } = this.selected;
             const single = length === 1;
@@ -406,7 +411,13 @@ export default {
             return `these ${length} ${pluralize(model)} ?`;
         },
         totalPercentage() {
-            return sumBy(this.formChild, "percent");
+            return reduce(
+                this.formChild,
+                (sum, el) => {
+                    return sum + Number(el.percent);
+                },
+                0
+            );
         }
     },
     methods: {
