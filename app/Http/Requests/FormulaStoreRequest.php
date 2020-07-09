@@ -30,9 +30,23 @@ class FormulaStoreRequest extends FormRequest
                 'min:3',
                 Rule::unique('formulas', 'name')->ignore($this->formula)
             ],
-            'description'   => [
+            'description' => [
                 'required',
                 'min:5'
+            ],
+            'products' => [
+                'sometimes',
+                'array'
+            ],
+            'products.*.id' => [
+                'integer',
+                'min:1',
+                'distinct',
+                'exists:products,id'
+            ],
+            'products.*.percent' => [
+                'min:1',
+                'max:100'
             ]
         ];
     }

@@ -493,26 +493,22 @@ export default {
             // validate
             this.$refs.form_child.validate().then(valid => {
                 if (valid) {
-                    console.log("validation pass");
+                    // this.SAVE_MODEL({
+                    //     model,
+                    //     payload: this.form
+                    // })
+                    //     .then(async () => {
+                    //         console.log("fetching");
+                    //         await this.fetchItem();
+                    //         this.selected = [];
+                    //         console.log("closing");
+                    //         this.close();
+                    //     })
+                    //     .catch(errors => {
+                    //         this.$refs.form.setErrors(errors);
+                    //     });
                 }
             });
-
-            // this.SAVE_MODEL({
-            //     model,
-            //     payload: this.form
-            // })
-            //     .then(async () => {
-            //         console.log("fetching");
-
-            //         await this.fetchItem();
-            //         this.selected = [];
-
-            //         console.log("closing");
-            //         this.close();
-            //     })
-            //     .catch(errors => {
-            //         this.$refs.form.setErrors(errors);
-            //     });
         },
         saveItem() {
             this.SAVE_MODEL({
