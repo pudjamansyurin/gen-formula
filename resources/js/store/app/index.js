@@ -6,6 +6,8 @@ import { ls } from "@/helpers";
 const state = {
     title: "GEN Formula",
     drawer: null,
+    dense: false,
+    dark: false,
     loading: 0,
     message: {
         text: "",

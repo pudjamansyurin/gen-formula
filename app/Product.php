@@ -57,12 +57,12 @@ class Product extends Model
     /**
      * Set relation tables.
      */
-    public function productPrices()
+    public function prices()
     {
-        return $this->hasMany(Price::class);
+        return $this->hasMany(ProductPrice::class);
     }
 
-    public function formulaProducts()
+    public function formulas()
     {
         return $this->hasMany(FormulaProduct::class);
     }

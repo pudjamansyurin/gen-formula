@@ -43,6 +43,7 @@
                             v-show="!selected.length && searchBox"
                             v-model="search"
                             label="Search"
+                            autofocus
                             single-line
                             hide-details
                         ></v-text-field>
@@ -86,7 +87,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                 v-show="!selected.length"
-                                @click="dense = !dense"
+                                @click="TOGGLE_DENSE"
                                 v-on="on"
                                 icon
                             >
@@ -151,24 +152,20 @@
                                 name="product_id"
                                 v-slot="{ errors, valid }"
                             >
-                                <v-autocomplete
+                                <v-select
                                     v-model="form.product_id"
-                                    @keydown="searchParent"
                                     :items="parentItems"
-                                    :search-input.sync="parentSearch"
                                     :readonly="id > 0"
                                     :error-messages="errors"
                                     :success="valid"
                                     :loading="!!loading"
                                     chips
-                                    hide-no-data
-                                    hide-selected
                                     item-text="name"
                                     item-value="id"
                                     label="Product"
                                     hint="The product being updated"
                                     persistent-hint
-                                ></v-autocomplete>
+                                ></v-select>
                             </validation-provider>
 
                             <v-menu
@@ -301,8 +298,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-123;
+import { mapState, mapMutations, mapActions } from "vuex";
 import { map, clone, cloneDeep, debounce, kebabCase, startCase } from "lodash";
 import {
     GET_MODEL,
@@ -310,6 +306,7 @@ import {
     SAVE_MODEL,
     DELETE_MODELS
 } from "@/store/model/action-types";
+import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import pluralize from "pluralize";
 import { ProductPrice } from "@/models";
 
@@ -322,7 +319,6 @@ export default {
     },
     data() {
         return {
-            dense: false,
             searchBox: false,
             dialog: false,
             dialogDelete: false,
@@ -337,13 +333,12 @@ export default {
                 { text: "Updater", value: "user.name" }
             ],
             menuChangedAt: false,
-            parentSearch: null,
             parentItems: [],
             form: null
         };
     },
     computed: {
-        ...mapState("app", ["loading"]),
+        ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["productPrices"]),
         toolbarTitle() {
             const { length } = this.selected;
@@ -373,6 +368,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations("app", [TOGGLE_DENSE]),
         ...mapActions("model", [
             GET_MODEL,
             GET_MODELS,
@@ -411,9 +407,7 @@ export default {
             await this.GET_MODELS({
                 model: "product",
                 params: {
-                    itemsPerPage: -1,
-                    filterFields: ["name"],
-                    search: this.parentSearch
+                    itemsPerPage: -1
                 }
             }).then(({ data }) => {
                 this.parentItems = data;
@@ -428,12 +422,8 @@ export default {
                     search: this.search
                 }
             }).then(({ meta }) => {
-                const { total, parent } = meta;
-
+                const { total } = meta;
                 this.total = total;
-                if (parent) {
-                    this.parentItems.splice(0, 1, parent);
-                }
             });
         },
         saveItem() {
@@ -460,10 +450,10 @@ export default {
             await this.fetchItem();
             this.selected = [];
             this.dialogDelete = false;
-        },
-        searchParent: debounce(function() {
-            this.fetchParent();
-        }, 500)
+        }
+    },
+    mounted() {
+        this.fetchParent();
     },
     watch: {
         options: {

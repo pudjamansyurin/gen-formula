@@ -16,28 +16,34 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class
         ]);
 
+        $products = factory(App\Product::class, 50)->create()
+            ->each(function ($product) {
+                for ($i = 1; $i < rand(1, 10); $i++) {
+                    factory(App\ProductPrice::class)->create([
+                        'product_id' => $product->id
+                    ]);
+                }
+            });
 
-        factory(App\Product::class, 50)->create();
+        factory(App\Formula::class, 25)->create()
+            ->each(function ($formula) use ($products) {
+                $productsQuota = $products->toArray();
+                $percentQuota = 100;
 
-        factory(App\ProductPrice::class, 50 * 5)->create();
+                while ($percentQuota) {
+                    $percent = rand(1, $percentQuota);
+                    $percentQuota -= $percent;
 
-        factory(App\Formula::class, 25)->create();
-        // ->each(function ($formula) use ($products) {
-        //     $percent = 100;
+                    $index = array_rand($productsQuota);
+                    $product_id = $productsQuota[$index]['id'];
+                    unset($productsQuota[$index]);
 
-        //     while ($percent) {
-        //         $random = rand(1, $percent);
-        //         $percent -= $random;
-
-
-        //         $formulaProducts['percent'] = array_push($percents, $random);
-        //     }
-
-        //     // $formula->products()->attach(
-
-        //     // )
-        // });
-
-        factory(App\FormulaProduct::class, 25 * 10)->create();
+                    factory(App\FormulaProduct::class)->create([
+                        'percent' => $percent,
+                        'formula_id' => $formula->id,
+                        'product_id' => $product_id
+                    ]);
+                }
+            });
     }
 }

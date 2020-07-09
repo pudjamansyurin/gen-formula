@@ -22,8 +22,7 @@ class ProductPriceController extends Controller
         // Model instance
         $q = new ProductPrice;
         // Parent
-        $parent = Product::find($productId);
-        if ($parent) {
+        if ($productId > 0) {
             $q = $q->whereHas('product', function ($q) use ($productId) {
                 $q->where('id', $productId);
             });
@@ -37,8 +36,7 @@ class ProductPriceController extends Controller
         return (new ProductPriceCollection($q->get()))
             ->additional([
                 'meta' => [
-                    'total' => $total,
-                    'parent' => $parent
+                    'total' => $total
                 ]
             ]);
     }

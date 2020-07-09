@@ -43,6 +43,7 @@
                             v-show="!selected.length && searchBox"
                             v-model="search"
                             label="Search"
+                            autofocus
                             single-line
                             hide-details
                         ></v-text-field>
@@ -86,7 +87,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                 v-show="!selected.length"
-                                @click="dense = !dense"
+                                @click="TOGGLE_DENSE"
                                 v-on="on"
                                 icon
                             >
@@ -129,7 +130,12 @@
             </template>
 
             <template v-slot:item.name="{ item }">
-                <v-chip color="primary" :small="dense">{{ item.name }}</v-chip>
+                <v-chip
+                    color="primary"
+                    @click="editChild(item.id)"
+                    :small="dense"
+                    >{{ item.name }}</v-chip
+                >
             </template>
             <template v-slot:item.updated_at="{ item }">{{
                 item.updated_at | moment("from")
@@ -229,17 +235,115 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog v-model="dialogChild" max-width="700px" persistent>
+            <validation-observer
+                v-slot="{ invalid, handleSubmit }"
+                ref="formProduct"
+            >
+                <v-form @submit.prevent="handleSubmit(saveItem())">
+                    <v-card :loading="!!loading">
+                        <v-card-title>
+                            <span class="headline">Related Products</span>
+                        </v-card-title>
+                        <v-divider></v-divider>
+
+                        <v-card-text>
+                            <validation-provider
+                                name="products"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-select
+                                    v-model="form.products_id"
+                                    :items="childItems"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    :loading="!!loading"
+                                    chips
+                                    multiple
+                                    item-text="name"
+                                    item-value="id"
+                                    label="Related products"
+                                    hint="The related products"
+                                    persistent-hint
+                                    return-object
+                                ></v-select>
+                            </validation-provider>
+
+                            <v-row
+                                v-for="product in form.products"
+                                :key="product.id"
+                            >
+                                <v-col>
+                                    {{ product.name }}
+                                </v-col>
+                            </v-row>
+                            <!-- <validation-provider
+                                name="name"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-text-field
+                                    label="Formula name"
+                                    type="text"
+                                    v-model="form.name"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    counter
+                                    hint="This is to identify the formula"
+                                    persistent-hint
+                                ></v-text-field>
+                            </validation-provider>
+
+                            <validation-provider
+                                name="description"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-text-field
+                                    label="Formula description"
+                                    type="text"
+                                    v-model="form.description"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    counter
+                                    hint="Short description about the formula"
+                                    persistent-hint
+                                ></v-text-field>
+                            </validation-provider> -->
+                        </v-card-text>
+
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-btn
+                                color="blue darken-1"
+                                text
+                                @click="closeChild"
+                                >Cancel</v-btn
+                            >
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                :disabled="invalid || !!loading"
+                                type="submit"
+                                color="primary"
+                                large
+                                >Save</v-btn
+                            >
+                        </v-card-actions>
+                    </v-card>
+                </v-form>
+            </validation-observer>
+        </v-dialog>
     </v-col>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import { map, clone, cloneDeep, debounce, startCase } from "lodash";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
 } from "@/store/model/action-types";
+import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import pluralize from "pluralize";
 import { Formula } from "@/models";
 
@@ -249,7 +353,6 @@ export default {
     name: model,
     data() {
         return {
-            dense: false,
             searchBox: false,
             dialog: false,
             dialogDelete: false,
@@ -263,11 +366,13 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],
+            dialogChild: false,
+            childItems: [],
             form: null
         };
     },
     computed: {
-        ...mapState("app", ["loading"]),
+        ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["formulas"]),
         toolbarTitle() {
             const { length } = this.selected;
@@ -292,6 +397,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations("app", [TOGGLE_DENSE]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         toggleSearch() {
             this.searchBox = !this.searchBox;
@@ -307,10 +413,36 @@ export default {
             this.form = cloneDeep(this.selected[0]);
             this.dialog = true;
         },
+        editChild(id) {
+            let index = this.formulas.findIndex(el => el.id == id);
+            this.form = cloneDeep(this.formulas[index]);
+            this.dialogChild = true;
+
+            this.form.products_id = map(
+                this.form.products,
+                el => el.product_id
+            );
+        },
         close() {
             this.dialog = false;
             this.$nextTick(() => {
                 this.$refs.form.reset();
+            });
+        },
+        closeChild() {
+            this.dialogChild = false;
+            this.$nextTick(() => {
+                this.$refs.formProduct.reset();
+            });
+        },
+        fetchChild: async function() {
+            await this.GET_MODELS({
+                model: "product",
+                params: {
+                    itemsPerPage: -1
+                }
+            }).then(({ data }) => {
+                this.childItems = data;
             });
         },
         fetchItem: async function() {
@@ -351,6 +483,9 @@ export default {
             this.selected = [];
             this.dialogDelete = false;
         }
+    },
+    mounted() {
+        this.fetchChild();
     },
     watch: {
         options: {

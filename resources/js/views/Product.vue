@@ -43,6 +43,7 @@
                             v-show="!selected.length && searchBox"
                             v-model="search"
                             label="Search"
+                            autofocus
                             single-line
                             hide-details
                         ></v-text-field>
@@ -86,7 +87,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                 v-show="!selected.length"
-                                @click="dense = !dense"
+                                @click="TOGGLE_DENSE"
                                 v-on="on"
                                 icon
                             >
@@ -238,13 +239,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { map, clone, cloneDeep, debounce, startCase } from "lodash";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
 } from "@/store/model/action-types";
+import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import pluralize from "pluralize";
 import { Product } from "@/models";
 
@@ -254,7 +256,6 @@ export default {
     name: model,
     data() {
         return {
-            dense: false,
             searchBox: false,
             dialog: false,
             dialogDelete: false,
@@ -272,7 +273,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading"]),
+        ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["products"]),
         toolbarTitle() {
             const { length } = this.selected;
@@ -297,6 +298,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations("app", [TOGGLE_DENSE]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         toggleSearch() {
             this.searchBox = !this.searchBox;

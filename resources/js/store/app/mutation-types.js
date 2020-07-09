@@ -8,3 +8,5 @@ export const SET_MESSAGE = "SET_MESSAGE";
 export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
 export const SET_AUTH = "SET_AUTH";
 export const CLEAR_AUTH = "CLEAR_AUTH";
+export const TOGGLE_DENSE = "TOGGLE_DENSE";
+export const TOGGLE_DARK = "TOGGLE_DARK";

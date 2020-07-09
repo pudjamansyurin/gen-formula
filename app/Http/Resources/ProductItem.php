@@ -19,7 +19,8 @@ class ProductItem extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'updated_at' => $this->updated_at,
-            'user' => $this->user,
+            'user' =>  $this->user,
+            'prices' => $this->prices,
         ];
     }
 }
