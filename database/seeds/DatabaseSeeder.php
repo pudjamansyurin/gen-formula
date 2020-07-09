@@ -27,21 +27,20 @@ class DatabaseSeeder extends Seeder
 
         factory(App\Formula::class, 25)->create()
             ->each(function ($formula) use ($products) {
-                $productsQuota = $products->toArray();
+                $productsUsed = [];
                 $percentQuota = 100;
 
                 while ($percentQuota) {
                     $percent = rand(1, $percentQuota);
                     $percentQuota -= $percent;
 
-                    $index = array_rand($productsQuota);
-                    $product_id = $productsQuota[$index]['id'];
-                    unset($productsQuota[$index]);
+                    $product = $products->whereNotIn('id', $productsUsed)->random();
+                    array_push($productsUsed, $product->id);
 
                     factory(App\FormulaProduct::class)->create([
                         'percent' => $percent,
                         'formula_id' => $formula->id,
-                        'product_id' => $product_id
+                        'product_id' => $product->id
                     ]);
                 }
             });

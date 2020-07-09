@@ -410,7 +410,12 @@ export default {
                     itemsPerPage: -1
                 }
             }).then(({ data }) => {
-                this.parentItems = data;
+                this.childItems = map(data, ({ id, name }) => {
+                    return {
+                        id,
+                        name
+                    };
+                });
             });
         },
         fetchItem: async function() {

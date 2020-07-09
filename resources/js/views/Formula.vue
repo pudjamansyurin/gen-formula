@@ -236,108 +236,117 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog v-model="dialogChild" max-width="700px" persistent>
-            <validation-observer
-                v-slot="{ invalid, handleSubmit }"
-                ref="formProduct"
-            >
-                <v-form @submit.prevent="handleSubmit(saveItem())">
-                    <v-card :loading="!!loading">
-                        <v-card-title>
-                            <span class="headline">Related Products</span>
-                        </v-card-title>
-                        <v-divider></v-divider>
+        <v-dialog v-model="dialogChild" max-width="700px" persistent scrollable>
+            <v-card :loading="!!loading">
+                <v-card-title>
+                    <span class="headline">Related Products</span>
+                </v-card-title>
+                <v-divider></v-divider>
 
-                        <v-card-text>
-                            <validation-provider
-                                name="products"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-select
-                                    v-model="form.products_id"
-                                    :items="childItems"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    :loading="!!loading"
-                                    chips
-                                    multiple
-                                    item-text="name"
-                                    item-value="id"
-                                    label="Related products"
-                                    hint="The related products"
-                                    persistent-hint
-                                    return-object
-                                ></v-select>
-                            </validation-provider>
-
-                            <v-row
-                                v-for="product in form.products"
-                                :key="product.id"
-                            >
+                <v-card-text style="max-height: 500px;">
+                    <validation-observer ref="form_child">
+                        <v-form>
+                            <v-row>
                                 <v-col>
-                                    {{ product.name }}
+                                    <validation-provider
+                                        rules="min_value:100|max_value:100"
+                                        name="total_percentage"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            label="Total percentage"
+                                            type="number"
+                                            :value="totalPercentage"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            suffix="%"
+                                            hint="This value should be 100%"
+                                            filled
+                                            readonly
+                                            persistent-hint
+                                        ></v-text-field>
+                                    </validation-provider>
+
+                                    <validation-provider
+                                        name="products"
+                                        rules="required"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-autocomplete
+                                            v-model="formChild"
+                                            :items="childItems"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            :loading="!!loading"
+                                            chips
+                                            multiple
+                                            auto-select-first
+                                            clearable
+                                            deletable-chips
+                                            item-text="name"
+                                            item-value="id"
+                                            label="Related products"
+                                            hint="The related products"
+                                            persistent-hint
+                                            return-object
+                                        ></v-autocomplete>
+                                    </validation-provider>
+                                </v-col>
+                                <v-col>
+                                    <validation-provider
+                                        v-for="(el, i) in formChild"
+                                        :key="el.id"
+                                        rules="required|min_value:1"
+                                        :name="`percent[${i}]`"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            :label="el.name"
+                                            type="number"
+                                            v-model.number="el.percent"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            suffix="%"
+                                            hint="This product's percentage"
+                                            persistent-hint
+                                        ></v-text-field>
+                                    </validation-provider>
                                 </v-col>
                             </v-row>
-                            <!-- <validation-provider
-                                name="name"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-text-field
-                                    label="Formula name"
-                                    type="text"
-                                    v-model="form.name"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    counter
-                                    hint="This is to identify the formula"
-                                    persistent-hint
-                                ></v-text-field>
-                            </validation-provider>
+                        </v-form>
+                    </validation-observer>
+                </v-card-text>
 
-                            <validation-provider
-                                name="description"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-text-field
-                                    label="Formula description"
-                                    type="text"
-                                    v-model="form.description"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    counter
-                                    hint="Short description about the formula"
-                                    persistent-hint
-                                ></v-text-field>
-                            </validation-provider> -->
-                        </v-card-text>
-
-                        <v-divider></v-divider>
-                        <v-card-actions>
-                            <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="closeChild"
-                                >Cancel</v-btn
-                            >
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                :disabled="invalid || !!loading"
-                                type="submit"
-                                color="primary"
-                                large
-                                >Save</v-btn
-                            >
-                        </v-card-actions>
-                    </v-card>
-                </v-form>
-            </validation-observer>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-btn color="blue darken-1" text @click="closeChild"
+                        >Cancel</v-btn
+                    >
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        :disabled="!!loading"
+                        @click="saveChildItem()"
+                        color="primary"
+                        large
+                        >Save</v-btn
+                    >
+                </v-card-actions>
+            </v-card>
         </v-dialog>
     </v-col>
 </template>
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import { map, clone, cloneDeep, debounce, startCase } from "lodash";
+import {
+    map,
+    find,
+    sumBy,
+    clone,
+    cloneDeep,
+    debounce,
+    startCase
+} from "lodash";
 import {
     GET_MODELS,
     SAVE_MODEL,
@@ -368,7 +377,8 @@ export default {
             ],
             dialogChild: false,
             childItems: [],
-            form: null
+            form: null,
+            formChild: []
         };
     },
     computed: {
@@ -394,6 +404,9 @@ export default {
                 return `this ${model} ?`;
             }
             return `these ${length} ${pluralize(model)} ?`;
+        },
+        totalPercentage() {
+            return sumBy(this.formChild, "percent");
         }
     },
     methods: {
@@ -414,14 +427,18 @@ export default {
             this.dialog = true;
         },
         editChild(id) {
-            let index = this.formulas.findIndex(el => el.id == id);
-            this.form = cloneDeep(this.formulas[index]);
-            this.dialogChild = true;
+            this.form = cloneDeep(find(this.formulas, { id: id }));
+            this.formChild = [
+                ...map(this.form.products, el => {
+                    return {
+                        id: el.product.id,
+                        name: el.product.name,
+                        percent: el.percent
+                    };
+                })
+            ];
 
-            this.form.products_id = map(
-                this.form.products,
-                el => el.product_id
-            );
+            this.dialogChild = true;
         },
         close() {
             this.dialog = false;
@@ -432,7 +449,7 @@ export default {
         closeChild() {
             this.dialogChild = false;
             this.$nextTick(() => {
-                this.$refs.formProduct.reset();
+                this.$refs.form_child.reset();
             });
         },
         fetchChild: async function() {
@@ -442,7 +459,12 @@ export default {
                     itemsPerPage: -1
                 }
             }).then(({ data }) => {
-                this.childItems = data;
+                this.childItems = map(data, ({ id, name }) => {
+                    return {
+                        id,
+                        name
+                    };
+                });
             });
         },
         fetchItem: async function() {
@@ -455,6 +477,31 @@ export default {
             }).then(({ meta }) => {
                 this.total = meta.total;
             });
+        },
+        saveChildItem() {
+            // validate
+            this.$refs.form_child.validate().then(valid => {
+                if (valid) {
+                    console.log("validation pass");
+                }
+            });
+
+            // this.SAVE_MODEL({
+            //     model,
+            //     payload: this.form
+            // })
+            //     .then(async () => {
+            //         console.log("fetching");
+
+            //         await this.fetchItem();
+            //         this.selected = [];
+
+            //         console.log("closing");
+            //         this.close();
+            //     })
+            //     .catch(errors => {
+            //         this.$refs.form.setErrors(errors);
+            //     });
         },
         saveItem() {
             this.SAVE_MODEL({
