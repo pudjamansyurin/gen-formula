@@ -20,7 +20,7 @@ class FormulaItem extends JsonResource
             'description' => $this->description,
             'updated_at' => $this->updated_at,
             'user' => $this->user,
-            'products' => $this->products,
+            'percents' => $this->percents,
         ];
     }
 }

@@ -2,13 +2,13 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\FormulaProduct;
+use App\FormulaPercent;
 use App\Formula;
 use App\Product;
 use App\User;
 use Faker\Generator as Faker;
 
-$factory->define(FormulaProduct::class, function (Faker $faker) {
+$factory->define(FormulaPercent::class, function (Faker $faker) {
     // Fetch relations
     $users_id = User::all('id')->pluck('id')->toArray();
     $products_id = Product::all('id')->pluck('id')->toArray();

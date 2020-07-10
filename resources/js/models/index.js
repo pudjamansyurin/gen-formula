@@ -26,6 +26,5 @@ export const Formula = {
     name: "",
     description: "",
     user: User,
-    products: [],
-    products_id: []
+    percents: []
 };

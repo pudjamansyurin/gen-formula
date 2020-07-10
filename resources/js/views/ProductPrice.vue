@@ -154,7 +154,7 @@
                             >
                                 <v-select
                                     v-model="form.product_id"
-                                    :items="parentItems"
+                                    :items="list_products"
                                     :readonly="id > 0"
                                     :error-messages="errors"
                                     :success="valid"
@@ -299,7 +299,15 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { map, clone, cloneDeep, debounce, kebabCase, startCase } from "lodash";
+import {
+    map,
+    pick,
+    clone,
+    cloneDeep,
+    debounce,
+    kebabCase,
+    startCase
+} from "lodash";
 import {
     GET_MODEL,
     GET_MODELS,
@@ -333,7 +341,7 @@ export default {
                 { text: "Updater", value: "user.name" }
             ],
             menuChangedAt: false,
-            parentItems: [],
+            list_products: [],
             form: null
         };
     },
@@ -391,9 +399,6 @@ export default {
         },
         edit() {
             this.form = cloneDeep(this.selected[0]);
-            this.parentItems.splice(0, 1, this.form.product);
-
-            console.log(this.form);
 
             this.dialog = true;
         },
@@ -403,19 +408,14 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        fetchParent: async function() {
+        fetchProducts: async function() {
             await this.GET_MODELS({
                 model: "product",
                 params: {
                     itemsPerPage: -1
                 }
             }).then(({ data }) => {
-                this.childItems = map(data, ({ id, name }) => {
-                    return {
-                        id,
-                        name
-                    };
-                });
+                this.list_products = map(data, el => pick(el, ["id", "name"]));
             });
         },
         fetchItem: async function() {
@@ -458,7 +458,7 @@ export default {
         }
     },
     mounted() {
-        this.fetchParent();
+        this.fetchProducts();
     },
     watch: {
         options: {

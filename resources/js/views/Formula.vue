@@ -132,7 +132,7 @@
             <template v-slot:item.name="{ item }">
                 <v-chip
                     color="primary"
-                    @click="editChild(item.id)"
+                    @click="editPercent(item.id)"
                     :small="dense"
                     >{{ item.name }}</v-chip
                 >
@@ -236,26 +236,31 @@
             </v-card>
         </v-dialog>
 
-        <v-dialog v-model="dialogChild" max-width="700px" persistent scrollable>
+        <v-dialog
+            v-model="dialogPercent"
+            max-width="700px"
+            persistent
+            scrollable
+        >
             <v-card :loading="!!loading">
                 <v-card-title>
-                    <span class="headline">{{ formChildTitle }}</span>
+                    <span class="headline">{{ formPercentTitle }}</span>
                 </v-card-title>
                 <v-divider></v-divider>
 
                 <v-card-text style="max-height: 500px;">
-                    <validation-observer ref="form_child">
+                    <validation-observer ref="form_percent">
                         <v-form>
                             <v-row>
                                 <v-col>
                                     <validation-provider
-                                        name="products"
+                                        name="products_id"
                                         rules="required"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-autocomplete
-                                            v-model="formChild"
-                                            :items="childItems"
+                                            v-model="formPercent"
+                                            :items="list_products"
                                             :error-messages="errors"
                                             :success="valid"
                                             :loading="!!loading"
@@ -275,7 +280,7 @@
 
                                     <validation-provider
                                         rules="min_value:100|max_value:100"
-                                        name="Total Percentage"
+                                        name="total_percentage"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-text-field
@@ -295,10 +300,10 @@
                                 </v-col>
                                 <v-col>
                                     <validation-provider
-                                        v-for="(el, key) in formChild"
+                                        v-for="(el, key) in formPercent"
                                         :key="el.id"
                                         rules="required|min_value:1|max_value:100"
-                                        :name="el.name"
+                                        :name="`percent[${el.id}]`"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-text-field
@@ -320,13 +325,13 @@
 
                 <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn color="blue darken-1" text @click="closeChild"
+                    <v-btn color="blue darken-1" text @click="closePercent"
                         >Cancel</v-btn
                     >
                     <v-spacer></v-spacer>
                     <v-btn
                         :disabled="!!loading"
-                        @click="saveChildItem()"
+                        @click="savePercentItem()"
                         color="primary"
                         large
                         >Save</v-btn
@@ -342,6 +347,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import {
     map,
     find,
+    pick,
     reduce,
     get,
     clone,
@@ -377,10 +383,10 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],
-            dialogChild: false,
-            childItems: [],
+            dialogPercent: false,
+            list_products: [],
             form: null,
-            formChild: []
+            formPercent: []
         };
     },
     computed: {
@@ -398,7 +404,7 @@ export default {
             const { id } = this.form;
             return id === -1 ? "New" : "Edit";
         },
-        formChildTitle() {
+        formPercentTitle() {
             return get(this.form, "name") || "Related products";
         },
         formDeleteContent() {
@@ -411,13 +417,16 @@ export default {
             return `these ${length} ${pluralize(model)} ?`;
         },
         totalPercentage() {
-            return reduce(
-                this.formChild,
-                (sum, el) => {
-                    return sum + Number(el.percent);
-                },
-                0
-            );
+            // return reduce(
+            //     this.formPercent,
+            //     (sum, el) => {
+            //         return sum + Number(el.percent);
+            //     },
+            //     0
+            // );
+            console.log(this.formPercent);
+
+            return 100;
         }
     },
     methods: {
@@ -437,10 +446,10 @@ export default {
             this.form = cloneDeep(this.selected[0]);
             this.dialog = true;
         },
-        editChild(id) {
+        editPercent(id) {
             this.form = cloneDeep(find(this.formulas, { id: id }));
-            this.formChild = [
-                ...map(this.form.products, el => {
+            this.formPercent = [
+                ...map(this.form.percents, el => {
                     return {
                         id: el.product.id,
                         name: el.product.name,
@@ -449,7 +458,7 @@ export default {
                 })
             ];
 
-            this.dialogChild = true;
+            this.dialogPercent = true;
         },
         close() {
             this.dialog = false;
@@ -457,25 +466,20 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        closeChild() {
-            this.dialogChild = false;
+        closePercent() {
+            this.dialogPercent = false;
             this.$nextTick(() => {
-                this.$refs.form_child.reset();
+                this.$refs.form_percent.reset();
             });
         },
-        fetchChild: async function() {
+        fetchProducts: async function() {
             await this.GET_MODELS({
                 model: "product",
                 params: {
                     itemsPerPage: -1
                 }
             }).then(({ data }) => {
-                this.childItems = map(data, ({ id, name }) => {
-                    return {
-                        id,
-                        name
-                    };
-                });
+                this.list_products = map(data, el => pick(el, ["id", "name"]));
             });
         },
         fetchItem: async function() {
@@ -489,9 +493,9 @@ export default {
                 this.total = meta.total;
             });
         },
-        saveChildItem() {
+        savePercentItem() {
             // validate
-            this.$refs.form_child.validate().then(valid => {
+            this.$refs.form_percent.validate().then(valid => {
                 if (valid) {
                     // this.SAVE_MODEL({
                     //     model,
@@ -539,7 +543,7 @@ export default {
         }
     },
     mounted() {
-        this.fetchChild();
+        this.fetchProducts();
     },
     watch: {
         options: {

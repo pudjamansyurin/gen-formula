@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormulaProductsTable extends Migration
+class CreateFormulaPercentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateFormulaProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('formula_products', function (Blueprint $table) {
+        Schema::create('formula_percents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('formula_id');
             $table->foreignId('product_id');
@@ -22,7 +22,7 @@ class CreateFormulaProductsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('formula_products', function (Blueprint $table) {
+        Schema::table('formula_percents', function (Blueprint $table) {
             $table->foreign('formula_id')
                 ->references('id')
                 ->on('formulas')
@@ -45,6 +45,6 @@ class CreateFormulaProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('formula_products');
+        Schema::dropIfExists('formula_percents');
     }
 }

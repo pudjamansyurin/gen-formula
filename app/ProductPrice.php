@@ -27,8 +27,8 @@ class ProductPrice extends Model
      * @var array
      */
     protected $with = [
+        'user:id,name',
         'product:id,name',
-        'user:id,name'
     ];
 
     /**

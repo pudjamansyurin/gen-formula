@@ -62,9 +62,14 @@ class Product extends Model
         return $this->hasMany(ProductPrice::class);
     }
 
+    public function percents()
+    {
+        return $this->hasMany(FormulaPercent::class);
+    }
+
     public function formulas()
     {
-        return $this->hasMany(FormulaProduct::class);
+        return $this->hasManyThrough(Formula::class, FormulaPercent::class);
     }
 
     public function user()

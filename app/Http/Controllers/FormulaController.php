@@ -82,6 +82,9 @@ class FormulaController extends Controller
             'description' => $request->description,
         ]);
 
+        // the products
+
+
         return response(
             new FormulaItem($formula),
             Response::HTTP_OK
