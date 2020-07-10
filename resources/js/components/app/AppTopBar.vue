@@ -28,7 +28,7 @@
         <v-menu offset-y>
             <template v-slot:activator="{ on }">
                 <v-btn icon large v-on="on">
-                    <v-avatar size="32px" item>
+                    <v-avatar right size="32px" item>
                         <v-img src="/img/unknown.png" alt="Profile"></v-img
                     ></v-avatar>
                 </v-btn>

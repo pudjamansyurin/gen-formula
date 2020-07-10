@@ -76,7 +76,7 @@ http.interceptors.response.use(
     ({ response }) => {
         const { status: code, statusText: text, data } = response;
         const { message } = data;
-        const { authenticated } = store.state.app.auth;
+        const { profile } = store.state.app.auth;
 
         console.error(response);
         store.commit(ns("app", STOP_LOADING));
@@ -97,7 +97,7 @@ http.interceptors.response.use(
 
         // redirect
         if (![422].includes(code)) {
-            if (authenticated && code === 401) {
+            if (profile && code === 401) {
                 // remove session
                 store.commit(ns("app", CLEAR_AUTH));
                 // session expired

@@ -11,6 +11,7 @@
             :dense="dense"
             :page="1"
             :items-per-page="10"
+            selectable-key="notme"
             sort-by="updated_at"
             sort-desc
             show-select
@@ -129,9 +130,37 @@
                 </v-toolbar>
             </template>
 
-            <template v-slot:item.name="{ item }">
-                <v-chip color="primary" :small="dense">{{ item.name }}</v-chip>
+            <!-- <template v-slot:header.data-table-select="{ on, props }">
+                <v-simple-checkbox
+                    color="purple"
+                    v-bind="props"
+                    v-on="on"
+                ></v-simple-checkbox>
             </template>
+             -->
+            <template v-slot:item.name="{ item }">
+                <v-chip
+                    v-if="auth.profile.id == item.id"
+                    :to="{ name: 'profile' }"
+                    color="primary"
+                    :small="dense"
+                    >{{ item.name }}</v-chip
+                >
+                <template v-else>
+                    {{ item.name }}
+                </template>
+            </template>
+
+            <!-- <template
+                v-slot:item.data-table-select="{ isSelected, select, item }"
+            >
+                <v-simple-checkbox
+                    v-if="auth.profile.id != item.id"
+                    :value="isSelected"
+                    @input="select($event)"
+                ></v-simple-checkbox>
+            </template> -->
+
             <template v-slot:item.last_at="{ item }">
                 <template v-if="item.last_at">
                     {{ item.last_at | moment("from") }}
@@ -364,7 +393,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "dense"]),
+        ...mapState("app", ["loading", "dense", "auth"]),
         ...mapState("model", ["users"]),
         toolbarTitle() {
             const { length } = this.selected;

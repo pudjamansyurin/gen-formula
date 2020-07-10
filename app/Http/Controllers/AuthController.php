@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\ThrottlesLogins;
+use App\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -112,7 +113,7 @@ class AuthController extends Controller
      * @param  mixed  $user
      * @return mixed
      */
-    protected function authenticated(Request $request, $user)
+    protected function authenticated(Request $request, User $user)
     {
         // record last login information
         $user->forceFill([

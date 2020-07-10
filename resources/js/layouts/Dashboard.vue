@@ -1,5 +1,5 @@
 <template>
-    <div v-if="auth.authenticated">
+    <div v-if="auth.profile">
         <app-left-drawer></app-left-drawer>
         <app-top-bar></app-top-bar>
 
@@ -95,11 +95,6 @@ export default {
     },
     mounted() {
         console.log("Session credebility should be checked!");
-        // this.authenticated = true;
-        // check token credebility
-        //   check()
-        //       .then(() => (this.authenticated = true))
-        //       .catch(() => {});
     }
 };
 </script>

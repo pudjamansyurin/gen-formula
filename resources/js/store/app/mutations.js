@@ -44,27 +44,18 @@ export default {
             type: "info"
         };
     },
-    [mutations.SET_AUTH](state, { user, remember }) {
-        const { email, password } = user;
-
+    [mutations.SET_AUTH](state, { user: profile, remember }) {
         state.auth = {
-            email,
-            password,
             remember,
-            authenticated: true
+            profile
         };
 
         ls.set("auth.remember", remember);
-        ls.set("auth.authenticated", true);
+        ls.set("auth.profile", profile);
     },
     [mutations.CLEAR_AUTH](state) {
-        state.auth = {
-            ...state.auth,
-            email: "",
-            password: "",
-            authenticated: false
-        };
+        state.auth.profile = null;
 
-        ls.remove("auth.authenticated");
+        ls.remove("auth.profile");
     }
 };

@@ -12,7 +12,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     const { auth, error } = store.state.app;
-    const { authenticated } = auth;
+    const { profile } = auth;
     const { code } = error;
 
     if (code && ![422].includes(code)) {
@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
         next();
     } else if (to.matched.some(record => record.meta.auth)) {
         // secured pages
-        if (authenticated) {
+        if (profile) {
             // session exist
             // check session credebility in Dashboard.vue:Created hook
             next();
@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
                 }
             });
         }
-    } else if (authenticated) {
+    } else if (profile) {
         // non-secured pages, session exist
         // redirect to dashboard
         next("/app");
