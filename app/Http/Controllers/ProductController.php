@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductItem;
 use App\Product;
@@ -40,7 +40,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductStoreRequest $request)
+    public function store(ProductRequest $request)
     {
         $product = Product::create([
             'name' => $request->name,
@@ -75,7 +75,7 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductStoreRequest $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
         $product->update([
             'name' => $request->name,

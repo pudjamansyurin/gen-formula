@@ -254,12 +254,11 @@
                             <v-row>
                                 <v-col>
                                     <validation-provider
-                                        name="products_id"
-                                        rules="required"
+                                        name="formula"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-autocomplete
-                                            v-model="formPercent"
+                                            v-model="form.percents"
                                             :items="list_products"
                                             :error-messages="errors"
                                             :success="valid"
@@ -269,8 +268,8 @@
                                             auto-select-first
                                             clearable
                                             deletable-chips
-                                            item-text="name"
-                                            item-value="id"
+                                            item-text="product.name"
+                                            item-value="product.id"
                                             label="Related products"
                                             hint="The related products"
                                             persistent-hint
@@ -279,7 +278,6 @@
                                     </validation-provider>
 
                                     <validation-provider
-                                        rules="min_value:100|max_value:100"
                                         name="total_percentage"
                                         v-slot="{ errors, valid }"
                                     >
@@ -298,16 +296,16 @@
                                         ></v-text-field>
                                     </validation-provider>
                                 </v-col>
+
                                 <v-col>
                                     <validation-provider
-                                        v-for="(el, key) in formPercent"
-                                        :key="el.id"
-                                        rules="required|min_value:1|max_value:100"
-                                        :name="`percent[${el.id}]`"
+                                        v-for="(el, key) in form.percents"
+                                        :key="el.product.id"
+                                        :name="`formula.${key}.percent`"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-text-field
-                                            :label="el.name"
+                                            :label="el.product.name"
                                             type="number"
                                             v-model.number="el.percent"
                                             :error-messages="errors"
@@ -385,8 +383,7 @@ export default {
             ],
             dialogPercent: false,
             list_products: [],
-            form: null,
-            formPercent: []
+            form: cloneDeep(Formula)
         };
     },
     computed: {
@@ -417,16 +414,13 @@ export default {
             return `these ${length} ${pluralize(model)} ?`;
         },
         totalPercentage() {
-            // return reduce(
-            //     this.formPercent,
-            //     (sum, el) => {
-            //         return sum + Number(el.percent);
-            //     },
-            //     0
-            // );
-            console.log(this.formPercent);
-
-            return 100;
+            return reduce(
+                this.form.percents,
+                (sum, el) => {
+                    return sum + Number(el.percent);
+                },
+                0
+            );
         }
     },
     methods: {
@@ -448,15 +442,6 @@ export default {
         },
         editPercent(id) {
             this.form = cloneDeep(find(this.formulas, { id: id }));
-            this.formPercent = [
-                ...map(this.form.percents, el => {
-                    return {
-                        id: el.product.id,
-                        name: el.product.name,
-                        percent: el.percent
-                    };
-                })
-            ];
 
             this.dialogPercent = true;
         },
@@ -479,7 +464,15 @@ export default {
                     itemsPerPage: -1
                 }
             }).then(({ data }) => {
-                this.list_products = map(data, el => pick(el, ["id", "name"]));
+                this.list_products = map(data, ({ id, name }) => {
+                    return {
+                        product: {
+                            id,
+                            name
+                        },
+                        percent: 0
+                    };
+                });
             });
         },
         fetchItem: async function() {
@@ -497,20 +490,29 @@ export default {
             // validate
             this.$refs.form_percent.validate().then(valid => {
                 if (valid) {
-                    // this.SAVE_MODEL({
-                    //     model,
-                    //     payload: this.form
-                    // })
-                    //     .then(async () => {
-                    //         console.log("fetching");
-                    //         await this.fetchItem();
-                    //         this.selected = [];
-                    //         console.log("closing");
-                    //         this.close();
-                    //     })
-                    //     .catch(errors => {
-                    //         this.$refs.form.setErrors(errors);
-                    //     });
+                    let formula = map(this.form.percents, el => {
+                        return {
+                            product_id: el.product.id,
+                            percent: el.percent
+                        };
+                    });
+
+                    this.SAVE_MODEL({
+                        url: `formula/${this.form.id}/percent`,
+                        payload: {
+                            formula
+                        }
+                    })
+                        .then(async () => {
+                            // console.log("fetching");
+                            // await this.fetchItem();
+                            // this.selected = [];
+                            // console.log("closing");
+                            // this.close();
+                        })
+                        .catch(errors => {
+                            this.$refs.form_percent.setErrors(errors);
+                        });
                 }
             });
         },

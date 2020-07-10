@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProductStoreRequest extends FormRequest
+class FormulaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,12 +28,12 @@ class ProductStoreRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
-                Rule::unique('products', 'name')->ignore($this->product)
+                Rule::unique('formulas', 'name')->ignore($this->formula)
             ],
-            'description'   => [
+            'description' => [
                 'required',
                 'min:5'
-            ]
+            ],
         ];
     }
 }

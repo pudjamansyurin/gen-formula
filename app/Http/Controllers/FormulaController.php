@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Formula;
-use App\Http\Requests\FormulaStoreRequest;
+use App\Http\Requests\FormulaRequest;
 use App\Http\Resources\FormulaCollection;
 use App\Http\Resources\FormulaItem;
 use Illuminate\Http\Request;
@@ -40,7 +40,7 @@ class FormulaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormulaStoreRequest $request)
+    public function store(FormulaRequest $request)
     {
         $product = Formula::create([
             'name' => $request->name,
@@ -75,15 +75,12 @@ class FormulaController extends Controller
      * @param  \App\Formula  $formula
      * @return \Illuminate\Http\Response
      */
-    public function update(FormulaStoreRequest $request, Formula $formula)
+    public function update(FormulaRequest $request, Formula $formula)
     {
         $formula->update([
             'name' => $request->name,
             'description' => $request->description,
         ]);
-
-        // the products
-
 
         return response(
             new FormulaItem($formula),

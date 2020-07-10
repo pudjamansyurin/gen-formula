@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class FormulaStoreRequest extends FormRequest
+class FormulaPercentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,26 +24,18 @@ class FormulaStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'formula' => [
                 'required',
-                'min:3',
-                Rule::unique('formulas', 'name')->ignore($this->formula)
+                'array',
             ],
-            'description' => [
-                'required',
-                'min:5'
-            ],
-            'products' => [
-                'sometimes',
-                'array'
-            ],
-            'products.*.id' => [
+            'formula.*.product_id' => [
                 'integer',
                 'min:1',
                 'distinct',
                 'exists:products,id'
             ],
-            'products.*.percent' => [
+            'formula.*.percent' => [
+                'integer',
                 'min:1',
                 'max:100'
             ]

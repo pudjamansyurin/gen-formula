@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductPriceStoreRequest;
+use App\Http\Requests\ProductPriceRequest;
 use App\Product;
 use App\ProductPrice;
 use App\Http\Resources\ProductPriceCollection;
@@ -47,7 +47,7 @@ class ProductPriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductPriceStoreRequest $request)
+    public function store(ProductPriceRequest $request)
     {
         $product = Product::find($request->product_id);
 
@@ -91,7 +91,7 @@ class ProductPriceController extends Controller
      * @param  \App\ProductPrice  $productPrice
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductPriceStoreRequest $request, $productId, ProductPrice $price)
+    public function update(ProductPriceRequest $request, $productId, ProductPrice $price)
     {
         $price->update([
             'product_id' => $request->product_id,
