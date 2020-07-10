@@ -20,27 +20,27 @@ class FormulaPercentController extends Controller
      */
     public function store(FormulaPercentRequest $request, Formula $formula)
     {
-        $formulaPercents = $request->formula;
-
         if ($formula) {
+            $formulaPercents = collect($request->formula)
+                ->map(function ($el) use ($formula) {
+                    return [
+                        'formula_id' => $formula->id,
+                        'product_id' => $el['product_id'],
+                        'percent' => $el['percent'],
+                        'user_id' => auth()->id()
+                    ];
+                });
+
             // check total
-            if (array_sum(array_column($formulaPercents, 'percent')) == 100) {
-                array_map(function ($el) {
-                }, $formulaPercents);
+            if ($formulaPercents->sum('percent') == 100) {
+                $formula->percents()->delete();
+                $formula->percents()->insert($formulaPercents->toArray());
+                $formula->refresh();
 
-                // $formula->percents()->sync($formulaPercents)
-
-                //     $productPrice = ProductPrice::create([
-                //         'formula_id' => $formula->id,
-                //         'product_id' => $request->product_id,
-                //         'percent' => $request->percent,
-                //         'user_id' => auth()->id()
-                //     ]);
-
-                // return response(
-                //     new FormulaPercentCollection($formulaPercents),
-                //     Response::HTTP_CREATED
-                // );
+                return response(
+                    new FormulaPercentCollection($formula->percents),
+                    Response::HTTP_CREATED
+                );
             }
 
             throw ValidationException::withMessages([

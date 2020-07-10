@@ -81,8 +81,8 @@ export default {
                 { icon: "mdi-currency-usd", text: "Price", to: "productPrice" },
                 { divider: true },
                 { heading: "CONFIGURATION" },
-                { icon: "mdi-account-group", text: "User", to: "user" },
-                { icon: "mdi-cogs", text: "Setting", to: "setting" }
+                { icon: "mdi-account-group", text: "User", to: "user" }
+                // { icon: "mdi-cogs", text: "Setting", to: "setting" }
                 //     { icon: "mdi-content-copy", text: "Duplicates" }
                 // {
                 //     icon: "mdi-chevron-up",

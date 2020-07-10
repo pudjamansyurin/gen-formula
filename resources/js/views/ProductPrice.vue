@@ -315,6 +315,7 @@ import {
     DELETE_MODELS
 } from "@/store/model/action-types";
 import { TOGGLE_DENSE } from "@/store/app/mutation-types";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
 import { ProductPrice } from "@/models";
 
@@ -377,6 +378,7 @@ export default {
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DENSE]),
+        ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [
             GET_MODEL,
             GET_MODELS,
@@ -412,7 +414,8 @@ export default {
             await this.GET_MODELS({
                 model: "product",
                 params: {
-                    itemsPerPage: -1
+                    itemsPerPage: -1,
+                    temporary: true
                 }
             }).then(({ data }) => {
                 this.list_products = map(data, el => pick(el, ["id", "name"]));
@@ -432,13 +435,22 @@ export default {
             });
         },
         saveItem() {
+            const { form: payload, apiUrl: url } = this;
+
             this.SAVE_MODEL({
                 model,
-                url: this.apiUrl,
-                payload: this.form
+                url,
+                payload
             })
-                .then(async () => {
-                    await this.fetchItem();
+                .then(async data => {
+                    if (payload.id > 0) {
+                        this.UPDATE_MODEL({
+                            model,
+                            data
+                        });
+                    } else {
+                        await this.fetchItem();
+                    }
                     this.selected = [];
                     this.close();
                 })

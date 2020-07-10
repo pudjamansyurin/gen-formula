@@ -8,7 +8,7 @@ export default {
         return api
             .viewAny(url || model, params)
             .then(res => {
-                if (!params.filterFields) {
+                if (!params.temporary) {
                     commit(mutations.SET_MODELS, {
                         model,
                         data: res.data
@@ -28,7 +28,7 @@ export default {
             .catch(e => {});
     },
     [actions.SAVE_MODEL]({ commit }, { model, payload, url }) {
-        const action = payload.id > -1 ? "update" : "create";
+        const action = payload.id > 0 ? "update" : "create";
 
         return api[action](url || model, payload).catch(e => {
             if (get(e, "data.errors")) {

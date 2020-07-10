@@ -247,6 +247,7 @@ import {
     DELETE_MODELS
 } from "@/store/model/action-types";
 import { TOGGLE_DENSE } from "@/store/app/mutation-types";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
 import { Product } from "@/models";
 
@@ -299,6 +300,7 @@ export default {
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DENSE]),
+        ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         toggleSearch() {
             this.searchBox = !this.searchBox;
@@ -332,17 +334,22 @@ export default {
             });
         },
         saveItem() {
+            const { form: payload } = this;
+
             this.SAVE_MODEL({
                 model,
-                payload: this.form
+                payload
             })
-                .then(async () => {
-                    console.log("fetching");
-
-                    await this.fetchItem();
+                .then(async data => {
+                    if (payload.id > 0) {
+                        this.UPDATE_MODEL({
+                            model,
+                            data
+                        });
+                    } else {
+                        await this.fetchItem();
+                    }
                     this.selected = [];
-
-                    console.log("closing");
                     this.close();
                 })
                 .catch(errors => {

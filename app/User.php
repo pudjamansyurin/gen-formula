@@ -5,12 +5,14 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Traits\ClientQueryScope;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasRoles, Notifiable;
+    use ClientQueryScope;
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +40,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['roles:id,name'];
+
+
+    /**
+     * Accessors
+     */
+    public function getNameAttribute($value)
+    {
+        return ucwords($value);
+    }
 
     /**
      * Set relation tables.

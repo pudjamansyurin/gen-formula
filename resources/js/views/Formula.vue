@@ -359,6 +359,7 @@ import {
     DELETE_MODELS
 } from "@/store/model/action-types";
 import { TOGGLE_DENSE } from "@/store/app/mutation-types";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
 import { Formula } from "@/models";
 
@@ -425,6 +426,7 @@ export default {
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DENSE]),
+        ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         toggleSearch() {
             this.searchBox = !this.searchBox;
@@ -461,7 +463,8 @@ export default {
             await this.GET_MODELS({
                 model: "product",
                 params: {
-                    itemsPerPage: -1
+                    itemsPerPage: -1,
+                    temporary: true
                 }
             }).then(({ data }) => {
                 this.list_products = map(data, ({ id, name }) => {
@@ -490,25 +493,27 @@ export default {
             // validate
             this.$refs.form_percent.validate().then(valid => {
                 if (valid) {
-                    let formula = map(this.form.percents, el => {
-                        return {
-                            product_id: el.product.id,
-                            percent: el.percent
-                        };
-                    });
-
                     this.SAVE_MODEL({
                         url: `formula/${this.form.id}/percent`,
                         payload: {
-                            formula
+                            formula: map(this.form.percents, el => {
+                                return {
+                                    product_id: el.product.id,
+                                    percent: el.percent
+                                };
+                            })
                         }
                     })
-                        .then(async () => {
-                            // console.log("fetching");
-                            // await this.fetchItem();
-                            // this.selected = [];
-                            // console.log("closing");
-                            // this.close();
+                        .then(async ({ data: percents }) => {
+                            this.UPDATE_MODEL({
+                                model,
+                                data: {
+                                    ...this.form,
+                                    percents
+                                }
+                            });
+
+                            this.closePercent();
                         })
                         .catch(errors => {
                             this.$refs.form_percent.setErrors(errors);
@@ -517,17 +522,22 @@ export default {
             });
         },
         saveItem() {
+            const { form: payload } = this;
+
             this.SAVE_MODEL({
                 model,
-                payload: this.form
+                payload
             })
-                .then(async () => {
-                    console.log("fetching");
-
-                    await this.fetchItem();
+                .then(async data => {
+                    if (payload.id > 0) {
+                        this.UPDATE_MODEL({
+                            model,
+                            data
+                        });
+                    } else {
+                        await this.fetchItem();
+                    }
                     this.selected = [];
-
-                    console.log("closing");
                     this.close();
                 })
                 .catch(errors => {

@@ -2,7 +2,10 @@ export const User = {
     id: -1,
     name: "",
     email: "",
-    role: null
+    role: {
+        id: -1,
+        name: ""
+    }
 };
 
 export const Product = {

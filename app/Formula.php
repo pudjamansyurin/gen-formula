@@ -47,6 +47,19 @@ class Formula extends Model
     ];
 
     /**
+     * Accessors
+     */
+    public function getNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+    public function getDescriptionAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    /**
      * Set relation tables.
      */
     public function percents()

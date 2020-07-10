@@ -43,6 +43,7 @@
                             v-show="!selected.length && searchBox"
                             v-model="search"
                             label="Search"
+                            autofocus
                             single-line
                             hide-details
                         ></v-text-field>
@@ -57,7 +58,11 @@
                                 icon
                             >
                                 <v-icon>
-                                    mdi-magnify{{ searchBox ? "-close" : "" }}
+                                    {{
+                                        searchBox
+                                            ? "mdi-close-circle"
+                                            : "mdi-magnify"
+                                    }}
                                 </v-icon>
                             </v-btn>
                         </template>
@@ -68,7 +73,7 @@
                         <template v-slot:activator="{ on }">
                             <v-btn
                                 v-show="!selected.length"
-                                @click="dialog = true"
+                                @click="create"
                                 v-on="on"
                                 icon
                             >
@@ -76,6 +81,22 @@
                             </v-btn>
                         </template>
                         <span>Create</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-show="!selected.length"
+                                @click="TOGGLE_DENSE"
+                                v-on="on"
+                                icon
+                            >
+                                <v-icon>{{
+                                    dense ? "mdi-table" : "mdi-table-large"
+                                }}</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>{{ dense ? "Larger" : "Smaller" }}</span>
                     </v-tooltip>
 
                     <v-tooltip bottom>
@@ -107,8 +128,20 @@
                     </v-tooltip>
                 </v-toolbar>
             </template>
+
+            <template v-slot:item.name="{ item }">
+                <v-chip color="primary" :small="dense">{{ item.name }}</v-chip>
+            </template>
             <template v-slot:item.last_at="{ item }">
-                {{ item.last_at | moment("from") }}
+                <template v-if="item.last_at">
+                    {{ item.last_at | moment("from") }}
+                </template>
+                <template v-else>
+                    Never
+                </template>
+            </template>
+            <template v-slot:item.last_ip="{ item }">
+                {{ item.last_ip || "None" }}
             </template>
         </v-data-table>
 
@@ -127,34 +160,113 @@
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
-                                    label="Product name"
-                                    name="name"
+                                    label="Name"
                                     type="text"
                                     v-model="form.name"
                                     :error-messages="errors"
                                     :success="valid"
                                     counter
-                                    hint="This is to identify the product"
+                                    hint="This is to identify the user"
                                     persistent-hint
                                 ></v-text-field>
                             </validation-provider>
 
                             <validation-provider
-                                name="description"
+                                name="email"
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
-                                    label="Product description"
-                                    name="description"
-                                    type="text"
-                                    v-model="form.description"
+                                    label="E-mail"
+                                    type="email"
+                                    v-model="form.email"
                                     :error-messages="errors"
                                     :success="valid"
                                     counter
-                                    hint="Short description about the product"
+                                    hint="This email is for recovery"
                                     persistent-hint
                                 ></v-text-field>
                             </validation-provider>
+
+                            <validation-provider
+                                name="role.id"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-select
+                                    v-model="form.role"
+                                    :items="list_roles"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    :loading="!!loading"
+                                    chips
+                                    item-text="name"
+                                    item-value="id"
+                                    label="Role"
+                                    hint="Role for this user"
+                                    persistent-hint
+                                    return-object
+                                ></v-select>
+                            </validation-provider>
+
+                            <v-btn
+                                v-if="form.id > 0"
+                                color="red"
+                                @click="change_password = !change_password"
+                                dark
+                                small
+                                >{{
+                                    change_password ? "Keep" : "Change"
+                                }}
+                                Password</v-btn
+                            >
+                            <template v-if="change_password">
+                                <validation-provider
+                                    name="password"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        label="Password"
+                                        v-model="form.password"
+                                        :type="
+                                            show_password ? 'text' : 'password'
+                                        "
+                                        :append-icon="
+                                            show_password
+                                                ? 'mdi-eye'
+                                                : 'mdi-eye-off'
+                                        "
+                                        @click:append="
+                                            show_password = !show_password
+                                        "
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        autocomplete="off"
+                                    ></v-text-field>
+                                </validation-provider>
+
+                                <validation-provider
+                                    name="password_confirmation"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        label="Password Confirmation"
+                                        v-model="form.password_confirmation"
+                                        :type="
+                                            show_password ? 'text' : 'password'
+                                        "
+                                        :append-icon="
+                                            show_password
+                                                ? 'mdi-eye'
+                                                : 'mdi-eye-off'
+                                        "
+                                        @click:append="
+                                            show_password = !show_password
+                                        "
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        autocomplete="off"
+                                    ></v-text-field>
+                                </validation-provider>
+                            </template>
                         </v-card-text>
 
                         <v-divider></v-divider>
@@ -184,9 +296,9 @@
                 <v-card-text class="pt-2" style="max-height: 300px;">
                     Are you sure to delete {{ formDeleteContent }}
                     <v-chip-group column small active-class="primary--text">
-                        <v-chip v-for="item in selected" :key="item.id">
-                            {{ item.name }}
-                        </v-chip>
+                        <v-chip v-for="item in selected" :key="item.id">{{
+                            item.name
+                        }}</v-chip>
                     </v-chip-group>
                 </v-card-text>
 
@@ -211,13 +323,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import { map, clone, cloneDeep, debounce, upperFirst } from "lodash";
+import { mapState, mapMutations, mapActions } from "vuex";
+import { map, pick, clone, cloneDeep, debounce, startCase } from "lodash";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
 } from "@/store/model/action-types";
+import { TOGGLE_DENSE } from "@/store/app/mutation-types";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
 import { User } from "@/models";
 
@@ -227,34 +341,36 @@ export default {
     name: model,
     data() {
         return {
-            dense: true,
             searchBox: false,
             dialog: false,
             dialogDelete: false,
             total: 0,
-            search: "",
+            search: null,
             options: {},
             selected: [],
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Email", value: "email" },
-                { text: "Role", value: "role" },
+                { text: "Role", value: "role.name" },
                 { text: "Last At", value: "last_at" },
                 { text: "Last Ip", value: "last_ip" }
             ],
-            form: cloneDeep(User)
+            list_roles: [],
+            change_password: false,
+            show_password: false,
+            form: null
         };
     },
     computed: {
-        ...mapState("app", ["loading"]),
-        ...mapState("model", [pluralize(model)]),
+        ...mapState("app", ["loading", "dense"]),
+        ...mapState("model", ["users"]),
         toolbarTitle() {
             const { length } = this.selected;
 
             if (length > 0) {
                 return `${length} selected`;
             }
-            return `${upperFirst(pluralize(model))}`;
+            return `${pluralize(startCase(model))}`;
         },
         formTitle() {
             const { id } = this.form;
@@ -271,8 +387,42 @@ export default {
         }
     },
     methods: {
+        ...mapMutations("app", [TOGGLE_DENSE]),
+        ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
-        fetch: async function() {
+        toggleSearch() {
+            this.searchBox = !this.searchBox;
+            if (!this.searchBox) {
+                this.search = "";
+            }
+        },
+        create() {
+            this.form = cloneDeep(User);
+            this.change_password = true;
+            this.dialog = true;
+        },
+        edit() {
+            this.form = cloneDeep(this.selected[0]);
+            this.change_password = false;
+            this.dialog = true;
+        },
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => {
+                this.$refs.form.reset();
+            });
+        },
+        fetchRoles: async function() {
+            await this.GET_MODELS({
+                model: "role",
+                params: {
+                    temporary: true
+                }
+            }).then(({ data }) => {
+                this.list_roles = map(data, el => pick(el, ["id", "name"]));
+            });
+        },
+        fetchItem: async function() {
             await this.GET_MODELS({
                 model,
                 params: {
@@ -283,56 +433,51 @@ export default {
                 this.total = meta.total;
             });
         },
-        toggleSearch() {
-            this.searchBox = !this.searchBox;
-            if (!this.searchBox) {
-                this.search = "";
-            }
-        },
-        edit() {
-            this.form = cloneDeep(this.selected[0]);
-            this.dialog = true;
-        },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => {
-                this.form = cloneDeep(User);
-                this.$refs.form.reset();
-            });
-        },
-        deleteItem: async function() {
-            await this.DELETE_MODELS({
-                model,
-                ids: map(this.selected, "id")
-            });
-            await this.fetch();
-            this.selected = [];
-            this.dialogDelete = false;
-        },
         saveItem() {
+            const { form: payload } = this;
+
             this.SAVE_MODEL({
                 model,
-                payload: this.form
+                payload
             })
-                .then(async () => {
-                    await this.fetch();
+                .then(async data => {
+                    if (payload.id > 0) {
+                        this.UPDATE_MODEL({
+                            model,
+                            data
+                        });
+                    } else {
+                        await this.fetchItem();
+                    }
                     this.selected = [];
                     this.close();
                 })
                 .catch(errors => {
                     this.$refs.form.setErrors(errors);
                 });
+        },
+        deleteItem: async function() {
+            await this.DELETE_MODELS({
+                model,
+                ids: map(this.selected, "id")
+            });
+            await this.fetchItem();
+            this.selected = [];
+            this.dialogDelete = false;
         }
+    },
+    mounted() {
+        this.fetchRoles();
     },
     watch: {
         options: {
             handler() {
-                this.fetch();
+                this.fetchItem();
             },
             deep: true
         },
         search: debounce(function() {
-            this.fetch();
+            this.fetchItem();
         }, 500)
     }
 };

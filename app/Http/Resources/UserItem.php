@@ -18,9 +18,7 @@ class UserItem extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->whenLoaded('roles', function () {
-                return $this->roles[0]->name;
-            }),
+            'role' => $this->roles[0],
             'last_at' => $this->last_at,
             'last_ip' => $this->last_ip,
         ];

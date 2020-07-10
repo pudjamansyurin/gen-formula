@@ -54,6 +54,12 @@ class Product extends Model
         return strtoupper($value);
     }
 
+    public function getDescriptionAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+
     /**
      * Set relation tables.
      */

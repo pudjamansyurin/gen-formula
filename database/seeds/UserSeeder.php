@@ -37,13 +37,13 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            $user = User::create([
+            $the_user = User::create([
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'password' => Hash::make($user['password']),
                 'created_at' => now()
             ]);
-            $user->assignRole(Role::firstWhere('name', $user['role']));
+            $the_user->assignRole(Role::firstWhere('name', $user['role']));
         }
     }
 }

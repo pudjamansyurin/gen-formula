@@ -18,7 +18,7 @@ class FormulaPercentItem extends JsonResource
             'id' => $this->id,
             'formula_id' => $this->formula_id,
             'product_id' => $this->product_id,
-            'percent' => $this->updated_at,
+            'percent' => $this->percent,
             'user' => $this->user,
             'product' => $this->product,
         ];
