@@ -122,4 +122,11 @@ class UserController extends Controller
         }
         return response($ids, Response::HTTP_BAD_REQUEST);
     }
+
+    public function role()
+    {
+        return response([
+            'data' => Role::all()
+        ], Response::HTTP_OK);
+    }
 }

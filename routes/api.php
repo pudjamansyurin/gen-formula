@@ -1,9 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +19,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('product.price', 'ProductPriceController');
     Route::apiResource('formula', 'FormulaController');
     Route::apiResource('formula.percent', 'FormulaPercentController', ['only' => ['store']]);
-    Route::get('/role', function () {
-        return response([
-            'data' => Role::all()
-        ], Response::HTTP_OK);
-    });
+    Route::get('/role', 'UserController@role');
 });

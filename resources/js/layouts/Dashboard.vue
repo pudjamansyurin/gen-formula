@@ -1,7 +1,7 @@
 <template>
     <div v-if="auth.authenticated">
-        <left-drawer></left-drawer>
-        <top-bar></top-bar>
+        <app-left-drawer></app-left-drawer>
+        <app-top-bar></app-top-bar>
 
         <v-content>
             <v-container class="fill-height" fluid>
@@ -75,15 +75,15 @@
 </template>
 
 <script>
-import LeftDrawer from "@/components/app/LeftDrawer";
-import TopBar from "@/components/app/TopBar";
+import AppLeftDrawer from "@/components/app/AppLeftDrawer";
+import AppTopBar from "@/components/app/AppTopBar";
 import { mapState } from "vuex";
 
 export default {
     name: "Dashboard",
     components: {
-        LeftDrawer,
-        TopBar
+        AppLeftDrawer,
+        AppTopBar
     },
     data() {
         return {
