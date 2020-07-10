@@ -1,6 +1,6 @@
 <template>
-    <validation-observer ref="form" v-slot="{ invalid, handleSubmit }">
-        <v-form @submit.prevent="handleSubmit(submit())">
+    <validation-observer ref="form" v-slot="{ handleSubmit }">
+        <v-form @submit.prevent="handleSubmit(submit)">
             <v-card class="elevation-1" :loading="!!loading">
                 <v-card-title>{{ title }}</v-card-title>
                 <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
@@ -52,7 +52,7 @@
 
                     <v-spacer></v-spacer>
                     <v-btn
-                        :disabled="invalid || !!loading"
+                        :disabled="!!loading"
                         type="submit"
                         color="primary"
                         large

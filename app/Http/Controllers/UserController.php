@@ -2,24 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        // $this->authorizeResource(User::class, 'user');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -50,23 +44,16 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(UserStoreRequest $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required|max:255',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'password' => 'required|string|min:8|confirmed',
-        // ]);
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('password')
+            'password' => Hash::make($request->password)
         ]);
 
         // add role
-        $role = Role::find($request->role['id']);
-        if ($role) {
+        if ($role = Role::find($request->role['id'])) {
             $user->syncRoles($role);
         }
 
@@ -97,16 +84,20 @@ class UserController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $user->update([
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
-        ]);
+        ];
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
+        };
+
+        $user->update($data);
 
         // change role
-        $role = Role::find($request->role['id']);
-        if ($role) {
+        if ($role = Role::find($request->role['id'])) {
             $user->syncRoles($role);
         }
 

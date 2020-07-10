@@ -143,8 +143,8 @@
         </v-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
-            <validation-observer v-slot="{ invalid, handleSubmit }" ref="form">
-                <v-form @submit.prevent="handleSubmit(saveItem())">
+            <validation-observer v-slot="{ handleSubmit }" ref="form">
+                <v-form @submit.prevent="handleSubmit(saveItem)">
                     <v-card :loading="!!loading">
                         <v-card-title>
                             <span class="headline">{{ formTitle }} Item</span>
@@ -192,7 +192,7 @@
                             >
                             <v-spacer></v-spacer>
                             <v-btn
-                                :disabled="invalid || !!loading"
+                                :disabled="!!loading"
                                 type="submit"
                                 color="primary"
                                 large

@@ -146,8 +146,8 @@
         </v-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
-            <validation-observer v-slot="{ invalid, handleSubmit }" ref="form">
-                <v-form @submit.prevent="handleSubmit(saveItem())">
+            <validation-observer v-slot="{ handleSubmit }" ref="form">
+                <v-form @submit.prevent="handleSubmit(saveItem)">
                     <v-card :loading="!!loading">
                         <v-card-title>
                             <span class="headline">{{ formTitle }} Item</span>
@@ -239,6 +239,7 @@
                                         "
                                         :error-messages="errors"
                                         :success="valid"
+                                        counter
                                         autocomplete="off"
                                     ></v-text-field>
                                 </validation-provider>
@@ -263,6 +264,7 @@
                                         "
                                         :error-messages="errors"
                                         :success="valid"
+                                        counter
                                         autocomplete="off"
                                     ></v-text-field>
                                 </validation-provider>
@@ -276,7 +278,7 @@
                             >
                             <v-spacer></v-spacer>
                             <v-btn
-                                :disabled="invalid || !!loading"
+                                :disabled="!!loading"
                                 type="submit"
                                 color="primary"
                                 large
@@ -397,12 +399,20 @@ export default {
             }
         },
         create() {
-            this.form = cloneDeep(User);
+            this.form = {
+                ...cloneDeep(User),
+                password: null,
+                password_confirmation: null
+            };
             this.change_password = true;
             this.dialog = true;
         },
         edit() {
-            this.form = cloneDeep(this.selected[0]);
+            this.form = {
+                ...cloneDeep(this.selected[0]),
+                password: null,
+                password_confirmation: null
+            };
             this.change_password = false;
             this.dialog = true;
         },
@@ -435,6 +445,11 @@ export default {
         },
         saveItem() {
             const { form: payload } = this;
+
+            if (!this.change_password) {
+                this.$delete(payload, "password");
+                this.$delete(payload, "password_confirmation");
+            }
 
             this.SAVE_MODEL({
                 model,
