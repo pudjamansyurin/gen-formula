@@ -273,7 +273,12 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
-                { text: "Last.Price", value: "latest_price", align: "right" },
+                {
+                    text: "Last.Price",
+                    value: "latest_price",
+                    align: "right",
+                    sortable: false
+                },
                 {
                     text: "Tot.Price",
                     value: "prices_len",
