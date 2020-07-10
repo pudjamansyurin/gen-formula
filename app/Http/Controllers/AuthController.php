@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserItem;
 use Illuminate\Http\Request;
 use App\Traits\ThrottlesLogins;
 use App\User;
@@ -122,7 +123,7 @@ class AuthController extends Controller
         ])->save();
 
         return response([
-            'user' => $user,
+            'user' => new UserItem($user),
             'message' => Lang::get('auth.authenticated', [
                 'name' => $user->name
             ])
