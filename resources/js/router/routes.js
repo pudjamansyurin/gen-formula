@@ -46,13 +46,18 @@ export default [
             {
                 path: "",
                 redirect: {
-                    name: "report"
+                    name: "formula"
                 }
             },
+            // {
+            //     path: "report",
+            //     name: "report",
+            //     component: Report
+            // },
             {
-                path: "report",
-                name: "report",
-                component: Report
+                path: "formula",
+                name: "formula",
+                component: Formula
             },
             {
                 path: "product",
@@ -66,20 +71,15 @@ export default [
                 props: castRouteParamsId
             },
             {
-                path: "formula",
-                name: "formula",
-                component: Formula
-            },
-            {
                 path: "user",
                 name: "user",
                 component: User
             },
-            {
-                path: "setting",
-                name: "setting",
-                component: Setting
-            },
+            // {
+            //     path: "setting",
+            //     name: "setting",
+            //     component: Setting
+            // },
             {
                 path: "profile",
                 name: "profile",
