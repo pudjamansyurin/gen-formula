@@ -21,6 +21,7 @@ class ProductItem extends JsonResource
             'updated_at' => $this->updated_at,
             'user' =>  $this->user,
             'prices' => $this->prices,
+            'latest_price' => $this->prices->sortByDesc('changed_at')->first()['price']
         ];
     }
 }

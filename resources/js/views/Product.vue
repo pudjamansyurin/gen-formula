@@ -137,6 +137,9 @@
                     >{{ item.name }}</v-chip
                 >
             </template>
+            <template v-slot:item.latest_price="{ item }">{{
+                item.latest_price | currency
+            }}</template>
             <template v-slot:item.prices_len="{ item }">{{
                 item.prices.length
             }}</template>
@@ -270,6 +273,7 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
+                { text: "Last.Price", value: "latest_price", align: "right" },
                 {
                     text: "Tot.Price",
                     value: "prices_len",
