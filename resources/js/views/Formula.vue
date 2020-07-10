@@ -137,6 +137,9 @@
                     >{{ item.name }}</v-chip
                 >
             </template>
+            <template v-slot:item.percents_len="{ item }">{{
+                item.percents.length
+            }}</template>
             <template v-slot:item.updated_at="{ item }">{{
                 item.updated_at | moment("from")
             }}</template>
@@ -379,6 +382,12 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
+                {
+                    text: "Tot.Product",
+                    value: "percents_len",
+                    align: "center",
+                    sortable: false
+                },
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],

@@ -137,6 +137,9 @@
                     >{{ item.name }}</v-chip
                 >
             </template>
+            <template v-slot:item.prices_len="{ item }">{{
+                item.prices.length
+            }}</template>
             <template v-slot:item.updated_at="{ item }">{{
                 item.updated_at | moment("from")
             }}</template>
@@ -267,6 +270,12 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
+                {
+                    text: "Tot.Price",
+                    value: "prices_len",
+                    align: "center",
+                    sortable: false
+                },
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],
