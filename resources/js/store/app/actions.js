@@ -11,7 +11,8 @@ export default {
                 const { user } = data;
                 const { remember } = payload;
 
-                commit(mutations.SET_AUTH, { user, remember });
+                commit(mutations.SET_PROFILE, user);
+                commit(mutations.SET_REMEMBER_ME, remember);
 
                 // redirect
                 const { redirect } = router.currentRoute.query;
@@ -25,7 +26,7 @@ export default {
     },
     [actions.LOGOUT]({ commit }) {
         logout().then(_ => {
-            commit(mutations.CLEAR_AUTH);
+            commit(mutations.CLEAR_PROFILE);
             router.push({ name: "login" });
         });
     }

@@ -44,18 +44,16 @@ export default {
             type: "info"
         };
     },
-    [mutations.SET_AUTH](state, { user: profile, remember }) {
-        state.auth = {
-            remember,
-            profile
-        };
-
-        ls.set("auth.remember", remember);
-        ls.set("auth.profile", profile);
+    [mutations.SET_REMEMBER_ME](state, remember) {
+        state.remember_me = remember;
+        ls.set("remember_me", remember);
     },
-    [mutations.CLEAR_AUTH](state) {
-        state.auth.profile = null;
-
-        ls.remove("auth.profile");
+    [mutations.SET_PROFILE](state, data) {
+        state.profile = data;
+        ls.set("profile", data);
+    },
+    [mutations.CLEAR_PROFILE](state) {
+        state.profile = null;
+        ls.remove("profile");
     }
 };

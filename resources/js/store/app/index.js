@@ -17,10 +17,8 @@ const state = {
         code: null,
         text: ""
     },
-    auth: {
-        remember: ls.get("auth.remember") || false,
-        profile: ls.get("auth.profile") || null
-    }
+    remember_me: ls.get("remember_me") || false,
+    profile: ls.get("profile") || null
 };
 
 export default {

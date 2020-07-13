@@ -18,7 +18,7 @@ import {
     SET_ERROR,
     CLEAR_ERROR,
     CLEAR_MESSAGE,
-    CLEAR_AUTH
+    CLEAR_PROFILE
 } from "@/store/app/mutation-types";
 
 export const http = axios.create({
@@ -99,7 +99,7 @@ http.interceptors.response.use(
         if (![422].includes(code)) {
             if (profile && code === 401) {
                 // remove session
-                store.commit(ns("app", CLEAR_AUTH));
+                store.commit(ns("app", CLEAR_PROFILE));
                 // session expired
                 router.push({
                     name: "login",

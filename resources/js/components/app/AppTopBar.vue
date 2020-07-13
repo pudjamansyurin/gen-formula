@@ -29,8 +29,8 @@
             <template v-slot:activator="{ on }">
                 <v-btn icon large v-on="on">
                     <v-avatar right size="32px" item>
-                        <v-img src="/img/unknown.png" alt="Profile"></v-img
-                    ></v-avatar>
+                        <v-img src="/img/unknown.png" alt="Profile"></v-img>
+                    </v-avatar>
                 </v-btn>
             </template>
             <v-list>

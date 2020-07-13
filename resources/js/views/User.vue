@@ -11,7 +11,7 @@
             :dense="dense"
             :page="1"
             :items-per-page="10"
-            selectable-key="notme"
+            selectable-key="freeze"
             sort-by="updated_at"
             sort-desc
             show-select

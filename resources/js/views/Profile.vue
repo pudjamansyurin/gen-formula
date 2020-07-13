@@ -1,10 +1,123 @@
 <template>
     <v-col cols="8">
-        <validation-observer v-slot="{ handleSubmit }" ref="form">
+        <v-card v-if="!edit_profile" class="mx-auto">
+            <v-list-item>
+                <v-list-item-avatar color="grey">
+                    <v-img src="/img/unknown.png" alt="Profile"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                    <v-list-item-title class="headline">{{
+                        auth.profile.name
+                    }}</v-list-item-title>
+                    <v-list-item-subtitle
+                        >Profile
+
+                        <v-btn @click="edit" color="blue darken-1" text
+                            >Edit</v-btn
+                        >
+                    </v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-divider></v-divider>
+            <v-list-item>
+                <v-list-item-icon>
+                    <v-icon color="indigo">mdi-email</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title
+                        >{{ auth.profile.email }}
+                        <v-chip
+                            class="ma-2"
+                            :color="
+                                auth.profile.verified_at ? 'teal' : 'orange'
+                            "
+                            text-color="white"
+                            small
+                        >
+                            <v-avatar left>
+                                <v-icon small>{{
+                                    auth.profile.verified_at
+                                        ? "mdi-checkbox-marked-circle"
+                                        : "mdi-help-circle-outline"
+                                }}</v-icon>
+                            </v-avatar>
+                            {{
+                                auth.profile.verified_at
+                                    ? "Verified"
+                                    : "Need verification"
+                            }}
+                        </v-chip>
+                    </v-list-item-title>
+                    <v-list-item-subtitle>Email</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-divider inset></v-divider>
+            <v-list-item>
+                <v-list-item-icon>
+                    <v-icon color="indigo"
+                        >mdi-account-supervisor-circle</v-icon
+                    >
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>{{
+                        auth.profile.role.name
+                    }}</v-list-item-title>
+                    <v-list-item-subtitle>Role</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-divider inset></v-divider>
+            <v-list-item>
+                <v-list-item-icon>
+                    <v-icon color="indigo">mdi-account-edit</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>{{
+                        auth.profile.created_at | moment("from")
+                    }}</v-list-item-title>
+                    <v-list-item-subtitle>Created at</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-list-item v-if="auth.profile.updated_at">
+                <v-list-item-action></v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>{{
+                        auth.profile.updated_at | moment("from")
+                    }}</v-list-item-title>
+                    <v-list-item-subtitle>Updated at</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-divider inset></v-divider>
+            <v-list-item>
+                <v-list-item-icon>
+                    <v-icon color="indigo">mdi-login</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                    <v-list-item-title>{{
+                        auth.profile.last_at | moment("from")
+                    }}</v-list-item-title>
+                    <v-list-item-subtitle>Last login</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+                <v-list-item-action></v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title>{{
+                        auth.profile.last_ip
+                    }}</v-list-item-title>
+                    <v-list-item-subtitle>Last Ip Address</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
+        </v-card>
+
+        <validation-observer v-else v-slot="{ handleSubmit }" ref="form">
             <v-form @submit.prevent="handleSubmit(saveItem)">
                 <v-card :loading="!!loading">
                     <v-card-title>
-                        <span class="headline">My Profile</span>
+                        <span class="headline">Edit Profile</span>
                     </v-card-title>
                     <v-divider></v-divider>
 
@@ -19,7 +132,6 @@
                                 v-model="form.name"
                                 :error-messages="errors"
                                 :success="valid"
-                                counter
                                 hint="This is to identify the user"
                                 persistent-hint
                             ></v-text-field>
@@ -35,7 +147,6 @@
                                 v-model="form.email"
                                 :error-messages="errors"
                                 :success="valid"
-                                counter
                                 hint="This email is for recovery"
                                 persistent-hint
                             ></v-text-field>
@@ -55,12 +166,21 @@
                                 item-text="name"
                                 item-value="id"
                                 label="Role"
-                                readonly
                                 hint="Role for this user"
                                 persistent-hint
                                 return-object
                             ></v-select>
                         </validation-provider>
+
+                        <v-btn
+                            color="blue darken-1"
+                            @click="change_password = !change_password"
+                            text
+                            >{{
+                                change_password ? "Keep" : "Change"
+                            }}
+                            Password</v-btn
+                        >
 
                         <template v-if="change_password">
                             <validation-provider
@@ -113,14 +233,8 @@
 
                     <v-divider></v-divider>
                     <v-card-actions>
-                        <v-btn
-                            color="blue darken-1"
-                            @click="change_password = !change_password"
-                            text
-                            >{{
-                                change_password ? "Keep" : "Change"
-                            }}
-                            Password</v-btn
+                        <v-btn @click="edit_profile = false" color="indigo" text
+                            >Cancel</v-btn
                         >
                         <v-spacer></v-spacer>
                         <v-btn
@@ -139,9 +253,9 @@
 
 <script>
 import { cloneDeep } from "lodash";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import { SAVE_MODEL } from "../store/model/action-types";
-import { User } from "../models";
+import { SET_PROFILE } from "../store/app/mutation-types";
 
 const model = "user";
 
@@ -149,17 +263,31 @@ export default {
     name: "profile",
     data() {
         return {
+            edit_profile: false,
             change_password: false,
             show_password: false,
-            form: cloneDeep(User)
+            form: null
         };
     },
     computed: {
         ...mapState("app", ["loading", "auth"])
     },
     methods: {
+        ...mapMutations("app", [SET_PROFILE]),
         ...mapActions("model", [SAVE_MODEL]),
-        close() {},
+        close() {
+            this.edit_profile = false;
+        },
+        edit() {
+            this.form = cloneDeep({
+                ...this.auth.profile,
+                password: null,
+                password_confirmation: null
+            });
+
+            this.change_password = false;
+            this.edit_profile = true;
+        },
         saveItem() {
             const { form: payload } = this;
 
@@ -173,23 +301,14 @@ export default {
                 payload
             })
                 .then(async data => {
-                    this.UPDATE_MODEL({
-                        model,
-                        data
-                    });
+                    console.log(data);
+                    // update auth data
+
                     this.close();
                 })
                 .catch(errors => {
                     this.$refs.form.setErrors(errors);
                 });
-        }
-    },
-    watch: {
-        "auth.profile": {
-            immediate: true,
-            handler(val) {
-                this.form = val;
-            }
         }
     }
 };

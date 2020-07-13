@@ -21,7 +21,10 @@ class UserItem extends JsonResource
             'role' => $this->roles[0],
             'last_at' => $this->last_at,
             'last_ip' => $this->last_ip,
-            'notme' => $this->id != auth()->id()
+            'email_verified_at' => $this->email_verified_at,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'freeze' => $this->id == auth()->id()
         ];
     }
 }
