@@ -17,7 +17,7 @@ const state = {
         code: null,
         text: ""
     },
-    remember_me: ls.get("remember_me") || false,
+    remember: ls.get("remember") || false,
     profile: ls.get("profile") || null
 };
 

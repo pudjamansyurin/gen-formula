@@ -11,8 +11,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const { auth, error } = store.state.app;
-    const { profile } = auth;
+    const { profile, error } = store.state.app;
     const { code } = error;
 
     if (code && ![422].includes(code)) {

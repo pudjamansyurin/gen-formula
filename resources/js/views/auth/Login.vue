@@ -42,7 +42,7 @@
                     </validation-provider>
 
                     <v-checkbox
-                        v-model="remember_me"
+                        v-model="form.remember"
                         label="Keep me logged in"
                     ></v-checkbox>
                 </v-card-text>
@@ -83,15 +83,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "auth"]),
-        remember_me: {
-            get() {
-                return this.auth.remember;
-            },
-            set(val) {
-                this.form.remember = val;
-            }
-        }
+        ...mapState("app", ["loading", "remember"])
     },
     methods: {
         ...mapActions("app", [LOGIN]),
@@ -99,6 +91,14 @@ export default {
             this.LOGIN(this.form).catch(errors => {
                 this.$refs.form.setErrors(errors);
             });
+        }
+    },
+    watch: {
+        remember: {
+            immediate: true,
+            handler(val) {
+                this.form.remember = this.remember;
+            }
         }
     }
 };

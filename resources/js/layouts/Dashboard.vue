@@ -1,5 +1,5 @@
 <template>
-    <div v-if="auth.profile">
+    <div v-if="profile">
         <app-left-drawer></app-left-drawer>
         <app-top-bar></app-top-bar>
 
@@ -91,7 +91,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["auth"])
+        ...mapState("app", ["profile"])
     },
     mounted() {
         console.log("Session credebility should be checked!");

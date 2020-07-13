@@ -7,7 +7,7 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                     <v-list-item-title class="headline">{{
-                        auth.profile.name
+                        profile.name
                     }}</v-list-item-title>
                     <v-list-item-subtitle
                         >Profile
@@ -26,24 +26,22 @@
 
                 <v-list-item-content>
                     <v-list-item-title
-                        >{{ auth.profile.email }}
+                        >{{ profile.email }}
                         <v-chip
                             class="ma-2"
-                            :color="
-                                auth.profile.verified_at ? 'teal' : 'orange'
-                            "
+                            :color="profile.verified_at ? 'teal' : 'orange'"
                             text-color="white"
                             small
                         >
                             <v-avatar left>
                                 <v-icon small>{{
-                                    auth.profile.verified_at
+                                    profile.verified_at
                                         ? "mdi-checkbox-marked-circle"
                                         : "mdi-help-circle-outline"
                                 }}</v-icon>
                             </v-avatar>
                             {{
-                                auth.profile.verified_at
+                                profile.verified_at
                                     ? "Verified"
                                     : "Need verification"
                             }}
@@ -62,7 +60,7 @@
 
                 <v-list-item-content>
                     <v-list-item-title>{{
-                        auth.profile.role.name
+                        profile.role.name
                     }}</v-list-item-title>
                     <v-list-item-subtitle>Role</v-list-item-subtitle>
                 </v-list-item-content>
@@ -75,16 +73,16 @@
 
                 <v-list-item-content>
                     <v-list-item-title>{{
-                        auth.profile.created_at | moment("from")
+                        profile.created_at | moment("from")
                     }}</v-list-item-title>
                     <v-list-item-subtitle>Created at</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
-            <v-list-item v-if="auth.profile.updated_at">
+            <v-list-item v-if="profile.updated_at">
                 <v-list-item-action></v-list-item-action>
                 <v-list-item-content>
                     <v-list-item-title>{{
-                        auth.profile.updated_at | moment("from")
+                        profile.updated_at | moment("from")
                     }}</v-list-item-title>
                     <v-list-item-subtitle>Updated at</v-list-item-subtitle>
                 </v-list-item-content>
@@ -97,7 +95,7 @@
 
                 <v-list-item-content>
                     <v-list-item-title>{{
-                        auth.profile.last_at | moment("from")
+                        profile.last_at | moment("from")
                     }}</v-list-item-title>
                     <v-list-item-subtitle>Last login</v-list-item-subtitle>
                 </v-list-item-content>
@@ -105,9 +103,7 @@
             <v-list-item>
                 <v-list-item-action></v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title>{{
-                        auth.profile.last_ip
-                    }}</v-list-item-title>
+                    <v-list-item-title>{{ profile.last_ip }}</v-list-item-title>
                     <v-list-item-subtitle>Last Ip Address</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -161,7 +157,6 @@
                                 :items="[form.role]"
                                 :error-messages="errors"
                                 :success="valid"
-                                :loading="!!loading"
                                 chips
                                 item-text="name"
                                 item-value="id"
@@ -255,7 +250,7 @@
 import { cloneDeep } from "lodash";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { SAVE_MODEL } from "../store/model/action-types";
-import { SET_PROFILE } from "../store/app/mutation-types";
+import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
 
 const model = "user";
 
@@ -270,17 +265,17 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "auth"])
+        ...mapState("app", ["loading", "profile"])
     },
     methods: {
-        ...mapMutations("app", [SET_PROFILE]),
+        ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
         ...mapActions("model", [SAVE_MODEL]),
         close() {
             this.edit_profile = false;
         },
         edit() {
             this.form = cloneDeep({
-                ...this.auth.profile,
+                ...this.profile,
                 password: null,
                 password_confirmation: null
             });
@@ -301,9 +296,12 @@ export default {
                 payload
             })
                 .then(async data => {
-                    console.log(data);
-                    // update auth data
-
+                    // update profile
+                    this.SET_PROFILE(data);
+                    this.SET_MESSAGE({
+                        text: "Profile udpated successfully",
+                        type: "success"
+                    });
                     this.close();
                 })
                 .catch(errors => {

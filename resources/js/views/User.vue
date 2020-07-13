@@ -140,7 +140,7 @@
              -->
             <template v-slot:item.name="{ item }">
                 <v-chip
-                    v-if="auth.profile.id == item.id"
+                    v-if="profile.id == item.id"
                     :to="{ name: 'profile' }"
                     color="primary"
                     :small="dense"
@@ -155,7 +155,7 @@
                 v-slot:item.data-table-select="{ isSelected, select, item }"
             >
                 <v-simple-checkbox
-                    v-if="auth.profile.id != item.id"
+                    v-if="profile.id != item.id"
                     :value="isSelected"
                     @input="select($event)"
                 ></v-simple-checkbox>
@@ -393,7 +393,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "dense", "auth"]),
+        ...mapState("app", ["loading", "dense", "profile"]),
         ...mapState("model", ["users"]),
         toolbarTitle() {
             const { length } = this.selected;

@@ -12,7 +12,7 @@ export default {
                 const { remember } = payload;
 
                 commit(mutations.SET_PROFILE, user);
-                commit(mutations.SET_REMEMBER_ME, remember);
+                commit(mutations.SET_REMEMBER, remember);
 
                 // redirect
                 const { redirect } = router.currentRoute.query;

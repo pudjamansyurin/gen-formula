@@ -44,9 +44,9 @@ export default {
             type: "info"
         };
     },
-    [mutations.SET_REMEMBER_ME](state, remember) {
-        state.remember_me = remember;
-        ls.set("remember_me", remember);
+    [mutations.SET_REMEMBER](state, remember) {
+        state.remember = remember;
+        ls.set("remember", remember);
     },
     [mutations.SET_PROFILE](state, data) {
         state.profile = data;

@@ -37,7 +37,7 @@ http.defaults.headers.common["Accept"] = "application/json";
 http.interceptors.request.use(
     config => {
         // get token, if user doesn't logout yet
-        // const { token } = store.state.app.auth;
+        // const { token } = store.state.app;
         // config.headers.Authorization = token ? `Bearer ${token}` : null;
 
         store.commit(ns("app", START_LOADING));
@@ -76,7 +76,7 @@ http.interceptors.response.use(
     ({ response }) => {
         const { status: code, statusText: text, data } = response;
         const { message } = data;
-        const { profile } = store.state.app.auth;
+        const { profile } = store.state.app;
 
         console.error(response);
         store.commit(ns("app", STOP_LOADING));
