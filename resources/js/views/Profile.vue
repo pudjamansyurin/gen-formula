@@ -196,6 +196,8 @@
                                     "
                                     :error-messages="errors"
                                     :success="valid"
+                                    hint="Your new password"
+                                    persistent-hint
                                     counter
                                     autocomplete="off"
                                 ></v-text-field>
@@ -219,6 +221,8 @@
                                     "
                                     :error-messages="errors"
                                     :success="valid"
+                                    hint="Fill again the password"
+                                    persistent-hint
                                     counter
                                     autocomplete="off"
                                 ></v-text-field>

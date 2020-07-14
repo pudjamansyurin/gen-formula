@@ -17,6 +17,8 @@
                             v-model="form.email"
                             :error-messages="errors"
                             :success="valid"
+                            hint="Your account's email"
+                            persistent-hint
                             prepend-icon="mdi-account"
                             autocomplete="on"
                         ></v-text-field>
@@ -36,6 +38,8 @@
                             @click:append="show_password = !show_password"
                             :error-messages="errors"
                             :success="valid"
+                            hint="Your account's password"
+                            persistent-hint
                             prepend-icon="mdi-lock"
                             autocomplete="on"
                         ></v-text-field>

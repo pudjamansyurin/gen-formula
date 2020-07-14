@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserItem;
-use Illuminate\Http\Request;
-use App\Traits\ThrottlesLogins;
+use App\Traits\Auth\ResetsPasswords;
+use App\Traits\Auth\ThrottlesLogins;
+use App\Traits\Auth\SendsPasswordResetEmails;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -14,6 +16,16 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     use ThrottlesLogins;
+    use SendsPasswordResetEmails;
+    use ResetsPasswords;
+
+    /**
+     * Send reset links to email
+     */
+    public function sendPasswordResetLink(Request $request)
+    {
+        return $this->sendResetLinkEmail($request);
+    }
 
     /**
      * Handle a login request to the application.

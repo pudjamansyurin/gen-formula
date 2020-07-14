@@ -30,7 +30,8 @@ export default [
                 component: Forget
             },
             {
-                path: "reset",
+                path: "reset/:token/:email",
+                props: true,
                 name: "reset",
                 component: Reset
             }

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // Debugbar::disable();
+        ResetPassword::createUrlUsing(function ($notifiable, $token) {
+            return env('VUE_URL') . "/reset/{$token}/{$notifiable->getEmailForPasswordReset()}";
+        });
     }
 }

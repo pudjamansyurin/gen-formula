@@ -6,3 +6,6 @@ export const login = async payload => {
 };
 
 export const logout = async () => await http.post("logout");
+
+export const forget = async payload =>
+    await http.post("password/email", payload);

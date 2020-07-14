@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import { login, logout } from "@/api/auth";
+import { login, logout, forget } from "@/api/auth";
 import router from "@/router";
 import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
@@ -29,5 +29,16 @@ export default {
             commit(mutations.CLEAR_PROFILE);
             router.push({ name: "login" });
         });
+    },
+    [actions.FORGET]({ commit }, payload) {
+        return forget(payload)
+            .then(({ data }) => {
+                console.log(data);
+            })
+            .catch(e => {
+                if (get(e, "data.errors")) {
+                    return Promise.reject(e.data.errors);
+                }
+            });
     }
 };
