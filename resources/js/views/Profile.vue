@@ -41,9 +41,7 @@
                                 }}</v-icon>
                             </v-avatar>
                             {{
-                                profile.verified_at
-                                    ? "Verified"
-                                    : "Need verification"
+                                profile.verified_at ? "Verified" : "Un-verified"
                             }}
                         </v-chip>
                     </v-list-item-title>

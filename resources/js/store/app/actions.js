@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import { login, logout, forget, reset } from "@/api/auth";
+import { login, logout, forget, reset, resend } from "@/api/auth";
 import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 
@@ -34,7 +34,6 @@ export default {
     [actions.RESET]({ commit }, payload) {
         return reset(payload)
             .then(({ data }) => {
-                console.log(data);
                 const { user } = data;
                 commit(mutations.SET_PROFILE, user);
             })
