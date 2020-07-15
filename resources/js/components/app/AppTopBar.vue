@@ -43,7 +43,7 @@
                     </v-list-item-content>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-list-item @click="LOGOUT">
+                <v-list-item @click="logout">
                     <v-list-item-icon>
                         <v-icon>mdi-logout</v-icon>
                     </v-list-item-icon>
@@ -67,7 +67,12 @@ export default {
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DRAWER]),
-        ...mapActions("app", [LOGOUT])
+        ...mapActions("app", [LOGOUT]),
+        logout() {
+            this.LOGOUT().then(() => {
+                this.$router.push({ name: "login" });
+            });
+        }
     }
 };
 </script>

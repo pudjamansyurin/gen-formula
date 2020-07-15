@@ -9,3 +9,8 @@ export const logout = async () => await http.post("logout");
 
 export const forget = async payload =>
     await http.post("password/email", payload);
+
+export const reset = async payload =>
+    await http.post("password/reset", payload);
+
+export const resend = async payload => await http.post("email/resend", payload);

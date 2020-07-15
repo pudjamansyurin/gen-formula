@@ -1,6 +1,5 @@
 import { get } from "lodash";
-import { login, logout, forget } from "@/api/auth";
-import router from "@/router";
+import { login, logout, forget, reset } from "@/api/auth";
 import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 
@@ -13,10 +12,6 @@ export default {
 
                 commit(mutations.SET_PROFILE, user);
                 commit(mutations.SET_REMEMBER, remember);
-
-                // redirect
-                const { redirect } = router.currentRoute.query;
-                router.push({ path: redirect || "/app" });
             })
             .catch(e => {
                 if (get(e, "data.errors")) {
@@ -25,15 +20,23 @@ export default {
             });
     },
     [actions.LOGOUT]({ commit }) {
-        logout().then(_ => {
+        return logout().then(_ => {
             commit(mutations.CLEAR_PROFILE);
-            router.push({ name: "login" });
         });
     },
     [actions.FORGET]({ commit }, payload) {
-        return forget(payload)
+        return forget(payload).catch(e => {
+            if (get(e, "data.errors")) {
+                return Promise.reject(e.data.errors);
+            }
+        });
+    },
+    [actions.RESET]({ commit }, payload) {
+        return reset(payload)
             .then(({ data }) => {
                 console.log(data);
+                const { user } = data;
+                commit(mutations.SET_PROFILE, user);
             })
             .catch(e => {
                 if (get(e, "data.errors")) {

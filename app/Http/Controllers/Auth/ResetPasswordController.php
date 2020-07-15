@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
+use App\Http\Resources\UserItem;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
@@ -21,10 +27,44 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
+    // /**
+    //  * Where to redirect users after resetting their password.
+    //  *
+    //  * @var string
+    //  */
+    // protected $redirectTo = RouteServiceProvider::HOME;
+
     /**
-     * Where to redirect users after resetting their password.
+     * Get the response for a successful password reset.
      *
-     * @var string
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected function sendResetResponse(Request $request, $response)
+    {
+        $user = User::where('email', $request->email)->first();
+        // record last login information
+        $user->forceFill([
+            'last_at' => now(),
+            'last_ip' => $request->getClientIp()
+        ])->save();
+
+        return response([
+            'user' => new UserItem($user),
+            'message' => Lang::get('auth.authenticated', [
+                'name' => $user->name
+            ])
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard('web');
+    }
 }

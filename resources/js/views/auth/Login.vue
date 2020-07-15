@@ -92,9 +92,15 @@ export default {
     methods: {
         ...mapActions("app", [LOGIN]),
         submit() {
-            this.LOGIN(this.form).catch(errors => {
-                this.$refs.form.setErrors(errors);
-            });
+            this.LOGIN(this.form)
+                .then(() => {
+                    // redirect
+                    const { redirect } = this.$route.query;
+                    this.$router.push({ path: redirect || "/app" });
+                })
+                .catch(errors => {
+                    this.$refs.form.setErrors(errors);
+                });
         }
     },
     watch: {

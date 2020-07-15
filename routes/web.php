@@ -16,11 +16,17 @@ use Illuminate\Support\Facades\Route;
 
 // Auth::routes();
 
-Route::post('login', 'AuthController@login');
-Route::post('logout', 'AuthController@logout');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::prefix('password')->group(function () {
-    Route::post('email', 'AuthController@sendPasswordResetLink');
-    Route::post('reset', 'AuthController@reset');
+    Route::post('email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    Route::post('reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+    // Route::post('confirm', 'Auth\ConfirmPasswordController@confirm');
 });
+Route::prefix('email')->group(function () {
+    //     Route::get('verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
+    Route::post('resend', 'Auth\VerificationController@resend')->name('verification.resend');
+});
+
 
 Route::view('/{any}', 'spa')->where('any', '.*');

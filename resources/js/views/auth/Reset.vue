@@ -7,6 +7,24 @@
                 <v-divider></v-divider>
                 <v-card-text>
                     <validation-provider
+                        name="email"
+                        v-slot="{ errors, valid }"
+                    >
+                        <v-text-field
+                            label="Email"
+                            type="email"
+                            :value="email"
+                            :error-messages="errors"
+                            :success="valid"
+                            hint="Your verified account's email"
+                            persistent-hint
+                            prepend-icon="mdi-account"
+                            autocomplete="on"
+                            readonly
+                        ></v-text-field>
+                    </validation-provider>
+
+                    <validation-provider
                         name="password"
                         v-slot="{ errors, valid }"
                     >
@@ -23,6 +41,7 @@
                             hint="Your new password"
                             persistent-hint
                             counter
+                            prepend-icon="mdi-lock"
                             autocomplete="off"
                         ></v-text-field>
                     </validation-provider>
@@ -44,6 +63,7 @@
                             hint="Fill again the password"
                             persistent-hint
                             counter
+                            prepend-icon="mdi-lock"
                             autocomplete="off"
                         ></v-text-field>
                     </validation-provider>
@@ -63,7 +83,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import { RESET } from "../../store/app/action-types";
+
 export default {
     name: "reset",
     props: {
@@ -85,10 +107,21 @@ export default {
         ...mapState("app", ["loading"])
     },
     methods: {
+        ...mapActions("app", [RESET]),
         submit() {
-            // this.FORGET(this.form).catch(errors => {
-            //     this.$refs.form.setErrors(errors);
-            // });
+            let payload = {
+                ...this.form,
+                email: this.email,
+                token: this.token
+            };
+
+            this.RESET(payload)
+                .then(() => {
+                    this.$router.push({ path: "/app" });
+                })
+                .catch(errors => {
+                    this.$refs.form.setErrors(errors);
+                });
         }
     }
 };
