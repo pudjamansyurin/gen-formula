@@ -4,6 +4,7 @@ const Home = () => import("@/layouts/Home");
 const Login = () => import("@/views/auth/Login");
 const Forget = () => import("@/views/auth/Forget");
 const Reset = () => import("@/views/auth/Reset");
+const Verify = () => import("@/views/auth/Verify");
 const Dashboard = () => import("@/layouts/Dashboard");
 const Setting = () => import("@/views/Setting");
 const User = () => import("@/views/User");
@@ -85,6 +86,11 @@ export default [
                 path: "profile",
                 name: "profile",
                 component: Profile
+            },
+            {
+                path: "verify",
+                name: "verify",
+                component: Verify
             }
         ]
     },

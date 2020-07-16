@@ -1,6 +1,6 @@
 <template>
     <v-col cols="8">
-        <v-card v-if="!edit_profile" class="mx-auto">
+        <v-card v-if="!edit_profile" :loading="!!loading" class="mx-auto">
             <v-list-item>
                 <v-list-item-avatar color="grey">
                     <v-img src="/img/unknown.png" alt="Profile"></v-img>
@@ -30,6 +30,7 @@
                         <v-chip
                             class="ma-2"
                             :color="profile.verified_at ? 'teal' : 'orange'"
+                            @click="resend"
                             text-color="white"
                             small
                         >
@@ -41,7 +42,7 @@
                                 }}</v-icon>
                             </v-avatar>
                             {{
-                                profile.verified_at ? "Verified" : "Un-verified"
+                                profile.verified_at ? "Verified" : "Verify"
                             }}
                         </v-chip>
                     </v-list-item-title>
@@ -110,7 +111,7 @@
         <validation-observer v-else v-slot="{ handleSubmit }" ref="form">
             <v-form @submit.prevent="handleSubmit(saveItem)">
                 <v-card :loading="!!loading">
-                    <v-card-title>
+                    <v-card-title class="headline grey lighten-2" primary-title>
                         <span class="headline">Edit Profile</span>
                     </v-card-title>
                     <v-divider></v-divider>
@@ -253,6 +254,7 @@ import { cloneDeep } from "lodash";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { SAVE_MODEL } from "../store/model/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
+import { RESEND } from "../store/app/action-types";
 
 const model = "user";
 
@@ -271,6 +273,7 @@ export default {
     },
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
+        ...mapActions("app", [RESEND]),
         ...mapActions("model", [SAVE_MODEL]),
         close() {
             this.edit_profile = false;
@@ -309,6 +312,11 @@ export default {
                 .catch(errors => {
                     this.$refs.form.setErrors(errors);
                 });
+        },
+        resend() {
+            if (!this.profile.verified_at) {
+                this.RESEND();
+            }
         }
     }
 };

@@ -152,7 +152,10 @@
             <validation-observer v-slot="{ handleSubmit }" ref="form">
                 <v-form @submit.prevent="handleSubmit(saveItem)">
                     <v-card :loading="!!loading">
-                        <v-card-title>
+                        <v-card-title
+                            class="headline grey lighten-2"
+                            primary-title
+                        >
                             <span class="headline">{{ formTitle }} Item</span>
                         </v-card-title>
                         <v-divider></v-divider>
@@ -212,7 +215,9 @@
 
         <v-dialog v-model="dialogDelete" max-width="290" persistent scrollable>
             <v-card :loading="!!loading">
-                <v-card-title>Confirmation</v-card-title>
+                <v-card-title class="headline grey lighten-2" primary-title
+                    >Confirmation</v-card-title
+                >
                 <v-divider></v-divider>
 
                 <v-card-text class="pt-2" style="max-height: 300px;">

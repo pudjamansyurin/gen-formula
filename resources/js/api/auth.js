@@ -13,4 +13,6 @@ export const forget = async payload =>
 export const reset = async payload =>
     await http.post("password/reset", payload);
 
-export const resend = async payload => await http.post("email/resend", payload);
+export const resend = async () => await http.post("email/resend");
+
+export const verify = async url => await http.get(url);

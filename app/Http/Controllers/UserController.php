@@ -57,6 +57,9 @@ class UserController extends Controller
             $user->syncRoles($role);
         }
 
+        // send email verification
+        $user->sendEmailVerificationNotification();
+
         return response(
             new UserItem($user),
             Response::HTTP_CREATED
@@ -86,14 +89,23 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
+        // send email verification
+        if ($user->email != $request->email) {
+            $user->markEmailAsUnVerified();
+            $user->sendEmailVerificationNotification();
+        }
+        // prepare the data
         $data = [
             'name' => $request->name,
             'email' => $request->email,
         ];
+
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         };
 
+
+        // update user
         $user->update($data);
 
         // change role
@@ -123,6 +135,9 @@ class UserController extends Controller
         return response($ids, Response::HTTP_BAD_REQUEST);
     }
 
+    /**
+     * Get list of roles as options
+     */
     public function role()
     {
         return response([

@@ -123,6 +123,9 @@ export default {
                     this.$refs.form.setErrors(errors);
                 });
         }
+    },
+    mounted() {
+        this.submit();
     }
 };
 </script>

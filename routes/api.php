@@ -14,10 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('user', 'UserController');
     Route::apiResource('product', 'ProductController');
     Route::apiResource('product.price', 'ProductPriceController');
     Route::apiResource('formula', 'FormulaController');
-    Route::apiResource('formula.percent', 'FormulaPercentController', ['only' => ['store']]);
+    Route::apiResource('formula.percent', 'FormulaPercentController', [
+        'only' => ['store']
+    ]);
+    Route::apiResource('user', 'UserController');
     Route::get('/role', 'UserController@role');
 });

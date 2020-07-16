@@ -2,10 +2,11 @@
 
 namespace App;
 
+use App\Traits\ClientQueryScope;
+use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\ClientQueryScope;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -69,5 +70,27 @@ class User extends Authenticatable
     public function formulas()
     {
         return $this->hasMany(Formula::class);
+    }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail());
+    }
+
+    /**
+     * Mark the given user's email as un-verified.
+     *
+     * @return bool
+     */
+    public function markEmailAsUnVerified()
+    {
+        return $this->forceFill([
+            'email_verified_at' => null,
+        ])->save();
     }
 }
