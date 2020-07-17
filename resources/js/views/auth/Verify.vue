@@ -1,5 +1,5 @@
 <template>
-    <v-col cols="8" :loading="!!loading" class="mx-auto">
+    <v-col cols="8">
         <v-card class="elevation-1" :loading="!!loading">
             <v-card-title>{{ title }}</v-card-title>
             <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
@@ -35,8 +35,11 @@ export default {
     methods: {
         ...mapActions("app", [VERIFY]),
         submit() {
-            console.log(this.$route.query.url);
-            this.VERIFY(this.$route.query.url);
+            this.VERIFY(this.$route.query.url)
+                .then(() => {
+                    this.$router.push({ name: "profile" });
+                })
+                .catch(e => {});
         }
     }
 };

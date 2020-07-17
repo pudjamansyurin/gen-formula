@@ -23,9 +23,14 @@ Route::prefix('password')->group(function () {
     Route::post('reset', 'Auth\ResetPasswordController@reset')->name('password.update');
     // Route::post('confirm', 'Auth\ConfirmPasswordController@confirm');
 });
+
 Route::prefix('email')->group(function () {
     Route::get('verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
     Route::post('resend', 'Auth\VerificationController@resend')->name('verification.resend');
+});
+
+Route::group(['domain' => env('APP_URL')], function () {
+    Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.address');
 });
 
 Route::view('/{any}', 'spa')->where('any', '.*');

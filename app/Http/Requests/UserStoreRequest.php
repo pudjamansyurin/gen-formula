@@ -32,7 +32,8 @@ class UserStoreRequest extends FormRequest
             ],
             'email'   => [
                 'required',
-                'email:rfc,dns'
+                'email:rfc,dns',
+                Rule::unique('users', 'email')->ignore($this->user)
             ],
             'role.id' => [
                 'required',

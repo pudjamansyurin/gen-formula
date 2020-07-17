@@ -89,11 +89,6 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        // send email verification
-        if ($user->email != $request->email) {
-            $user->markEmailAsUnVerified();
-            $user->sendEmailVerificationNotification();
-        }
         // prepare the data
         $data = [
             'name' => $request->name,
@@ -104,9 +99,16 @@ class UserController extends Controller
             $data['password'] = Hash::make($request->password);
         };
 
-
+        if ($user->email != $request->email) {
+            $user->markEmailAsUnVerified();
+        }
         // update user
         $user->update($data);
+
+        // send email verification
+        if (!$user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+        }
 
         // change role
         if ($role = Role::find($request->role['id'])) {
@@ -133,6 +135,18 @@ class UserController extends Controller
             return response($ids, Response::HTTP_OK);
         }
         return response($ids, Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Get current logged-in user
+     */
+    public function profile(Request $request)
+    {
+        $user = $request->user();
+
+        return response([
+            'user' => new UserItem($user),
+        ], Response::HTTP_OK);
     }
 
     /**

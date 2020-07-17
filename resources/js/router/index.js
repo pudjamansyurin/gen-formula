@@ -32,7 +32,7 @@ router.beforeEach((to, from, next) => {
                 }
             });
         }
-    } else if (profile) {
+    } else if (profile && to.name != "verify") {
         // non-secured pages, session exist
         // redirect to dashboard
         next("/app");

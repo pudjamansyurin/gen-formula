@@ -282,7 +282,8 @@ export default {
                     text: "Last.Price",
                     value: "latest_price",
                     align: "right",
-                    sortable: false
+                    sortable: false,
+                    width: 150
                 },
                 {
                     text: "Tot.Price",

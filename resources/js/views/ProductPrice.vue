@@ -342,7 +342,7 @@ export default {
             selected: [],
             headers: [
                 { text: "Product", value: "product.name" },
-                { text: "Price", value: "price", align: "right" },
+                { text: "Price", value: "price", align: "right", width: 150 },
                 { text: "Changed At", value: "changed_at" },
                 { text: "Updater", value: "user.name" }
             ],

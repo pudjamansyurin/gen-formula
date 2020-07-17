@@ -29,20 +29,24 @@
                         >{{ profile.email }}
                         <v-chip
                             class="ma-2"
-                            :color="profile.verified_at ? 'teal' : 'orange'"
+                            :color="
+                                profile.email_verified_at ? 'teal' : 'orange'
+                            "
                             @click="resend"
                             text-color="white"
                             small
                         >
                             <v-avatar left>
                                 <v-icon small>{{
-                                    profile.verified_at
+                                    profile.email_verified_at
                                         ? "mdi-checkbox-marked-circle"
                                         : "mdi-help-circle-outline"
                                 }}</v-icon>
                             </v-avatar>
                             {{
-                                profile.verified_at ? "Verified" : "Verify"
+                                profile.email_verified_at
+                                    ? "Verified"
+                                    : "Verify"
                             }}
                         </v-chip>
                     </v-list-item-title>
@@ -254,7 +258,7 @@ import { cloneDeep } from "lodash";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { SAVE_MODEL } from "../store/model/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
-import { RESEND } from "../store/app/action-types";
+import { RESEND, PROFILE } from "../store/app/action-types";
 
 const model = "user";
 
@@ -273,7 +277,7 @@ export default {
     },
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
-        ...mapActions("app", [RESEND]),
+        ...mapActions("app", [RESEND, PROFILE]),
         ...mapActions("model", [SAVE_MODEL]),
         close() {
             this.edit_profile = false;
@@ -314,10 +318,13 @@ export default {
                 });
         },
         resend() {
-            if (!this.profile.verified_at) {
+            if (!this.profile.email_verified_at) {
                 this.RESEND();
             }
         }
+    },
+    mounted() {
+        this.PROFILE();
     }
 };
 </script>

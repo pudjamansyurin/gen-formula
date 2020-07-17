@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'only' => ['store']
     ]);
     Route::apiResource('user', 'UserController');
+    Route::get('/profile', 'UserController@profile');
     Route::get('/role', 'UserController@role');
 });

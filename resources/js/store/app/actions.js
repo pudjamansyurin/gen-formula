@@ -64,18 +64,12 @@ export default {
             })
             .catch(e => {});
     },
-    [actions.VERIFY]({ commit }) {
-        return auth
-            .verify()
-            .then(res => {
-                console.log(res);
-                // commit(mutations.SET_MESSAGE, {
-                //     text: "Check your email",
-                //     type: "success"
-                // });
-            })
-            .catch(e => {
-                console.log(e);
-            });
+    [actions.VERIFY]({ commit }, url) {
+        return auth.verify(url);
+    },
+    [actions.PROFILE]({ commit }) {
+        return auth.profile().then(({ user }) => {
+            commit(mutations.SET_PROFILE, user);
+        });
     }
 };

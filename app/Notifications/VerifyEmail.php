@@ -71,10 +71,10 @@ class VerifyEmail extends VerifyEmailNotification
      */
     protected function verificationUrl($notifiable)
     {
-        return env('VUE_URL') . '/app/verify?' . http_build_query(
+        return env('APP_URL') . '/app/verify?' . http_build_query(
             [
                 'url' => URL::temporarySignedRoute(
-                    'verification.verify',
+                    'verification.address',
                     Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
                     [
                         'id' => $notifiable->getKey(),
