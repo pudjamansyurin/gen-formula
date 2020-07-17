@@ -11,7 +11,7 @@
             :dense="dense"
             :page="1"
             :items-per-page="10"
-            selectable-key="freeze"
+            selectable-key="selectable"
             sort-by="updated_at"
             sort-desc
             show-select
@@ -519,9 +519,6 @@ export default {
             this.dialogDelete = false;
         }
     },
-    mounted() {
-        this.fetchRoles();
-    },
     watch: {
         options: {
             handler() {
@@ -531,7 +528,12 @@ export default {
         },
         search: debounce(function() {
             this.fetchItem();
-        }, 500)
+        }, 500),
+        dialog: function(val) {
+            if (val && this.list_roles.length == 0) {
+                this.fetchRoles();
+            }
+        }
     }
 };
 </script>

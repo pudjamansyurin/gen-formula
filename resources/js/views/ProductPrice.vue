@@ -401,12 +401,10 @@ export default {
             if (this.id > 0) {
                 this.form.product_id = this.id;
             }
-
             this.dialog = true;
         },
         edit() {
             this.form = cloneDeep(this.selected[0]);
-
             this.dialog = true;
         },
         close() {
@@ -474,9 +472,6 @@ export default {
             this.dialogDelete = false;
         }
     },
-    mounted() {
-        this.fetchProducts();
-    },
     watch: {
         options: {
             handler() {
@@ -486,7 +481,12 @@ export default {
         },
         search: debounce(function() {
             this.fetchItem();
-        }, 500)
+        }, 500),
+        dialog: function(val) {
+            if (val && this.list_products.length == 0) {
+                this.fetchProducts();
+            }
+        }
     }
 };
 </script>

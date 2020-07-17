@@ -25,6 +25,8 @@ class FormulaController extends Controller
         $total = $q->count();
         $q = $q->clientSorter($request);
         $q = $q->clientLimiter($request);
+
+        debug($q->get()[0]->percents);
         // Response
         return (new FormulaCollection($q->get()))
             ->additional([
