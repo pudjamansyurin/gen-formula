@@ -489,17 +489,19 @@ export default {
                     itemsPerPage: -1,
                     temporary: true
                 }
-            }).then(({ data }) => {
-                this.list_products = map(data, ({ id, name }) => {
-                    return {
-                        product: {
-                            id,
-                            name
-                        },
-                        percent: 0
-                    };
-                });
-            });
+            })
+                .then(({ data }) => {
+                    this.list_products = map(data, ({ id, name }) => {
+                        return {
+                            product: {
+                                id,
+                                name
+                            },
+                            percent: 0
+                        };
+                    });
+                })
+                .catch(e => {});
         },
         fetchItem: async function() {
             await this.GET_MODELS({
@@ -508,9 +510,11 @@ export default {
                     ...this.options,
                     search: this.search
                 }
-            }).then(({ meta }) => {
-                this.total = meta.total;
-            });
+            })
+                .then(({ meta }) => {
+                    this.total = meta.total;
+                })
+                .catch(e => {});
         },
         savePercentItem() {
             // validate
@@ -567,10 +571,13 @@ export default {
             await this.DELETE_MODELS({
                 model,
                 ids: map(this.selected, "id")
-            });
-            await this.fetchItem();
-            this.selected = [];
-            this.dialogDelete = false;
+            })
+                .then(async () => {
+                    await this.fetchItem();
+                    this.selected = [];
+                    this.dialogDelete = false;
+                })
+                .catch(e => {});
         }
     },
     watch: {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Formula;
 use App\Http\Requests\FormulaRequest;
+use App\Http\Requests\MassDeleteRequest;
 use App\Http\Resources\FormulaCollection;
 use App\Http\Resources\FormulaItem;
 use Illuminate\Http\Request;
@@ -55,19 +56,19 @@ class FormulaController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Formula  $formula
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Formula $formula)
-    {
-        return response(
-            new FormulaItem($formula),
-            Response::HTTP_OK
-        );
-    }
+    // /**
+    //  * Display the specified resource.
+    //  *
+    //  * @param  \App\Formula  $formula
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function show(Formula $formula)
+    // {
+    //     return response(
+    //         new FormulaItem($formula),
+    //         Response::HTTP_OK
+    //     );
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -95,13 +96,11 @@ class FormulaController extends Controller
      * @param  \App\Formula  $formula
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(MassDeleteRequest $request)
     {
-        $ids = $request->ids;
-        if (is_array($ids)) {
-            Formula::destroy($ids);
-            return response($ids, Response::HTTP_OK);
-        }
-        return response($ids, Response::HTTP_BAD_REQUEST);
+        $formulas_id = $request->ids;
+
+        Formula::destroy($formulas_id);
+        return response($formulas_id, Response::HTTP_OK);
     }
 }

@@ -21,9 +21,12 @@ export default {
             });
     },
     [actions.LOGOUT]({ commit }) {
-        return auth.logout().then(_ => {
-            commit(mutations.CLEAR_PROFILE);
-        });
+        return auth
+            .logout()
+            .then(() => {
+                commit(mutations.CLEAR_PROFILE);
+            })
+            .catch(e => {});
     },
     [actions.FORGET]({ commit }, payload) {
         return auth

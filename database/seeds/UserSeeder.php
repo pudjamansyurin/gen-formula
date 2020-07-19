@@ -2,7 +2,6 @@
 
 use App\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 
@@ -32,7 +31,7 @@ class UserSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@gen.com',
                 'password' => 'adminpassword',
-                'role' => 'administrator'
+                'role' => 'admin'
             ],
         ];
 
@@ -40,7 +39,7 @@ class UserSeeder extends Seeder
             $the_user = User::create([
                 'name' => $user['name'],
                 'email' => $user['email'],
-                'password' => Hash::make($user['password']),
+                'password' => $user['password'],
                 'created_at' => now()
             ]);
             $the_user->assignRole(Role::firstWhere('name', $user['role']));

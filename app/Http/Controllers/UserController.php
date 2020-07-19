@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MassDeleteRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserCollection;
@@ -10,7 +11,6 @@ use Illuminate\Http\Request;
 use App\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -21,6 +21,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', User::class);
+
         // Model instance
         $q = new User;
         // Client Query
@@ -46,10 +48,12 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
+        $this->authorize('create', User::class);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => $request->password
         ]);
 
         // add role
@@ -66,19 +70,19 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        return response(
-            new UserItem($user),
-            Response::HTTP_OK
-        );
-    }
+    // /**
+    //  * Display the specified resource.
+    //  *
+    //  * @param  \App\User  $user
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function show(User $user)
+    // {
+    //     return response(
+    //         new UserItem($user),
+    //         Response::HTTP_OK
+    //     );
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -89,6 +93,8 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
+        $this->authorize('update', $user);
+
         // prepare the data
         $data = [
             'name' => $request->name,
@@ -96,7 +102,7 @@ class UserController extends Controller
         ];
 
         if ($request->password) {
-            $data['password'] = Hash::make($request->password);
+            $data['password'] = $request->password;
         };
 
         if ($user->email != $request->email) {
@@ -127,14 +133,13 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(MassDeleteRequest $request)
     {
-        $ids = $request->ids;
-        if (is_array($ids)) {
-            User::destroy($ids);
-            return response($ids, Response::HTTP_OK);
-        }
-        return response($ids, Response::HTTP_BAD_REQUEST);
+        $users_id = $request->ids;
+        $this->authorize('delete', [User::class, $users_id]);
+
+        User::destroy($users_id);
+        return response($users_id, Response::HTTP_OK);
     }
 
     /**
@@ -142,10 +147,8 @@ class UserController extends Controller
      */
     public function profile(Request $request)
     {
-        $user = $request->user();
-
         return response([
-            'user' => new UserItem($user),
+            'user' => new UserItem($request->user()),
         ], Response::HTTP_OK);
     }
 
@@ -154,6 +157,8 @@ class UserController extends Controller
      */
     public function role()
     {
+        $this->authorize('viewRoles', User::class);
+
         return response([
             'data' => Role::all()
         ], Response::HTTP_OK);

@@ -6,8 +6,15 @@
                     <p class="display-2 font-weight-thin">{{ error_code }}</p>
                     <p class="display-1 font-weight-thin">{{ error_text }}</p>
                     <div>
-                        <v-btn @click="handleBack" :disabled="direct" elevation="1">Back</v-btn>
-                        <v-btn :to="{ name: 'login' }" elevation="1" color="primary">Login</v-btn>
+                        <v-btn v-if="!direct" @click="handleBack" elevation="1"
+                            >Back</v-btn
+                        >
+                        <v-btn
+                            :to="{ path: profile ? '/app' : '/' }"
+                            elevation="1"
+                            color="primary"
+                            >{{ profile ? "Home" : "Login" }}</v-btn
+                        >
                     </div>
                 </v-col>
             </v-row>
@@ -34,7 +41,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["error"]),
+        ...mapState("app", ["error", "profile"]),
         error_code: function() {
             if (this.error.code) {
                 return this.error.code;
@@ -56,11 +63,7 @@ export default {
     methods: {
         ...mapMutations("app", [CLEAR_ERROR, CLEAR_MESSAGE]),
         handleBack() {
-            if (this.direct) {
-                this.$router.replace({ name: "login" });
-            } else {
-                this.$router.back();
-            }
+            this.$router.go(-2);
         }
     },
     beforeDestroy() {

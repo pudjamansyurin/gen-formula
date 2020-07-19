@@ -353,9 +353,11 @@ export default {
                     ...this.options,
                     search: this.search
                 }
-            }).then(({ meta }) => {
-                this.total = meta.total;
-            });
+            })
+                .then(({ meta }) => {
+                    this.total = meta.total;
+                })
+                .catch(e => {});
         },
         saveItem() {
             const { form: payload } = this;
@@ -384,10 +386,13 @@ export default {
             await this.DELETE_MODELS({
                 model,
                 ids: map(this.selected, "id")
-            });
-            await this.fetchItem();
-            this.selected = [];
-            this.dialogDelete = false;
+            })
+                .then(async () => {
+                    await this.fetchItem();
+                    this.selected = [];
+                    this.dialogDelete = false;
+                })
+                .catch(e => {});
         },
         childRoute(id) {
             return {

@@ -27,12 +27,11 @@ class RolesAndPermissionSeeder extends Seeder
             'create',
             'edit',
             'delete',
-            '*'
         ];
         $roles = [
             'inputor' => ['products'],
             'manager' => ['products', 'formulas'],
-            'administrator' => ['products', 'formulas', 'users']
+            'admin' => ['products', 'formulas', 'users']
         ];
 
         // create permissions
@@ -46,7 +45,9 @@ class RolesAndPermissionSeeder extends Seeder
         foreach ($roles as $role => $models) {
             $theRole = Role::create(['name' => $role]);
             foreach ($models as $model) {
-                $theRole->givePermissionTo("{$model}.*");
+                foreach ($actions as $action) {
+                    $theRole->givePermissionTo("{$model}.{$action}");
+                }
             }
         }
     }

@@ -314,7 +314,6 @@ import {
     startCase
 } from "lodash";
 import {
-    GET_MODEL,
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
@@ -384,12 +383,7 @@ export default {
     methods: {
         ...mapMutations("app", [TOGGLE_DENSE]),
         ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [
-            GET_MODEL,
-            GET_MODELS,
-            SAVE_MODEL,
-            DELETE_MODELS
-        ]),
+        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         toggleSearch() {
             this.searchBox = !this.searchBox;
             if (!this.searchBox) {
@@ -420,9 +414,13 @@ export default {
                     itemsPerPage: -1,
                     temporary: true
                 }
-            }).then(({ data }) => {
-                this.list_products = map(data, el => pick(el, ["id", "name"]));
-            });
+            })
+                .then(({ data }) => {
+                    this.list_products = map(data, el =>
+                        pick(el, ["id", "name"])
+                    );
+                })
+                .catch(e => {});
         },
         fetchItem: async function() {
             await this.GET_MODELS({
@@ -432,10 +430,12 @@ export default {
                     ...this.options,
                     search: this.search
                 }
-            }).then(({ meta }) => {
-                const { total } = meta;
-                this.total = total;
-            });
+            })
+                .then(({ meta }) => {
+                    const { total } = meta;
+                    this.total = total;
+                })
+                .catch(e => {});
         },
         saveItem() {
             const { form: payload, apiUrl: url } = this;
@@ -466,10 +466,13 @@ export default {
                 model,
                 url: this.apiUrl,
                 ids: map(this.selected, "id")
-            });
-            await this.fetchItem();
-            this.selected = [];
-            this.dialogDelete = false;
+            })
+                .then(async () => {
+                    await this.fetchItem();
+                    this.selected = [];
+                    this.dialogDelete = false;
+                })
+                .catch(e => {});
         }
     },
     watch: {

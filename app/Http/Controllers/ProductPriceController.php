@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MassDeleteRequest;
 use App\Http\Requests\ProductPriceRequest;
 use App\Product;
 use App\ProductPrice;
@@ -70,19 +71,19 @@ class ProductPriceController extends Controller
         ], Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ProductPrice  $productPrice
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ProductPrice $productPrice)
-    {
-        return response(
-            new ProductPriceItem($productPrice),
-            Response::HTTP_OK
-        );
-    }
+    // /**
+    //  * Display the specified resource.
+    //  *
+    //  * @param  \App\ProductPrice  $productPrice
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function show(ProductPrice $productPrice)
+    // {
+    //     return response(
+    //         new ProductPriceItem($productPrice),
+    //         Response::HTTP_OK
+    //     );
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -111,13 +112,11 @@ class ProductPriceController extends Controller
      * @param  \App\ProductPrice  $productPrice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(MassDeleteRequest $request)
     {
-        $ids = $request->ids;
-        if (is_array($ids)) {
-            ProductPrice::destroy($ids);
-            return response($ids, Response::HTTP_OK);
-        }
-        return response($ids, Response::HTTP_BAD_REQUEST);
+        $product_prices_id = $request->ids;
+
+        ProductPrice::destroy($product_prices_id);
+        return response($product_prices_id, Response::HTTP_OK);
     }
 }

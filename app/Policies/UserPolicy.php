@@ -21,17 +21,17 @@ class UserPolicy
         return $user->can('users.view');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     * @return mixed
-     */
-    public function view(User $user, User $model)
-    {
-        return $user->can('users.view');
-    }
+    // /**
+    //  * Determine whether the user can view the model.
+    //  *
+    //  * @param  \App\User  $user
+    //  * @param  \App\User  $model
+    //  * @return mixed
+    //  */
+    // public function view(User $user, User $model)
+    // {
+    //     return $user->can('users.view');
+    // }
 
     /**
      * Determine whether the user can create models.
@@ -53,6 +53,10 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
+        // user can't delete their own account
+        if ($user->id === $model->id) {
+            return true;
+        }
         return $user->can('users.update');
     }
 
@@ -63,15 +67,21 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user, $users_id)
     {
         // user can't delete their own account
-        if ($user->id === $model->id) {
+        if (in_array($user->id, $users_id)) {
             return false;
         }
 
-        if ($user->can('users.delete')) {
-            return true;
-        }
+        return $user->can('users.delete');
+    }
+
+    /**
+     * Determine whether the user can view roles.
+     */
+    public function viewRoles(User $user)
+    {
+        return $user->can('users.create');
     }
 }
