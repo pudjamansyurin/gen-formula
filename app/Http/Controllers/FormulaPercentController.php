@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Formula;
 use App\Http\Requests\FormulaPercentRequest;
+use App\Http\Resources\FormulaItem;
 use App\Http\Resources\FormulaPercentCollection;
 use App\Http\Resources\FormulaPercentItem;
 use Carbon\Carbon;
@@ -65,10 +66,8 @@ class FormulaPercentController extends Controller
                         $formula->percents()->create($el);
                     });
 
-                $formula->refresh();
-
                 return response(
-                    new FormulaPercentCollection($formula->percents),
+                    new FormulaItem($formula->refresh()),
                     Response::HTTP_CREATED
                 );
             }

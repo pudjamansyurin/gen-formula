@@ -26,7 +26,6 @@ class FormulaController extends Controller
         $q = $q->clientSorter($request);
         $q = $q->clientLimiter($request);
 
-        debug($q->get()[0]->percents);
         // Response
         return (new FormulaCollection($q->get()))
             ->additional([
@@ -44,14 +43,14 @@ class FormulaController extends Controller
      */
     public function store(FormulaRequest $request)
     {
-        $product = Formula::create([
+        $formula = Formula::create([
             'name' => $request->name,
             'description' => $request->description,
             'user_id' => auth()->id()
         ]);
 
         return response(
-            new FormulaItem($product),
+            new FormulaItem($formula),
             Response::HTTP_CREATED
         );
     }

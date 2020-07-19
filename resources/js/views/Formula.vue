@@ -137,6 +137,9 @@
                     >{{ item.name }}</v-chip
                 >
             </template>
+            <template v-slot:item.total_price="{ item }">{{
+                item.total_price | currency
+            }}</template>
             <template v-slot:item.percents_len="{ item }">{{
                 item.percents.length
             }}</template>
@@ -388,7 +391,14 @@ export default {
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
                 {
-                    text: "Tot.Product",
+                    text: "Tot.Price",
+                    value: "total_price",
+                    align: "right",
+                    sortable: false,
+                    width: 150
+                },
+                {
+                    text: "Rel.Product",
                     value: "percents_len",
                     align: "center",
                     sortable: false
@@ -517,15 +527,11 @@ export default {
                             })
                         }
                     })
-                        .then(async ({ data: percents }) => {
+                        .then(async data => {
                             this.UPDATE_MODEL({
                                 model,
-                                data: {
-                                    ...this.form,
-                                    percents
-                                }
+                                data
                             });
-
                             this.closePercent();
                         })
                         .catch(errors => {
