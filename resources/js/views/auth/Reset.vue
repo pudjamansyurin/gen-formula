@@ -85,6 +85,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { RESET } from "../../store/app/action-types";
+import { ajaxErrorHandler } from "../../helpers";
 
 export default {
     name: "reset",
@@ -119,7 +120,8 @@ export default {
                 .then(() => {
                     this.$router.push({ path: "/app" });
                 })
-                .catch(errors => {
+                .catch(e => {
+                    let errors = ajaxErrorHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
         }

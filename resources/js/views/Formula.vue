@@ -373,6 +373,7 @@ import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
 import { Formula } from "@/models";
+import { ajaxErrorHandler } from "../helpers";
 
 const model = "formula";
 
@@ -501,7 +502,7 @@ export default {
                         };
                     });
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         },
         fetchItem: async function() {
             await this.GET_MODELS({
@@ -514,7 +515,7 @@ export default {
                 .then(({ meta }) => {
                     this.total = meta.total;
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         },
         savePercentItem() {
             // validate
@@ -538,7 +539,8 @@ export default {
                             });
                             this.closePercent();
                         })
-                        .catch(errors => {
+                        .catch(e => {
+                            let errors = ajaxErrorHandler(e);
                             this.$refs.form_percent.setErrors(errors);
                         });
                 }
@@ -563,7 +565,8 @@ export default {
                     this.selected = [];
                     this.close();
                 })
-                .catch(errors => {
+                .catch(e => {
+                    let errors = ajaxErrorHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
         },
@@ -577,7 +580,7 @@ export default {
                     this.selected = [];
                     this.dialogDelete = false;
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         }
     },
     watch: {

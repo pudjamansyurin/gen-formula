@@ -313,18 +313,19 @@ export default {
                     });
                     this.close();
                 })
-                .catch(errors => {
+                .catch(e => {
+                    let errors = ajaxErrorHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
         },
         resend() {
             if (!this.profile.email_verified_at) {
-                this.RESEND();
+                this.RESEND().catch(e => ajaxErrorHandler(e));
             }
         }
     },
     mounted() {
-        this.PROFILE();
+        this.PROFILE().catch(e => ajaxErrorHandler(e));
     }
 };
 </script>

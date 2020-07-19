@@ -71,6 +71,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import { LOGIN } from "@/store/app/action-types";
+import { ajaxErrorHandler } from "../../helpers";
 
 export default {
     name: "login",
@@ -98,7 +99,8 @@ export default {
                     const { redirect } = this.$route.query;
                     this.$router.push({ path: redirect || "/app" });
                 })
-                .catch(errors => {
+                .catch(e => {
+                    let errors = ajaxErrorHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
         }

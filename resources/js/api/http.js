@@ -8,7 +8,6 @@
 
 import axios from "axios";
 import store from "@/store";
-import router from "@/router";
 import config from "@/config";
 import { ns } from "@/helpers";
 import {
@@ -17,8 +16,7 @@ import {
     SET_MESSAGE,
     SET_ERROR,
     CLEAR_ERROR,
-    CLEAR_MESSAGE,
-    CLEAR_PROFILE
+    CLEAR_MESSAGE
 } from "@/store/app/mutation-types";
 
 export const http = axios.create({
@@ -73,12 +71,12 @@ http.interceptors.response.use(
 
         return response;
     },
-    ({ response }) => {
-        const { status: code, statusText: text, data } = response;
+    ({ response: e }) => {
+        const { status: code, statusText: text, data } = e;
         const { message } = data;
         const { profile } = store.state.app;
 
-        console.error(response);
+        console.error(e);
         store.commit(ns("app", STOP_LOADING));
 
         // save system generated message
@@ -95,23 +93,6 @@ http.interceptors.response.use(
             });
         }
 
-        // redirect
-        if (![422].includes(code)) {
-            if (profile && code === 401) {
-                // remove session
-                store.commit(ns("app", CLEAR_PROFILE));
-                // session expired
-                router.push({
-                    name: "login",
-                    query: {
-                        redirect: router.currentRoute.fullPath
-                    }
-                });
-            } else {
-                router.push({ name: "error" });
-            }
-        }
-
-        return Promise.reject(response);
+        return Promise.reject(e);
     }
 );

@@ -261,6 +261,7 @@ import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
 import { Product } from "@/models";
+import { ajaxErrorHandler } from "../helpers";
 
 const model = "product";
 
@@ -357,7 +358,7 @@ export default {
                 .then(({ meta }) => {
                     this.total = meta.total;
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         },
         saveItem() {
             const { form: payload } = this;
@@ -378,7 +379,8 @@ export default {
                     this.selected = [];
                     this.close();
                 })
-                .catch(errors => {
+                .catch(e => {
+                    let errors = ajaxErrorHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
         },
@@ -392,7 +394,7 @@ export default {
                     this.selected = [];
                     this.dialogDelete = false;
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         },
         childRoute(id) {
             return {

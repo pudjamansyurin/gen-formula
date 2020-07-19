@@ -25,18 +25,19 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import { CLEAR_ERROR, CLEAR_MESSAGE } from "@/store/app/mutation-types";
+import { HTTP_NOT_FOUND, HTTP_UNAUTHORIZED } from "@/helpers/response";
 
 export default {
     name: "error",
     props: {
-        code: { default: 404 },
+        code: { default: HTTP_NOT_FOUND },
         text: { default: null }
     },
     data() {
         return {
             errors: {
-                404: "Page not found",
-                401: "Unauthorized access"
+                [HTTP_NOT_FOUND]: "Page not found",
+                [HTTP_UNAUTHORIZED]: "Unauthorized access"
             }
         };
     },

@@ -1,4 +1,3 @@
-import { get } from "lodash";
 import * as api from "@/api/model";
 import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
@@ -12,7 +11,6 @@ export default {
                     data: res.data
                 });
             }
-
             return res;
         });
     },
@@ -26,11 +24,7 @@ export default {
     [actions.SAVE_MODEL]({ commit }, { model, payload, url }) {
         const action = payload.id > 0 ? "update" : "create";
 
-        return api[action](url || model, payload).catch(e => {
-            if (get(e, "data.errors")) {
-                return Promise.reject(e.data.errors);
-            }
-        });
+        return api[action](url || model, payload);
     },
     [actions.DELETE_MODELS]({ commit }, { model, ids, url }) {
         return api.destroy(url || model, ids);

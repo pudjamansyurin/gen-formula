@@ -69,9 +69,11 @@ export default {
         ...mapMutations("app", [TOGGLE_DRAWER]),
         ...mapActions("app", [LOGOUT]),
         logout() {
-            this.LOGOUT().then(() => {
-                this.$router.push({ name: "login" });
-            });
+            this.LOGOUT()
+                .then(() => {
+                    this.$router.push({ name: "login" });
+                })
+                .catch(e => ajaxErrorHandler(e));
         }
     }
 };

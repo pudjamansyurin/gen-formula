@@ -374,6 +374,7 @@ import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
 import { User } from "@/models";
+import { ajaxErrorHandler } from "../helpers";
 
 const model = "user";
 
@@ -470,7 +471,7 @@ export default {
                 .then(({ data }) => {
                     this.list_roles = map(data, el => pick(el, ["id", "name"]));
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         },
         fetchItem: async function() {
             await this.GET_MODELS({
@@ -483,7 +484,7 @@ export default {
                 .then(({ meta }) => {
                     this.total = meta.total;
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         },
         saveItem() {
             const { form: payload } = this;
@@ -509,7 +510,8 @@ export default {
                     this.selected = [];
                     this.close();
                 })
-                .catch(errors => {
+                .catch(e => {
+                    let errors = ajaxErrorHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
         },
@@ -523,7 +525,7 @@ export default {
                     this.selected = [];
                     this.dialogDelete = false;
                 })
-                .catch(e => {});
+                .catch(e => ajaxErrorHandler(e));
         }
     },
     watch: {

@@ -19,6 +19,8 @@ class FormulaController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Formula::class);
+
         // Model instance
         $q = new Formula;
         // Client Query
@@ -44,6 +46,8 @@ class FormulaController extends Controller
      */
     public function store(FormulaRequest $request)
     {
+        $this->authorize('create', Formula::class);
+
         $formula = Formula::create([
             'name' => $request->name,
             'description' => $request->description,
