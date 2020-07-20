@@ -1,142 +1,23 @@
 <template>
     <v-col cols="12">
-        <v-data-table
+        <the-data-table
             v-model="selected"
             :headers="headers"
+            :model="model"
             :items="prices"
-            :search="search"
-            :options.sync="options"
-            :server-items-length="total"
-            :loading="!!loading"
-            :dense="dense"
-            :page="1"
-            :items-per-page="10"
-            sort-by="changed_at"
-            sort-desc
-            show-select
-            must-sort
-            class="elevation-1"
+            :total="total"
+            @fetch="fetchItem"
+            @create="create"
+            @edit="edit"
+            @delete="dialogDelete = true"
         >
-            <template v-slot:top>
-                <v-toolbar :dark="!!selected.length" flat>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length"
-                                @click="selected = []"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-close</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Cancel</span>
-                    </v-tooltip>
-
-                    <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title>
-                    <v-divider class="mx-4" inset vertical></v-divider>
-
-                    <v-spacer></v-spacer>
-
-                    <v-slide-x-reverse-transition>
-                        <v-text-field
-                            v-show="!selected.length && searchBox"
-                            v-model="search"
-                            label="Search"
-                            autofocus
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                    </v-slide-x-reverse-transition>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="toggleSearch"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>
-                                    {{
-                                        searchBox
-                                            ? "mdi-close-circle"
-                                            : "mdi-magnify"
-                                    }}
-                                </v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Search</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="create"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Create</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="TOGGLE_DENSE"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>{{
-                                    dense ? "mdi-table" : "mdi-table-large"
-                                }}</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>{{ dense ? "Larger" : "Smaller" }}</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length"
-                                @click="dialogDelete = true"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-delete</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Delete</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length == 1"
-                                @click="edit"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Edit</span>
-                    </v-tooltip>
-                </v-toolbar>
-            </template>
-
             <template v-slot:item.price="{ item }">{{
                 item.price | currency
             }}</template>
-
             <template v-slot:item.changed_at="{ item }">{{
                 item.changed_at | moment("from")
             }}</template>
-        </v-data-table>
+        </the-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
             <validation-observer v-slot="{ handleSubmit }" ref="form">
@@ -305,38 +186,29 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import {
-    map,
-    pick,
-    clone,
-    cloneDeep,
-    debounce,
-    kebabCase,
-    startCase
-} from "lodash";
-import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
 } from "@/store/model/action-types";
-import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
-import pluralize from "pluralize";
 import { Price } from "@/models";
 import { ajaxErrorHandler, castParamsId } from "../helpers";
+import pluralize from "pluralize";
+import TheDataTable from "../components/TheDataTable.vue";
 
 const model = "price";
 
 export default {
     name: model,
     props: ["id"],
+    components: {
+        TheDataTable
+    },
     data() {
         return {
-            searchBox: false,
-            dialog: false,
-            dialogDelete: false,
+            model,
+            params: null,
             total: 0,
-            search: null,
-            options: {},
             selected: [],
             headers: [
                 { text: "Product", value: "product.name" },
@@ -344,6 +216,8 @@ export default {
                 { text: "Changed At", value: "changed_at" },
                 { text: "Updater", value: "user.name" }
             ],
+            dialog: false,
+            dialogDelete: false,
             menuChangedAt: false,
             list_products: [],
             form: null
@@ -352,14 +226,6 @@ export default {
     computed: {
         ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["prices"]),
-        toolbarTitle() {
-            const { length } = this.selected;
-
-            if (length > 0) {
-                return `${length} selected`;
-            }
-            return `${pluralize(startCase(model))}`;
-        },
         formTitle() {
             const { id } = this.form;
             return id === -1 ? "New" : "Edit";
@@ -369,9 +235,9 @@ export default {
             const single = length === 1;
 
             if (single) {
-                return `this ${startCase(model)} ?`;
+                return `this ${this.$_.startCase(model)} ?`;
             }
-            return `these ${length} ${pluralize(startCase(model))} ?`;
+            return `these ${length} ${pluralize(this.$_.startCase(model))} ?`;
         },
         apiUrl() {
             let id = castParamsId(this.id);
@@ -380,17 +246,10 @@ export default {
         }
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_DENSE]),
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
-        toggleSearch() {
-            this.searchBox = !this.searchBox;
-            if (!this.searchBox) {
-                this.search = "";
-            }
-        },
         create() {
-            this.form = cloneDeep(Price);
+            this.form = this.$_.cloneDeep(Price);
             let id = castParamsId(this.id);
 
             if (id > 0) {
@@ -399,7 +258,7 @@ export default {
             this.dialog = true;
         },
         edit() {
-            this.form = cloneDeep(this.selected[0]);
+            this.form = this.$_.cloneDeep(this.selected[0]);
             this.dialog = true;
         },
         close() {
@@ -417,20 +276,21 @@ export default {
                 }
             })
                 .then(({ data }) => {
-                    this.list_products = map(data, el =>
-                        pick(el, ["id", "name"])
+                    this.list_products = this.$_.map(data, el =>
+                        this.$_.pick(el, ["id", "name"])
                     );
                 })
                 .catch(e => ajaxErrorHandler(e));
         },
-        fetchItem: async function() {
+        fetchItem: async function(params) {
+            if (params) {
+                this.params = params;
+            }
+
             await this.GET_MODELS({
                 model,
                 url: this.apiUrl,
-                params: {
-                    ...this.options,
-                    search: this.search
-                }
+                params: this.params
             })
                 .then(({ meta }) => {
                     const { total } = meta;
@@ -467,7 +327,7 @@ export default {
             await this.DELETE_MODELS({
                 model,
                 url: this.apiUrl,
-                ids: map(this.selected, "id")
+                ids: this.$_.map(this.selected, "id")
             })
                 .then(async () => {
                     await this.fetchItem();
@@ -478,15 +338,6 @@ export default {
         }
     },
     watch: {
-        options: {
-            handler() {
-                this.fetchItem();
-            },
-            deep: true
-        },
-        search: debounce(function() {
-            this.fetchItem();
-        }, 500),
         dialog: function(val) {
             if (val && this.list_products.length == 0) {
                 this.fetchProducts();

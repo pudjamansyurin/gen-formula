@@ -1,143 +1,16 @@
 <template>
     <v-col cols="12">
-        <v-data-table
+        <the-data-table
             v-model="selected"
             :headers="headers"
+            :model="model"
             :items="users"
-            :search="search"
-            :options.sync="options"
-            :server-items-length="total"
-            :loading="!!loading"
-            :dense="dense"
-            :page="1"
-            :items-per-page="10"
-            selectable-key="selectable"
-            sort-by="updated_at"
-            sort-desc
-            show-select
-            must-sort
-            class="elevation-1"
+            :total="total"
+            @fetch="fetchItem"
+            @create="create"
+            @edit="edit"
+            @delete="dialogDelete = true"
         >
-            <template v-slot:top>
-                <v-toolbar :dark="!!selected.length" flat>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length"
-                                @click="selected = []"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-close</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Cancel</span>
-                    </v-tooltip>
-
-                    <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title>
-                    <v-divider class="mx-4" inset vertical></v-divider>
-
-                    <v-spacer></v-spacer>
-
-                    <v-slide-x-reverse-transition>
-                        <v-text-field
-                            v-show="!selected.length && searchBox"
-                            v-model="search"
-                            label="Search"
-                            autofocus
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                    </v-slide-x-reverse-transition>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="toggleSearch"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>
-                                    {{
-                                        searchBox
-                                            ? "mdi-close-circle"
-                                            : "mdi-magnify"
-                                    }}
-                                </v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Search</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="create"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Create</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="TOGGLE_DENSE"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>{{
-                                    dense ? "mdi-table" : "mdi-table-large"
-                                }}</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>{{ dense ? "Larger" : "Smaller" }}</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length"
-                                @click="dialogDelete = true"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-delete</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Delete</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length == 1"
-                                @click="edit"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Edit</span>
-                    </v-tooltip>
-                </v-toolbar>
-            </template>
-
-            <!-- <template v-slot:header.data-table-select="{ on, props }">
-                <v-simple-checkbox
-                    color="purple"
-                    v-bind="props"
-                    v-on="on"
-                ></v-simple-checkbox>
-            </template>
-             -->
             <template v-slot:item.name="{ item }">
                 <v-chip
                     v-if="profile.id == item.id"
@@ -150,17 +23,6 @@
                     {{ item.name }}
                 </template>
             </template>
-
-            <!-- <template
-                v-slot:item.data-table-select="{ isSelected, select, item }"
-            >
-                <v-simple-checkbox
-                    v-if="profile.id != item.id"
-                    :value="isSelected"
-                    @input="select($event)"
-                ></v-simple-checkbox>
-            </template> -->
-
             <template v-slot:item.last_at="{ item }">
                 <template v-if="item.last_at">
                     {{ item.last_at | moment("from") }}
@@ -172,7 +34,7 @@
             <template v-slot:item.last_ip="{ item }">
                 {{ item.last_ip || "None" }}
             </template>
-        </v-data-table>
+        </the-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
             <validation-observer v-slot="{ handleSubmit }" ref="form">
@@ -364,30 +226,29 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { map, pick, clone, cloneDeep, debounce, startCase } from "lodash";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
 } from "@/store/model/action-types";
-import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
-import pluralize from "pluralize";
 import { User } from "@/models";
 import { ajaxErrorHandler } from "../helpers";
+import pluralize from "pluralize";
+import TheDataTable from "../components/TheDataTable.vue";
 
 const model = "user";
 
 export default {
     name: model,
+    components: {
+        TheDataTable
+    },
     data() {
         return {
-            searchBox: false,
-            dialog: false,
-            dialogDelete: false,
+            model,
+            params: null,
             total: 0,
-            search: null,
-            options: {},
             selected: [],
             headers: [
                 { text: "Name", value: "name" },
@@ -396,6 +257,8 @@ export default {
                 { text: "Last At", value: "last_at" },
                 { text: "Last Ip", value: "last_ip" }
             ],
+            dialog: false,
+            dialogDelete: false,
             list_roles: [],
             change_password: false,
             show_password: false,
@@ -405,14 +268,6 @@ export default {
     computed: {
         ...mapState("app", ["loading", "dense", "profile"]),
         ...mapState("model", ["users"]),
-        toolbarTitle() {
-            const { length } = this.selected;
-
-            if (length > 0) {
-                return `${length} selected`;
-            }
-            return `${pluralize(startCase(model))}`;
-        },
         formTitle() {
             const { id } = this.form;
             return id === -1 ? "New" : "Edit";
@@ -428,18 +283,11 @@ export default {
         }
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_DENSE]),
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
-        toggleSearch() {
-            this.searchBox = !this.searchBox;
-            if (!this.searchBox) {
-                this.search = "";
-            }
-        },
         create() {
             this.form = {
-                ...cloneDeep(User),
+                ...this.$_.cloneDeep(User),
                 password: null,
                 password_confirmation: null
             };
@@ -448,7 +296,7 @@ export default {
         },
         edit() {
             this.form = {
-                ...cloneDeep(this.selected[0]),
+                ...this.$_.cloneDeep(this.selected[0]),
                 password: null,
                 password_confirmation: null
             };
@@ -469,7 +317,9 @@ export default {
                 }
             })
                 .then(({ data }) => {
-                    this.list_roles = map(data, el => pick(el, ["id", "name"]));
+                    this.list_roles = this.$_.map(data, el =>
+                        this.$_.pick(el, ["id", "name"])
+                    );
                 })
                 .catch(e => ajaxErrorHandler(e));
         },
@@ -518,7 +368,7 @@ export default {
         deleteItem: async function() {
             await this.DELETE_MODELS({
                 model,
-                ids: map(this.selected, "id")
+                ids: this.$_.map(this.selected, "id")
             })
                 .then(async () => {
                     await this.fetchItem();
@@ -529,15 +379,6 @@ export default {
         }
     },
     watch: {
-        options: {
-            handler() {
-                this.fetchItem();
-            },
-            deep: true
-        },
-        search: debounce(function() {
-            this.fetchItem();
-        }, 500),
         dialog: function(val) {
             if (val && this.list_roles.length == 0) {
                 this.fetchRoles();

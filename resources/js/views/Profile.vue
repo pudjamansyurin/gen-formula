@@ -254,7 +254,6 @@
 </template>
 
 <script>
-import { cloneDeep } from "lodash";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { SAVE_MODEL } from "../store/model/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
@@ -283,7 +282,7 @@ export default {
             this.edit_profile = false;
         },
         edit() {
-            this.form = cloneDeep({
+            this.form = this.$_.cloneDeep({
                 ...this.profile,
                 password: null,
                 password_confirmation: null

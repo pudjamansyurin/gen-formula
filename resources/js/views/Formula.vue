@@ -1,134 +1,16 @@
 <template>
     <v-col cols="12">
-        <v-data-table
+        <the-data-table
             v-model="selected"
             :headers="headers"
+            :model="model"
             :items="formulas"
-            :search="search"
-            :options.sync="options"
-            :server-items-length="total"
-            :loading="!!loading"
-            :dense="dense"
-            :page="1"
-            :items-per-page="10"
-            sort-by="updated_at"
-            sort-desc
-            show-select
-            must-sort
-            class="elevation-1"
+            :total="total"
+            @fetch="fetchItem"
+            @create="create"
+            @edit="edit"
+            @delete="dialogDelete = true"
         >
-            <template v-slot:top>
-                <v-toolbar :dark="!!selected.length" flat>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length"
-                                @click="selected = []"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-close</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Cancel</span>
-                    </v-tooltip>
-
-                    <v-toolbar-title>{{ toolbarTitle }}</v-toolbar-title>
-                    <v-divider class="mx-4" inset vertical></v-divider>
-
-                    <v-spacer></v-spacer>
-
-                    <v-slide-x-reverse-transition>
-                        <v-text-field
-                            v-show="!selected.length && searchBox"
-                            v-model="search"
-                            label="Search"
-                            autofocus
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                    </v-slide-x-reverse-transition>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="toggleSearch"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>
-                                    {{
-                                        searchBox
-                                            ? "mdi-close-circle"
-                                            : "mdi-magnify"
-                                    }}
-                                </v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Search</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="create"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Create</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="!selected.length"
-                                @click="TOGGLE_DENSE"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>{{
-                                    dense ? "mdi-table" : "mdi-table-large"
-                                }}</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>{{ dense ? "Larger" : "Smaller" }}</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length"
-                                @click="dialogDelete = true"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-delete</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Delete</span>
-                    </v-tooltip>
-
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                v-show="selected.length == 1"
-                                @click="edit"
-                                v-on="on"
-                                icon
-                            >
-                                <v-icon>mdi-pencil</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Edit</span>
-                    </v-tooltip>
-                </v-toolbar>
-            </template>
-
             <template v-slot:item.name="{ item }">
                 <v-chip
                     color="primary"
@@ -146,7 +28,7 @@
             <template v-slot:item.updated_at="{ item }">{{
                 item.updated_at | moment("from")
             }}</template>
-        </v-data-table>
+        </the-data-table>
 
         <v-dialog v-model="dialog" max-width="500px" persistent>
             <validation-observer v-slot="{ handleSubmit }" ref="form">
@@ -354,39 +236,28 @@
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 import {
-    map,
-    find,
-    pick,
-    reduce,
-    get,
-    clone,
-    cloneDeep,
-    debounce,
-    startCase
-} from "lodash";
-import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
 } from "@/store/model/action-types";
-import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
-import pluralize from "pluralize";
 import { Formula } from "@/models";
 import { ajaxErrorHandler } from "../helpers";
+import pluralize from "pluralize";
+import TheDataTable from "../components/TheDataTable.vue";
 
 const model = "formula";
 
 export default {
     name: model,
+    components: {
+        TheDataTable
+    },
     data() {
         return {
-            searchBox: false,
-            dialog: false,
-            dialogDelete: false,
+            model,
+            params: null,
             total: 0,
-            search: null,
-            options: {},
             selected: [],
             headers: [
                 { text: "Name", value: "name" },
@@ -407,28 +278,22 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" }
             ],
+            dialog: false,
+            dialogDelete: false,
             dialogPercent: false,
             list_products: [],
-            form: cloneDeep(Formula)
+            form: this.$_.cloneDeep(Formula)
         };
     },
     computed: {
         ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["formulas"]),
-        toolbarTitle() {
-            const { length } = this.selected;
-
-            if (length > 0) {
-                return `${length} selected`;
-            }
-            return `${pluralize(startCase(model))}`;
-        },
         formTitle() {
             const { id } = this.form;
             return id === -1 ? "New" : "Edit";
         },
         formPercentTitle() {
-            return get(this.form, "name") || "Related products";
+            return this.form.name || "Related products";
         },
         formDeleteContent() {
             const { length } = this.selected;
@@ -440,7 +305,7 @@ export default {
             return `these ${length} ${pluralize(model)} ?`;
         },
         totalPercentage() {
-            return reduce(
+            return this.$_.reduce(
                 this.form.percents,
                 (sum, el) => {
                     return sum + Number(el.percent);
@@ -450,25 +315,20 @@ export default {
         }
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_DENSE]),
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
-        toggleSearch() {
-            this.searchBox = !this.searchBox;
-            if (!this.searchBox) {
-                this.search = "";
-            }
-        },
         create() {
-            this.form = cloneDeep(Formula);
+            this.form = this.$_.cloneDeep(Formula);
             this.dialog = true;
         },
         edit() {
-            this.form = cloneDeep(this.selected[0]);
+            this.form = this.$_.cloneDeep(this.selected[0]);
             this.dialog = true;
         },
         editPercent(id) {
-            this.form = cloneDeep(find(this.formulas, { id: id }));
+            this.form = this.$_.cloneDeep(
+                this.$_.find(this.formulas, { id: id })
+            );
             this.dialogPercent = true;
         },
         close() {
@@ -492,7 +352,7 @@ export default {
                 }
             })
                 .then(({ data }) => {
-                    this.list_products = map(data, ({ id, name }) => {
+                    this.list_products = this.$_.map(data, ({ id, name }) => {
                         return {
                             product: {
                                 id,
@@ -504,13 +364,14 @@ export default {
                 })
                 .catch(e => ajaxErrorHandler(e));
         },
-        fetchItem: async function() {
+        fetchItem: async function(params) {
+            if (params) {
+                this.params = params;
+            }
+
             await this.GET_MODELS({
                 model,
-                params: {
-                    ...this.options,
-                    search: this.search
-                }
+                params: this.params
             })
                 .then(({ meta }) => {
                     this.total = meta.total;
@@ -524,7 +385,7 @@ export default {
                     this.SAVE_MODEL({
                         url: `formula/${this.form.id}/percent`,
                         payload: {
-                            formula: map(this.form.percents, el => {
+                            formula: this.$_.map(this.form.percents, el => {
                                 return {
                                     product_id: el.product.id,
                                     percent: el.percent
@@ -573,7 +434,7 @@ export default {
         deleteItem: async function() {
             await this.DELETE_MODELS({
                 model,
-                ids: map(this.selected, "id")
+                ids: this.$_.map(this.selected, "id")
             })
                 .then(async () => {
                     await this.fetchItem();
@@ -584,15 +445,6 @@ export default {
         }
     },
     watch: {
-        options: {
-            handler() {
-                this.fetchItem();
-            },
-            deep: true
-        },
-        search: debounce(function() {
-            this.fetchItem();
-        }, 500),
         dialogPercent: function(val) {
             if (val && this.list_products.length == 0) {
                 this.fetchProducts();

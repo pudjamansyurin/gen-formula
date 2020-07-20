@@ -94,18 +94,18 @@ class PriceController extends Controller
      * @param  \App\Price  $price
      * @return \Illuminate\Http\Response
      */
-    public function update(PriceRequest $request, Product $product, Price $price)
+    public function update(PriceRequest $request, $product_id, Price $price)
     {
         $this->authorize('update', $price);
 
         $price->update([
-            'product_id' => $product->id,
+            'product_id' => $request->product_id,
             'price' => $request->price,
             'changed_at' => $request->changed_at,
         ]);
 
         return response(
-            new PriceItem($price),
+            new PriceItem($price->refresh()),
             Response::HTTP_OK
         );
     }
