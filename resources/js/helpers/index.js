@@ -32,10 +32,17 @@ export const castRouteParamsId = route => {
 };
 
 export const ajaxErrorHandler = e => {
-    const { status: code } = e;
+    const { status: code, statusText: text } = e;
     const { profile } = store.state.app;
     let errors = [];
 
+    // save system generated message
+    store.commit(ns("app", SET_ERROR), {
+        code,
+        text
+    });
+
+    // handle each error codes
     switch (code) {
         case HTTP_UNPROCESSABLE_ENTITY:
             if (get(e, "data.errors")) {

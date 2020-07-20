@@ -72,18 +72,11 @@ http.interceptors.response.use(
         return response;
     },
     ({ response: e }) => {
-        const { status: code, statusText: text, data } = e;
+        const { data } = e;
         const { message } = data;
-        const { profile } = store.state.app;
 
         console.error(e);
         store.commit(ns("app", STOP_LOADING));
-
-        // save system generated message
-        store.commit(ns("app", SET_ERROR), {
-            code,
-            text
-        });
 
         // save api generated message
         if (message) {

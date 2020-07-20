@@ -15,13 +15,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const { profile, error } = store.state.app;
-    // const { code } = error;
+    const { profile } = store.state.app;
 
-    // if (code && ![HTTP_UNPROCESSABLE_ENTITY].includes(code)) {
-    //     // forward, already handle by axios
-    //     next();
-    // } else
     if (to.matched.some(record => record.meta.auth)) {
         // secured pages
         if (!profile) {
@@ -36,9 +31,14 @@ router.beforeEach((to, from, next) => {
             // session exist
             next();
         }
-    } else if (profile && !to.name == "error") {
+    } else if (profile) {
         // non-secured pages, session exist
-        next("/app");
+        if (to.name == "error") {
+            next();
+        } else {
+            // redirect to dashboard
+            next("/app");
+        }
     } else {
         // non-secured pages, session expired
         next();

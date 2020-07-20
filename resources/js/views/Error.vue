@@ -54,7 +54,7 @@ export default {
                 this.error.text ||
                 this.text ||
                 this.errors[this.code] ||
-                "Opps, something not right"
+                "Opps, something wrong."
             );
         },
         direct: function() {
