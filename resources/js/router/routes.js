@@ -59,7 +59,10 @@ export default [
             {
                 path: "formula",
                 name: "formula",
-                component: Formula
+                component: Formula,
+                meta: {
+                    roles: ["admin", "manager"]
+                }
             },
             {
                 path: "product",
@@ -75,7 +78,10 @@ export default [
             {
                 path: "user",
                 name: "user",
-                component: User
+                component: User,
+                meta: {
+                    roles: ["admin"]
+                }
             },
             // {
             //     path: "setting",

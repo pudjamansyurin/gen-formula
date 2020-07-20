@@ -11,7 +11,7 @@
                     item.heading
                 }}</v-subheader>
                 <v-divider v-else-if="item.divider" :key="index"></v-divider>
-                <v-list-group
+                <!-- <v-list-group
                     v-else-if="item.children"
                     :key="index"
                     v-model="item.model"
@@ -41,9 +41,9 @@
                             }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                </v-list-group>
+                </v-list-group> -->
                 <v-list-item
-                    v-else
+                    v-else-if="checkPageRoles(item.to)"
                     :key="index"
                     :to="{ name: item.to }"
                     color="primary"
@@ -109,10 +109,32 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["drawer"])
+        ...mapState("app", ["drawer", "profile"])
     },
     methods: {
-        ...mapMutations("app", [SET_DRAWER])
+        ...mapMutations("app", [SET_DRAWER]),
+        checkPageRoles(name) {
+            let page = this.$router.resolve({ name });
+
+            // valid page
+            if (page) {
+                // check authorization
+                let roles = page.route.meta.roles;
+                if (roles) {
+                    if (roles.includes(this.profile.role.name)) {
+                        // user role is authorized
+                        return true;
+                    } else {
+                        // user role is un-authorized
+                        return false;
+                    }
+                }
+                // un-authorized page
+                return true;
+            }
+            // invalid page
+            return false;
+        }
     }
 };
 </script>

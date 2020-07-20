@@ -2,10 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import routes from "./routes.js";
 import store from "@/store";
-import {
-    HTTP_UNPROCESSABLE_ENTITY,
-    HTTP_UNAUTHORIZED
-} from "@/helpers/response";
+import { HTTP_UNAUTHORIZED } from "@/helpers/response";
 
 Vue.use(VueRouter);
 
@@ -19,7 +16,26 @@ router.beforeEach((to, from, next) => {
 
     if (to.matched.some(record => record.meta.auth)) {
         // secured pages
-        if (!profile) {
+        if (profile) {
+            let passedRoles = to.matched[to.matched.length - 1].meta.roles;
+            if (passedRoles) {
+                // pages with authorization
+                if (passedRoles.includes(profile.role.name)) {
+                    next();
+                } else {
+                    // un-authorized pages
+                    next({
+                        name: "error",
+                        params: {
+                            code: HTTP_UNAUTHORIZED
+                        }
+                    });
+                }
+            } else {
+                // pages without authorization, session exist
+                next();
+            }
+        } else {
             // session expired
             next({
                 name: "error",
@@ -27,9 +43,6 @@ router.beforeEach((to, from, next) => {
                     code: HTTP_UNAUTHORIZED
                 }
             });
-        } else {
-            // session exist
-            next();
         }
     } else if (profile) {
         // non-secured pages, session exist
