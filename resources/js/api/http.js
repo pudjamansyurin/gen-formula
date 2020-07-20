@@ -14,7 +14,6 @@ import {
     START_LOADING,
     STOP_LOADING,
     SET_MESSAGE,
-    SET_ERROR,
     CLEAR_ERROR,
     CLEAR_MESSAGE
 } from "@/store/app/mutation-types";

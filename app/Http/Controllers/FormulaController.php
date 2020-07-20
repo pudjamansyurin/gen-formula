@@ -83,6 +83,8 @@ class FormulaController extends Controller
      */
     public function update(FormulaRequest $request, Formula $formula)
     {
+        $this->authorize('update', $formula);
+
         $formula->update([
             'name' => $request->name,
             'description' => $request->description,
@@ -103,6 +105,7 @@ class FormulaController extends Controller
     public function destroy(MassDeleteRequest $request)
     {
         $formulas_id = $request->ids;
+        $this->authorize('delete', [Formula::class, $formulas_id]);
 
         Formula::destroy($formulas_id);
         return response($formulas_id, Response::HTTP_OK);

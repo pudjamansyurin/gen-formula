@@ -48,14 +48,14 @@ export default [
             {
                 path: "",
                 redirect: {
-                    name: "formula"
+                    name: "report"
                 }
             },
-            // {
-            //     path: "report",
-            //     name: "report",
-            //     component: Report
-            // },
+            {
+                path: "report",
+                name: "report",
+                component: Report
+            },
             {
                 path: "formula",
                 name: "formula",

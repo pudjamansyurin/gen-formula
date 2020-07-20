@@ -53,7 +53,13 @@ class FormulaPolicy
      */
     public function update(User $user, Formula $formula)
     {
-        //
+        // only owner can update
+        if ($user->id === $formula->user_id) {
+            return true;
+        }
+        // admin can update all
+        return $user->hasRole('admin');
+        // return $user->can('formulas.update');
     }
 
     /**
@@ -63,32 +69,16 @@ class FormulaPolicy
      * @param  \App\Formula  $formula
      * @return mixed
      */
-    public function delete(User $user, Formula $formula)
+    public function delete(User $user,  $formulas_id)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Formula  $formula
-     * @return mixed
-     */
-    public function restore(User $user, Formula $formula)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Formula  $formula
-     * @return mixed
-     */
-    public function forceDelete(User $user, Formula $formula)
-    {
-        //
+        $belonging = Formula::whereIn('id', $formulas_id)
+            ->where('user_id', $user->id)
+            ->count();
+        // only owner can delete
+        if ($belonging == count($formulas_id)) {
+            return true;
+        }
+        // admin can delete all
+        return $user->hasRole('admin');
     }
 }

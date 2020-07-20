@@ -18,7 +18,8 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('users.view');
+        // only admin can view all users
+        return $user->hasRole('admin');
     }
 
     // /**
@@ -41,7 +42,8 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->can('users.create');
+        // only admin can create user
+        return $user->hasRole('admin');
     }
 
     /**
@@ -53,11 +55,13 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        // user can't delete their own account
+        // only owner can update
         if ($user->id === $model->id) {
             return true;
         }
-        return $user->can('users.update');
+        // admin can update all
+        return $user->hasRole('admin');
+        // return $user->can('users.update');
     }
 
     /**
@@ -69,12 +73,12 @@ class UserPolicy
      */
     public function delete(User $user, $users_id)
     {
-        // user can't delete their own account
+        // user can't delete their profile
         if (in_array($user->id, $users_id)) {
             return false;
         }
-
-        return $user->can('users.delete');
+        // admin can delete all
+        return $user->hasRole('admin');
     }
 
     /**
@@ -82,6 +86,7 @@ class UserPolicy
      */
     public function viewRoles(User $user)
     {
-        return $user->can('users.create');
+        // only admin can view all roles
+        return $user->hasRole('admin');
     }
 }

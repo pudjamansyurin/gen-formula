@@ -71,7 +71,7 @@ export default {
             items: [
                 { divider: true },
                 { heading: "DASHBOARD" },
-                // { icon: "mdi-chart-areaspline", text: "Report", to: "report" },
+                { icon: "mdi-chart-areaspline", text: "Report", to: "report" },
                 { icon: "mdi-microsoft-excel", text: "Formula", to: "formula" },
                 {
                     icon: "mdi-package-variant-closed",

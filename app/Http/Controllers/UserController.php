@@ -143,16 +143,6 @@ class UserController extends Controller
     }
 
     /**
-     * Get current logged-in user
-     */
-    public function profile(Request $request)
-    {
-        return response([
-            'user' => new UserItem($request->user()),
-        ], Response::HTTP_OK);
-    }
-
-    /**
      * Get list of roles as options
      */
     public function role()
@@ -161,6 +151,16 @@ class UserController extends Controller
 
         return response([
             'data' => Role::all()
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get current logged-in user
+     */
+    public function profile(Request $request)
+    {
+        return response([
+            'user' => new UserItem($request->user()),
         ], Response::HTTP_OK);
     }
 }

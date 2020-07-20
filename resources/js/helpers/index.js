@@ -5,7 +5,7 @@ import {
     HTTP_UNPROCESSABLE_ENTITY,
     HTTP_UNAUTHORIZED
 } from "@/helpers/response";
-import { CLEAR_PROFILE } from "@/store/app/mutation-types";
+import { CLEAR_PROFILE, SET_ERROR } from "@/store/app/mutation-types";
 
 export const ns = (namespace, definition) => {
     return `${namespace.toLowerCase()}/${definition}`;

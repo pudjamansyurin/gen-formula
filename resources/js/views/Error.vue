@@ -64,7 +64,7 @@ export default {
     methods: {
         ...mapMutations("app", [CLEAR_ERROR, CLEAR_MESSAGE]),
         handleBack() {
-            this.$router.go(-2);
+            this.$router.go(-1);
         }
     },
     beforeDestroy() {
