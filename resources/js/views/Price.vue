@@ -3,7 +3,7 @@
         <v-data-table
             v-model="selected"
             :headers="headers"
-            :items="productPrices"
+            :items="prices"
             :search="search"
             :options.sync="options"
             :server-items-length="total"
@@ -321,16 +321,14 @@ import {
 import { TOGGLE_DENSE } from "@/store/app/mutation-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import pluralize from "pluralize";
-import { ProductPrice } from "@/models";
-import { ajaxErrorHandler } from "../helpers";
+import { Price } from "@/models";
+import { ajaxErrorHandler, castParamsId } from "../helpers";
 
-const model = "productPrice";
+const model = "price";
 
 export default {
     name: model,
-    props: {
-        id: Number
-    },
+    props: ["id"],
     data() {
         return {
             searchBox: false,
@@ -353,7 +351,7 @@ export default {
     },
     computed: {
         ...mapState("app", ["loading", "dense"]),
-        ...mapState("model", ["productPrices"]),
+        ...mapState("model", ["prices"]),
         toolbarTitle() {
             const { length } = this.selected;
 
@@ -376,9 +374,9 @@ export default {
             return `these ${length} ${pluralize(startCase(model))} ?`;
         },
         apiUrl() {
-            let models = kebabCase(model).split("-");
+            let id = castParamsId(this.id);
 
-            return `${models[0]}/${this.id}/${models[1]}`;
+            return `product/${id}/${model}`;
         }
     },
     methods: {
@@ -392,9 +390,11 @@ export default {
             }
         },
         create() {
-            this.form = cloneDeep(ProductPrice);
-            if (this.id > 0) {
-                this.form.product_id = this.id;
+            this.form = cloneDeep(Price);
+            let id = castParamsId(this.id);
+
+            if (id > 0) {
+                this.form.product_id = id;
             }
             this.dialog = true;
         },

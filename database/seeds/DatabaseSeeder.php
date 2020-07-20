@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $products = factory(App\Product::class, 50)->create()
             ->each(function ($product) {
                 for ($i = 1; $i < rand(1, 10); $i++) {
-                    factory(App\ProductPrice::class)->create([
+                    factory(App\Price::class)->create([
                         'product_id' => $product->id
                     ]);
                 }
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
                     $product = $products->whereNotIn('id', $productsUsed)->random();
                     array_push($productsUsed, $product->id);
 
-                    factory(App\FormulaPercent::class)->create([
+                    factory(App\Percent::class)->create([
                         'percent' => $percent,
                         'formula_id' => $formula->id,
                         'product_id' => $product->id

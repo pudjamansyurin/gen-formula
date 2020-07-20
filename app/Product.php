@@ -65,17 +65,17 @@ class Product extends Model
      */
     public function prices()
     {
-        return $this->hasMany(ProductPrice::class)->orderBy('changed_at', 'desc');
+        return $this->hasMany(Price::class)->orderBy('changed_at', 'desc');
     }
 
     public function percents()
     {
-        return $this->hasMany(FormulaPercent::class);
+        return $this->hasMany(Percent::class);
     }
 
     public function formulas()
     {
-        return $this->hasManyThrough(Formula::class, FormulaPercent::class);
+        return $this->hasManyThrough(Formula::class, Percent::class);
     }
 
     public function user()

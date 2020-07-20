@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('product', 'ProductController', ['except' => ['show']]);
-    Route::apiResource('product.price', 'ProductPriceController', ['except' => ['show']]);
+    Route::apiResource('product.price', 'PriceController', ['except' => ['show']]);
     Route::apiResource('formula', 'FormulaController', ['except' => ['show']]);
-    Route::apiResource('formula.percent', 'FormulaPercentController', ['only' => ['store']]);
+    Route::apiResource('formula.percent', 'PercentController', ['only' => ['store']]);
     Route::apiResource('user', 'UserController', ['except' => ['show']]);
     Route::get('/profile', 'UserController@profile');
     Route::get('/role', 'UserController@role');

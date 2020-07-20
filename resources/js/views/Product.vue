@@ -398,7 +398,7 @@ export default {
         },
         childRoute(id) {
             return {
-                name: "productPrice",
+                name: "price",
                 params: { id }
             };
         }

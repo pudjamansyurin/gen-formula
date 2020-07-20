@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Formula;
-use App\Http\Requests\FormulaPercentRequest;
+use App\Http\Requests\PercentRequest;
 use App\Http\Resources\FormulaItem;
-use App\Http\Resources\FormulaPercentCollection;
-use App\Http\Resources\FormulaPercentItem;
+use App\Http\Resources\PercentCollection;
+use App\Http\Resources\PercentItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
-class FormulaPercentController extends Controller
+class PercentController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -20,7 +20,7 @@ class FormulaPercentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormulaPercentRequest $request, Formula $formula)
+    public function store(PercentRequest $request, Formula $formula)
     {
         $this->authorize('update', $formula);
 

@@ -11,7 +11,7 @@ const User = () => import("@/views/User");
 const Profile = () => import("@/views/Profile");
 const Report = () => import("@/views/Report");
 const Product = () => import("@/views/Product");
-const ProductPrice = () => import("@/views/ProductPrice");
+const Price = () => import("@/views/Price");
 const Formula = () => import("@/views/Formula");
 const Error = () => import("@/views/Error");
 
@@ -67,10 +67,10 @@ export default [
                 component: Product
             },
             {
-                path: "product-price/:id?",
-                name: "productPrice",
-                component: ProductPrice,
-                props: castRouteParamsId
+                path: "price/:id?",
+                name: "price",
+                component: Price,
+                props: true
             },
             {
                 path: "user",

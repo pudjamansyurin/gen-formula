@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Formula;
+use App\Product;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class FormulaPolicy
+class ProductPolicy
 {
     use HandlesAuthorization;
 
@@ -18,17 +18,17 @@ class FormulaPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('formulas.view');
+        return $user->can('products.view');
     }
 
     // /**
     //  * Determine whether the user can view the model.
     //  *
     //  * @param  \App\User  $user
-    //  * @param  \App\Formula  $formula
+    //  * @param  \App\Product  $product
     //  * @return mixed
     //  */
-    // public function view(User $user, Formula $formula)
+    // public function view(User $user, Product $product)
     // {
     //     //
     // }
@@ -41,24 +41,24 @@ class FormulaPolicy
      */
     public function create(User $user)
     {
-        return $user->can('formulas.create');
+        return $user->can('products.create');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Formula  $formula
+     * @param  \App\Product  $product
      * @return mixed
      */
-    public function update(User $user, Formula $formula)
+    public function update(User $user, Product $product)
     {
         // only owner can update
-        if ($user->id === $formula->user_id) {
+        if ($user->id === $product->user_id) {
             return true;
         }
         // above role can update all
-        return $user->hasRole('admin');
+        return $user->hasRole(['admin', 'manager']);
         // return $user->can('formulas.update');
     }
 
@@ -66,19 +66,19 @@ class FormulaPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Formula  $formula
+     * @param  \App\Product  $product
      * @return mixed
      */
-    public function delete(User $user,  $formulas_id)
+    public function delete(User $user, $products_id)
     {
-        $belonging = Formula::whereIn('id', $formulas_id)
+        $belonging = Product::whereIn('id', $products_id)
             ->where('user_id', $user->id)
             ->count();
         // only owner can delete
-        if ($belonging == count($formulas_id)) {
+        if ($belonging == count($products_id)) {
             return true;
         }
         // above role can delete all
-        return $user->hasRole('admin');
+        return $user->hasRole(['admin', 'manager']);
     }
 }

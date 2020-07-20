@@ -2,22 +2,20 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\FormulaPercent;
-use App\Formula;
 use App\Product;
 use App\User;
+use App\Price;
 use Faker\Generator as Faker;
 
-$factory->define(FormulaPercent::class, function (Faker $faker) {
+$factory->define(Price::class, function (Faker $faker) {
     // Fetch relations
     $users_id = User::all('id')->pluck('id')->toArray();
     $products_id = Product::all('id')->pluck('id')->toArray();
-    $formulas_id = Formula::all('id')->pluck('id')->toArray();
 
     return [
-        'formula_id' => $faker->randomElement($formulas_id),
         'product_id' => $faker->randomElement($products_id),
-        'percent' => $faker->numberBetween(0, 100),
+        'price' => $faker->randomNumber(6),
+        'changed_at' => $faker->dateTimeBetween('-6 months', 'now'),
         'user_id' => $faker->randomElement($users_id),
         'created_at' => $faker->dateTimeBetween('-15 days', 'now'),
     ];

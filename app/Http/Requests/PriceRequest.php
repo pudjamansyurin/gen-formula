@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormulaPercentRequest extends FormRequest
+class PriceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,20 +24,20 @@ class FormulaPercentRequest extends FormRequest
     public function rules()
     {
         return [
-            'formula' => [
+            'product_id' => [
                 'required',
-                'array',
-            ],
-            'formula.*.product_id' => [
                 'integer',
                 'min:1',
-                'distinct',
                 'exists:products,id'
             ],
-            'formula.*.percent' => [
+            'price' => [
+                'required',
                 'integer',
                 'min:1',
-                'max:100'
+            ],
+            'changed_at' => [
+                'required',
+                'date_format:"Y-m-d"'
             ]
         ];
     }

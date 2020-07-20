@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FormulaPercent extends Model
+class Percent extends Model
 {
     /**
      * The attributes that are mass assignable.

@@ -5,7 +5,7 @@ namespace App;
 use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductPrice extends Model
+class Price extends Model
 {
     use ClientQueryScope;
 

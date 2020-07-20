@@ -64,12 +64,12 @@ class Formula extends Model
      */
     public function percents()
     {
-        return $this->hasMany(FormulaPercent::class);
+        return $this->hasMany(Percent::class);
     }
 
     public function products()
     {
-        return $this->hasManyThrough(Product::class, FormulaPercent::class);
+        return $this->hasManyThrough(Product::class, Percent::class);
     }
 
     public function user()

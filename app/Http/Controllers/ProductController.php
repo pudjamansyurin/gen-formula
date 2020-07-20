@@ -19,6 +19,8 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Product::class);
+
         // Model instance
         $q = new Product;
         // Client Query
@@ -43,6 +45,8 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        $this->authorize('create', Product::class);
+
         $product = Product::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -78,6 +82,8 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, Product $product)
     {
+        $this->authorize('update', $product);
+
         $product->update([
             'name' => $request->name,
             'description' => $request->description,
@@ -98,6 +104,7 @@ class ProductController extends Controller
     public function destroy(MassDeleteRequest $request)
     {
         $products_id = $request->ids;
+        $this->authorize('delete', [Product::class, $products_id]);
 
         Product::destroy($products_id);
         return response($products_id, Response::HTTP_OK);

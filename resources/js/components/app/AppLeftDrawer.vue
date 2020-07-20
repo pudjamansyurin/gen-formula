@@ -78,7 +78,7 @@ export default {
                     text: "Product",
                     to: "product"
                 },
-                { icon: "mdi-currency-usd", text: "Price", to: "productPrice" },
+                { icon: "mdi-currency-usd", text: "Price", to: "price" },
                 { divider: true },
                 { heading: "CONFIGURATION" },
                 { icon: "mdi-account-group", text: "User", to: "user" },

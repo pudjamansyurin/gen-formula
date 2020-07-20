@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class FormulaPercentCollection extends ResourceCollection
+class PercentCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +15,7 @@ class FormulaPercentCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' =>  FormulaPercentItem::collection($this->collection),
+            'data' =>  PercentItem::collection($this->collection),
         ];
     }
 }

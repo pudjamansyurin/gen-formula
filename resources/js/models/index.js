@@ -15,7 +15,7 @@ export const Product = {
     user: User
 };
 
-export const ProductPrice = {
+export const Price = {
     id: -1,
     product_id: -1,
     price: 0,

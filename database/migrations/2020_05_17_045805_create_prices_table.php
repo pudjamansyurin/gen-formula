@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductPricesTable extends Migration
+class CreatePricesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateProductPricesTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_prices', function (Blueprint $table) {
+        Schema::create('prices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id');
             $table->double('price');
@@ -22,7 +22,7 @@ class CreateProductPricesTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('product_prices', function (Blueprint $table) {
+        Schema::table('prices', function (Blueprint $table) {
             $table->foreign('product_id')
                 ->references('id')
                 ->on('products')
@@ -41,6 +41,6 @@ class CreateProductPricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_prices');
+        Schema::dropIfExists('prices');
     }
 }

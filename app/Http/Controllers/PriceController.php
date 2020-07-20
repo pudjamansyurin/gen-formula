@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MassDeleteRequest;
-use App\Http\Requests\ProductPriceRequest;
+use App\Http\Requests\PriceRequest;
 use App\Product;
-use App\ProductPrice;
-use App\Http\Resources\ProductPriceCollection;
-use App\Http\Resources\ProductPriceItem;
+use App\Price;
+use App\Http\Resources\PriceCollection;
+use App\Http\Resources\PriceItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class ProductPriceController extends Controller
+class PriceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,7 +21,7 @@ class ProductPriceController extends Controller
     public function index(Request $request, $productId)
     {
         // Model instance
-        $q = new ProductPrice;
+        $q = new Price;
         // Parent
         if ($productId > 0) {
             $q = $q->whereHas('product', function ($q) use ($productId) {
@@ -34,7 +34,7 @@ class ProductPriceController extends Controller
         $q = $q->clientSorter($request);
         $q = $q->clientLimiter($request);
         // Response
-        return (new ProductPriceCollection($q->get()))
+        return (new PriceCollection($q->get()))
             ->additional([
                 'meta' => [
                     'total' => $total
@@ -48,12 +48,12 @@ class ProductPriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductPriceRequest $request)
+    public function store(PriceRequest $request)
     {
         $product = Product::find($request->product_id);
 
         if ($product) {
-            $productPrice = ProductPrice::create([
+            $price = Price::create([
                 'product_id' => $request->product_id,
                 'price' => $request->price,
                 'changed_at' => $request->changed_at,
@@ -61,7 +61,7 @@ class ProductPriceController extends Controller
             ]);
 
             return response(
-                new ProductPriceItem($productPrice),
+                new PriceItem($price),
                 Response::HTTP_CREATED
             );
         }
@@ -74,13 +74,13 @@ class ProductPriceController extends Controller
     // /**
     //  * Display the specified resource.
     //  *
-    //  * @param  \App\ProductPrice  $productPrice
+    //  * @param  \App\Price  $price
     //  * @return \Illuminate\Http\Response
     //  */
-    // public function show(ProductPrice $productPrice)
+    // public function show(Price $price)
     // {
     //     return response(
-    //         new ProductPriceItem($productPrice),
+    //         new PriceItem($price),
     //         Response::HTTP_OK
     //     );
     // }
@@ -89,10 +89,10 @@ class ProductPriceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ProductPrice  $productPrice
+     * @param  \App\Price  $price
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductPriceRequest $request, $productId, ProductPrice $price)
+    public function update(PriceRequest $request, $productId, Price $price)
     {
         $price->update([
             'product_id' => $request->product_id,
@@ -101,7 +101,7 @@ class ProductPriceController extends Controller
         ]);
 
         return response(
-            new ProductPriceItem($price),
+            new PriceItem($price),
             Response::HTTP_OK
         );
     }
@@ -109,14 +109,14 @@ class ProductPriceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ProductPrice  $productPrice
+     * @param  \App\Price  $price
      * @return \Illuminate\Http\Response
      */
     public function destroy(MassDeleteRequest $request)
     {
-        $product_prices_id = $request->ids;
+        $prices_id = $request->ids;
 
-        ProductPrice::destroy($product_prices_id);
-        return response($product_prices_id, Response::HTTP_OK);
+        Price::destroy($prices_id);
+        return response($prices_id, Response::HTTP_OK);
     }
 }

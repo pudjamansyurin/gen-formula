@@ -23,12 +23,10 @@ export const ls = {
     }
 };
 
-export const castRouteParamsId = route => {
-    let id = Number(route.params.id);
+export const castParamsId = value => {
+    let id = Number(value);
 
-    return {
-        id: Number.isInteger(id) ? id : -1
-    };
+    return Number.isInteger(id) ? id : -1;
 };
 
 export const ajaxErrorHandler = e => {
