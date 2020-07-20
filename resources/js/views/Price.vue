@@ -439,12 +439,12 @@ export default {
                 .catch(e => ajaxErrorHandler(e));
         },
         saveItem() {
-            const { form: payload, apiUrl: url } = this;
+            const { form: payload } = this;
 
             this.SAVE_MODEL({
                 model,
-                url,
-                payload
+                payload,
+                url: `product/${payload.product_id}/${model}`
             })
                 .then(async data => {
                     if (payload.id > 0) {

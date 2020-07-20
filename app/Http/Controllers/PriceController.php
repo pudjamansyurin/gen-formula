@@ -20,6 +20,8 @@ class PriceController extends Controller
      */
     public function index(Request $request, $productId)
     {
+        $this->authorize('viewAny', Price::class);
+
         // Model instance
         $q = new Price;
         // Parent
@@ -48,27 +50,27 @@ class PriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PriceRequest $request)
+    public function store(PriceRequest $request, $product_id)
     {
-        $product = Product::find($request->product_id);
+        $this->authorize('create', Price::class);
 
-        if ($product) {
-            $price = Price::create([
-                'product_id' => $request->product_id,
-                'price' => $request->price,
-                'changed_at' => $request->changed_at,
-                'user_id' => auth()->id()
-            ]);
-
-            return response(
-                new PriceItem($price),
-                Response::HTTP_CREATED
-            );
+        if (!$product = Product::find($product_id)) {
+            return response([
+                'message' => 'Product category not found'
+            ], Response::HTTP_NOT_FOUND);
         }
 
-        return response([
-            'message' => 'Product category not found'
-        ], Response::HTTP_NOT_FOUND);
+        $price = Price::create([
+            'product_id' => $product->id,
+            'price' => $request->price,
+            'changed_at' => $request->changed_at,
+            'user_id' => auth()->id()
+        ]);
+
+        return response(
+            new PriceItem($price),
+            Response::HTTP_CREATED
+        );
     }
 
     // /**
@@ -92,10 +94,12 @@ class PriceController extends Controller
      * @param  \App\Price  $price
      * @return \Illuminate\Http\Response
      */
-    public function update(PriceRequest $request, $productId, Price $price)
+    public function update(PriceRequest $request, Product $product, Price $price)
     {
+        $this->authorize('update', $price);
+
         $price->update([
-            'product_id' => $request->product_id,
+            'product_id' => $product->id,
             'price' => $request->price,
             'changed_at' => $request->changed_at,
         ]);
@@ -115,6 +119,7 @@ class PriceController extends Controller
     public function destroy(MassDeleteRequest $request)
     {
         $prices_id = $request->ids;
+        $this->authorize('delete', [Price::class, $prices_id]);
 
         Price::destroy($prices_id);
         return response($prices_id, Response::HTTP_OK);
