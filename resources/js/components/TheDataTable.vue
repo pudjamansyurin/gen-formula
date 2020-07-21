@@ -11,6 +11,7 @@
         :dense="dense"
         :page="1"
         :items-per-page="10"
+        selectable-key="selectable"
         sort-by="updated_at"
         sort-desc
         show-select
@@ -23,7 +24,7 @@
                     <template v-slot:activator="{ on }">
                         <v-btn
                             v-show="value.length"
-                            @click="value = []"
+                            @click="$emit('unselect')"
                             v-on="on"
                             icon
                         >
@@ -151,11 +152,11 @@ export default {
     props: {
         value: {
             type: Array,
-            default: []
+            default: () => []
         },
         headers: {
             type: Array,
-            default: []
+            default: () => []
         },
         model: {
             type: String,
@@ -163,7 +164,7 @@ export default {
         },
         items: {
             type: Array,
-            default: []
+            default: () => []
         },
         total: {
             type: Number,

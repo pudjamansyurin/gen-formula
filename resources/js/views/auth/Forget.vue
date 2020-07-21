@@ -38,7 +38,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { FORGET } from "@/store/app/action-types";
-import { ajaxErrorHandler } from "../../helpers";
+import { eHandler } from "../../helpers";
 
 export default {
     name: "forget",
@@ -58,7 +58,7 @@ export default {
         ...mapActions("app", [FORGET]),
         submit() {
             this.FORGET(this.form).catch(e => {
-                let errors = ajaxErrorHandler(e);
+                let errors = eHandler(e);
                 this.$refs.form.setErrors(errors);
             });
         }

@@ -6,6 +6,7 @@
             :model="model"
             :items="products"
             :total="total"
+            @unselect="selected = []"
             @fetch="fetchItem"
             @create="create"
             @edit="edit"
@@ -30,104 +31,55 @@
             }}</template>
         </the-data-table>
 
-        <v-dialog v-model="dialog" max-width="500px" persistent>
-            <validation-observer v-slot="{ handleSubmit }" ref="form">
-                <v-form @submit.prevent="handleSubmit(saveItem)">
-                    <v-card :loading="!!loading">
-                        <v-card-title
-                            class="headline grey lighten-2"
-                            primary-title
-                        >
-                            <span class="headline">{{ formTitle }} Item</span>
-                        </v-card-title>
-                        <v-divider></v-divider>
+        <the-dialog-form
+            v-model="dialog"
+            :form="form"
+            @close="close"
+            @submit="saveItem"
+        >
+            <validation-observer ref="form">
+                <validation-provider name="name" v-slot="{ errors, valid }">
+                    <v-text-field
+                        label="Product name"
+                        type="text"
+                        v-model="form.name"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="This is to identify the product"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
 
-                        <v-card-text>
-                            <validation-provider
-                                name="name"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-text-field
-                                    label="Product name"
-                                    type="text"
-                                    v-model="form.name"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    counter
-                                    hint="This is to identify the product"
-                                    persistent-hint
-                                ></v-text-field>
-                            </validation-provider>
-
-                            <validation-provider
-                                name="description"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-text-field
-                                    label="Product description"
-                                    type="text"
-                                    v-model="form.description"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    counter
-                                    hint="Short description about the product"
-                                    persistent-hint
-                                ></v-text-field>
-                            </validation-provider>
-                        </v-card-text>
-
-                        <v-divider></v-divider>
-                        <v-card-actions>
-                            <v-btn color="blue darken-1" text @click="close"
-                                >Cancel</v-btn
-                            >
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                :disabled="!!loading"
-                                type="submit"
-                                color="primary"
-                                large
-                                >Save</v-btn
-                            >
-                        </v-card-actions>
-                    </v-card>
-                </v-form>
-            </validation-observer>
-        </v-dialog>
-
-        <v-dialog v-model="dialogDelete" max-width="290" persistent scrollable>
-            <v-card :loading="!!loading">
-                <v-card-title class="headline grey lighten-2" primary-title
-                    >Confirmation</v-card-title
+                <validation-provider
+                    name="description"
+                    v-slot="{ errors, valid }"
                 >
-                <v-divider></v-divider>
+                    <v-text-field
+                        label="Product description"
+                        type="text"
+                        v-model="form.description"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="Short description about the product"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
+            </validation-observer>
+        </the-dialog-form>
 
-                <v-card-text class="pt-2" style="max-height: 300px;">
-                    Are you sure to delete {{ formDeleteContent }}
-                    <v-chip-group column small active-class="primary--text">
-                        <v-chip v-for="item in selected" :key="item.id">{{
-                            item.name
-                        }}</v-chip>
-                    </v-chip-group>
-                </v-card-text>
-
-                <v-divider></v-divider>
-                <v-card-actions>
-                    <v-btn color="darken-1" @click="dialogDelete = false" text
-                        >Cancel</v-btn
-                    >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        :disabled="!!loading"
-                        @click="deleteItem"
-                        color="red"
-                        dark
-                        large
-                        >Yes, sure</v-btn
-                    >
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <the-dialog-delete
+            v-model="dialogDelete"
+            :selected="selected"
+            :model="model"
+            @delete="deleteItem"
+            @close="dialogDelete = false"
+        >
+            <template v-slot="{ item }">
+                {{ item.name }}
+            </template>
+        </the-dialog-delete>
     </v-col>
 </template>
 
@@ -140,16 +92,20 @@ import {
 } from "@/store/model/action-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Product } from "@/models";
-import { ajaxErrorHandler } from "../helpers";
+import { eHandler } from "../helpers";
 import pluralize from "pluralize";
 import TheDataTable from "../components/TheDataTable.vue";
+import TheDialogForm from "../components/TheDialogForm.vue";
+import TheDialogDelete from "../components/TheDialogDelete.vue";
 
 const model = "product";
 
 export default {
     name: model,
     components: {
-        TheDataTable
+        TheDataTable,
+        TheDialogForm,
+        TheDialogDelete
     },
     data() {
         return {
@@ -178,25 +134,12 @@ export default {
             ],
             dialog: false,
             dialogDelete: false,
-            form: null
+            form: {}
         };
     },
     computed: {
         ...mapState("app", ["loading", "dense"]),
-        ...mapState("model", ["products"]),
-        formTitle() {
-            const { id } = this.form;
-            return id === -1 ? "New" : "Edit";
-        },
-        formDeleteContent() {
-            const { length } = this.selected;
-            const single = length === 1;
-
-            if (single) {
-                return `this ${model} ?`;
-            }
-            return `these ${length} ${pluralize(model)} ?`;
-        }
+        ...mapState("model", ["products"])
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -226,31 +169,37 @@ export default {
                 .then(({ meta }) => {
                     this.total = meta.total;
                 })
-                .catch(e => ajaxErrorHandler(e));
+                .catch(e => eHandler(e));
         },
         saveItem() {
-            const { form: payload } = this;
-
-            this.SAVE_MODEL({
-                model,
-                payload
-            })
-                .then(async data => {
-                    if (payload.id > 0) {
-                        this.UPDATE_MODEL({
-                            model,
-                            data
+            // validate
+            this.$refs.form.validate().then(valid => {
+                if (valid) {
+                    // pass validation
+                    const { form: payload } = this;
+                    // submit to backend
+                    this.SAVE_MODEL({
+                        model,
+                        payload
+                    })
+                        .then(async data => {
+                            if (payload.id > 0) {
+                                this.UPDATE_MODEL({
+                                    model,
+                                    data
+                                });
+                            } else {
+                                await this.fetchItem();
+                            }
+                            this.selected = [];
+                            this.close();
+                        })
+                        .catch(e => {
+                            let errors = eHandler(e);
+                            this.$refs.form.setErrors(errors);
                         });
-                    } else {
-                        await this.fetchItem();
-                    }
-                    this.selected = [];
-                    this.close();
-                })
-                .catch(e => {
-                    let errors = ajaxErrorHandler(e);
-                    this.$refs.form.setErrors(errors);
-                });
+                }
+            });
         },
         deleteItem: async function() {
             await this.DELETE_MODELS({
@@ -262,7 +211,7 @@ export default {
                     this.selected = [];
                     this.dialogDelete = false;
                 })
-                .catch(e => ajaxErrorHandler(e));
+                .catch(e => eHandler(e));
         },
         childRoute(id) {
             return {

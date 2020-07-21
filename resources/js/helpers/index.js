@@ -29,7 +29,7 @@ export const castParamsId = value => {
     return Number.isInteger(id) ? id : -1;
 };
 
-export const ajaxErrorHandler = e => {
+export const eHandler = e => {
     const { status: code, statusText: text } = e;
     const { profile } = store.state.app;
     let errors = [];

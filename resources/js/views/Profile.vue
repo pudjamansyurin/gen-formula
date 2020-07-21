@@ -112,15 +112,15 @@
             </v-list-item>
         </v-card>
 
-        <validation-observer v-else v-slot="{ handleSubmit }" ref="form">
-            <v-form @submit.prevent="handleSubmit(saveItem)">
-                <v-card :loading="!!loading">
-                    <v-card-title class="headline grey lighten-2" primary-title>
-                        <span class="headline">Edit Profile</span>
-                    </v-card-title>
-                    <v-divider></v-divider>
+        <v-card v-else :loading="!!loading">
+            <v-card-title class="headline grey lighten-2" primary-title>
+                <span class="headline">Edit Profile</span>
+            </v-card-title>
+            <v-divider></v-divider>
 
-                    <v-card-text>
+            <v-card-text>
+                <v-form>
+                    <validation-observer ref="form">
                         <validation-provider
                             name="name"
                             v-slot="{ errors, valid }"
@@ -231,25 +231,25 @@
                                 ></v-text-field>
                             </validation-provider>
                         </template>
-                    </v-card-text>
+                    </validation-observer>
+                </v-form>
+            </v-card-text>
 
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                        <v-btn @click="edit_profile = false" color="indigo" text
-                            >Cancel</v-btn
-                        >
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            :disabled="!!loading"
-                            type="submit"
-                            color="primary"
-                            large
-                            >Save</v-btn
-                        >
-                    </v-card-actions>
-                </v-card>
-            </v-form>
-        </validation-observer>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-btn @click="edit_profile = false" color="indigo" text
+                    >Cancel</v-btn
+                >
+                <v-spacer></v-spacer>
+                <v-btn
+                    :disabled="!!loading"
+                    @click="saveItem"
+                    color="primary"
+                    large
+                    >Save</v-btn
+                >
+            </v-card-actions>
+        </v-card>
     </v-col>
 </template>
 
@@ -292,39 +292,44 @@ export default {
             this.edit_profile = true;
         },
         saveItem() {
-            const { form: payload } = this;
-
-            if (!this.change_password) {
-                this.$delete(payload, "password");
-                this.$delete(payload, "password_confirmation");
-            }
-
-            this.SAVE_MODEL({
-                model,
-                payload
-            })
-                .then(async data => {
-                    // update profile
-                    this.SET_PROFILE(data);
-                    this.SET_MESSAGE({
-                        text: "Profile udpated successfully",
-                        type: "success"
-                    });
-                    this.close();
-                })
-                .catch(e => {
-                    let errors = ajaxErrorHandler(e);
-                    this.$refs.form.setErrors(errors);
-                });
+            // validate
+            this.$refs.form.validate().then(valid => {
+                if (valid) {
+                    // pass validation
+                    const { form: payload } = this;
+                    if (!this.change_password) {
+                        this.$delete(payload, "password");
+                        this.$delete(payload, "password_confirmation");
+                    }
+                    // submit to backend
+                    this.SAVE_MODEL({
+                        model,
+                        payload
+                    })
+                        .then(async data => {
+                            // update profile
+                            this.SET_PROFILE(data);
+                            this.SET_MESSAGE({
+                                text: "Profile udpated successfully",
+                                type: "success"
+                            });
+                            this.close();
+                        })
+                        .catch(e => {
+                            let errors = eHandler(e);
+                            this.$refs.form.setErrors(errors);
+                        });
+                }
+            });
         },
         resend() {
             if (!this.profile.email_verified_at) {
-                this.RESEND().catch(e => ajaxErrorHandler(e));
+                this.RESEND().catch(e => eHandler(e));
             }
         }
     },
     mounted() {
-        this.PROFILE().catch(e => ajaxErrorHandler(e));
+        this.PROFILE().catch(e => eHandler(e));
     }
 };
 </script>

@@ -20,7 +20,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { VERIFY } from "@/store/app/action-types";
-import { ajaxErrorHandler } from "../../helpers";
+import { eHandler } from "../../helpers";
 
 export default {
     name: "verify",
@@ -40,7 +40,7 @@ export default {
                 .then(() => {
                     this.$router.push({ name: "profile" });
                 })
-                .catch(e => ajaxErrorHandler(e));
+                .catch(e => eHandler(e));
         }
     }
 };

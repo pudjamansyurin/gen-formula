@@ -73,7 +73,7 @@ export default {
                 .then(() => {
                     this.$router.push({ name: "login" });
                 })
-                .catch(e => ajaxErrorHandler(e));
+                .catch(e => eHandler(e));
         }
     }
 };
