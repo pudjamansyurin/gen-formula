@@ -13,8 +13,9 @@
             <v-divider></v-divider>
 
             <v-card-text style="max-height: 500px;">
-                <v-form>
+                <v-form @submit.prevent="$emit('submit')">
                     <slot></slot>
+                    <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
             </v-card-text>
 
@@ -66,8 +67,7 @@ export default {
                 return this.title;
             }
 
-            const { id } = this.form;
-            return id === -1 ? "New Item" : "Edit Item";
+            return this.form.id === -1 ? "New Item" : "Edit Item";
         }
     }
 };
