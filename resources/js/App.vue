@@ -1,7 +1,6 @@
 <template>
     <v-app>
         <router-view></router-view>
-
         <v-snackbar
             :value="snackbar"
             :timeout="timeout"
@@ -24,14 +23,14 @@ export default {
     data() {
         return {
             text: "",
-            timeout: 2000
+            timeout: 2000,
         };
     },
     computed: {
         ...mapState("app", ["message"]),
         snackbar() {
             return this.$route.name != "error" && this.message.text;
-        }
-    }
+        },
+    },
 };
 </script>

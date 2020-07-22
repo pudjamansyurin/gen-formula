@@ -1,89 +1,87 @@
 <template>
-    <v-col cols="12">
-        <v-row>
-            <v-col>
-                <v-card
-                    class="mx-auto text-center"
-                    color="green"
-                    dark
-                    max-width="600"
-                >
-                    <v-card-text>
-                        <v-sheet color="rgba(0, 0, 0, .12)">
-                            <v-sparkline
-                                :value="value"
-                                color="rgba(255, 255, 255, .7)"
-                                height="100"
-                                padding="24"
-                                stroke-linecap="round"
-                                smooth
-                            >
-                                <template v-slot:label="item">
-                                    ${{ item.value }}
-                                </template>
-                            </v-sparkline>
-                        </v-sheet>
-                    </v-card-text>
-
-                    <v-card-text>
-                        <div class="display-1 font-weight-thin">
-                            Changes in last 30 days
-                        </div>
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions class="justify-center">
-                        <v-btn block text>Go to Formula</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
-            <v-col>
-                <v-card class="mx-auto" color="grey lighten-4" max-width="600">
-                    <v-card-title>
-                        <v-icon
-                            :color="checking ? 'red lighten-2' : 'indigo'"
-                            class="mr-12"
-                            size="64"
-                            @click="takePulse"
-                        >
-                            mdi-heart-pulse
-                        </v-icon>
-                        <v-row align="start">
-                            <div class="caption grey--text text-uppercase">
-                                Heart rate
-                            </div>
-                            <div>
-                                <span
-                                    class="display-2 font-weight-black"
-                                    v-text="avg || '—'"
-                                ></span>
-                                <strong v-if="avg">BPM</strong>
-                            </div>
-                        </v-row>
-
-                        <v-spacer></v-spacer>
-
-                        <v-btn icon class="align-self-start" size="28">
-                            <v-icon>mdi-arrow-right-thick</v-icon>
-                        </v-btn>
-                    </v-card-title>
-
-                    <v-sheet color="transparent">
+    <v-fragment>
+        <v-col>
+            <v-card
+                class="mx-auto text-center"
+                color="green"
+                dark
+                max-width="600"
+            >
+                <v-card-text>
+                    <v-sheet color="rgba(0, 0, 0, .12)">
                         <v-sparkline
-                            :key="String(avg)"
-                            :smooth="16"
-                            :gradient="['#f72047', '#ffd200', '#1feaea']"
-                            :line-width="3"
-                            :value="heartbeats"
-                            auto-draw
+                            :value="value"
+                            color="rgba(255, 255, 255, .7)"
+                            height="100"
+                            padding="24"
                             stroke-linecap="round"
-                        ></v-sparkline>
+                            smooth
+                        >
+                            <template v-slot:label="item">
+                                ${{ item.value }}
+                            </template>
+                        </v-sparkline>
                     </v-sheet>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-col>
+                </v-card-text>
+
+                <v-card-text>
+                    <div class="display-1 font-weight-thin">
+                        Changes in last 30 days
+                    </div>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions class="justify-center">
+                    <v-btn block text>Go to Formula</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-col>
+        <v-col>
+            <v-card class="mx-auto" color="grey lighten-4" max-width="600">
+                <v-card-title>
+                    <v-icon
+                        :color="checking ? 'red lighten-2' : 'indigo'"
+                        class="mr-12"
+                        size="64"
+                        @click="takePulse"
+                    >
+                        mdi-heart-pulse
+                    </v-icon>
+                    <v-row align="start">
+                        <div class="caption grey--text text-uppercase">
+                            Heart rate
+                        </div>
+                        <div>
+                            <span
+                                class="display-2 font-weight-black"
+                                v-text="avg || '—'"
+                            ></span>
+                            <strong v-if="avg">BPM</strong>
+                        </div>
+                    </v-row>
+
+                    <v-spacer></v-spacer>
+
+                    <v-btn icon class="align-self-start" size="28">
+                        <v-icon>mdi-arrow-right-thick</v-icon>
+                    </v-btn>
+                </v-card-title>
+
+                <v-sheet color="transparent">
+                    <v-sparkline
+                        :key="String(avg)"
+                        :smooth="16"
+                        :gradient="['#f72047', '#ffd200', '#1feaea']"
+                        :line-width="3"
+                        :value="heartbeats"
+                        auto-draw
+                        stroke-linecap="round"
+                    ></v-sparkline>
+                </v-sheet>
+            </v-card>
+        </v-col>
+    </v-fragment>
 </template>
 
 <script>

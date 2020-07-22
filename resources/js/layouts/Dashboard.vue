@@ -1,5 +1,5 @@
 <template>
-    <div v-if="profile">
+    <v-fragment>
         <app-left-drawer></app-left-drawer>
         <app-top-bar></app-top-bar>
         <v-content>
@@ -9,13 +9,13 @@
                 </v-row>
             </v-container>
         </v-content>
-    </div>
+    </v-fragment>
 </template>
 
 <script>
 import AppLeftDrawer from "@/components/app/AppLeftDrawer";
 import AppTopBar from "@/components/app/AppTopBar";
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
 
 export default {
     name: "Dashboard",
@@ -23,14 +23,9 @@ export default {
         AppLeftDrawer,
         AppTopBar
     },
-    data() {
-        return {
-            dialog: false
-        };
-    },
-    computed: {
-        ...mapState("app", ["profile"])
-    },
+    // computed: {
+    //     ...mapState("app", ["profile"])
+    // },
     mounted() {
         console.log("Session credebility should be checked!");
     }

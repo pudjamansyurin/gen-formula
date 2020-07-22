@@ -31,6 +31,7 @@
         "vee-validate": "^3.3.1",
         "vue": "^2.6.11",
         "vue-currency-filter": "^5.1.0",
+        "vue-fragment": "^1.5.1",
         "vue-lodash": "^2.1.2",
         "vue-moment": "^4.1.0",
         "vue-router": "^3.3.2",

@@ -1,12 +1,12 @@
 <template>
     <v-app-bar
         :clipped-left="$vuetify.breakpoint.lgAndUp"
-        app
         color="blue darken-3"
         dark
+        app
     >
         <v-app-bar-nav-icon @click.stop="TOGGLE_DRAWER"></v-app-bar-nav-icon>
-        <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
+        <v-toolbar-title style="width: 300px;" class="ml-0 pl-4">
             <span class="hidden-sm-and-down">{{ title }}</span>
         </v-toolbar-title>
         <!-- <v-text-field
@@ -63,7 +63,7 @@ import { LOGOUT } from "@/store/app/action-types";
 
 export default {
     computed: {
-        ...mapState("app", ["title"])
+        ...mapState("app", ["title"]),
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DRAWER]),
@@ -73,9 +73,9 @@ export default {
                 .then(() => {
                     this.$router.push({ name: "login" });
                 })
-                .catch(e => eHandler(e));
-        }
-    }
+                .catch((e) => eHandler(e));
+        },
+    },
 };
 </script>
 
