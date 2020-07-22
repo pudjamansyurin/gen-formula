@@ -19,8 +19,7 @@ class PercentItem extends JsonResource
             'formula_id' => $this->formula_id,
             'product_id' => $this->product_id,
             'percent' => $this->percent,
-            'user' => $this->user,
-            'product' => $this->product,
+            'product' => new ProductItem($this->whenLoaded('product')),
         ];
     }
 }

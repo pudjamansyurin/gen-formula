@@ -19,9 +19,14 @@ class ProductItem extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'updated_at' => $this->updated_at,
-            'user' =>  $this->user,
-            'prices' => $this->prices,
-            'latest_price' => (count($this->prices) ? $this->prices[0]['price'] : 0)
+            'user' => new UserItem($this->whenLoaded('user')),
+            'prices' => PriceItem::collection($this->whenLoaded('prices')),
+            'latest_price' => $this->whenLoaded('prices', function () {
+                if ($item = $this->prices->first()) {
+                    return $item['price'];
+                }
+                return 0;
+            })
         ];
     }
 }

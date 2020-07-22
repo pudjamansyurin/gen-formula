@@ -19,8 +19,8 @@ class FormulaItem extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'updated_at' => $this->updated_at,
-            'user' => $this->user,
-            'percents' => $this->percents,
+            'user' => new UserItem($this->whenLoaded('user')),
+            'percents' => PercentItem::collection($this->whenLoaded('percents')),
             'total_price' => $this->whenLoaded('percents', function () {
                 $total =  $this->percents->reduce(function ($total, $item) {
                     $value = 0;

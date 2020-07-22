@@ -23,7 +23,7 @@ class PriceController extends Controller
         $this->authorize('viewAny', Price::class);
 
         // Model instance
-        $q = new Price;
+        $q = Price::with(['user:id,name', 'product:id,name']);
         // Parent
         if ($productId > 0) {
             $q = $q->whereHas('product', function ($q) use ($productId) {
@@ -68,7 +68,7 @@ class PriceController extends Controller
         ]);
 
         return response(
-            new PriceItem($price),
+            new PriceItem($price->loadMissing(['user:id,name', 'product:id,name'])),
             Response::HTTP_CREATED
         );
     }
@@ -105,7 +105,7 @@ class PriceController extends Controller
         ]);
 
         return response(
-            new PriceItem($price->refresh()),
+            new PriceItem($price->loadMissing(['user:id,name', 'product:id,name'])),
             Response::HTTP_OK
         );
     }

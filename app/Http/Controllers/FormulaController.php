@@ -22,7 +22,7 @@ class FormulaController extends Controller
         $this->authorize('viewAny', Formula::class);
 
         // Model instance
-        $q = new Formula;
+        $q = Formula::with(['user:id,name', 'percents.product.prices']);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -55,7 +55,7 @@ class FormulaController extends Controller
         ]);
 
         return response(
-            new FormulaItem($formula),
+            new FormulaItem($formula->loadMissing(['user:id,name', 'percents.product.prices'])),
             Response::HTTP_CREATED
         );
     }
@@ -91,7 +91,7 @@ class FormulaController extends Controller
         ]);
 
         return response(
-            new FormulaItem($formula),
+            new FormulaItem($formula->loadMissing(['user:id,name', 'percents.product.prices'])),
             Response::HTTP_OK
         );
     }

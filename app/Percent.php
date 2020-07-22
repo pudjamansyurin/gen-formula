@@ -30,7 +30,7 @@ class Percent extends Model
      *
      * @var array
      */
-    protected $with = ['user:id,name', 'product:id,name'];
+    // protected $with = ['product:id,name'];
 
     /**
      * Get the associated table.

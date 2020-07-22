@@ -22,7 +22,7 @@ class ProductController extends Controller
         $this->authorize('viewAny', Product::class);
 
         // Model instance
-        $q = new Product;
+        $q = Product::with(['user:id,name', 'prices']);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -54,7 +54,7 @@ class ProductController extends Controller
         ]);
 
         return response(
-            new ProductItem($product),
+            new ProductItem($product->loadMissing(['user:id,name', 'prices'])),
             Response::HTTP_CREATED
         );
     }
@@ -90,7 +90,7 @@ class ProductController extends Controller
         ]);
 
         return response(
-            new ProductItem($product),
+            new ProductItem($product->loadMissing(['user:id,name', 'prices'])),
             Response::HTTP_OK
         );
     }

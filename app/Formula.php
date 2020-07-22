@@ -32,7 +32,7 @@ class Formula extends Model
      *
      * @var array
      */
-    protected $with = ['user:id,name', 'percents'];
+    // protected $with = ['user:id,name', 'percents'];
 
     /**
      * Client query scope

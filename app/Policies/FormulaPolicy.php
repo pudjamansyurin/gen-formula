@@ -69,7 +69,7 @@ class FormulaPolicy
      * @param  \App\Formula  $formula
      * @return mixed
      */
-    public function delete(User $user,  $formulas_id)
+    public function delete(User $user, $formulas_id)
     {
         $belonging = Formula::whereIn('id', $formulas_id)
             ->where('user_id', $user->id)

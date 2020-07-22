@@ -24,6 +24,8 @@ class PercentController extends Controller
     {
         $this->authorize('update', $formula);
 
+        $formula = $formula->loadMissing(['user:id,name', 'percents.product.prices']);
+
         $formulaNew = collect($request->formula)
             ->map(function ($el) use ($formula) {
                 return [
@@ -39,7 +41,7 @@ class PercentController extends Controller
             // check existing
             $same = [];
             $changed = [];
-            $formulaNew->each(function ($el, $key) use ($formula, &$same, &$changed) {
+            $formulaNew->each(function ($el) use ($formula, &$same, &$changed) {
                 $old = $formula->percents->firstWhere('product_id', $el['product_id']);
                 if ($old) {
                     // check is percent same

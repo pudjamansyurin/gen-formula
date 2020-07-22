@@ -24,7 +24,7 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         // Model instance
-        $q = new User;
+        $q = User::with(['roles:id,name']);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -65,7 +65,7 @@ class UserController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response(
-            new UserItem($user),
+            new UserItem($user->loadMissing(['roles:id,name'])),
             Response::HTTP_CREATED
         );
     }
@@ -122,7 +122,7 @@ class UserController extends Controller
         }
 
         return response(
-            new UserItem($user->refresh()),
+            new UserItem($user->loadMissing(['roles:id,name'])),
             Response::HTTP_OK
         );
     }
@@ -159,8 +159,10 @@ class UserController extends Controller
      */
     public function profile(Request $request)
     {
+        $user = User::find(auth()->id());
+
         return response([
-            'user' => new UserItem($request->user()),
+            'user' => new UserItem($user->loadMissing(['roles:id,name'])),
         ], Response::HTTP_OK);
     }
 }

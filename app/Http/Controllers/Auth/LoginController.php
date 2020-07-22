@@ -61,7 +61,7 @@ class LoginController extends Controller
         ])->save();
 
         return response([
-            'user' => new UserItem($user),
+            'user' => new UserItem($user->loadMissing(['roles:id,name'])),
             'message' => Lang::get('auth.authenticated', [
                 'name' => $user->name
             ])
