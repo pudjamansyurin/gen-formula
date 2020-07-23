@@ -1,5 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/genmotor/formula.genmotorcycles.com/
-    - /bin/cp -R public/. $DEPLOYPATH
+    - export BACK_END_PATH=/home/genmotor/formula.genmotorcycles.com/backend/
+    - export FRONT_END_PATH=/home/genmotor/formula.genmotorcycles.com/
+    - /bin/rsync -avr --progress --exclude '.git/' --exclude 'public/' . $BACK_END_PATH
+    - /bin/rsync -avr --progress --exclude 'index.php' public/ $FRONT_END_PATH
