@@ -1,5 +1,5 @@
 <template>
-    <v-fragment>
+    <fragment>
         <v-col>
             <v-card
                 class="mx-auto text-center"
@@ -81,7 +81,7 @@
                 </v-sheet>
             </v-card>
         </v-col>
-    </v-fragment>
+    </fragment>
 </template>
 
 <script>

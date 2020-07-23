@@ -1,5 +1,5 @@
 <template>
-    <v-fragment>
+    <fragment>
         <app-left-drawer></app-left-drawer>
         <app-top-bar></app-top-bar>
         <v-content>
@@ -9,7 +9,7 @@
                 </v-row>
             </v-container>
         </v-content>
-    </v-fragment>
+    </fragment>
 </template>
 
 <script>
