@@ -19,7 +19,11 @@
         class="elevation-1"
     >
         <template v-slot:top>
-            <v-toolbar :dark="!!value.length" flat>
+            <v-toolbar
+                :dark="!!value.length"
+                :dense="$vuetify.breakpoint.smAndDown"
+                flat
+            >
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
                         <v-btn
@@ -34,10 +38,11 @@
                     <span>Cancel</span>
                 </v-tooltip>
 
-                <v-toolbar-title>{{ tableTitle }}</v-toolbar-title>
-                <v-divider class="mx-4" inset vertical></v-divider>
-
-                <v-spacer></v-spacer>
+                <template v-if="!searchBox">
+                    <v-toolbar-title>{{ tableTitle }}</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-spacer></v-spacer>
+                </template>
 
                 <v-slide-x-reverse-transition>
                     <v-text-field
@@ -47,6 +52,7 @@
                         autofocus
                         single-line
                         hide-details
+                        full-width
                     ></v-text-field>
                 </v-slide-x-reverse-transition>
 
@@ -73,7 +79,7 @@
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
                         <v-btn
-                            v-show="!value.length"
+                            v-show="!value.length && !searchBox"
                             @click="$emit('create')"
                             v-on="on"
                             icon
@@ -87,7 +93,11 @@
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
                         <v-btn
-                            v-show="!value.length"
+                            v-show="
+                                !value.length &&
+                                !searchBox &&
+                                !$vuetify.breakpoint.xsOnly
+                            "
                             @click="TOGGLE_DENSE"
                             v-on="on"
                             icon
@@ -152,30 +162,30 @@ export default {
     props: {
         value: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         headers: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         model: {
             type: String,
-            default: ""
+            default: "",
         },
         items: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         total: {
             type: Number,
-            default: 0
-        }
+            default: 0,
+        },
     },
     data() {
         return {
             search: "",
             searchBox: false,
-            options: null
+            options: null,
         };
     },
     computed: {
@@ -187,7 +197,7 @@ export default {
                 return `${length} selected`;
             }
             return `${pluralize(this.$_.startCase(this.model))}`;
-        }
+        },
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DENSE]),
@@ -200,21 +210,21 @@ export default {
         fetch() {
             this.$emit("fetch", {
                 ...this.options,
-                search: this.search
+                search: this.search,
             });
-        }
+        },
     },
     watch: {
         options: {
             handler() {
                 this.fetch();
             },
-            deep: true
+            deep: true,
         },
-        search: debounce(function() {
+        search: debounce(function () {
             this.fetch();
-        }, 500)
-    }
+        }, 500),
+    },
 };
 </script>
 

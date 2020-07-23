@@ -7,7 +7,7 @@
             :items="users"
             :total="total"
             @unselect="selected = []"
-            @fetch="fetchItem"
+            @fetch="fetch"
             @create="create"
             @edit="edit"
             @delete="dialogDelete = true"
@@ -41,7 +41,7 @@
             v-model="dialog"
             :form="form"
             @close="close"
-            @submit="saveItem"
+            @submit="save"
         >
             <validation-observer ref="form">
                 <validation-provider name="name" v-slot="{ errors, valid }">
@@ -160,7 +160,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import {
     GET_MODELS,
     SAVE_MODEL,
-    DELETE_MODELS
+    DELETE_MODELS,
 } from "@/store/model/action-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { User } from "@/models";
@@ -176,12 +176,12 @@ export default {
     components: {
         TheDataTable,
         TheDialogForm,
-        TheDialogDelete
+        TheDialogDelete,
     },
     data() {
         return {
             model,
-            params: null,
+            params: {},
             total: 0,
             selected: [],
             headers: [
@@ -189,19 +189,19 @@ export default {
                 { text: "Email", value: "email" },
                 { text: "Role", value: "role.name" },
                 { text: "Last At", value: "last_at" },
-                { text: "Last Ip", value: "last_ip" }
+                { text: "Last Ip", value: "last_ip" },
             ],
             dialog: false,
             dialogDelete: false,
-            list_roles: [],
             change_password: false,
             show_password: false,
-            form: {}
+            list_roles: [],
+            form: {},
         };
     },
     computed: {
         ...mapState("app", ["loading", "dense", "profile"]),
-        ...mapState("model", ["users"])
+        ...mapState("model", ["users"]),
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -210,7 +210,7 @@ export default {
             this.form = {
                 ...this.$_.cloneDeep(User),
                 password: null,
-                password_confirmation: null
+                password_confirmation: null,
             };
             this.change_password = true;
             this.dialog = true;
@@ -219,7 +219,7 @@ export default {
             this.form = {
                 ...this.$_.cloneDeep(this.selected[0]),
                 password: null,
-                password_confirmation: null
+                password_confirmation: null,
             };
             this.change_password = false;
             this.dialog = true;
@@ -230,36 +230,37 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        fetchRoles: async function() {
+        fetchRoles: async function () {
             await this.GET_MODELS({
                 model: "role",
                 params: {
-                    temporary: true
-                }
+                    temporary: true,
+                },
             })
                 .then(({ data }) => {
-                    this.list_roles = this.$_.map(data, el =>
+                    this.list_roles = this.$_.map(data, (el) =>
                         this.$_.pick(el, ["id", "name"])
                     );
                 })
-                .catch(e => eHandler(e));
+                .catch((e) => eHandler(e));
         },
-        fetchItem: async function() {
+        fetch: async function (params) {
+            if (params) {
+                this.params = params;
+            }
+
             await this.GET_MODELS({
                 model,
-                params: {
-                    ...this.options,
-                    search: this.search
-                }
+                params: this.params,
             })
                 .then(({ meta }) => {
                     this.total = meta.total;
                 })
-                .catch(e => eHandler(e));
+                .catch((e) => eHandler(e));
         },
-        saveItem() {
+        save() {
             // validate
-            this.$refs.form.validate().then(valid => {
+            this.$refs.form.validate().then((valid) => {
                 if (valid) {
                     // pass validation
                     const { form: payload } = this;
@@ -270,47 +271,47 @@ export default {
                     // submit to backend
                     this.SAVE_MODEL({
                         model,
-                        payload
+                        payload,
                     })
-                        .then(async data => {
+                        .then(async (data) => {
                             if (payload.id > 0) {
                                 this.UPDATE_MODEL({
                                     model,
-                                    data
+                                    data,
                                 });
                             } else {
-                                await this.fetchItem();
+                                await this.fetch();
                             }
                             this.selected = [];
                             this.close();
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             let errors = eHandler(e);
                             this.$refs.form.setErrors(errors);
                         });
                 }
             });
         },
-        deleteItem: async function() {
+        deleteItem: async function () {
             await this.DELETE_MODELS({
                 model,
-                ids: this.$_.map(this.selected, "id")
+                ids: this.$_.map(this.selected, "id"),
             })
                 .then(async () => {
-                    await this.fetchItem();
+                    await this.fetch();
                     this.selected = [];
                     this.dialogDelete = false;
                 })
-                .catch(e => eHandler(e));
-        }
+                .catch((e) => eHandler(e));
+        },
     },
     watch: {
-        dialog: function(val) {
+        dialog: function (val) {
             if (val && this.list_roles.length == 0) {
                 this.fetchRoles();
             }
-        }
-    }
+        },
+    },
 };
 </script>
 

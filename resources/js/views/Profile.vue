@@ -1,5 +1,5 @@
 <template>
-    <v-col cols="8">
+    <v-col cols="12" md="8">
         <v-card v-if="!edit_profile" :loading="!!loading" class="mx-auto">
             <v-list-item>
                 <v-list-item-avatar color="grey">
@@ -11,10 +11,15 @@
                     }}</v-list-item-title>
                     <v-list-item-subtitle
                         >Profile
-
-                        <v-btn @click="edit" color="blue darken-1" text
-                            >Edit</v-btn
+                        <v-btn
+                            @click="edit"
+                            class="ma-2"
+                            small
+                            rounded
+                            color="primary"
                         >
+                            <v-icon small left>mdi-pencil</v-icon> Edit
+                        </v-btn>
                     </v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -27,28 +32,28 @@
                 <v-list-item-content>
                     <v-list-item-title
                         >{{ profile.email }}
-                        <v-chip
+
+                        <v-btn
+                            @click="resend"
                             class="ma-2"
+                            small
+                            rounded
                             :color="
                                 profile.email_verified_at ? 'teal' : 'orange'
                             "
-                            @click="resend"
-                            text-color="white"
-                            small
                         >
-                            <v-avatar left>
-                                <v-icon small>{{
-                                    profile.email_verified_at
-                                        ? "mdi-checkbox-marked-circle"
-                                        : "mdi-help-circle-outline"
-                                }}</v-icon>
-                            </v-avatar>
+                            <v-icon small left>{{
+                                profile.email_verified_at
+                                    ? "mdi-checkbox-marked-circle"
+                                    : "mdi-help-circle-outline"
+                            }}</v-icon>
+
                             {{
                                 profile.email_verified_at
                                     ? "Verified"
                                     : "Verify"
                             }}
-                        </v-chip>
+                        </v-btn>
                     </v-list-item-title>
                     <v-list-item-subtitle>Email</v-list-item-subtitle>
                 </v-list-item-content>
@@ -241,11 +246,7 @@
                     >Cancel</v-btn
                 >
                 <v-spacer></v-spacer>
-                <v-btn
-                    :disabled="!!loading"
-                    @click="saveItem"
-                    color="primary"
-                    large
+                <v-btn :disabled="!!loading" @click="save" color="primary"
                     >Save</v-btn
                 >
             </v-card-actions>
@@ -268,11 +269,11 @@ export default {
             edit_profile: false,
             change_password: false,
             show_password: false,
-            form: null
+            form: {},
         };
     },
     computed: {
-        ...mapState("app", ["loading", "profile"])
+        ...mapState("app", ["loading", "profile"]),
     },
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
@@ -285,15 +286,15 @@ export default {
             this.form = this.$_.cloneDeep({
                 ...this.profile,
                 password: null,
-                password_confirmation: null
+                password_confirmation: null,
             });
 
             this.change_password = false;
             this.edit_profile = true;
         },
-        saveItem() {
+        save() {
             // validate
-            this.$refs.form.validate().then(valid => {
+            this.$refs.form.validate().then((valid) => {
                 if (valid) {
                     // pass validation
                     const { form: payload } = this;
@@ -304,18 +305,18 @@ export default {
                     // submit to backend
                     this.SAVE_MODEL({
                         model,
-                        payload
+                        payload,
                     })
-                        .then(async data => {
+                        .then(async (data) => {
                             // update profile
                             this.SET_PROFILE(data);
                             this.SET_MESSAGE({
                                 text: "Profile udpated successfully",
-                                type: "success"
+                                type: "success",
                             });
                             this.close();
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             let errors = eHandler(e);
                             this.$refs.form.setErrors(errors);
                         });
@@ -324,13 +325,13 @@ export default {
         },
         resend() {
             if (!this.profile.email_verified_at) {
-                this.RESEND().catch(e => eHandler(e));
+                this.RESEND().catch((e) => eHandler(e));
             }
-        }
+        },
     },
     mounted() {
-        this.PROFILE().catch(e => eHandler(e));
-    }
+        this.PROFILE().catch((e) => eHandler(e));
+    },
 };
 </script>
 

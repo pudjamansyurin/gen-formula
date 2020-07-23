@@ -7,7 +7,7 @@
             :items="formulas"
             :total="total"
             @unselect="selected = []"
-            @fetch="fetchItem"
+            @fetch="fetch"
             @create="create"
             @edit="edit"
             @delete="dialogDelete = true"
@@ -35,7 +35,7 @@
             v-model="dialog"
             :form="form"
             @close="close"
-            @submit="saveItem"
+            @submit="save"
         >
             <validation-observer ref="form">
                 <validation-provider name="name" v-slot="{ errors, valid }">
@@ -86,11 +86,11 @@
             :title="formPercentTitle"
             width="700px"
             @close="closePercent"
-            @submit="savePercentItem"
+            @submit="savePercent"
         >
             <validation-observer ref="form_percent">
                 <v-row>
-                    <v-col>
+                    <v-col cols="12" sm="6">
                         <validation-provider
                             name="formula"
                             v-slot="{ errors, valid }"
@@ -134,8 +134,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-
-                    <v-col>
+                    <v-col cols="12" sm="6">
                         <validation-provider
                             v-for="(el, key) in form.percents"
                             :key="el.product.id"
@@ -165,7 +164,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import {
     GET_MODELS,
     SAVE_MODEL,
-    DELETE_MODELS
+    DELETE_MODELS,
 } from "@/store/model/action-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Formula } from "@/models";
@@ -181,12 +180,12 @@ export default {
     components: {
         TheDataTable,
         TheDialogForm,
-        TheDialogDelete
+        TheDialogDelete,
     },
     data() {
         return {
             model,
-            params: null,
+            params: {},
             total: 0,
             selected: [],
             headers: [
@@ -197,22 +196,22 @@ export default {
                     value: "total_price",
                     align: "right",
                     sortable: false,
-                    width: 150
+                    width: 150,
                 },
                 {
                     text: "Rel.Product",
                     value: "percents_len",
                     align: "center",
-                    sortable: false
+                    sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
-                { text: "Updated At", value: "updated_at" }
+                { text: "Updated At", value: "updated_at" },
             ],
             dialog: false,
             dialogDelete: false,
             dialogPercent: false,
             list_products: [],
-            form: this.$_.cloneDeep(Formula)
+            form: this.$_.cloneDeep(Formula),
         };
     },
     computed: {
@@ -229,7 +228,7 @@ export default {
                 },
                 0
             );
-        }
+        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -260,121 +259,121 @@ export default {
                 this.$refs.form_percent.reset();
             });
         },
-        fetchProducts: async function() {
+        fetchProducts: async function () {
             await this.GET_MODELS({
                 model: "product",
                 params: {
                     itemsPerPage: -1,
-                    temporary: true
-                }
+                    temporary: true,
+                },
             })
                 .then(({ data }) => {
                     this.list_products = this.$_.map(data, ({ id, name }) => {
                         return {
                             product: {
                                 id,
-                                name
+                                name,
                             },
-                            percent: 0
+                            percent: 0,
                         };
                     });
                 })
-                .catch(e => eHandler(e));
+                .catch((e) => eHandler(e));
         },
-        fetchItem: async function(params) {
+        fetch: async function (params) {
             if (params) {
                 this.params = params;
             }
 
             await this.GET_MODELS({
                 model,
-                params: this.params
+                params: this.params,
             })
                 .then(({ meta }) => {
                     this.total = meta.total;
                 })
-                .catch(e => eHandler(e));
+                .catch((e) => eHandler(e));
         },
-        savePercentItem() {
+        savePercent() {
             // validate
-            this.$refs.form_percent.validate().then(valid => {
+            this.$refs.form_percent.validate().then((valid) => {
                 if (valid) {
                     // pass validation
                     this.SAVE_MODEL({
                         url: `formula/${this.form.id}/percent`,
                         payload: {
-                            formula: this.$_.map(this.form.percents, el => {
+                            formula: this.$_.map(this.form.percents, (el) => {
                                 return {
                                     product_id: el.product.id,
-                                    percent: el.percent
+                                    percent: el.percent,
                                 };
-                            })
-                        }
+                            }),
+                        },
                     })
-                        .then(async data => {
+                        .then(async (data) => {
                             this.UPDATE_MODEL({
                                 model,
-                                data
+                                data,
                             });
                             this.closePercent();
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             let errors = eHandler(e);
                             this.$refs.form_percent.setErrors(errors);
                         });
                 }
             });
         },
-        saveItem() {
+        save() {
             // validate
-            this.$refs.form.validate().then(valid => {
+            this.$refs.form.validate().then((valid) => {
                 if (valid) {
                     // pass validation
                     const { form: payload } = this;
                     // submit to backend
                     this.SAVE_MODEL({
                         model,
-                        payload
+                        payload,
                     })
-                        .then(async data => {
+                        .then(async (data) => {
                             if (payload.id > 0) {
                                 this.UPDATE_MODEL({
                                     model,
-                                    data
+                                    data,
                                 });
                             } else {
-                                await this.fetchItem();
+                                await this.fetch();
                             }
                             this.selected = [];
                             this.close();
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             let errors = eHandler(e);
                             this.$refs.form.setErrors(errors);
                         });
                 }
             });
         },
-        deleteItem: async function() {
+        deleteItem: async function () {
             await this.DELETE_MODELS({
                 model,
-                ids: this.$_.map(this.selected, "id")
+                ids: this.$_.map(this.selected, "id"),
             })
                 .then(async () => {
-                    await this.fetchItem();
+                    await this.fetch();
                     this.selected = [];
                     this.dialogDelete = false;
                 })
-                .catch(e => eHandler(e));
-        }
+                .catch((e) => eHandler(e));
+        },
     },
     watch: {
-        dialogPercent: function(val) {
+        dialogPercent: function (val) {
             if (val && this.list_products.length == 0) {
                 this.fetchProducts();
             }
-        }
-    }
+        },
+    },
 };
 </script>
 

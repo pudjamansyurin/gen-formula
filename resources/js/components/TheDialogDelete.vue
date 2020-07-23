@@ -2,6 +2,7 @@
     <v-dialog
         :value="value"
         @input="$emit('input', $event)"
+        :fullscreen="$vuetify.breakpoint.smAndDown"
         max-width="290"
         persistent
         scrollable
@@ -12,7 +13,12 @@
             >
             <v-divider></v-divider>
 
-            <v-card-text class="pt-2" style="max-height: 300px;">
+            <v-card-text
+                class="pt-2"
+                :style="
+                    !$vuetify.breakpoint.smAndDown ? 'max-height: 300px;' : ''
+                "
+            >
                 Are you sure to delete {{ question }}
                 <v-chip-group column small active-class="primary--text">
                     <v-chip v-for="item in selected" :key="item.id">
@@ -32,7 +38,6 @@
                     @click="$emit('delete')"
                     color="red"
                     dark
-                    large
                     >Yes, sure</v-btn
                 >
             </v-card-actions>
@@ -49,16 +54,16 @@ export default {
     props: {
         value: {
             type: Boolean,
-            default: false
+            default: false,
         },
         selected: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         model: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
     computed: {
         ...mapState("app", ["loading"]),
@@ -70,8 +75,8 @@ export default {
                 return `this ${this.model} ?`;
             }
             return `these ${length} ${pluralize(this.model)} ?`;
-        }
-    }
+        },
+    },
 };
 </script>
 

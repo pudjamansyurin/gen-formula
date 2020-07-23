@@ -3,8 +3,8 @@
         <app-left-drawer></app-left-drawer>
         <app-top-bar></app-top-bar>
         <v-content>
-            <v-container class="fill-height" fluid>
-                <v-row align="center" justify="center">
+            <v-container fluid>
+                <v-row align="start" justify="center" no-gutters>
                     <router-view></router-view>
                 </v-row>
             </v-container>
@@ -21,14 +21,14 @@ export default {
     name: "Dashboard",
     components: {
         AppLeftDrawer,
-        AppTopBar
+        AppTopBar,
     },
     // computed: {
     //     ...mapState("app", ["profile"])
     // },
     mounted() {
         console.log("Session credebility should be checked!");
-    }
+    },
 };
 </script>
 

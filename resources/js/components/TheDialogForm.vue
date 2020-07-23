@@ -2,6 +2,7 @@
     <v-dialog
         :value="value"
         @input="$emit('input', $event)"
+        :fullscreen="$vuetify.breakpoint.smAndDown"
         :max-width="width"
         persistent
         scrollable
@@ -12,7 +13,11 @@
             </v-card-title>
             <v-divider></v-divider>
 
-            <v-card-text style="max-height: 500px;">
+            <v-card-text
+                :style="
+                    !$vuetify.breakpoint.smAndDown ? 'max-height: 500px;' : ''
+                "
+            >
                 <v-form @submit.prevent="$emit('submit')">
                     <slot></slot>
                     <v-btn v-show="false" type="submit"></v-btn>
@@ -29,7 +34,6 @@
                     :disabled="!!loading"
                     @click="$emit('submit')"
                     color="primary"
-                    large
                     >Save</v-btn
                 >
             </v-card-actions>
@@ -45,20 +49,20 @@ export default {
     props: {
         value: {
             type: Boolean,
-            default: false
+            default: false,
         },
         form: {
             type: Object,
-            default: () => {}
+            default: () => {},
         },
         title: {
             type: String,
-            default: ""
+            default: "",
         },
         width: {
             type: String,
-            default: "500px"
-        }
+            default: "500px",
+        },
     },
     computed: {
         ...mapState("app", ["loading"]),
@@ -68,8 +72,8 @@ export default {
             }
 
             return this.form.id === -1 ? "New Item" : "Edit Item";
-        }
-    }
+        },
+    },
 };
 </script>
 

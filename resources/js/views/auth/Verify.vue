@@ -5,11 +5,7 @@
             <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
             <v-divider></v-divider>
             <v-card-text>
-                <v-btn
-                    :disabled="!!loading"
-                    @click="submit"
-                    color="primary"
-                    large
+                <v-btn :disabled="!!loading" @click="submit" color="primary"
                     >Verify Email</v-btn
                 >
             </v-card-text>
@@ -27,11 +23,11 @@ export default {
     data() {
         return {
             title: "VERIFY",
-            subtitle: "Click button bellow to verify"
+            subtitle: "Click button bellow to verify",
         };
     },
     computed: {
-        ...mapState("app", ["loading"])
+        ...mapState("app", ["loading"]),
     },
     methods: {
         ...mapActions("app", [VERIFY]),
@@ -40,9 +36,9 @@ export default {
                 .then(() => {
                     this.$router.push({ name: "profile" });
                 })
-                .catch(e => eHandler(e));
-        }
-    }
+                .catch((e) => eHandler(e));
+        },
+    },
 };
 </script>
 

@@ -55,11 +55,7 @@
                     <v-btn :to="{ name: 'forget' }" text>Forget Password</v-btn>
 
                     <v-spacer></v-spacer>
-                    <v-btn
-                        :disabled="!!loading"
-                        type="submit"
-                        color="primary"
-                        large
+                    <v-btn :disabled="!!loading" type="submit" color="primary"
                         >Login</v-btn
                     >
                 </v-card-actions>
@@ -83,12 +79,12 @@ export default {
             form: {
                 email: "",
                 password: "",
-                remember: false
-            }
+                remember: false,
+            },
         };
     },
     computed: {
-        ...mapState("app", ["loading", "remember"])
+        ...mapState("app", ["loading", "remember"]),
     },
     methods: {
         ...mapActions("app", [LOGIN]),
@@ -99,20 +95,20 @@ export default {
                     const { redirect } = this.$route.query;
                     this.$router.push({ path: redirect || "/app" });
                 })
-                .catch(e => {
+                .catch((e) => {
                     let errors = eHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
-        }
+        },
     },
     watch: {
         remember: {
             immediate: true,
             handler(val) {
                 this.form.remember = this.remember;
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>
 

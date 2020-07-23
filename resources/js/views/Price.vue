@@ -7,7 +7,7 @@
             :items="prices"
             :total="total"
             @unselect="selected = []"
-            @fetch="fetchItem"
+            @fetch="fetch"
             @create="create"
             @edit="edit"
             @delete="dialogDelete = true"
@@ -24,7 +24,7 @@
             v-model="dialog"
             :form="form"
             @close="close"
-            @submit="saveItem"
+            @submit="save"
         >
             <validation-observer ref="form">
                 <validation-provider
@@ -136,7 +136,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import {
     GET_MODELS,
     SAVE_MODEL,
-    DELETE_MODELS
+    DELETE_MODELS,
 } from "@/store/model/action-types";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Price } from "@/models";
@@ -153,25 +153,25 @@ export default {
     components: {
         TheDataTable,
         TheDialogForm,
-        TheDialogDelete
+        TheDialogDelete,
     },
     data() {
         return {
             model,
-            params: null,
+            params: {},
             total: 0,
             selected: [],
             headers: [
                 { text: "Product", value: "product.name" },
                 { text: "Price", value: "price", align: "right", width: 150 },
                 { text: "Changed At", value: "changed_at" },
-                { text: "Updater", value: "user.name" }
+                { text: "Updater", value: "user.name" },
             ],
             dialog: false,
             dialogDelete: false,
             menuChangedAt: false,
             list_products: [],
-            form: {}
+            form: {},
         };
     },
     computed: {
@@ -185,7 +185,7 @@ export default {
             let id = castParamsId(this.id);
 
             return `product/${id}/${model}`;
-        }
+        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -209,22 +209,22 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        fetchProducts: async function() {
+        fetchProducts: async function () {
             await this.GET_MODELS({
                 model: "product",
                 params: {
                     itemsPerPage: -1,
-                    temporary: true
-                }
+                    temporary: true,
+                },
             })
                 .then(({ data }) => {
-                    this.list_products = this.$_.map(data, el =>
+                    this.list_products = this.$_.map(data, (el) =>
                         this.$_.pick(el, ["id", "name"])
                     );
                 })
-                .catch(e => eHandler(e));
+                .catch((e) => eHandler(e));
         },
-        fetchItem: async function(params) {
+        fetch: async function (params) {
             if (params) {
                 this.params = params;
             }
@@ -232,17 +232,17 @@ export default {
             await this.GET_MODELS({
                 model,
                 url: this.apiUrl,
-                params: this.params
+                params: this.params,
             })
                 .then(({ meta }) => {
                     const { total } = meta;
                     this.total = total;
                 })
-                .catch(e => eHandler(e));
+                .catch((e) => eHandler(e));
         },
-        saveItem() {
+        save() {
             // validate
-            this.$refs.form.validate().then(valid => {
+            this.$refs.form.validate().then((valid) => {
                 if (valid) {
                     // pass validation
                     const { form: payload } = this;
@@ -250,48 +250,48 @@ export default {
                     this.SAVE_MODEL({
                         model,
                         payload,
-                        url: `product/${payload.product_id}/${model}`
+                        url: `product/${payload.product_id}/${model}`,
                     })
-                        .then(async data => {
+                        .then(async (data) => {
                             if (payload.id > 0) {
                                 this.UPDATE_MODEL({
                                     model,
-                                    data
+                                    data,
                                 });
                             } else {
-                                await this.fetchItem();
+                                await this.fetch();
                             }
                             this.selected = [];
                             this.close();
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             let errors = eHandler(e);
                             this.$refs.form.setErrors(errors);
                         });
                 }
             });
         },
-        deleteItem: async function() {
+        deleteItem: async function () {
             await this.DELETE_MODELS({
                 model,
                 url: this.apiUrl,
-                ids: this.$_.map(this.selected, "id")
+                ids: this.$_.map(this.selected, "id"),
             })
                 .then(async () => {
-                    await this.fetchItem();
+                    await this.fetch();
                     this.selected = [];
                     this.dialogDelete = false;
                 })
-                .catch(e => eHandler(e));
-        }
+                .catch((e) => eHandler(e));
+        },
     },
     watch: {
-        dialog: function(val) {
+        dialog: function (val) {
             if (val && this.list_products.length == 0) {
                 this.fetchProducts();
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
