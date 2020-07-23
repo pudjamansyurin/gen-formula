@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/gen_motor/public_html/formula.genmotorcycles.com/
+    - export DEPLOYPATH=/home/gen_motor/formula.genmotorcycles.com/
     - /bin/cp -R public $DEPLOYPATH
