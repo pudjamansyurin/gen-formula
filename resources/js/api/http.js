@@ -43,7 +43,9 @@ http.interceptors.request.use(
         return config;
     },
     error => {
-        console.warn(error);
+        if (config.DEBUG) {
+            console.warn(error);
+        }
         store.commit(ns("app", STOP_LOADING));
         return Promise.reject(error);
     }
@@ -57,7 +59,9 @@ http.interceptors.response.use(
         const { data } = response;
         const { message } = data;
 
-        console.info(response);
+        if (config.DEBUG) {
+            console.info(response);
+        }
         store.commit(ns("app", STOP_LOADING));
 
         // save api generated message
@@ -74,7 +78,9 @@ http.interceptors.response.use(
         const { data } = e;
         const { message } = data;
 
-        console.error(e);
+        if (config.DEBUG) {
+            console.error(e);
+        }
         store.commit(ns("app", STOP_LOADING));
 
         // save api generated message
