@@ -16,13 +16,18 @@ mix.webpackConfig({
     }
 });
 
-mix.js("resources/js/app.js", "public/js")
-    .sass("resources/sass/app.scss", "public/css")
-    .version()
-    .sourceMaps();
+mix.js("resources/js/app.js", "public/js").sass(
+    "resources/sass/app.scss",
+    "public/css"
+);
 
-// mix.browserSync({
-//     proxy: "gen-formula.test",
-//     // open: "external",
-//     port: 8080
-// });
+if (mix.inProduction()) {
+    mix.version();
+} else {
+    mix.sourceMaps();
+    mix.browserSync({
+        proxy: "gen-formula.test",
+        // open: "external",
+        port: 8080
+    });
+}
