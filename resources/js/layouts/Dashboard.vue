@@ -1,6 +1,6 @@
 <template>
     <fragment>
-        <app-top-bar v-if="!$vuetify.breakpoint.smAndDown"></app-top-bar>
+        <app-top-bar></app-top-bar>
         <app-left-drawer></app-left-drawer>
         <v-content>
             <v-container fluid>

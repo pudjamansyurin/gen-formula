@@ -84,14 +84,14 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { RESET } from "../../store/app/action-types";
-import { eHandler } from "../../helpers";
+import { RESET } from "@/store/app/action-types";
+import { eHandler } from "@/utils/helper";
 
 export default {
     name: "reset",
     props: {
         token: String,
-        email: String
+        email: String,
     },
     data() {
         return {
@@ -100,12 +100,12 @@ export default {
             show_password: false,
             form: {
                 password: null,
-                password_confirmation: null
-            }
+                password_confirmation: null,
+            },
         };
     },
     computed: {
-        ...mapState("app", ["loading"])
+        ...mapState("app", ["loading"]),
     },
     methods: {
         ...mapActions("app", [RESET]),
@@ -113,22 +113,22 @@ export default {
             let payload = {
                 ...this.form,
                 email: this.email,
-                token: this.token
+                token: this.token,
             };
 
             this.RESET(payload)
                 .then(() => {
                     this.$router.push({ path: "/app" });
                 })
-                .catch(e => {
+                .catch((e) => {
                     let errors = eHandler(e);
                     this.$refs.form.setErrors(errors);
                 });
-        }
+        },
     },
     mounted() {
         this.submit();
-    }
+    },
 };
 </script>
 

@@ -256,9 +256,9 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import { SAVE_MODEL } from "../store/model/action-types";
-import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
-import { RESEND, PROFILE } from "../store/app/action-types";
+import { SAVE_MODEL } from "@/store/model/action-types";
+import { SET_PROFILE, SET_MESSAGE } from "@/store/app/mutation-types";
+import { RESEND, PROFILE } from "@/store/app/action-types";
 
 const model = "user";
 

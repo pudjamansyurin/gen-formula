@@ -67,7 +67,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import { LOGIN } from "@/store/app/action-types";
-import { eHandler } from "../../helpers";
+import { eHandler } from "@/utils/helper";
 
 export default {
     name: "login",

@@ -19,23 +19,22 @@
 </template>
 
 <script>
+import { navs } from "@/utils/navigation";
+
 export default {
     data() {
         return {
-            items: [
-                { icon: "mdi-chart-areaspline", text: "Report", to: "report" },
-                { icon: "mdi-microsoft-excel", text: "Formula", to: "formula" },
-                {
-                    icon: "mdi-package-variant-closed",
-                    text: "Product",
-                    to: "product",
-                },
-                { icon: "mdi-currency-usd", text: "Price", to: "price" },
-                { icon: "mdi-account-group", text: "User", to: "user" },
-                { icon: "mdi-account-cog", text: "Profile", to: "profile" },
-            ],
             activeTab: this.$route.name,
         };
+    },
+    computed: {
+        items() {
+            return this.$_.cloneDeep(
+                navs.filter((el) => {
+                    return el.icon && el.bottomNav;
+                })
+            );
+        },
     },
 };
 </script>

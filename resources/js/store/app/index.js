@@ -1,7 +1,7 @@
 // import getters from "./getters";
 import actions from "./actions";
 import mutations from "./mutations";
-import { ls } from "@/helpers";
+import { ls } from "@/utils/helper";
 
 const state = {
     title: "GEN Formula",

@@ -25,31 +25,31 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import { CLEAR_ERROR, CLEAR_MESSAGE } from "@/store/app/mutation-types";
-import { HTTP_NOT_FOUND, HTTP_UNAUTHORIZED } from "@/helpers/response";
+import { HTTP_NOT_FOUND, HTTP_UNAUTHORIZED } from "@/utils/response";
 
 export default {
     name: "error",
     props: {
         code: { default: HTTP_NOT_FOUND },
-        text: { default: null }
+        text: { default: null },
     },
     data() {
         return {
             errors: {
                 [HTTP_NOT_FOUND]: "Page not found",
-                [HTTP_UNAUTHORIZED]: "Unauthorized access"
-            }
+                [HTTP_UNAUTHORIZED]: "Unauthorized access",
+            },
         };
     },
     computed: {
         ...mapState("app", ["error", "profile"]),
-        error_code: function() {
+        error_code: function () {
             if (this.error.code) {
                 return this.error.code;
             }
             return this.errors[this.code] ? this.code : null;
         },
-        error_text: function() {
+        error_text: function () {
             return (
                 this.error.text ||
                 this.text ||
@@ -57,20 +57,20 @@ export default {
                 "Opps, something wrong."
             );
         },
-        direct: function() {
+        direct: function () {
             return window.history.length <= 2;
-        }
+        },
     },
     methods: {
         ...mapMutations("app", [CLEAR_ERROR, CLEAR_MESSAGE]),
         handleBack() {
             this.$router.go(-1);
-        }
+        },
     },
     beforeDestroy() {
         this.CLEAR_MESSAGE();
         this.CLEAR_ERROR();
-    }
+    },
 };
 </script>
 

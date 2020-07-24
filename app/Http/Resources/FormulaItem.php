@@ -24,8 +24,10 @@ class FormulaItem extends JsonResource
             'total_price' => $this->whenLoaded('percents', function () {
                 $total =  $this->percents->reduce(function ($total, $item) {
                     $value = 0;
-                    if ($latest = $item->product->prices->first()) {
-                        $value = ($latest->price * $item->percent / 100);
+                    if ($product = $item->product) {
+                        if ($price = $product->prices->first()) {
+                            $value = ($price->price * $item->percent / 100);
+                        }
                     }
                     return $total + $value;
                 }, 0);

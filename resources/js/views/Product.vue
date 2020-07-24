@@ -90,13 +90,13 @@ import {
     SAVE_MODEL,
     DELETE_MODELS,
 } from "@/store/model/action-types";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
+import { UPDATE_MODEL } from "@/store/model/mutation-types";
 import { Product } from "@/models";
-import { eHandler } from "../helpers";
+import { eHandler } from "@/utils/helper";
 import pluralize from "pluralize";
-import TheDataTable from "../components/TheDataTable.vue";
-import TheDialogForm from "../components/TheDialogForm.vue";
-import TheDialogDelete from "../components/TheDialogDelete.vue";
+import TheDataTable from "@/components/TheDataTable.vue";
+import TheDialogForm from "@/components/TheDialogForm.vue";
+import TheDialogDelete from "@/components/TheDialogDelete.vue";
 
 const model = "product";
 

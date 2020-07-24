@@ -64,52 +64,14 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import { SET_DRAWER } from "@/store/app/mutation-types";
+import { navs } from "@/utils/navigation";
 
 export default {
-    data() {
-        return {
-            items: [
-                { divider: true },
-                { heading: "DASHBOARD" },
-                { icon: "mdi-chart-areaspline", text: "Report", to: "report" },
-                { icon: "mdi-microsoft-excel", text: "Formula", to: "formula" },
-                {
-                    icon: "mdi-package-variant-closed",
-                    text: "Product",
-                    to: "product"
-                },
-                { icon: "mdi-currency-usd", text: "Price", to: "price" },
-                { divider: true },
-                { heading: "CONFIGURATION" },
-                { icon: "mdi-account-group", text: "User", to: "user" },
-                { icon: "mdi-account-cog", text: "Profile", to: "profile" }
-                // { icon: "mdi-cogs", text: "Setting", to: "setting" }
-                //     { icon: "mdi-content-copy", text: "Duplicates" }
-                // {
-                //     icon: "mdi-chevron-up",
-                //     "icon-alt": "mdi-chevron-down",
-                //     text: "Labels",
-                //     model: true,
-                //     children: [{ icon: "mdi-plus", text: "Create label" }]
-                // },
-                // {
-                //     icon: "mdi-chevron-up",
-                //     "icon-alt": "mdi-chevron-down",
-                //     text: "More",
-                //     model: false,
-                //     children: [
-                //         { text: "Import" },
-                //         { text: "Export" },
-                //         { text: "Print" },
-                //         { text: "Undo changes" },
-                //         { text: "Other contacts" }
-                //     ]
-                // }
-            ]
-        };
-    },
     computed: {
-        ...mapState("app", ["drawer", "profile"])
+        ...mapState("app", ["drawer", "profile"]),
+        items() {
+            return this.$_.cloneDeep(navs);
+        },
     },
     methods: {
         ...mapMutations("app", [SET_DRAWER]),
@@ -134,8 +96,8 @@ export default {
             }
             // invalid page
             return false;
-        }
-    }
+        },
+    },
 };
 </script>
 

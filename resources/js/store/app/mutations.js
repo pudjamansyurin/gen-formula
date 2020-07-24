@@ -1,4 +1,4 @@
-import { ls } from "@/helpers";
+import { ls } from "@/utils/helper";
 import * as mutations from "./mutation-types";
 
 export default {

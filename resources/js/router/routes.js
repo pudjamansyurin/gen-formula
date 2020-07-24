@@ -1,5 +1,3 @@
-import { castRouteParamsId } from "@/helpers";
-
 const Home = () => import("@/layouts/Home");
 const Login = () => import("@/views/auth/Login");
 const Forget = () => import("@/views/auth/Forget");

@@ -138,12 +138,12 @@ import {
     SAVE_MODEL,
     DELETE_MODELS,
 } from "@/store/model/action-types";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
+import { UPDATE_MODEL } from "@/store/model/mutation-types";
 import { Price } from "@/models";
-import { eHandler, castParamsId } from "../helpers";
-import TheDataTable from "../components/TheDataTable.vue";
-import TheDialogForm from "../components/TheDialogForm.vue";
-import TheDialogDelete from "../components/TheDialogDelete.vue";
+import { eHandler, castParamsId } from "@/utils/helper";
+import TheDataTable from "@/components/TheDataTable.vue";
+import TheDialogForm from "@/components/TheDialogForm.vue";
+import TheDialogDelete from "@/components/TheDialogDelete.vue";
 
 const model = "price";
 
