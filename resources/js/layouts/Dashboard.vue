@@ -17,7 +17,7 @@
                 </v-overlay>
                 <!-- fullscreen confirmation -->
                 <v-dialog
-                    v-if="$vuetify.breakpoint.smAndDown"
+                    v-show="$vuetify.breakpoint.smAndDown"
                     v-model="dialog"
                     max-width="290"
                 >
