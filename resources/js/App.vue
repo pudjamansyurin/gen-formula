@@ -8,7 +8,7 @@
             top
         >
             {{ message.text }}
-            <v-btn @click="snackbar = false" icon>
+            <v-btn @click="snackbar = false" icon dark>
                 <v-icon>mdi-close-circle</v-icon>
             </v-btn>
         </v-snackbar>

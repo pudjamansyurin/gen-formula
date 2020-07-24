@@ -31,7 +31,7 @@
                     name="product_id"
                     v-slot="{ errors, valid }"
                 >
-                    <v-select
+                    <v-autocomplete
                         v-model="form.product_id"
                         :items="list_products"
                         :readonly="id > 0"
@@ -44,7 +44,7 @@
                         label="Product"
                         hint="The product being updated"
                         persistent-hint
-                    ></v-select>
+                    ></v-autocomplete>
                 </validation-provider>
 
                 <v-menu
