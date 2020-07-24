@@ -78,8 +78,9 @@ export default {
     methods: {
         toggle() {
             this.dialog = false;
-            this.$fullscreen.toggle();
-            this.TOGGLE_FULLSCREEN();
+            this.$fullscreen.toggle(document.body, {
+                callback: this.TOGGLE_FULLSCREEN(),
+            });
         },
     },
     mounted() {

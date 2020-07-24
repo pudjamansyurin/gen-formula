@@ -86,8 +86,9 @@ export default {
                 .catch((e) => eHandler(e));
         },
         toggle() {
-            this.$fullscreen.toggle();
-            this.TOGGLE_FULLSCREEN();
+            this.$fullscreen.toggle(document.body, {
+                callback: this.TOGGLE_FULLSCREEN(),
+            });
         },
     },
 };
