@@ -1,17 +1,26 @@
-const Home = () => import("../layouts/Home");
-const Login = () => import("../views/auth/Login");
-const Forget = () => import("../views/auth/Forget");
-const Reset = () => import("../views/auth/Reset");
-const Verify = () => import("../views/auth/Verify");
-const Dashboard = () => import("../layouts/Dashboard");
-const Setting = () => import("../views/Setting");
-const User = () => import("../views/User");
-const Profile = () => import("../views/Profile");
-const Report = () => import("../views/Report");
-const Product = () => import("../views/Product");
-const Price = () => import("../views/Price");
-const Formula = () => import("../views/Formula");
-const Error = () => import("../views/Error");
+const Home = () => import(/* webpackChunkName: "home" */ "../layouts/Home");
+const Login = () =>
+    import(/* webpackChunkName: "auth-login" */ "../views/auth/Login");
+const Forget = () =>
+    import(/* webpackChunkName: "auth-forget" */ "../views/auth/Forget");
+const Reset = () =>
+    import(/* webpackChunkName: "auth-reset" */ "../views/auth/Reset");
+const Verify = () =>
+    import(/* webpackChunkName: "auth-verify" */ "../views/auth/Verify");
+const Dashboard = () =>
+    import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
+const Setting = () =>
+    import(/* webpackChunkName: "setting" */ "../views/Setting");
+const User = () => import(/* webpackChunkName: "user" */ "../views/User");
+const Profile = () =>
+    import(/* webpackChunkName: "profile" */ "../views/Profile");
+const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
+const Product = () =>
+    import(/* webpackChunkName: "product" */ "../views/Product");
+const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
+const Formula = () =>
+    import(/* webpackChunkName: "formula" */ "../views/Formula");
+const Error = () => import(/* webpackChunkName: "error" */ "../views/Error");
 
 export default [
     {

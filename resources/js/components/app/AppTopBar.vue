@@ -67,7 +67,7 @@
 
         <!-- fullscreen confirmation -->
         <v-dialog
-            v-if="!fullscreen && $vuetify.breakpoint.smAndDown"
+            v-if="$vuetify.breakpoint.smAndDown"
             v-model="dialog"
             max-width="290"
         >
@@ -81,10 +81,10 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="dialog = false">
+                    <v-btn color="green darken-1" text @click="confirm(false)">
                         No
                     </v-btn>
-                    <v-btn color="green" dark @click="toggle">
+                    <v-btn color="green" dark @click="confirm(true)">
                         Yes
                     </v-btn>
                 </v-card-actions>
@@ -100,11 +100,12 @@ import {
     TOGGLE_FULLSCREEN,
 } from "../../store/app/mutation-types";
 import { LOGOUT } from "../../store/app/action-types";
+import { ls } from "../../utils/helper";
 
 export default {
     data() {
         return {
-            dialog: true,
+            dialog: !ls.get("confirmedFullscreen"),
         };
     },
     computed: {
@@ -120,9 +121,15 @@ export default {
                 })
                 .catch((e) => eHandler(e));
         },
-        toggle() {
+        confirm(state) {
             this.dialog = false;
-
+            ls.set("confirmedFullscreen", true);
+            // handle fullscreen request
+            if (state) {
+                this.toggle();
+            }
+        },
+        toggle() {
             this.$fullscreen.toggle(document.body, {
                 callback: this.TOGGLE_FULLSCREEN(),
             });

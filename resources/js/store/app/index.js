@@ -8,7 +8,7 @@ const state = {
     drawer: null,
     dense: false,
     dark: false,
-    fullscreen: ls.get("fullscreen") || false,
+    fullscreen: false,
     loading: 0,
     message: {
         text: "",

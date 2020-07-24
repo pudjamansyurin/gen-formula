@@ -10,7 +10,6 @@ export default {
     },
     [mutations.TOGGLE_FULLSCREEN](state) {
         state.fullscreen = !state.fullscreen;
-        ls.set("fullscreen", state.fullscreen);
     },
     [mutations.TOGGLE_DENSE](state) {
         state.dense = !state.dense;
