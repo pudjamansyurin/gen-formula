@@ -90,7 +90,7 @@ export default {
         toggle() {
             console.log(this.$fullscreen);
             this.$fullscreen.toggle(document.body, {
-                wrap: false,
+                // wrap: false,
                 callback: this.fullscreenChange,
             });
         },
