@@ -15,35 +15,6 @@
                         color="white"
                     ></v-progress-circular>
                 </v-overlay>
-                <!-- fullscreen confirmation -->
-                <v-dialog
-                    v-show="$vuetify.breakpoint.smAndDown"
-                    v-model="dialog"
-                    max-width="290"
-                >
-                    <v-card>
-                        <v-card-title class="headline"
-                            >Use fullscreen mode ?</v-card-title
-                        >
-                        <v-card-text>
-                            You are using small device screen, we can help you
-                            navigate easier using fullscreen mode.
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                color="green darken-1"
-                                text
-                                @click="dialog = false"
-                            >
-                                No
-                            </v-btn>
-                            <v-btn color="green darken-1" text @click="toggle">
-                                Yes
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
             </v-container>
         </v-content>
         <app-bottom-navigation
@@ -53,8 +24,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { TOGGLE_FULLSCREEN } from "../store/app/mutation-types";
+import { mapState } from "vuex";
 import AppBottomNavigation from "../components/app/AppBottomNavigation.vue";
 import AppLeftDrawer from "../components/app/AppLeftDrawer.vue";
 import AppTopBar from "../components/app/AppTopBar.vue";
@@ -73,15 +43,6 @@ export default {
     },
     computed: {
         ...mapState("app", ["loading"]),
-        ...mapMutations("app", [TOGGLE_FULLSCREEN]),
-    },
-    methods: {
-        toggle() {
-            this.dialog = false;
-            this.$fullscreen.toggle(document.body, {
-                callback: this.TOGGLE_FULLSCREEN(),
-            });
-        },
     },
     mounted() {
         console.log("Session credebility should be checked!");
