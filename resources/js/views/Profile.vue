@@ -17,6 +17,7 @@
                             small
                             rounded
                             color="primary"
+                            dark
                         >
                             <v-icon small left>mdi-pencil</v-icon> Edit
                         </v-btn>
@@ -32,7 +33,6 @@
                 <v-list-item-content>
                     <v-list-item-title
                         >{{ profile.email }}
-
                         <v-btn
                             @click="resend"
                             class="ma-2"
@@ -41,13 +41,13 @@
                             :color="
                                 profile.email_verified_at ? 'teal' : 'orange'
                             "
+                            dark
                         >
                             <v-icon small left>{{
                                 profile.email_verified_at
                                     ? "mdi-checkbox-marked-circle"
                                     : "mdi-help-circle-outline"
                             }}</v-icon>
-
                             {{
                                 profile.email_verified_at
                                     ? "Verified"

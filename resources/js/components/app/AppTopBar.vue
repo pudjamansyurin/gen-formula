@@ -1,9 +1,9 @@
 <template>
     <v-app-bar
         :clipped-left="$vuetify.breakpoint.lgAndUp"
+        :collapse="$vuetify.breakpoint.smAndDown"
+        :collapse-on-scroll="$vuetify.breakpoint.smAndDown"
         color="blue darken-3"
-        collapse
-        collapse-on-scroll
         dark
         app
     >
