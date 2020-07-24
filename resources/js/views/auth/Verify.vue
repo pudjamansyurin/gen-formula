@@ -15,8 +15,8 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { VERIFY } from "@/store/app/action-types";
-import { eHandler } from "@/utils/helper";
+import { VERIFY } from "../../store/app/action-types";
+import { eHandler } from "../../utils/helper";
 
 export default {
     name: "verify",

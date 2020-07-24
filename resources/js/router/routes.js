@@ -1,17 +1,17 @@
-const Home = () => import("@/layouts/Home");
-const Login = () => import("@/views/auth/Login");
-const Forget = () => import("@/views/auth/Forget");
-const Reset = () => import("@/views/auth/Reset");
-const Verify = () => import("@/views/auth/Verify");
-const Dashboard = () => import("@/layouts/Dashboard");
-const Setting = () => import("@/views/Setting");
-const User = () => import("@/views/User");
-const Profile = () => import("@/views/Profile");
-const Report = () => import("@/views/Report");
-const Product = () => import("@/views/Product");
-const Price = () => import("@/views/Price");
-const Formula = () => import("@/views/Formula");
-const Error = () => import("@/views/Error");
+const Home = () => import("../layouts/Home");
+const Login = () => import("../views/auth/Login");
+const Forget = () => import("../views/auth/Forget");
+const Reset = () => import("../views/auth/Reset");
+const Verify = () => import("../views/auth/Verify");
+const Dashboard = () => import("../layouts/Dashboard");
+const Setting = () => import("../views/Setting");
+const User = () => import("../views/User");
+const Profile = () => import("../views/Profile");
+const Report = () => import("../views/Report");
+const Product = () => import("../views/Product");
+const Price = () => import("../views/Price");
+const Formula = () => import("../views/Formula");
+const Error = () => import("../views/Error");
 
 export default [
     {

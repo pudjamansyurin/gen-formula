@@ -65,8 +65,11 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { TOGGLE_DRAWER, TOGGLE_FULLSCREEN } from "@/store/app/mutation-types";
-import { LOGOUT } from "@/store/app/action-types";
+import {
+    TOGGLE_DRAWER,
+    TOGGLE_FULLSCREEN,
+} from "../../store/app/mutation-types";
+import { LOGOUT } from "../../store/app/action-types";
 
 export default {
     computed: {
@@ -83,9 +86,8 @@ export default {
                 .catch((e) => eHandler(e));
         },
         toggle() {
-            this.$fullscreen.toggle(document.body, {
-                callback: this.TOGGLE_FULLSCREEN(),
-            });
+            this.$fullscreen.toggle();
+            this.TOGGLE_FULLSCREEN();
         },
     },
 };

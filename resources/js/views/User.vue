@@ -161,13 +161,13 @@ import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
-} from "@/store/model/action-types";
-import { UPDATE_MODEL } from "@/store/model/mutation-types";
-import { User } from "@/models";
-import { eHandler } from "@/utils/helper";
-import TheDataTable from "@/components/TheDataTable.vue";
-import TheDialogForm from "@/components/TheDialogForm.vue";
-import TheDialogDelete from "@/components/TheDialogDelete.vue";
+} from "../store/model/action-types";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
+import { User } from "../models";
+import { eHandler } from "../utils/helper";
+import TheDataTable from "../components/TheDataTable.vue";
+import TheDialogForm from "../components/TheDialogForm.vue";
+import TheDialogDelete from "../components/TheDialogDelete.vue";
 
 const model = "user";
 

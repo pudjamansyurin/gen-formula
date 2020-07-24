@@ -84,8 +84,8 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { RESET } from "@/store/app/action-types";
-import { eHandler } from "@/utils/helper";
+import { RESET } from "../../store/app/action-types";
+import { eHandler } from "../../utils/helper";
 
 export default {
     name: "reset",

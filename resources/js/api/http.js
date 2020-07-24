@@ -7,16 +7,16 @@
 */
 
 import axios from "axios";
-import store from "@/store";
-import config from "@/utils/config";
-import { ns } from "@/utils/helper";
+import store from "../store";
+import config from "../utils/config";
+import { ns } from "../utils/helper";
 import {
     START_LOADING,
     STOP_LOADING,
     SET_MESSAGE,
     CLEAR_ERROR,
     CLEAR_MESSAGE
-} from "@/store/app/mutation-types";
+} from "../store/app/mutation-types";
 
 export const http = axios.create({
     baseURL: `${config.APP_URL}/`,

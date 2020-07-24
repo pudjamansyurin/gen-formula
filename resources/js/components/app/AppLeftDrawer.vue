@@ -63,8 +63,8 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { SET_DRAWER } from "@/store/app/mutation-types";
-import { navs } from "@/utils/navigation";
+import { SET_DRAWER } from "../../store/app/mutation-types";
+import { navs } from "../../utils/navigation";
 
 export default {
     computed: {

@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import routes from "./routes.js";
-import store from "@/store";
-import { HTTP_UNAUTHORIZED } from "@/utils/response";
+import store from "../store";
+import { HTTP_UNAUTHORIZED } from "../utils/response";
 
 Vue.use(VueRouter);
 

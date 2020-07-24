@@ -155,7 +155,7 @@
 import pluralize from "pluralize";
 import { debounce } from "lodash";
 import { mapState, mapMutations } from "vuex";
-import { TOGGLE_DENSE } from "@/store/app/mutation-types";
+import { TOGGLE_DENSE } from "../store/app/mutation-types";
 
 export default {
     name: "the-data-table",

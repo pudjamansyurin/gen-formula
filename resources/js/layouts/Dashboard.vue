@@ -27,7 +27,7 @@
                         >
                         <v-card-text>
                             You are using small device screen, we can help you
-                            easier to navigate using fullscreen mode.
+                            navigate easier using fullscreen mode.
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -53,11 +53,11 @@
 </template>
 
 <script>
-import AppBottomNavigation from "@/components/app/AppBottomNavigation";
-import AppLeftDrawer from "@/components/app/AppLeftDrawer";
-import AppTopBar from "@/components/app/AppTopBar";
 import { mapState, mapMutations } from "vuex";
 import { TOGGLE_FULLSCREEN } from "../store/app/mutation-types";
+import AppBottomNavigation from "../components/app/AppBottomNavigation.vue";
+import AppLeftDrawer from "../components/app/AppLeftDrawer.vue";
+import AppTopBar from "../components/app/AppTopBar.vue";
 
 export default {
     name: "Dashboard",
@@ -78,9 +78,8 @@ export default {
     methods: {
         toggle() {
             this.dialog = false;
-            this.$fullscreen.toggle(document.body, {
-                callback: this.TOGGLE_FULLSCREEN(),
-            });
+            this.$fullscreen.toggle();
+            this.TOGGLE_FULLSCREEN();
         },
     },
     mounted() {

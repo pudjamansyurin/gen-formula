@@ -37,8 +37,8 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { FORGET } from "@/store/app/action-types";
-import { eHandler } from "@/utils/helper";
+import { FORGET } from "../../store/app/action-types";
+import { eHandler } from "../../utils/helper";
 
 export default {
     name: "forget",

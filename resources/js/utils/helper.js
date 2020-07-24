@@ -1,8 +1,11 @@
-import store from "@/store";
-import router from "@/router";
+import store from "../store";
+import router from "../router";
 import { get } from "lodash";
-import { HTTP_UNPROCESSABLE_ENTITY, HTTP_UNAUTHORIZED } from "@/utils/response";
-import { CLEAR_PROFILE, SET_ERROR } from "@/store/app/mutation-types";
+import {
+    HTTP_UNPROCESSABLE_ENTITY,
+    HTTP_UNAUTHORIZED
+} from "../utils/response";
+import { CLEAR_PROFILE, SET_ERROR } from "../store/app/mutation-types";
 
 export const ns = (namespace, definition) => {
     return `${namespace.toLowerCase()}/${definition}`;

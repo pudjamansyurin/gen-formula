@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { navs } from "@/utils/navigation";
+import { navs } from "../../utils/navigation";
 
 export default {
     data() {
