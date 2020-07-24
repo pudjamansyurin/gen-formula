@@ -65,20 +65,15 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { TOGGLE_DRAWER } from "@/store/app/mutation-types";
+import { TOGGLE_DRAWER, TOGGLE_FULLSCREEN } from "@/store/app/mutation-types";
 import { LOGOUT } from "@/store/app/action-types";
 
 export default {
-    data() {
-        return {
-            fullscreen: false,
-        };
-    },
     computed: {
         ...mapState("app", ["title"]),
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_DRAWER]),
+        ...mapMutations("app", [TOGGLE_DRAWER, TOGGLE_FULLSCREEN]),
         ...mapActions("app", [LOGOUT]),
         logout() {
             this.LOGOUT()
@@ -88,14 +83,9 @@ export default {
                 .catch((e) => eHandler(e));
         },
         toggle() {
-            console.log(this.$fullscreen);
             this.$fullscreen.toggle(document.body, {
-                // wrap: false,
-                callback: this.fullscreenChange,
+                callback: this.TOGGLE_FULLSCREEN(),
             });
-        },
-        fullscreenChange(fullscreen) {
-            this.fullscreen = fullscreen;
         },
     },
 };

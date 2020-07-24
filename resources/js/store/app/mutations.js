@@ -8,6 +8,10 @@ export default {
     [mutations.TOGGLE_DRAWER](state) {
         state.drawer = !state.drawer;
     },
+    [mutations.TOGGLE_FULLSCREEN](state) {
+        state.fullscreen = !state.fullscreen;
+        ls.set("fullscreen", state.fullscreen);
+    },
     [mutations.TOGGLE_DENSE](state) {
         state.dense = !state.dense;
     },
