@@ -13,7 +13,7 @@
             v-if="$vuetify.breakpoint.smAndDown"
         ></app-bottom-navigation>
 
-        <v-overlay v-if="$vuetify.breakpoint.smAndDown" :value="loading">
+        <v-overlay :value="loading">
             <v-progress-circular
                 indeterminate
                 size="64"
