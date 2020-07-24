@@ -2,6 +2,7 @@
     <v-bottom-navigation
         v-model="activeTab"
         color="primary"
+        hide-on-scroll
         mandatory
         shift
         app

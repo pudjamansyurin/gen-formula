@@ -7,19 +7,18 @@
                 <v-row align="start" justify="center" no-gutters>
                     <router-view></router-view>
                 </v-row>
+                <v-overlay :value="loading" absolute>
+                    <v-progress-circular
+                        indeterminate
+                        size="64"
+                        color="white"
+                    ></v-progress-circular>
+                </v-overlay>
             </v-container>
         </v-content>
         <app-bottom-navigation
             v-if="$vuetify.breakpoint.smAndDown"
         ></app-bottom-navigation>
-
-        <v-overlay :value="loading">
-            <v-progress-circular
-                indeterminate
-                size="64"
-                color="white"
-            ></v-progress-circular>
-        </v-overlay>
     </fragment>
 </template>
 

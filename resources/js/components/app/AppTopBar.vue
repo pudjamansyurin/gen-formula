@@ -20,6 +20,11 @@
             class="hidden-sm-and-down"
         ></v-text-field> -->
         <v-spacer></v-spacer>
+        <v-btn @click="toggle" icon>
+            <v-icon>{{
+                fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen"
+            }}</v-icon>
+        </v-btn>
         <!-- <v-btn icon>
             <v-icon>mdi-apps</v-icon>
         </v-btn> -->
@@ -64,6 +69,11 @@ import { TOGGLE_DRAWER } from "@/store/app/mutation-types";
 import { LOGOUT } from "@/store/app/action-types";
 
 export default {
+    data() {
+        return {
+            fullscreen: false,
+        };
+    },
     computed: {
         ...mapState("app", ["title"]),
     },
@@ -76,6 +86,16 @@ export default {
                     this.$router.push({ name: "login" });
                 })
                 .catch((e) => eHandler(e));
+        },
+        toggle() {
+            console.log(this.$fullscreen);
+            this.$fullscreen.toggle(document.body, {
+                wrap: false,
+                callback: this.fullscreenChange,
+            });
+        },
+        fullscreenChange(fullscreen) {
+            this.fullscreen = fullscreen;
         },
     },
 };

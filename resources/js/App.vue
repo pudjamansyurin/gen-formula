@@ -8,8 +8,8 @@
             top
         >
             {{ message.text }}
-            <v-btn color="white" text @click="snackbar = false">
-                Close
+            <v-btn color="white" @click="snackbar = false">
+                <v-icon>mdi-close-circle</v-icon>
             </v-btn>
         </v-snackbar>
     </v-app>
