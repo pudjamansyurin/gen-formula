@@ -66,14 +66,18 @@
         </v-app-bar>
 
         <!-- fullscreen confirmation -->
-        <v-dialog v-if="!fullscreen" v-model="dialog" max-width="290">
+        <v-dialog
+            v-if="!fullscreen && $vuetify.breakpoint.smAndDown"
+            v-model="dialog"
+            max-width="290"
+        >
             <v-card>
                 <v-card-title class="headline"
                     >Use fullscreen mode ?</v-card-title
                 >
                 <v-card-text>
-                    We can help you navigate our app easier using fullscreen
-                    mode.
+                    You are using small device screen, we can help you navigate
+                    easier using fullscreen mode.
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
