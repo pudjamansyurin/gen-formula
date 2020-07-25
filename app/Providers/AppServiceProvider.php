@@ -31,12 +31,19 @@ class AppServiceProvider extends ServiceProvider
     {
         if (App::environment('production')) {
             Debugbar::disable();
+
+            /* Fix laravel-mix manifest issue */
+            $this->app->bind('path.public', function () {
+                return base_path() . '/../';
+            });
         }
 
+        /* Fix reset password api endpoint */
         ResetPassword::createUrlUsing(function ($notifiable, $token) {
             return env('VUE_URL') . "/reset/{$token}/{$notifiable->getEmailForPasswordReset()}";
         });
 
-        Builder::defaultStringLength(191); // Update defaultStringLength
+        /* Fix cpanel mysql issue */
+        Builder::defaultStringLength(191);
     }
 }
