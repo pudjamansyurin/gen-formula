@@ -1,11 +1,5 @@
 <template>
-    <v-bottom-navigation
-        :value="activeTab"
-        color="primary"
-        hide-on-scroll
-        shift
-        app
-    >
+    <v-bottom-navigation :value="activeTab" color="primary" hide-on-scroll app>
         <v-btn
             v-for="(item, index) in items"
             :key="index"
