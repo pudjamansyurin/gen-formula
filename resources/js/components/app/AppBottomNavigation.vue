@@ -1,6 +1,6 @@
 <template>
     <v-bottom-navigation
-        v-model="activeTab"
+        :value="activeTab"
         color="primary"
         hide-on-scroll
         shift
