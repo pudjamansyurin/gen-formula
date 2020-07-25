@@ -100,7 +100,7 @@ import {
     TOGGLE_FULLSCREEN,
 } from "../../store/app/mutation-types";
 import { LOGOUT } from "../../store/app/action-types";
-import { ls } from "../../utils/helper";
+import { ls, eHandler } from "../../utils/helper";
 
 export default {
     data() {
