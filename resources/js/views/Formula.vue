@@ -84,9 +84,10 @@
         <the-dialog-form
             v-model="dialogPercent"
             :title="formPercentTitle"
-            width="700px"
             @close="closePercent"
             @submit="savePercent"
+            width="700px"
+            readonly
         >
             <validation-observer ref="form_percent">
                 <v-row>
@@ -101,10 +102,11 @@
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
+                                :readonly="!form.authorized"
+                                :clearable="form.authorized"
                                 chips
                                 multiple
                                 auto-select-first
-                                clearable
                                 deletable-chips
                                 item-text="product.name"
                                 item-value="product.id"
@@ -142,11 +144,12 @@
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
-                                :label="el.product.name"
-                                type="number"
                                 v-model.number="el.percent"
+                                :label="el.product.name"
                                 :error-messages="errors"
                                 :success="valid"
+                                :readonly="!form.authorized"
+                                type="number"
                                 suffix="%"
                                 hint="This product's percentage"
                                 persistent-hint

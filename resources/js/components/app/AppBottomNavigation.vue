@@ -18,7 +18,7 @@ import { navs } from "../../utils/navigation";
 export default {
     data() {
         return {
-            activeTab: this.$route.name,
+            // activeTab: this.$route.name,
         };
     },
     computed: {

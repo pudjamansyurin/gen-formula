@@ -31,7 +31,7 @@
                 >
                 <v-spacer></v-spacer>
                 <v-btn
-                    :disabled="!!loading"
+                    :disabled="!!loading && !readonly"
                     @click="$emit('submit')"
                     color="primary"
                     >Save</v-btn
@@ -48,6 +48,10 @@ export default {
     name: "the-dialog-form",
     props: {
         value: {
+            type: Boolean,
+            default: false,
+        },
+        readonly: {
             type: Boolean,
             default: false,
         },

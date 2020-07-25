@@ -1,5 +1,4 @@
 export const navs = [
-    { divider: true },
     { heading: "DASHBOARD" },
     {
         icon: "mdi-chart-areaspline",
@@ -20,10 +19,8 @@ export const navs = [
         bottomNav: true
     },
     { icon: "mdi-currency-usd", text: "Price", to: "price", bottomNav: true },
-    { divider: true },
-    { heading: "CONFIGURATION" },
-    { icon: "mdi-account-group", text: "User", to: "user" },
-    { icon: "mdi-account-cog", text: "Profile", to: "profile" }
+    { icon: "mdi-account-group", text: "User", to: "user" }
+    // { icon: "mdi-account-cog", text: "Profile", to: "profile" }
     // { icon: "mdi-cogs", text: "Setting", to: "setting" }
     //     { icon: "mdi-content-copy", text: "Duplicates" }
     // {

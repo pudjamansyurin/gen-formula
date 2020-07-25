@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class PriceItem extends JsonResource
 {
@@ -21,6 +22,7 @@ class PriceItem extends JsonResource
             'changed_at' => $this->changed_at,
             'user' => new UserItem($this->whenLoaded('user')),
             'product' => new ProductItem($this->whenLoaded('product')),
+            'authorized' => Gate::allows('update', $this->resource)
         ];
     }
 }

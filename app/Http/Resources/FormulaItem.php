@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class FormulaItem extends JsonResource
 {
@@ -33,7 +34,8 @@ class FormulaItem extends JsonResource
                 }, 0);
 
                 return $total;
-            })
+            }),
+            'authorized' => Gate::allows('update', $this->resource)
         ];
     }
 }

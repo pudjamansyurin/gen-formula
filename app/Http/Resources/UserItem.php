@@ -23,7 +23,7 @@ class UserItem extends JsonResource
             'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'selectable' => $this->id != auth()->id(),
+            'authorized' => $this->id != auth()->id(),
             'role' => $this->whenLoaded('roles', function () {
                 return $this->roles->first();
             }),

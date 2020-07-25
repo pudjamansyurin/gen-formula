@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class ProductItem extends JsonResource
 {
@@ -26,7 +27,8 @@ class ProductItem extends JsonResource
                     return $item['price'];
                 }
                 return 0;
-            })
+            }),
+            'authorized' => Gate::allows('update', $this->resource)
         ];
     }
 }

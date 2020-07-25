@@ -2,15 +2,14 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Product;
 use App\User;
-use App\Price;
 use Faker\Generator as Faker;
 
-$factory->define(Price::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
-        'price' => $faker->randomNumber(6),
-        'changed_at' => $faker->dateTimeBetween('-6 months', 'now'),
+        'name' => $faker->name,
+        'email' => $faker->email,
+        'password' => $faker->password,
         'created_at' => $faker->dateTimeBetween('-10 months', 'now'),
     ];
 });
