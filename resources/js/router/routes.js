@@ -21,6 +21,7 @@ const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
 const Error = () => import(/* webpackChunkName: "error" */ "../views/Error");
+const Policy = () => import(/* webpackChunkName: "policy" */ "../views/Policy");
 
 export default [
     {
@@ -42,6 +43,11 @@ export default [
                 props: true,
                 name: "reset",
                 component: Reset
+            },
+            {
+                path: "policy",
+                name: "policy",
+                component: Policy
             }
         ]
     },
