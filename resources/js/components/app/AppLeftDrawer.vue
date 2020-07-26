@@ -103,13 +103,14 @@ export default {
         ...mapMutations("app", [SET_DRAWER]),
         checkPageRoles(name) {
             let page = this.$router.resolve({ name });
+            let role = this.$_.get(this.profile, "role.name");
 
             // valid page
             if (page) {
                 // check authorization
                 let roles = page.route.meta.roles;
                 if (roles) {
-                    if (roles.includes(this.profile.role.name)) {
+                    if (roles.includes(role)) {
                         // user role is authorized
                         return true;
                     } else {
