@@ -224,6 +224,13 @@ export default {
         search: debounce(function () {
             this.fetch();
         }, 500),
+        value: function (selected) {
+            if (selected.length) {
+                this.searchBox = false;
+            } else if (this.search) {
+                this.searchBox = true;
+            }
+        },
     },
 };
 </script>

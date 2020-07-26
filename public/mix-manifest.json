@@ -1,5 +1,5 @@
 {
-    "/js/app.js": "/js/app.js?id=27230d0a85ee4b699fb3",
+    "/js/app.js": "/js/app.js?id=18bc60c8fab63091945f",
     "/css/app.css": "/css/app.css?id=c79cc61f8ecec6fb9927",
     "/js/auth-forget.js": "/js/auth-forget.js?id=22aa41d0368cee101db8",
     "/js/auth-login.js": "/js/auth-login.js?id=6aa468300004b5df712d",
@@ -7,13 +7,13 @@
     "/js/auth-verify.js": "/js/auth-verify.js?id=2a379ead244d75cf3ca3",
     "/js/dashboard.js": "/js/dashboard.js?id=8cfe24dc09064741f3ab",
     "/js/error.js": "/js/error.js?id=69ea9f1f15ffd50adc51",
-    "/js/formula.js": "/js/formula.js?id=72ed8a53813ba546d5f2",
+    "/js/formula.js": "/js/formula.js?id=cf6eaca503d4f01ff593",
     "/js/home.js": "/js/home.js?id=1014e4bea2e273964c48",
     "/js/policy.js": "/js/policy.js?id=97f99f85c9572be948c5",
-    "/js/price.js": "/js/price.js?id=e7276d1ebb3228c87639",
-    "/js/product.js": "/js/product.js?id=b36a69b2ce24dc459ec9",
+    "/js/price.js": "/js/price.js?id=2fc6787e30d6ed0664d5",
+    "/js/product.js": "/js/product.js?id=129c140a38d559163a6a",
     "/js/profile.js": "/js/profile.js?id=b058b5965d1ec193ff97",
     "/js/report.js": "/js/report.js?id=696f5ed897a664f805b4",
     "/js/setting.js": "/js/setting.js?id=7ef9898cfd9f2a6db7a6",
-    "/js/user.js": "/js/user.js?id=cc43e9bccc0cdc18e504"
+    "/js/user.js": "/js/user.js?id=c987e00a3596bb7c7bcb"
 }
