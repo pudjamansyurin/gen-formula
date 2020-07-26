@@ -91,7 +91,7 @@
             @close="closePercent"
             @submit="savePercent"
             width="700px"
-            readonly
+            :readonly="!form.authorized"
         >
             <validation-observer ref="form_percent">
                 <v-row>

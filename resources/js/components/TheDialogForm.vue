@@ -31,7 +31,8 @@
                 >
                 <v-spacer></v-spacer>
                 <v-btn
-                    :disabled="!!loading && !readonly"
+                    v-if="!readonly"
+                    :disabled="!!loading"
                     @click="$emit('submit')"
                     color="primary"
                     >Save</v-btn
