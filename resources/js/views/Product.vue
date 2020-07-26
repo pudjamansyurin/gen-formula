@@ -15,13 +15,13 @@
             <template v-slot:item.name="{ item }">
                 <v-chip
                     :to="childRoute(item.id)"
-                    color="primary"
+                    :color="item.prices.length ? 'green' : 'red'"
                     :small="dense"
                     >{{ item.name }}</v-chip
                 >
             </template>
-            <template v-slot:item.latest_price="{ item }">{{
-                item.latest_price | currency
+            <template v-slot:item.price_latest="{ item }">{{
+                item.price_latest | currency
             }}</template>
             <template v-slot:item.price_count="{ item }">{{
                 item.prices.length
@@ -118,7 +118,7 @@ export default {
                 { text: "Description", value: "description" },
                 {
                     text: "Last.Price",
-                    value: "latest_price",
+                    value: "price_latest",
                     align: "right",
                     sortable: false,
                     width: 150,

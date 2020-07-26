@@ -22,7 +22,7 @@ class ProductItem extends JsonResource
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),
             'prices' => PriceItem::collection($this->whenLoaded('prices')),
-            'latest_price' => $this->whenLoaded('prices', function () {
+            'price_latest' => $this->whenLoaded('prices', function () {
                 if ($item = $this->prices->first()) {
                     return $item['price'];
                 }
