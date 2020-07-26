@@ -76,7 +76,7 @@ class PercentController extends Controller
         }
 
         throw ValidationException::withMessages([
-            'total_percentage' => 'The total percentage should be 100%',
+            'percent_total' => 'The total percentage should be 100%',
         ]);
     }
 }

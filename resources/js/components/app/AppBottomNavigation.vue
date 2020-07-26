@@ -1,5 +1,5 @@
 <template>
-    <v-bottom-navigation color="primary" hide-on-scroll app>
+    <v-bottom-navigation color="primary" app>
         <v-btn
             v-for="(item, index) in items"
             :key="index"
@@ -16,11 +16,6 @@
 import { navs } from "../../utils/navigation";
 
 export default {
-    data() {
-        return {
-            // activeTab: this.$route.name,
-        };
-    },
     computed: {
         items() {
             return this.$_.cloneDeep(

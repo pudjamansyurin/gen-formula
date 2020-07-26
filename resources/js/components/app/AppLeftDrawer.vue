@@ -6,7 +6,12 @@
         app
     >
         <v-list>
-            <v-list-item :to="{ name: 'profile' }" color="red" link>
+            <v-list-item
+                v-if="profile"
+                :to="{ name: 'profile' }"
+                color="red"
+                link
+            >
                 <v-list-item-avatar>
                     <v-avatar right size="50px" item>
                         <v-img src="/img/unknown.png" alt="Profile"></v-img>

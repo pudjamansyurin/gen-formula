@@ -22,7 +22,12 @@ class FormulaItem extends JsonResource
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),
             'percents' => PercentItem::collection($this->whenLoaded('percents')),
-            'total_price' => $this->whenLoaded('percents', function () {
+            'percent_total' => $this->whenLoaded('percents', function () {
+                return $this->percents->reduce(function ($total, $item) {
+                    return $total + $item->percent;
+                }, 0);
+            }),
+            'price_total' => $this->whenLoaded('percents', function () {
                 $total =  $this->percents->reduce(function ($total, $item) {
                     $value = 0;
                     if ($product = $item->product) {

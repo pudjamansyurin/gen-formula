@@ -20,10 +20,13 @@
                     >{{ item.name }}</v-chip
                 >
             </template>
-            <template v-slot:item.total_price="{ item }">{{
-                item.total_price | currency
+            <template v-slot:item.price_total="{ item }">{{
+                item.price_total | currency
             }}</template>
-            <template v-slot:item.percents_len="{ item }">{{
+            <template v-slot:item.percent_total="{ item }"
+                >{{ item.percent_total }} %</template
+            >
+            <template v-slot:item.percent_count="{ item }">{{
                 item.percents.length
             }}</template>
             <template v-slot:item.updated_at="{ item }">{{
@@ -118,18 +121,18 @@
                         </validation-provider>
 
                         <validation-provider
-                            name="total_percentage"
+                            name="percent_total"
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
                                 class="mt-3"
                                 label="Total Percentage"
                                 type="number"
-                                :value="totalPercentage"
+                                :value="percentTotal"
                                 :error-messages="errors"
                                 :success="valid"
                                 suffix="%"
-                                hint="This shoudl be 100%"
+                                hint="This should be 100%"
                                 readonly
                                 filled
                                 persistent-hint
@@ -196,14 +199,20 @@ export default {
                 { text: "Description", value: "description" },
                 {
                     text: "Tot.Price",
-                    value: "total_price",
+                    value: "price_total",
                     align: "right",
                     sortable: false,
                     width: 150,
                 },
                 {
+                    text: "Tot.Percent",
+                    value: "percent_total",
+                    align: "center",
+                    sortable: false,
+                },
+                {
                     text: "Rel.Product",
-                    value: "percents_len",
+                    value: "percent_count",
                     align: "center",
                     sortable: false,
                 },
@@ -223,7 +232,7 @@ export default {
         formPercentTitle() {
             return this.form.name || "Related products";
         },
-        totalPercentage() {
+        percentTotal() {
             return this.$_.reduce(
                 this.form.percents,
                 (sum, el) => {

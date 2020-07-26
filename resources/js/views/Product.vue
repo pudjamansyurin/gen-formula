@@ -23,7 +23,7 @@
             <template v-slot:item.latest_price="{ item }">{{
                 item.latest_price | currency
             }}</template>
-            <template v-slot:item.prices_len="{ item }">{{
+            <template v-slot:item.price_count="{ item }">{{
                 item.prices.length
             }}</template>
             <template v-slot:item.updated_at="{ item }">{{
@@ -125,7 +125,7 @@ export default {
                 },
                 {
                     text: "Tot.Price",
-                    value: "prices_len",
+                    value: "price_count",
                     align: "center",
                     sortable: false,
                 },
