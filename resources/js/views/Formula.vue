@@ -15,8 +15,9 @@
             <template v-slot:item.name="{ item }">
                 <v-chip
                     @click="editPercent(item.id)"
-                    color="primary"
+                    :color="item.percent_total == 100 ? 'green' : 'red'"
                     :small="dense"
+                    dark
                     >{{ item.name }}</v-chip
                 >
             </template>
