@@ -23,7 +23,7 @@
             class="hidden-sm-and-down"
         ></v-text-field> -->
             <v-spacer></v-spacer>
-            <v-btn @click="toggle" icon>
+            <v-btn v-if="!webview" @click="toggle" icon>
                 <v-icon>{{
                     fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen"
                 }}</v-icon>
@@ -67,7 +67,7 @@
 
         <!-- fullscreen confirmation -->
         <v-dialog
-            v-if="$vuetify.breakpoint.smAndDown"
+            v-if="$vuetify.breakpoint.smAndDown && !webview"
             v-model="dialog"
             max-width="290"
         >
@@ -101,6 +101,7 @@ import {
 } from "../../store/app/mutation-types";
 import { LOGOUT } from "../../store/app/action-types";
 import { ls, eHandler } from "../../utils/helper";
+import isWebview from "is-ua-webview";
 
 export default {
     data() {
@@ -110,6 +111,9 @@ export default {
     },
     computed: {
         ...mapState("app", ["title", "fullscreen"]),
+        webview() {
+            return isWebview(window.navigator.userAgent);
+        },
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DRAWER, TOGGLE_FULLSCREEN]),
