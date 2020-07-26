@@ -17,6 +17,7 @@
                     :to="childRoute(item.id)"
                     :color="item.prices.length ? 'green' : 'red'"
                     :small="dense"
+                    dark
                     >{{ item.name }}</v-chip
                 >
             </template>
