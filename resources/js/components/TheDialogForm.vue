@@ -46,7 +46,6 @@
 import { mapState } from "vuex";
 
 export default {
-    name: "the-dialog-form",
     props: {
         value: {
             type: Boolean,

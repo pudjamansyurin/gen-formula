@@ -50,7 +50,6 @@ import { mapState } from "vuex";
 import pluralize from "pluralize";
 
 export default {
-    name: "the-dialog-delete",
     props: {
         value: {
             type: Boolean,

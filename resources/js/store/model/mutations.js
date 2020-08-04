@@ -7,8 +7,9 @@ export default {
     },
     [mutations.UPDATE_MODEL](state, { model, data }) {
         let index = state[pluralize(model)].findIndex(m => m.id === data.id);
-
-        state[pluralize(model)].splice(index, 1, data);
+        if (index > -1) {
+            state[pluralize(model)].splice(index, 1, data);
+        }
     }
     // [mutations.ADD_MODEL](state, {model, data}) {
     //     state[pluralize(model)].unshift(data);

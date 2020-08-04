@@ -1,134 +1,147 @@
 <template>
-    <v-col cols="12">
-        <the-data-table
-            v-model="selected"
-            :headers="headers"
-            :model="model"
-            :items="prices"
-            :total="total"
-            @unselect="selected = []"
-            @fetch="fetch"
-            @create="create"
-            @edit="edit"
-            @delete="dialogDelete = true"
-        >
-            <template v-slot:item.price="{ item }">{{
-                item.price | currency
-            }}</template>
-            <template v-slot:item.changed_at="{ item }">{{
-                item.changed_at | moment("from")
-            }}</template>
-        </the-data-table>
+    <fragment>
+        <app-top-bar></app-top-bar>
 
-        <the-dialog-form
-            v-model="dialog"
-            :form="form"
-            @close="close"
-            @submit="save"
-        >
-            <validation-observer ref="form">
-                <validation-provider
-                    name="product_id"
-                    v-slot="{ errors, valid }"
+        <v-row align="start" justify="center" no-gutters>
+            <v-col cols="12">
+                <the-data-table
+                    v-model="selected"
+                    :headers="headers"
+                    :model="model"
+                    :items="prices"
+                    :total="total"
+                    @edit="edit"
+                    @fetch="fetch"
+                    @create="create"
+                    @unselect="selected = []"
+                    @delete="dialogDelete = true"
                 >
-                    <v-autocomplete
-                        v-model="form.product_id"
-                        :items="list_products"
-                        :readonly="id > 0"
-                        :error-messages="errors"
-                        :success="valid"
-                        :loading="!!loading"
-                        chips
-                        item-text="name"
-                        item-value="id"
-                        label="Product"
-                        hint="The product being updated"
-                        persistent-hint
-                    ></v-autocomplete>
-                </validation-provider>
+                    <template v-slot:item.price="{ item }">{{
+                        item.price | currency
+                    }}</template>
+                    <template v-slot:item.changed_at="{ item }">{{
+                        item.changed_at | moment("from")
+                    }}</template>
+                </the-data-table>
 
-                <v-menu
-                    ref="menuChangedAt"
-                    v-model="menuChangedAt"
-                    :return-value.sync="form.changed_at"
-                    :close-on-content-click="false"
-                    min-width="290px"
-                    offset-y
+                <the-dialog-form
+                    v-model="dialog"
+                    :form="form"
+                    @close="close"
+                    @submit="save"
                 >
-                    <template v-slot:activator="{ on, attrs }">
+                    <validation-observer ref="form">
                         <validation-provider
-                            name="changed_at"
+                            name="product_id"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-autocomplete
+                                v-model="form.product_id"
+                                :items="list_products"
+                                :readonly="id > 0"
+                                :error-messages="errors"
+                                :success="valid"
+                                :loading="!!loading"
+                                chips
+                                item-text="name"
+                                item-value="id"
+                                label="Product"
+                                hint="The product being updated"
+                                persistent-hint
+                            ></v-autocomplete>
+                        </validation-provider>
+
+                        <v-menu
+                            ref="menuChangedAt"
+                            v-model="menuChangedAt"
+                            :return-value.sync="form.changed_at"
+                            :close-on-content-click="false"
+                            min-width="290px"
+                            offset-y
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <validation-provider
+                                    name="changed_at"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        v-model="form.changed_at"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        label="Changed At"
+                                        hint="When the price changed"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    ></v-text-field>
+                                </validation-provider>
+                            </template>
+                            <v-date-picker
+                                v-model="form.changed_at"
+                                :max="$moment().format('YYYY-MM-DD')"
+                                no-title
+                                scrollable
+                            >
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="menuChangedAt = false"
+                                    >Cancel</v-btn
+                                >
+                                <v-btn
+                                    text
+                                    color="primary"
+                                    @click="
+                                        $refs.menuChangedAt.save(
+                                            form.changed_at
+                                        )
+                                    "
+                                    >OK</v-btn
+                                >
+                            </v-date-picker>
+                        </v-menu>
+
+                        <validation-provider
+                            name="price"
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
-                                v-model="form.changed_at"
+                                label="Product price"
+                                type="number"
+                                v-model.number="form.price"
                                 :error-messages="errors"
                                 :success="valid"
-                                label="Changed At"
-                                hint="When the price changed"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
+                                prefix="Rp"
+                                counter
+                                hint="The updated product price"
+                                persistent-hint
                             ></v-text-field>
                         </validation-provider>
+                    </validation-observer>
+                </the-dialog-form>
+
+                <the-dialog-delete
+                    v-model="dialogDelete"
+                    :selected="selected"
+                    :model="model"
+                    @delete="deleteItem"
+                    @close="dialogDelete = false"
+                >
+                    <template v-slot="{ item }">
+                        <span v-if="id > 0">
+                            <strong>{{ item.price | currency }}</strong>
+                            {{ item.changed_at | moment("from") }}
+                        </span>
+                        <span v-else>
+                            <strong>{{ item.product.name }}</strong>
+                            {{ item.price | currency }}
+                        </span>
                     </template>
-                    <v-date-picker
-                        v-model="form.changed_at"
-                        :max="$moment().format('YYYY-MM-DD')"
-                        no-title
-                        scrollable
-                    >
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            text
-                            color="primary"
-                            @click="menuChangedAt = false"
-                            >Cancel</v-btn
-                        >
-                        <v-btn
-                            text
-                            color="primary"
-                            @click="$refs.menuChangedAt.save(form.changed_at)"
-                            >OK</v-btn
-                        >
-                    </v-date-picker>
-                </v-menu>
-
-                <validation-provider name="price" v-slot="{ errors, valid }">
-                    <v-text-field
-                        label="Product price"
-                        type="number"
-                        v-model.number="form.price"
-                        :error-messages="errors"
-                        :success="valid"
-                        prefix="Rp"
-                        counter
-                        hint="The updated product price"
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
-            </validation-observer>
-        </the-dialog-form>
-
-        <the-dialog-delete
-            v-model="dialogDelete"
-            :selected="selected"
-            :model="model"
-            @delete="deleteItem"
-            @close="dialogDelete = false"
-        >
-            <template v-slot="{ item }">
-                <span v-if="id > 0">
-                    <strong>{{ item.price | currency }}</strong>
-                    {{ item.changed_at | moment("from") }}
-                </span>
-                <span v-else>
-                    <strong>{{ item.product.name }}</strong>
-                    {{ item.price | currency }}
-                </span>
-            </template>
-        </the-dialog-delete>
-    </v-col>
+                </the-dialog-delete>
+            </v-col>
+        </v-row>
+    </fragment>
 </template>
 
 <script>
@@ -141,23 +154,22 @@ import {
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Price } from "../models";
 import { eHandler, castParamsId } from "../utils/helper";
+import AppTopBar from "../components/app/AppTopBar.vue";
 import TheDataTable from "../components/TheDataTable.vue";
 import TheDialogForm from "../components/TheDialogForm.vue";
 import TheDialogDelete from "../components/TheDialogDelete.vue";
 
-const model = "price";
-
 export default {
-    name: model,
     props: ["id"],
     components: {
+        AppTopBar,
         TheDataTable,
         TheDialogForm,
         TheDialogDelete,
     },
     data() {
         return {
-            model,
+            model: "price",
             params: {},
             total: 0,
             selected: [],
@@ -184,7 +196,7 @@ export default {
         apiUrl() {
             let id = castParamsId(this.id);
 
-            return `product/${id}/${model}`;
+            return `product/${id}/${this.model}`;
         },
     },
     methods: {
@@ -224,15 +236,17 @@ export default {
                 })
                 .catch((e) => eHandler(e));
         },
-        fetch: async function (params) {
-            if (params) {
-                this.params = params;
+        fetch: async function (param) {
+            if (param) {
+                this.params = param;
             }
+
+            let { model, apiUrl: url, params } = this;
 
             await this.GET_MODELS({
                 model,
-                url: this.apiUrl,
-                params: this.params,
+                url,
+                params,
             })
                 .then(({ meta }) => {
                     const { total } = meta;
@@ -245,7 +259,7 @@ export default {
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
                     // pass validation
-                    const { form: payload } = this;
+                    const { form: payload, model } = this;
                     // submit to backend
                     this.SAVE_MODEL({
                         model,
@@ -272,9 +286,11 @@ export default {
             });
         },
         deleteItem: async function () {
+            let { model, apiUrl: url } = this;
+
             await this.DELETE_MODELS({
                 model,
-                url: this.apiUrl,
+                url,
                 ids: this.$_.map(this.selected, "id"),
             })
                 .then(async () => {

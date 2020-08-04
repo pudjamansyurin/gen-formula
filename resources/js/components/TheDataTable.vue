@@ -158,7 +158,6 @@ import { mapState, mapMutations } from "vuex";
 import { TOGGLE_DENSE } from "../store/app/mutation-types";
 
 export default {
-    name: "the-data-table",
     props: {
         value: {
             type: Array,
@@ -185,7 +184,7 @@ export default {
         return {
             search: "",
             searchBox: false,
-            options: null,
+            options: {},
         };
     },
     computed: {

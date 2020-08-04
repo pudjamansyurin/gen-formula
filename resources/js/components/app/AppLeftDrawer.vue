@@ -5,18 +5,20 @@
         :clipped="$vuetify.breakpoint.lgAndUp"
         app
     >
-        <v-list>
+        <template v-slot:prepend>
             <v-list-item
                 v-if="profile"
                 :to="{ name: 'profile' }"
                 color="red"
                 link
+                two-line
             >
                 <v-list-item-avatar>
                     <v-avatar right size="50px" item>
                         <v-img src="/img/unknown.png" alt="Profile"></v-img>
                     </v-avatar>
                 </v-list-item-avatar>
+
                 <v-list-item-content>
                     <v-list-item-title class="title">{{
                         profile.name
@@ -29,7 +31,8 @@
                     <v-icon>mdi-menu-down</v-icon>
                 </v-list-item-action>
             </v-list-item>
-        </v-list>
+        </template>
+
         <v-divider></v-divider>
         <v-list>
             <template v-for="(item, index) in items">

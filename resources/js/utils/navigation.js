@@ -1,11 +1,11 @@
 export const navs = [
     { heading: "DASHBOARD" },
-    {
-        icon: "mdi-chart-areaspline",
-        text: "Report",
-        to: "report",
-        bottomNav: true
-    },
+    // {
+    //     icon: "mdi-chart-areaspline",
+    //     text: "Report",
+    //     to: "report",
+    //     bottomNav: true
+    // },
     {
         icon: "mdi-microsoft-excel",
         text: "Formula",

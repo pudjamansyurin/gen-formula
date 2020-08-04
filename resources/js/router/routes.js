@@ -1,12 +1,22 @@
-const Home = () => import(/* webpackChunkName: "home" */ "../layouts/Home");
+const Landing = () =>
+    import(/* webpackChunkName: "home" */ "../layouts/Landing");
 const Login = () =>
-    import(/* webpackChunkName: "auth-login" */ "../views/auth/Login");
+    import(/* webpackChunkName: "auth-login" */ "../views/landing/auth/Login");
 const Forget = () =>
-    import(/* webpackChunkName: "auth-forget" */ "../views/auth/Forget");
+    import(
+        /* webpackChunkName: "auth-forget" */ "../views/landing/auth/Forget"
+    );
 const Reset = () =>
-    import(/* webpackChunkName: "auth-reset" */ "../views/auth/Reset");
+    import(/* webpackChunkName: "auth-reset" */ "../views/landing/auth/Reset");
 const Verify = () =>
-    import(/* webpackChunkName: "auth-verify" */ "../views/auth/Verify");
+    import(
+        /* webpackChunkName: "auth-verify" */ "../views/landing/auth/Verify"
+    );
+const Error = () =>
+    import(/* webpackChunkName: "error" */ "../views/landing/Error");
+const Policy = () =>
+    import(/* webpackChunkName: "policy" */ "../views/landing/Policy");
+
 const Dashboard = () =>
     import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
 const Setting = () =>
@@ -14,19 +24,19 @@ const Setting = () =>
 const User = () => import(/* webpackChunkName: "user" */ "../views/User");
 const Profile = () =>
     import(/* webpackChunkName: "profile" */ "../views/Profile");
-const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
+// const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
 const Product = () =>
     import(/* webpackChunkName: "product" */ "../views/Product");
 const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
-const Error = () => import(/* webpackChunkName: "error" */ "../views/Error");
-const Policy = () => import(/* webpackChunkName: "policy" */ "../views/Policy");
+
+import store from "../store";
 
 export default [
     {
         path: "/",
-        component: Home,
+        component: Landing,
         children: [
             {
                 path: "",
@@ -60,15 +70,20 @@ export default [
         children: [
             {
                 path: "",
-                redirect: {
-                    name: "report"
+                redirect: to => {
+                    const { role } = store.state.app.profile;
+
+                    if (["admin", "manager"].includes(role.name)) {
+                        return { name: "formula" };
+                    }
+                    return { name: "product" };
                 }
             },
-            {
-                path: "report",
-                name: "report",
-                component: Report
-            },
+            // {
+            //     path: "report",
+            //     name: "report",
+            //     component: Report
+            // },
             {
                 path: "formula",
                 name: "formula",
@@ -96,11 +111,11 @@ export default [
                     roles: ["admin"]
                 }
             },
-            // {
-            //     path: "setting",
-            //     name: "setting",
-            //     component: Setting
-            // },
+            {
+                path: "setting",
+                name: "setting",
+                component: Setting
+            },
             {
                 path: "profile",
                 name: "profile",

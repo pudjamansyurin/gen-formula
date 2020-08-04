@@ -1,87 +1,96 @@
 <template>
-    <v-col cols="12">
-        <the-data-table
-            v-model="selected"
-            :headers="headers"
-            :model="model"
-            :items="products"
-            :total="total"
-            @unselect="selected = []"
-            @fetch="fetch"
-            @create="create"
-            @edit="edit"
-            @delete="dialogDelete = true"
-        >
-            <template v-slot:item.name="{ item }">
-                <v-chip
-                    :to="childRoute(item.id)"
-                    :color="item.prices.length ? 'green' : 'red'"
-                    :small="dense"
-                    dark
-                    >{{ item.name }}</v-chip
+    <fragment>
+        <app-top-bar></app-top-bar>
+
+        <v-row align="start" justify="center" no-gutters>
+            <v-col cols="12">
+                <the-data-table
+                    v-model="selected"
+                    :headers="headers"
+                    :model="model"
+                    :items="products"
+                    :total="total"
+                    @edit="edit"
+                    @fetch="fetch"
+                    @create="create"
+                    @unselect="selected = []"
+                    @delete="dialogDelete = true"
                 >
-            </template>
-            <template v-slot:item.price_latest="{ item }">{{
-                item.price_latest | currency
-            }}</template>
-            <template v-slot:item.price_count="{ item }">{{
-                item.prices.length
-            }}</template>
-            <template v-slot:item.updated_at="{ item }">{{
-                item.updated_at | moment("from")
-            }}</template>
-        </the-data-table>
+                    <template v-slot:item.name="{ item }">
+                        <v-chip
+                            :to="childRoute(item.id)"
+                            :color="item.prices.length ? 'green' : 'red'"
+                            :small="dense"
+                            dark
+                            >{{ item.name }}</v-chip
+                        >
+                    </template>
+                    <template v-slot:item.price_latest="{ item }">{{
+                        item.price_latest | currency
+                    }}</template>
+                    <template v-slot:item.price_count="{ item }">{{
+                        item.prices.length
+                    }}</template>
+                    <template v-slot:item.updated_at="{ item }">{{
+                        item.updated_at | moment("from")
+                    }}</template>
+                </the-data-table>
 
-        <the-dialog-form
-            v-model="dialog"
-            :form="form"
-            @close="close"
-            @submit="save"
-        >
-            <validation-observer ref="form">
-                <validation-provider name="name" v-slot="{ errors, valid }">
-                    <v-text-field
-                        label="Product name"
-                        type="text"
-                        v-model="form.name"
-                        :error-messages="errors"
-                        :success="valid"
-                        counter
-                        hint="This is to identify the product"
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
-
-                <validation-provider
-                    name="description"
-                    v-slot="{ errors, valid }"
+                <the-dialog-form
+                    v-model="dialog"
+                    :form="form"
+                    @close="close"
+                    @submit="save"
                 >
-                    <v-text-field
-                        label="Product description"
-                        type="text"
-                        v-model="form.description"
-                        :error-messages="errors"
-                        :success="valid"
-                        counter
-                        hint="Short description about the product"
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
-            </validation-observer>
-        </the-dialog-form>
+                    <validation-observer ref="form">
+                        <validation-provider
+                            name="name"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                label="Product name"
+                                type="text"
+                                v-model="form.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                counter
+                                hint="This is to identify the product"
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
 
-        <the-dialog-delete
-            v-model="dialogDelete"
-            :selected="selected"
-            :model="model"
-            @delete="deleteItem"
-            @close="dialogDelete = false"
-        >
-            <template v-slot="{ item }">
-                {{ item.name }}
-            </template>
-        </the-dialog-delete>
-    </v-col>
+                        <validation-provider
+                            name="description"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                label="Product description"
+                                type="text"
+                                v-model="form.description"
+                                :error-messages="errors"
+                                :success="valid"
+                                counter
+                                hint="Short description about the product"
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
+                    </validation-observer>
+                </the-dialog-form>
+
+                <the-dialog-delete
+                    v-model="dialogDelete"
+                    :selected="selected"
+                    :model="model"
+                    @delete="deleteItem"
+                    @close="dialogDelete = false"
+                >
+                    <template v-slot="{ item }">
+                        {{ item.name }}
+                    </template>
+                </the-dialog-delete>
+            </v-col>
+        </v-row>
+    </fragment>
 </template>
 
 <script>
@@ -95,22 +104,21 @@ import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Product } from "../models";
 import { eHandler } from "../utils/helper";
 import pluralize from "pluralize";
+import AppTopBar from "../components/app/AppTopBar.vue";
 import TheDataTable from "../components/TheDataTable.vue";
 import TheDialogForm from "../components/TheDialogForm.vue";
 import TheDialogDelete from "../components/TheDialogDelete.vue";
 
-const model = "product";
-
 export default {
-    name: model,
     components: {
+        AppTopBar,
         TheDataTable,
         TheDialogForm,
         TheDialogDelete,
     },
     data() {
         return {
-            model,
+            model: "product",
             params: {},
             total: 0,
             selected: [],
@@ -159,14 +167,16 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        fetch: async function (params) {
-            if (params) {
-                this.params = params;
+        fetch: async function (param) {
+            if (param) {
+                this.params = param;
             }
+
+            let { model, params } = this;
 
             await this.GET_MODELS({
                 model,
-                params: this.params,
+                params,
             })
                 .then(({ meta }) => {
                     this.total = meta.total;
@@ -178,7 +188,7 @@ export default {
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
                     // pass validation
-                    const { form: payload } = this;
+                    const { model, form: payload } = this;
                     // submit to backend
                     this.SAVE_MODEL({
                         model,
@@ -204,6 +214,8 @@ export default {
             });
         },
         deleteItem: async function () {
+            let { model } = this;
+
             await this.DELETE_MODELS({
                 model,
                 ids: this.$_.map(this.selected, "id"),

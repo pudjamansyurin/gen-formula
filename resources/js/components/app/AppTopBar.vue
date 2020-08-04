@@ -14,14 +14,14 @@
             <v-toolbar-title style="width: 300px;" class="ml-0 pl-4">
                 <span class="hidden-sm-and-down">{{ title }}</span>
             </v-toolbar-title>
-            <!-- <v-text-field
-            flat
-            solo-inverted
-            hide-details
-            prepend-inner-icon="mdi-magnify"
-            label="Search"
-            class="hidden-sm-and-down"
-        ></v-text-field> -->
+            <v-text-field
+                flat
+                solo-inverted
+                hide-details
+                prepend-inner-icon="mdi-magnify"
+                label="Search"
+                class="hidden-sm-and-down"
+            ></v-text-field>
             <v-spacer></v-spacer>
             <v-btn v-if="!webview" @click="toggle" icon>
                 <v-icon>{{
