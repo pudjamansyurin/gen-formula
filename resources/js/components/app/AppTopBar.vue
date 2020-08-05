@@ -1,7 +1,6 @@
 <template>
     <fragment>
         <v-app-bar
-            :clipped-left="$vuetify.breakpoint.lgAndUp"
             :collapse="$vuetify.breakpoint.smAndDown"
             :collapse-on-scroll="$vuetify.breakpoint.smAndDown"
             color="blue darken-3"
@@ -11,8 +10,8 @@
             <v-app-bar-nav-icon
                 @click.stop="TOGGLE_DRAWER"
             ></v-app-bar-nav-icon>
-            <v-toolbar-title style="width: 300px;" class="ml-0 pl-4">
-                <span class="hidden-sm-and-down">{{ title }}</span>
+            <v-toolbar-title>
+                <span>{{ title }}</span>
             </v-toolbar-title>
             <v-text-field
                 flat
@@ -20,7 +19,6 @@
                 hide-details
                 prepend-inner-icon="mdi-magnify"
                 label="Search"
-                class="hidden-sm-and-down"
             ></v-text-field>
             <v-spacer></v-spacer>
             <v-btn v-if="!webview" @click="toggle" icon>
@@ -63,6 +61,12 @@
                     </v-list-item>
                 </v-list>
             </v-menu>
+
+            <template v-slot:extension>
+                <v-btn fab color="cyan accent-2" bottom right absolute>
+                    <v-icon>mdi-plus</v-icon>
+                </v-btn>
+            </template>
         </v-app-bar>
 
         <!-- fullscreen confirmation -->

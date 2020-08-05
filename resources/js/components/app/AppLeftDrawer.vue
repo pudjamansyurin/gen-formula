@@ -1,11 +1,11 @@
 <template>
     <v-navigation-drawer
-        :value="drawer"
         @input="SET_DRAWER"
-        :clipped="$vuetify.breakpoint.lgAndUp"
+        :value="drawer || $vuetify.breakpoint.lgAndUp"
+        :mini-variant="!drawer && $vuetify.breakpoint.lgAndUp"
         app
     >
-        <template v-slot:prepend>
+        <v-list>
             <v-list-item
                 v-if="profile"
                 :to="{ name: 'profile' }"
@@ -13,11 +13,13 @@
                 link
                 two-line
             >
-                <v-list-item-avatar>
-                    <v-avatar right size="50px" item>
-                        <v-img src="/img/unknown.png" alt="Profile"></v-img>
-                    </v-avatar>
-                </v-list-item-avatar>
+                <!-- <v-list-item-avatar>
+                    <v-img src="/img/unknown.png" alt="Profile"></v-img>
+                </v-list-item-avatar> -->
+
+                <v-list-item-action>
+                    <v-icon>mdi-face-profile</v-icon>
+                </v-list-item-action>
 
                 <v-list-item-content>
                     <v-list-item-title class="title">{{
@@ -31,14 +33,13 @@
                     <v-icon>mdi-menu-down</v-icon>
                 </v-list-item-action>
             </v-list-item>
-        </template>
-
-        <v-divider></v-divider>
-        <v-list>
+            <v-divider></v-divider>
             <template v-for="(item, index) in items">
-                <v-subheader v-if="item.heading" :key="index">{{
-                    item.heading
-                }}</v-subheader>
+                <template v-if="item.heading">
+                    <v-subheader v-if="drawer" :key="index">{{
+                        item.heading
+                    }}</v-subheader>
+                </template>
                 <v-divider v-else-if="item.divider" :key="index"></v-divider>
                 <!-- <v-list-group
                     v-else-if="item.children"
