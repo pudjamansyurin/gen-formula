@@ -1,6 +1,10 @@
 <template>
     <fragment>
-        <app-top-bar></app-top-bar>
+        <app-top-bar
+            :model="model"
+            :selected="selected"
+            @unselect="selected = []"
+        ></app-top-bar>
 
         <v-row align="start" justify="center" no-gutters>
             <v-col cols="12">

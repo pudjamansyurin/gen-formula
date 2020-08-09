@@ -1,27 +1,16 @@
 <template>
     <fragment>
-        <v-app-bar
-            :collapse="$vuetify.breakpoint.smAndDown"
-            :collapse-on-scroll="$vuetify.breakpoint.smAndDown"
-            color="blue darken-3"
-            dark
-            app
-        >
+        <!-- :collapse="$vuetify.breakpoint.smAndDown"
+            :collapse-on-scroll="$vuetify.breakpoint.smAndDown" -->
+        <v-app-bar color="blue darken-3" dark app>
             <v-app-bar-nav-icon
                 @click.stop="TOGGLE_DRAWER"
             ></v-app-bar-nav-icon>
             <v-toolbar-title>
                 <span>{{ title }}</span>
             </v-toolbar-title>
-            <v-text-field
-                flat
-                solo-inverted
-                hide-details
-                prepend-inner-icon="mdi-magnify"
-                label="Search"
-            ></v-text-field>
             <v-spacer></v-spacer>
-            <v-btn v-if="!webview" @click="toggle" icon>
+            <v-btn v-if="!webview" @click="toggleFullscreen" icon>
                 <v-icon>{{
                     fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen"
                 }}</v-icon>
@@ -63,7 +52,120 @@
             </v-menu>
 
             <template v-slot:extension>
-                <v-btn fab color="cyan accent-2" bottom right absolute>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                            v-show="selected.length"
+                            @click="$emit('unselect')"
+                            v-on="on"
+                            icon
+                        >
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Cancel</span>
+                </v-tooltip>
+
+                <template v-if="!selected.length">
+                    <v-toolbar-title>{{ theTitle }}</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                </template>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                            v-show="
+                                !selected.length && !$vuetify.breakpoint.xsOnly
+                            "
+                            @click="TOGGLE_DENSE"
+                            v-on="on"
+                            icon
+                        >
+                            <v-icon>{{
+                                dense ? "mdi-table" : "mdi-table-large"
+                            }}</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>{{ dense ? "Larger" : "Smaller" }}</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                            v-show="selected.length"
+                            @click="$emit('delete')"
+                            v-on="on"
+                            icon
+                        >
+                            <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Delete</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                            v-show="selected.length == 1"
+                            @click="$emit('edit')"
+                            v-on="on"
+                            icon
+                        >
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Edit</span>
+                </v-tooltip>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                            v-show="!searchBox && $vuetify.breakpoint.smAndDown"
+                            @click="setSearch(true)"
+                            v-on="on"
+                            icon
+                        >
+                            <v-icon>
+                                {{
+                                    searchBox
+                                        ? "mdi-close-circle"
+                                        : "mdi-magnify"
+                                }}
+                            </v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Search</span>
+                </v-tooltip>
+
+                <template v-if="searchBox || !$vuetify.breakpoint.smAndDown">
+                    <v-text-field
+                        v-model="search"
+                        :prepend-icon="
+                            $vuetify.breakpoint.smAndDown
+                                ? 'mdi-magnify-close'
+                                : 'mdi-magnify'
+                        "
+                        @click:prepend="setSearch(false)"
+                        label="Search"
+                        dense
+                        flat
+                        solo-inverted
+                        hide-details
+                    ></v-text-field>
+                </template>
+                <!-- <v-spacer v-if="!$vuetify.breakpoint.smAndDown"></v-spacer> -->
+
+                <v-spacer></v-spacer>
+                <v-btn
+                    v-if="!selected.length"
+                    @click="$emit('create')"
+                    color="cyan accent-2"
+                    fab
+                    small
+                    bottom
+                    right
+                    absolute
+                >
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </template>
@@ -102,45 +204,77 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import {
     TOGGLE_DRAWER,
     TOGGLE_FULLSCREEN,
+    TOGGLE_DENSE,
 } from "../../store/app/mutation-types";
 import { LOGOUT } from "../../store/app/action-types";
 import { ls, eHandler } from "../../utils/helper";
+import pluralize from "pluralize";
 import isWebview from "is-ua-webview";
 
 export default {
+    props: {
+        model: {
+            type: String,
+            default: "",
+        },
+        selected: {
+            type: Array,
+            default: () => [],
+        },
+    },
     data() {
         return {
             dialog: !ls.get("confirmedFullscreen"),
+            search: "",
+            searchBox: false,
         };
     },
     computed: {
-        ...mapState("app", ["title", "fullscreen"]),
+        ...mapState("app", ["title", "dense", "fullscreen"]),
         webview() {
             return isWebview(window.navigator.userAgent);
         },
+        theTitle() {
+            const { length } = this.selected;
+            if (length > 0) {
+                return `${length} selected`;
+            }
+            return `${pluralize(this.$_.startCase(this.model))}`;
+        },
     },
     methods: {
-        ...mapMutations("app", [TOGGLE_DRAWER, TOGGLE_FULLSCREEN]),
+        ...mapMutations("app", [
+            TOGGLE_DENSE,
+            TOGGLE_DRAWER,
+            TOGGLE_FULLSCREEN,
+        ]),
         ...mapActions("app", [LOGOUT]),
+        setSearch(state) {
+            if (this.$vuetify.breakpoint.smAndDown) {
+                if (!state) {
+                    this.search = "";
+                }
+                this.searchBox = state;
+            }
+        },
+        toggleFullscreen() {
+            this.$fullscreen.toggle(document.body, {
+                callback: this.TOGGLE_FULLSCREEN(),
+            });
+        },
+        confirm(state) {
+            if (state) {
+                this.toggleFullscreen();
+            }
+            this.dialog = false;
+            ls.set("confirmedFullscreen", true);
+        },
         logout() {
             this.LOGOUT()
                 .then(() => {
                     this.$router.push({ name: "login" });
                 })
                 .catch((e) => eHandler(e));
-        },
-        confirm(state) {
-            this.dialog = false;
-            ls.set("confirmedFullscreen", true);
-            // handle fullscreen request
-            if (state) {
-                this.toggle();
-            }
-        },
-        toggle() {
-            this.$fullscreen.toggle(document.body, {
-                callback: this.TOGGLE_FULLSCREEN(),
-            });
         },
     },
 };

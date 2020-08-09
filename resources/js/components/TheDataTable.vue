@@ -18,7 +18,7 @@
         must-sort
         class="elevation-1"
     >
-        <template v-slot:top>
+        <!-- <template v-slot:top>
             <v-toolbar
                 :dark="!!value.length"
                 :dense="$vuetify.breakpoint.smAndDown"
@@ -138,10 +138,10 @@
                     <span>Edit</span>
                 </v-tooltip>
             </v-toolbar>
-        </template>
+        </template> -->
 
         <template
-            v-for="(header, key) in headers"
+            v-for="header in headers"
             v-slot:[`item.${header.value}`]="{ item }"
         >
             <slot :name="`item.${header.value}`" :item="item">
