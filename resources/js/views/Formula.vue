@@ -14,7 +14,7 @@
 
         <v-row align="start" justify="center" no-gutters>
             <v-col cols="12">
-                <the-data-table
+                <!-- <the-data-table
                     v-model="selected"
                     :headers="headers"
                     :items="formulas"
@@ -43,21 +43,15 @@
                     <template v-slot:item.updated_at="{ item }">{{
                         item.updated_at | moment("from")
                     }}</template>
-                </the-data-table>
+                </the-data-table> -->
 
-                <!-- <the-data-card
+                <the-data-card
                     v-model="selected"
-                    :headers="headers"
-                    :model="model"
                     :items="formulas"
-                    :total="total"
-                    @unselect="selected = []"
+                    :options.sync="options"
                     @fetch="fetch"
-                    @create="create"
-                    @edit="edit"
-                    @delete="dialogDelete = true"
                 >
-                </the-data-card> -->
+                </the-data-card>
 
                 <the-dialog-form
                     v-model="dialog"

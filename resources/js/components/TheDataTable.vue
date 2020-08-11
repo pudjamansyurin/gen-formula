@@ -11,6 +11,9 @@
         :dense="dense"
         :page="1"
         :items-per-page="10"
+        :footer-props="{
+            itemsPerPageText: 'Rows',
+        }"
         selectable-key="authorized"
         sort-by="updated_at"
         class="elevation-1"

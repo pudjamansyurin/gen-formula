@@ -67,50 +67,25 @@ export default {
             type: Array,
             default: () => [],
         },
-        headers: {
-            type: Array,
-            default: () => [],
-        },
-        model: {
-            type: String,
-            default: "",
-        },
         items: {
             type: Array,
             default: () => [],
         },
-        total: {
-            type: Number,
-            default: 0,
+        options: {
+            type: Object,
+            default: () => {},
         },
     },
     data() {
         return {
-            search: "",
-            searchBox: false,
             datas: [],
-            options: {},
         };
     },
     computed: {
         ...mapState("app", ["loading", "dense"]),
-        tableTitle() {
-            const { length } = this.value;
-
-            if (length > 0) {
-                return `${length} selected`;
-            }
-            return `${pluralize(this.$_.startCase(this.model))}`;
-        },
     },
     methods: {
         ...mapMutations("app", [TOGGLE_DENSE]),
-        toggleSearch() {
-            this.searchBox = !this.searchBox;
-            if (!this.searchBox) {
-                this.search = "";
-            }
-        },
         toggleSelect(item) {
             item.selected = !item.selected;
 
@@ -119,23 +94,14 @@ export default {
                 this.datas.filter((el) => el.selected)
             );
         },
-        fetch() {
-            this.$emit("fetch", {
-                ...this.options,
-                search: this.search,
-            });
-        },
     },
     watch: {
         options: {
             handler() {
-                this.fetch();
+                this.$emit("fetch");
             },
             deep: true,
         },
-        search: debounce(function () {
-            this.fetch();
-        }, 500),
         items: function (items) {
             this.datas = this.$_.map(items, (el) => {
                 return {
@@ -144,16 +110,9 @@ export default {
                 };
             });
         },
-        value: function (selected) {
-            if (selected.length) {
-                this.searchBox = false;
-            } else if (this.search) {
-                this.searchBox = true;
-            }
-        },
     },
     mounted() {
-        this.options = {
+        this.$emit("update:options", {
             groupBy: [],
             groupDesc: [],
             itemsPerPage: 10,
@@ -163,7 +122,7 @@ export default {
             search: "",
             sortBy: ["updated_at"],
             sortDesc: [true],
-        };
+        });
     },
 };
 </script>
