@@ -2,7 +2,12 @@
     <fragment>
         <!-- :collapse="$vuetify.breakpoint.smAndDown"
             :collapse-on-scroll="$vuetify.breakpoint.smAndDown" -->
-        <v-app-bar :color="selected.length ? 'black' : 'primary'" dark app>
+        <v-app-bar
+            :color="selected.length ? 'black' : 'primary'"
+            :collapse-on-scroll="!(selected.length || value)"
+            dark
+            app
+        >
             <template v-if="!searchBox || !$vuetify.breakpoint.smAndDown">
                 <v-app-bar-nav-icon
                     @click.stop="TOGGLE_DRAWER"
