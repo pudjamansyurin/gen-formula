@@ -1,10 +1,8 @@
 <template>
     <fragment>
-        <!-- :collapse="$vuetify.breakpoint.smAndDown"
-            :collapse-on-scroll="$vuetify.breakpoint.smAndDown" -->
         <v-app-bar
             :color="selected.length ? 'black' : 'primary'"
-            :collapse-on-scroll="!(selected.length || value)"
+            :collapse-on-scroll="!(selected.length || searchBox)"
             dark
             app
         >

@@ -1,18 +1,18 @@
 {
-    "/js/app.js": "/js/app.js?id=0ad0f7739569d29f972f",
+    "/js/app.js": "/js/app.js?id=0904e30cbea644b371f8",
     "/css/app.css": "/css/app.css?id=c79cc61f8ecec6fb9927",
     "/js/auth-forget.js": "/js/auth-forget.js?id=e7668ed5fae9be358553",
     "/js/auth-login.js": "/js/auth-login.js?id=081d2944d48952e456ff",
     "/js/auth-reset.js": "/js/auth-reset.js?id=2e511b6d2edb1ceabc5f",
     "/js/auth-verify.js": "/js/auth-verify.js?id=da7f295101fa668242fb",
-    "/js/dashboard.js": "/js/dashboard.js?id=115756594e23a3b78131",
+    "/js/dashboard.js": "/js/dashboard.js?id=9a72337be2d44e1bb027",
     "/js/error.js": "/js/error.js?id=800344f4b96b9ee256e9",
-    "/js/formula.js": "/js/formula.js?id=b66335093a4894c0b51c",
+    "/js/formula.js": "/js/formula.js?id=2eddb1786ab438377def",
     "/js/home.js": "/js/home.js?id=9e3e0b530c7c1c889833",
     "/js/policy.js": "/js/policy.js?id=4f9b794140d4256fca8f",
-    "/js/price.js": "/js/price.js?id=8c5b2db5537fa55c570e",
-    "/js/product.js": "/js/product.js?id=3a39324c29da67e8d4fd",
-    "/js/profile.js": "/js/profile.js?id=d0de418dccf63f42792b",
+    "/js/price.js": "/js/price.js?id=173b16430acbdbc90b8c",
+    "/js/product.js": "/js/product.js?id=959abbeacb55271ffff1",
+    "/js/profile.js": "/js/profile.js?id=64cd4a6233a05ccdd1ac",
     "/js/setting.js": "/js/setting.js?id=8ebeaa552930a548f365",
-    "/js/user.js": "/js/user.js?id=3b7094e106f578f62a90"
+    "/js/user.js": "/js/user.js?id=51982b546922856b8bdf"
 }
