@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["formula~price~product~user"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["formula~price~product"],{
 
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TheDataTable.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\

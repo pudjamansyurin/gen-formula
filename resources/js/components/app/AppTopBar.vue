@@ -2,14 +2,46 @@
     <fragment>
         <!-- :collapse="$vuetify.breakpoint.smAndDown"
             :collapse-on-scroll="$vuetify.breakpoint.smAndDown" -->
-        <v-app-bar color="blue darken-3" dark app>
-            <v-app-bar-nav-icon
-                @click.stop="TOGGLE_DRAWER"
-            ></v-app-bar-nav-icon>
-            <v-toolbar-title>
-                <span>{{ title }}</span>
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
+        <v-app-bar :color="selected.length ? 'black' : 'primary'" dark app>
+            <template v-if="!searchBox || !$vuetify.breakpoint.smAndDown">
+                <v-app-bar-nav-icon
+                    @click.stop="TOGGLE_DRAWER"
+                ></v-app-bar-nav-icon>
+                <v-toolbar-title>
+                    <span>{{ title }}</span>
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+            </template>
+
+            <template v-if="crud">
+                <v-text-field
+                    v-if="searchBox || !$vuetify.breakpoint.smAndDown"
+                    :value="value"
+                    @input="$emit('input', $event)"
+                    :append-icon="
+                        $vuetify.breakpoint.smAndDown || value
+                            ? 'mdi-magnify-close'
+                            : 'mdi-magnify'
+                    "
+                    @click:append="setSearch(false)"
+                    label="Search"
+                    dense
+                    flat
+                    solo-inverted
+                    hide-details
+                ></v-text-field>
+            </template>
+
+            <v-spacer v-if="!$vuetify.breakpoint.smAndDown"></v-spacer>
+            <template v-if="crud">
+                <v-btn
+                    v-if="!searchBox && $vuetify.breakpoint.smAndDown"
+                    @click="setSearch(true)"
+                    icon
+                >
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+            </template>
             <v-btn v-if="!webview" @click="toggleFullscreen" icon>
                 <v-icon>{{
                     fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen"
@@ -51,123 +83,99 @@
                 </v-list>
             </v-menu>
 
-            <template v-slot:extension>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                            v-show="selected.length"
-                            @click="$emit('unselect')"
-                            v-on="on"
-                            icon
-                        >
-                            <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Cancel</span>
-                </v-tooltip>
+            <template v-slot:extension v-if="crud">
+                <template v-if="selected.length">
+                    <v-btn
+                        @click="$emit('unselect')"
+                        fab
+                        text
+                        outlined
+                        small
+                        dark
+                    >
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-divider
+                        :dark="!!selected.length"
+                        class="mr-4"
+                        inset
+                        vertical
+                    ></v-divider>
+                </template>
 
-                <template v-if="!selected.length">
+                <template>
                     <v-toolbar-title>{{ theTitle }}</v-toolbar-title>
-                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-divider
+                        :dark="!!selected.length"
+                        class="mx-4"
+                        inset
+                        vertical
+                    ></v-divider>
                 </template>
-
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                            v-show="
-                                !selected.length && !$vuetify.breakpoint.xsOnly
-                            "
-                            @click="TOGGLE_DENSE"
-                            v-on="on"
-                            icon
-                        >
-                            <v-icon>{{
-                                dense ? "mdi-table" : "mdi-table-large"
-                            }}</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>{{ dense ? "Larger" : "Smaller" }}</span>
-                </v-tooltip>
-
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                            v-show="selected.length"
-                            @click="$emit('delete')"
-                            v-on="on"
-                            icon
-                        >
-                            <v-icon>mdi-delete</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Delete</span>
-                </v-tooltip>
-
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                            v-show="selected.length == 1"
-                            @click="$emit('edit')"
-                            v-on="on"
-                            icon
-                        >
-                            <v-icon>mdi-pencil</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Edit</span>
-                </v-tooltip>
-
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                            v-show="!searchBox && $vuetify.breakpoint.smAndDown"
-                            @click="setSearch(true)"
-                            v-on="on"
-                            icon
-                        >
-                            <v-icon>
-                                {{
-                                    searchBox
-                                        ? "mdi-close-circle"
-                                        : "mdi-magnify"
-                                }}
-                            </v-icon>
-                        </v-btn>
-                    </template>
-                    <span>Search</span>
-                </v-tooltip>
-
-                <template v-if="searchBox || !$vuetify.breakpoint.smAndDown">
-                    <v-text-field
-                        v-model="search"
-                        :prepend-icon="
-                            $vuetify.breakpoint.smAndDown
-                                ? 'mdi-magnify-close'
-                                : 'mdi-magnify'
-                        "
-                        @click:prepend="setSearch(false)"
-                        label="Search"
-                        dense
-                        flat
-                        solo-inverted
-                        hide-details
-                    ></v-text-field>
-                </template>
-                <!-- <v-spacer v-if="!$vuetify.breakpoint.smAndDown"></v-spacer> -->
 
                 <v-spacer></v-spacer>
-                <v-btn
-                    v-if="!selected.length"
-                    @click="$emit('create')"
-                    color="cyan accent-2"
-                    fab
-                    small
-                    bottom
-                    right
-                    absolute
-                >
-                    <v-icon>mdi-plus</v-icon>
-                </v-btn>
+
+                <template v-if="!selected.length">
+                    <v-btn
+                        @click="TOGGLE_DENSE"
+                        :fab="$vuetify.breakpoint.smAndDown"
+                        class="mr-2"
+                        text
+                        outlined
+                        small
+                        dark
+                    >
+                        <v-icon>{{
+                            dense ? "mdi-table" : "mdi-table-large"
+                        }}</v-icon>
+                        <template v-if="!$vuetify.breakpoint.smAndDown"
+                            >Dense</template
+                        >
+                    </v-btn>
+                    <v-btn
+                        @click="$emit('create')"
+                        :fab="$vuetify.breakpoint.smAndDown"
+                        text
+                        outlined
+                        small
+                        dark
+                    >
+                        <v-icon>mdi-plus</v-icon>
+                        <template v-if="!$vuetify.breakpoint.smAndDown"
+                            >Create</template
+                        >
+                    </v-btn>
+                </template>
+                <template v-else>
+                    <v-btn
+                        v-if="selected.length == 1"
+                        @click="$emit('edit')"
+                        :fab="$vuetify.breakpoint.smAndDown"
+                        class="mr-2"
+                        text
+                        outlined
+                        small
+                        dark
+                    >
+                        <v-icon>mdi-pencil</v-icon>
+                        <template v-if="!$vuetify.breakpoint.smAndDown"
+                            >Edit</template
+                        >
+                    </v-btn>
+                    <v-btn
+                        @click="$emit('delete')"
+                        :fab="$vuetify.breakpoint.smAndDown"
+                        text
+                        outlined
+                        small
+                        dark
+                    >
+                        <v-icon>mdi-delete</v-icon>
+                        <template v-if="!$vuetify.breakpoint.smAndDown"
+                            >Delete</template
+                        >
+                    </v-btn>
+                </template>
             </template>
         </v-app-bar>
 
@@ -207,13 +215,18 @@ import {
     TOGGLE_DENSE,
 } from "../../store/app/mutation-types";
 import { LOGOUT } from "../../store/app/action-types";
+import { debounce } from "lodash";
 import { ls, eHandler } from "../../utils/helper";
 import pluralize from "pluralize";
 import isWebview from "is-ua-webview";
 
 export default {
     props: {
-        model: {
+        value: {
+            type: String,
+            default: "",
+        },
+        page: {
             type: String,
             default: "",
         },
@@ -221,11 +234,14 @@ export default {
             type: Array,
             default: () => [],
         },
+        crud: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
             dialog: !ls.get("confirmedFullscreen"),
-            search: "",
             searchBox: false,
         };
     },
@@ -239,7 +255,7 @@ export default {
             if (length > 0) {
                 return `${length} selected`;
             }
-            return `${pluralize(this.$_.startCase(this.model))}`;
+            return `${pluralize(this.$_.startCase(this.page))}`;
         },
     },
     methods: {
@@ -250,12 +266,10 @@ export default {
         ]),
         ...mapActions("app", [LOGOUT]),
         setSearch(state) {
-            if (this.$vuetify.breakpoint.smAndDown) {
-                if (!state) {
-                    this.search = "";
-                }
-                this.searchBox = state;
+            if (!state) {
+                this.$emit("input", "");
             }
+            this.searchBox = state;
         },
         toggleFullscreen() {
             this.$fullscreen.toggle(document.body, {
@@ -276,6 +290,11 @@ export default {
                 })
                 .catch((e) => eHandler(e));
         },
+    },
+    watch: {
+        value: debounce(function () {
+            this.$emit("fetch");
+        }, 500),
     },
 };
 </script>

@@ -1,9 +1,15 @@
 <template>
     <fragment>
         <app-top-bar
-            :model="model"
+            v-model="search"
+            :page="model"
             :selected="selected"
             @unselect="selected = []"
+            @fetch="fetch"
+            @edit="edit"
+            @create="create"
+            @delete="dialogDelete = true"
+            crud
         ></app-top-bar>
 
         <v-row align="start" justify="center" no-gutters>
@@ -11,14 +17,10 @@
                 <the-data-table
                     v-model="selected"
                     :headers="headers"
-                    :model="model"
                     :items="products"
                     :total="total"
-                    @edit="edit"
+                    :options.sync="options"
                     @fetch="fetch"
-                    @create="create"
-                    @unselect="selected = []"
-                    @delete="dialogDelete = true"
                 >
                     <template v-slot:item.name="{ item }">
                         <v-chip
@@ -123,7 +125,8 @@ export default {
     data() {
         return {
             model: "product",
-            params: {},
+            options: {},
+            search: "",
             total: 0,
             selected: [],
             headers: [
@@ -171,16 +174,15 @@ export default {
                 this.$refs.form.reset();
             });
         },
-        fetch: async function (param) {
-            if (param) {
-                this.params = param;
-            }
-
-            let { model, params } = this;
+        fetch: async function () {
+            let { model, options, search } = this;
 
             await this.GET_MODELS({
                 model,
-                params,
+                params: {
+                    ...options,
+                    search,
+                },
             })
                 .then(({ meta }) => {
                     this.total = meta.total;

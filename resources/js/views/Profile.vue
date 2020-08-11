@@ -1,6 +1,6 @@
 <template>
     <fragment>
-        <app-top-bar></app-top-bar>
+        <app-top-bar page="Profile"></app-top-bar>
 
         <v-row align="start" justify="center" no-gutters>
             <v-col cols="12" md="8">

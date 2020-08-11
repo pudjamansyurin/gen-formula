@@ -1,45 +1,51 @@
 <template>
     <fragment>
-        <app-top-bar></app-top-bar>
+        <app-top-bar
+            v-model="search"
+            :page="model"
+            :selected="selected"
+            @unselect="selected = []"
+            @fetch="fetch"
+            @edit="edit"
+            @create="create"
+            @delete="dialogDelete = true"
+            crud
+        ></app-top-bar>
 
         <v-row align="start" justify="center" no-gutters>
             <v-col cols="12">
-                <!-- <the-data-table
-            v-model="selected"
-            :headers="headers"
-            :model="model"
-            :items="formulas"
-            :total="total"
-            @edit="edit"
-            @fetch="fetch"
-            @create="create"
-            @unselect="selected = []"
-            @delete="dialogDelete = true"
-        >
-            <template v-slot:item.name="{ item }">
-                <v-chip
-                    @click="editPercent(item.id)"
-                    :color="item.percent_total == 100 ? 'green' : 'red'"
-                    :small="dense"
-                    dark
-                    >{{ item.name }}</v-chip
+                <the-data-table
+                    v-model="selected"
+                    :headers="headers"
+                    :items="formulas"
+                    :total="total"
+                    :options.sync="options"
+                    @fetch="fetch"
                 >
-            </template>
-            <template v-slot:item.price_total="{ item }">{{
-                item.price_total | currency
-            }}</template>
-            <template v-slot:item.percent_total="{ item }"
-                >{{ item.percent_total }} %</template
-            >
-            <template v-slot:item.percent_count="{ item }">{{
-                item.percents.length
-            }}</template>
-            <template v-slot:item.updated_at="{ item }">{{
-                item.updated_at | moment("from")
-            }}</template>
-        </the-data-table> -->
+                    <template v-slot:item.name="{ item }">
+                        <v-chip
+                            @click="editPercent(item.id)"
+                            :color="item.percent_total == 100 ? 'green' : 'red'"
+                            :small="dense"
+                            dark
+                            >{{ item.name }}</v-chip
+                        >
+                    </template>
+                    <template v-slot:item.price_total="{ item }">{{
+                        item.price_total | currency
+                    }}</template>
+                    <template v-slot:item.percent_total="{ item }"
+                        >{{ item.percent_total }} %</template
+                    >
+                    <template v-slot:item.percent_count="{ item }">{{
+                        item.percents.length
+                    }}</template>
+                    <template v-slot:item.updated_at="{ item }">{{
+                        item.updated_at | moment("from")
+                    }}</template>
+                </the-data-table>
 
-                <the-data-card
+                <!-- <the-data-card
                     v-model="selected"
                     :headers="headers"
                     :model="model"
@@ -51,7 +57,7 @@
                     @edit="edit"
                     @delete="dialogDelete = true"
                 >
-                </the-data-card>
+                </the-data-card> -->
 
                 <the-dialog-form
                     v-model="dialog"
@@ -216,7 +222,8 @@ export default {
     data() {
         return {
             model: "formula",
-            params: {},
+            options: {},
+            search: "",
             total: 0,
             selected: [],
             headers: [
@@ -317,16 +324,15 @@ export default {
                 })
                 .catch((e) => eHandler(e));
         },
-        fetch: async function (param) {
-            if (param) {
-                this.params = param;
-            }
-
-            let { model, params } = this;
+        fetch: async function () {
+            let { model, options, search } = this;
 
             await this.GET_MODELS({
                 model,
-                params,
+                params: {
+                    ...options,
+                    search,
+                },
             })
                 .then(({ meta }) => {
                     this.total = meta.total;
