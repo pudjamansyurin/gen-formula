@@ -6,7 +6,7 @@
             dark
             app
         >
-            <template v-if="!searchBox || !$vuetify.breakpoint.smAndDown">
+            <template v-if="!searchBox || !mobile">
                 <v-app-bar-nav-icon
                     @click.stop="TOGGLE_DRAWER"
                 ></v-app-bar-nav-icon>
@@ -18,13 +18,11 @@
 
             <template v-if="crud">
                 <v-text-field
-                    v-if="searchBox || !$vuetify.breakpoint.smAndDown"
+                    v-if="searchBox || !mobile"
                     :value="value"
                     @input="$emit('input', $event)"
                     :append-icon="
-                        $vuetify.breakpoint.smAndDown || value
-                            ? 'mdi-magnify-close'
-                            : 'mdi-magnify'
+                        mobile || value ? 'mdi-magnify-close' : 'mdi-magnify'
                     "
                     @click:append="setSearch(false)"
                     label="Search"
@@ -35,10 +33,10 @@
                 ></v-text-field>
             </template>
 
-            <v-spacer v-if="!$vuetify.breakpoint.smAndDown"></v-spacer>
+            <v-spacer v-if="!mobile"></v-spacer>
             <template v-if="crud">
                 <v-btn
-                    v-if="!searchBox && $vuetify.breakpoint.smAndDown"
+                    v-if="!searchBox && mobile"
                     @click="setSearch(true)"
                     icon
                 >
@@ -120,8 +118,9 @@
 
                 <template v-if="!selected.length">
                     <v-btn
+                        v-if="!mobile"
                         @click="TOGGLE_DENSE"
-                        :fab="$vuetify.breakpoint.smAndDown"
+                        :fab="mobile"
                         class="mr-2"
                         text
                         outlined
@@ -131,29 +130,25 @@
                         <v-icon>{{
                             dense ? "mdi-table" : "mdi-table-large"
                         }}</v-icon>
-                        <template v-if="!$vuetify.breakpoint.smAndDown"
-                            >Dense</template
-                        >
+                        <template v-if="!mobile">Dense</template>
                     </v-btn>
                     <v-btn
                         @click="$emit('create')"
-                        :fab="$vuetify.breakpoint.smAndDown"
+                        :fab="mobile"
                         text
                         outlined
                         small
                         dark
                     >
                         <v-icon>mdi-plus</v-icon>
-                        <template v-if="!$vuetify.breakpoint.smAndDown"
-                            >Create</template
-                        >
+                        <template v-if="!mobile">Create</template>
                     </v-btn>
                 </template>
                 <template v-else>
                     <v-btn
                         v-if="selected.length == 1"
                         @click="$emit('edit')"
-                        :fab="$vuetify.breakpoint.smAndDown"
+                        :fab="mobile"
                         class="mr-2"
                         text
                         outlined
@@ -161,33 +156,25 @@
                         dark
                     >
                         <v-icon>mdi-pencil</v-icon>
-                        <template v-if="!$vuetify.breakpoint.smAndDown"
-                            >Edit</template
-                        >
+                        <template v-if="!mobile">Edit</template>
                     </v-btn>
                     <v-btn
                         @click="$emit('delete')"
-                        :fab="$vuetify.breakpoint.smAndDown"
+                        :fab="mobile"
                         text
                         outlined
                         small
                         dark
                     >
                         <v-icon>mdi-delete</v-icon>
-                        <template v-if="!$vuetify.breakpoint.smAndDown"
-                            >Delete</template
-                        >
+                        <template v-if="!mobile">Delete</template>
                     </v-btn>
                 </template>
             </template>
         </v-app-bar>
 
         <!-- fullscreen confirmation -->
-        <v-dialog
-            v-if="$vuetify.breakpoint.smAndDown && !webview"
-            v-model="dialog"
-            max-width="290"
-        >
+        <v-dialog v-if="mobile && !webview" v-model="dialog" max-width="290">
             <v-card>
                 <v-card-title class="headline"
                     >Use fullscreen mode ?</v-card-title
@@ -220,10 +207,12 @@ import {
 import { LOGOUT } from "../../store/app/action-types";
 import { debounce } from "lodash";
 import { ls, eHandler } from "../../utils/helper";
+import mixins from "../../mixins";
 import pluralize from "pluralize";
 import isWebview from "is-ua-webview";
 
 export default {
+    mixins: [mixins],
     props: {
         value: {
             type: String,

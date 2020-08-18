@@ -12,178 +12,194 @@
             crud
         ></app-top-bar>
 
-        <v-row align="start" justify="center" no-gutters>
-            <v-col cols="12">
-                <the-data-table
-                    v-model="selected"
-                    :headers="headers"
-                    :items="users"
-                    :total="total"
-                    :options.sync="options"
-                    @fetch="fetch"
-                >
-                    <template v-slot:item.name="{ item }">
-                        <v-chip
-                            v-if="profile.id == item.id"
-                            :to="{ name: 'profile' }"
-                            color="primary"
-                            :small="dense"
-                            >{{ item.name }}</v-chip
-                        >
-                        <template v-else>
-                            {{ item.name }}
-                        </template>
-                    </template>
-                    <template v-slot:item.last_at="{ item }">
-                        <template v-if="item.last_at">
+        <v-alert v-if="!users.length" outlined type="info" border="top">
+            Oops, no {{ model }} data yet.
+        </v-alert>
+        <div v-else>
+            <the-data-card
+                v-if="mobile"
+                v-model="selected"
+                :items="users"
+                :options.sync="options"
+                @fetch="fetch"
+            >
+                <template v-slot="{ item }">
+                    <v-btn
+                        v-if="profile.id == item.id"
+                        :to="{ name: 'profile' }"
+                        :outlined="!item.selected"
+                        color="green"
+                        absolute
+                        top
+                        right
+                        small
+                        tile
+                        >Profile</v-btn
+                    >
+                    <v-card-text>
+                        <div class="overline">
                             {{ item.last_at | moment("from") }}
-                        </template>
-                        <template v-else>
-                            Never
-                        </template>
-                    </template>
-                    <template v-slot:item.last_ip="{ item }">
-                        {{ item.last_ip || "None" }}
-                    </template>
-                </the-data-table>
-
-                <the-dialog-form
-                    v-model="dialog"
-                    :form="form"
-                    @close="close"
-                    @submit="save"
-                >
-                    <validation-observer ref="form">
-                        <validation-provider
-                            name="name"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                label="Name"
-                                type="text"
-                                v-model="form.name"
-                                :error-messages="errors"
-                                :success="valid"
-                                counter
-                                hint="This is to identify the user"
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-
-                        <validation-provider
-                            name="email"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                label="E-mail"
-                                type="email"
-                                v-model="form.email"
-                                :error-messages="errors"
-                                :success="valid"
-                                counter
-                                hint="This email is for recovery"
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-
-                        <validation-provider
-                            name="role.id"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-select
-                                v-model="form.role"
-                                :items="list_roles"
-                                :error-messages="errors"
-                                :success="valid"
-                                :loading="!!loading"
-                                chips
-                                item-text="name"
-                                item-value="id"
-                                label="Role"
-                                hint="Role for this user"
-                                persistent-hint
-                                return-object
-                            ></v-select>
-                        </validation-provider>
-
-                        <v-btn
-                            v-if="form.id > 0"
-                            color="red"
-                            @click="change_password = !change_password"
-                            dark
-                            small
-                            >{{
-                                change_password ? "Keep" : "Change"
-                            }}
-                            Password</v-btn
-                        >
-                        <template v-if="change_password">
-                            <validation-provider
-                                name="password"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-text-field
-                                    label="Password"
-                                    v-model="form.password"
-                                    :type="show_password ? 'text' : 'password'"
-                                    :append-icon="
-                                        show_password
-                                            ? 'mdi-eye'
-                                            : 'mdi-eye-off'
-                                    "
-                                    @click:append="
-                                        show_password = !show_password
-                                    "
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    hint="Password for this user"
-                                    persistent-hint
-                                    counter
-                                    autocomplete="off"
-                                ></v-text-field>
-                            </validation-provider>
-
-                            <validation-provider
-                                name="password_confirmation"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-text-field
-                                    label="Password Confirmation"
-                                    v-model="form.password_confirmation"
-                                    :type="show_password ? 'text' : 'password'"
-                                    :append-icon="
-                                        show_password
-                                            ? 'mdi-eye'
-                                            : 'mdi-eye-off'
-                                    "
-                                    @click:append="
-                                        show_password = !show_password
-                                    "
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    hint="Fill again the password"
-                                    persistent-hint
-                                    counter
-                                    autocomplete="off"
-                                ></v-text-field>
-                            </validation-provider>
-                        </template>
-                    </validation-observer>
-                </the-dialog-form>
-
-                <the-dialog-delete
-                    v-model="dialogDelete"
-                    :selected="selected"
-                    :model="model"
-                    @delete="deleteItem"
-                    @close="dialogDelete = false"
-                >
-                    <template v-slot="{ item }">
+                        </div>
+                        <div class="overline mb-2">
+                            {{ item.role.name }}
+                        </div>
+                        <div class="subtitle-2 font-weight-bold">
+                            {{ item.name }}
+                        </div>
+                        {{ item.email }}
+                    </v-card-text>
+                </template>
+            </the-data-card>
+            <the-data-table
+                v-else
+                v-model="selected"
+                :headers="headers"
+                :items="users"
+                :total="total"
+                :options.sync="options"
+                @fetch="fetch"
+            >
+                <template v-slot:[`item.name`]="{ item }">
+                    <v-chip
+                        v-if="profile.id == item.id"
+                        :to="{ name: 'profile' }"
+                        color="primary"
+                        :small="dense"
+                        >{{ item.name }}</v-chip
+                    >
+                    <template v-else>
                         {{ item.name }}
                     </template>
-                </the-dialog-delete>
-            </v-col>
-        </v-row>
+                </template>
+                <template v-slot:[`item.last_at`]="{ item }">
+                    <template v-if="item.last_at">
+                        {{ item.last_at | moment("from") }}
+                    </template>
+                    <template v-else>
+                        Never
+                    </template>
+                </template>
+                <template v-slot:[`item.last_ip`]="{ item }">
+                    {{ item.last_ip || "None" }}
+                </template>
+            </the-data-table>
+        </div>
+
+        <the-dialog-delete
+            v-model="dialogDelete"
+            :selected="selected"
+            :model="model"
+            @delete="deleteItem"
+            @close="dialogDelete = false"
+        >
+            <template v-slot="{ item }">
+                {{ item.name }}
+            </template>
+        </the-dialog-delete>
+
+        <the-dialog-form
+            v-model="dialog"
+            :form="form"
+            @close="close"
+            @submit="save"
+        >
+            <validation-observer ref="form">
+                <validation-provider name="name" v-slot="{ errors, valid }">
+                    <v-text-field
+                        label="Name"
+                        type="text"
+                        v-model="form.name"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="This is to identify the user"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
+
+                <validation-provider name="email" v-slot="{ errors, valid }">
+                    <v-text-field
+                        label="E-mail"
+                        type="email"
+                        v-model="form.email"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="This email is for recovery"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
+
+                <validation-provider name="role.id" v-slot="{ errors, valid }">
+                    <v-select
+                        v-model="form.role"
+                        :items="list_roles"
+                        :error-messages="errors"
+                        :success="valid"
+                        :loading="!!loading"
+                        chips
+                        item-text="name"
+                        item-value="id"
+                        label="Role"
+                        hint="Role for this user"
+                        persistent-hint
+                        return-object
+                    ></v-select>
+                </validation-provider>
+
+                <v-btn
+                    v-if="form.id > 0"
+                    color="red"
+                    @click="change_password = !change_password"
+                    dark
+                    small
+                    >{{ change_password ? "Keep" : "Change" }} Password</v-btn
+                >
+                <template v-if="change_password">
+                    <validation-provider
+                        name="password"
+                        v-slot="{ errors, valid }"
+                    >
+                        <v-text-field
+                            label="Password"
+                            v-model="form.password"
+                            :type="show_password ? 'text' : 'password'"
+                            :append-icon="
+                                show_password ? 'mdi-eye' : 'mdi-eye-off'
+                            "
+                            @click:append="show_password = !show_password"
+                            :error-messages="errors"
+                            :success="valid"
+                            hint="Password for this user"
+                            persistent-hint
+                            counter
+                            autocomplete="off"
+                        ></v-text-field>
+                    </validation-provider>
+
+                    <validation-provider
+                        name="password_confirmation"
+                        v-slot="{ errors, valid }"
+                    >
+                        <v-text-field
+                            label="Password Confirmation"
+                            v-model="form.password_confirmation"
+                            :type="show_password ? 'text' : 'password'"
+                            :append-icon="
+                                show_password ? 'mdi-eye' : 'mdi-eye-off'
+                            "
+                            @click:append="show_password = !show_password"
+                            :error-messages="errors"
+                            :success="valid"
+                            hint="Fill again the password"
+                            persistent-hint
+                            counter
+                            autocomplete="off"
+                        ></v-text-field>
+                    </validation-provider>
+                </template>
+            </validation-observer>
+        </the-dialog-form>
     </fragment>
 </template>
 
@@ -198,13 +214,17 @@ import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
 import AppTopBar from "../components/app/AppTopBar.vue";
+import TheDataCard from "../components/TheDataCard.vue";
 import TheDataTable from "../components/TheDataTable.vue";
 import TheDialogForm from "../components/TheDialogForm.vue";
 import TheDialogDelete from "../components/TheDialogDelete.vue";
+import mixins from "../mixins";
 
 export default {
+    mixins: [mixins],
     components: {
         AppTopBar,
+        TheDataCard,
         TheDataTable,
         TheDialogForm,
         TheDialogDelete,

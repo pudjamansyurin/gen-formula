@@ -2,7 +2,7 @@
     <v-dialog
         :value="value"
         @input="$emit('input', $event)"
-        :fullscreen="$vuetify.breakpoint.smAndDown"
+        :fullscreen="mobile"
         :max-width="width"
         persistent
         scrollable
@@ -13,11 +13,7 @@
             </v-card-title>
             <v-divider></v-divider>
 
-            <v-card-text
-                :style="
-                    !$vuetify.breakpoint.smAndDown ? 'max-height: 500px;' : ''
-                "
-            >
+            <v-card-text :style="!mobile ? 'max-height: 500px;' : ''">
                 <v-form @submit.prevent="$emit('submit')">
                     <slot></slot>
                     <v-btn v-show="false" type="submit"></v-btn>
@@ -43,9 +39,11 @@
 </template>
 
 <script>
+import mixins from "../mixins";
 import { mapState } from "vuex";
 
 export default {
+    mixins: [mixins],
     props: {
         value: {
             type: Boolean,

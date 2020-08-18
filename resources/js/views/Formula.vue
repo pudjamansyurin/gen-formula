@@ -12,180 +12,204 @@
             crud
         ></app-top-bar>
 
-        <v-row align="start" justify="center" no-gutters>
-            <v-col cols="12">
-                <!-- <the-data-table
-                    v-model="selected"
-                    :headers="headers"
-                    :items="formulas"
-                    :total="total"
-                    :options.sync="options"
-                    @fetch="fetch"
-                >
-                    <template v-slot:item.name="{ item }">
-                        <v-chip
-                            @click="editPercent(item.id)"
-                            :color="item.percent_total == 100 ? 'green' : 'red'"
-                            :small="dense"
-                            dark
-                            >{{ item.name }}</v-chip
-                        >
-                    </template>
-                    <template v-slot:item.price_total="{ item }">{{
-                        item.price_total | currency
-                    }}</template>
-                    <template v-slot:item.percent_total="{ item }"
-                        >{{ item.percent_total }} %</template
+        <v-alert v-if="!formulas.length" outlined type="info" border="top">
+            Oops, no {{ model }} data yet.
+        </v-alert>
+        <div v-else>
+            <the-data-card
+                v-if="mobile"
+                v-model="selected"
+                :items="formulas"
+                :options.sync="options"
+                @fetch="fetch"
+            >
+                <template v-slot="{ item }">
+                    <v-btn
+                        @click.stop="editPercent(item.id)"
+                        :color="item.percent_total == 100 ? 'green' : 'red'"
+                        :outlined="!item.selected"
+                        absolute
+                        top
+                        right
+                        small
+                        tile
+                        >{{ item.price_total | currency }}</v-btn
                     >
-                    <template v-slot:item.percent_count="{ item }">{{
-                        item.percents.length
-                    }}</template>
-                    <template v-slot:item.updated_at="{ item }">{{
-                        item.updated_at | moment("from")
-                    }}</template>
-                </the-data-table> -->
-
-                <the-data-card
-                    v-model="selected"
-                    :items="formulas"
-                    :options.sync="options"
-                    @fetch="fetch"
+                    <v-card-text>
+                        <div class="overline">
+                            {{ item.updated_at | moment("from") }}
+                        </div>
+                        <div class="overline mb-2">
+                            {{ item.user.name }}
+                        </div>
+                        <div class="subtitle-2 font-weight-bold">
+                            {{ item.name }}
+                        </div>
+                        {{ item.description }}
+                    </v-card-text>
+                </template>
+            </the-data-card>
+            <the-data-table
+                v-else
+                v-model="selected"
+                :headers="headers"
+                :items="formulas"
+                :total="total"
+                :options.sync="options"
+                @fetch="fetch"
+            >
+                <template v-slot:[`item.name`]="{ item }">
+                    <v-chip
+                        @click="editPercent(item.id)"
+                        :color="item.percent_total == 100 ? 'green' : 'red'"
+                        :small="dense"
+                        dark
+                        >{{ item.name }}</v-chip
+                    >
+                </template>
+                <template v-slot:[`item.price_total`]="{ item }">{{
+                    item.price_total | currency
+                }}</template>
+                <template v-slot:[`item.percent_total`]="{ item }"
+                    >{{ item.percent_total }} %</template
                 >
-                </the-data-card>
+                <template v-slot:[`item.percent_count`]="{ item }">{{
+                    item.percents.length
+                }}</template>
+                <template v-slot:[`item.updated_at`]="{ item }">{{
+                    item.updated_at | moment("from")
+                }}</template>
+            </the-data-table>
+        </div>
 
-                <the-dialog-form
-                    v-model="dialog"
-                    :form="form"
-                    @close="close"
-                    @submit="save"
+        <the-dialog-delete
+            v-model="dialogDelete"
+            :selected="selected"
+            :model="model"
+            @delete="deleteItem"
+            @close="dialogDelete = false"
+        >
+            <template v-slot="{ item }">
+                {{ item.name }}
+            </template>
+        </the-dialog-delete>
+
+        <the-dialog-form
+            v-model="dialog"
+            :form="form"
+            @close="close"
+            @submit="save"
+        >
+            <validation-observer ref="form">
+                <validation-provider name="name" v-slot="{ errors, valid }">
+                    <v-text-field
+                        label="Formula name"
+                        type="text"
+                        v-model="form.name"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="This is to identify the formula"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
+
+                <validation-provider
+                    name="description"
+                    v-slot="{ errors, valid }"
                 >
-                    <validation-observer ref="form">
+                    <v-text-field
+                        label="Formula description"
+                        type="text"
+                        v-model="form.description"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="Short description about the formula"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
+            </validation-observer>
+        </the-dialog-form>
+
+        <the-dialog-form
+            v-model="dialogPercent"
+            :title="formPercentTitle"
+            @close="closePercent"
+            @submit="savePercent"
+            width="700px"
+            :readonly="!form.authorized"
+        >
+            <validation-observer ref="form_percent">
+                <v-row>
+                    <v-col cols="12" sm="6">
                         <validation-provider
-                            name="name"
+                            name="formula"
                             v-slot="{ errors, valid }"
                         >
-                            <v-text-field
-                                label="Formula name"
-                                type="text"
-                                v-model="form.name"
+                            <v-autocomplete
+                                v-model="form.percents"
+                                :items="list_products"
                                 :error-messages="errors"
                                 :success="valid"
-                                counter
-                                hint="This is to identify the formula"
+                                :loading="!!loading"
+                                :readonly="!form.authorized"
+                                :clearable="form.authorized"
+                                chips
+                                multiple
+                                auto-select-first
+                                deletable-chips
+                                item-text="product.name"
+                                item-value="product.id"
+                                label="Related products"
+                                hint="The related products"
                                 persistent-hint
-                            ></v-text-field>
+                                return-object
+                            ></v-autocomplete>
                         </validation-provider>
 
                         <validation-provider
-                            name="description"
+                            name="percent_total"
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
-                                label="Formula description"
-                                type="text"
-                                v-model="form.description"
+                                class="mt-3"
+                                label="Total Percentage"
+                                type="number"
+                                :value="percentTotal"
                                 :error-messages="errors"
                                 :success="valid"
-                                counter
-                                hint="Short description about the formula"
+                                suffix="%"
+                                hint="This should be 100%"
+                                readonly
+                                filled
                                 persistent-hint
                             ></v-text-field>
                         </validation-provider>
-                    </validation-observer>
-                </the-dialog-form>
-
-                <the-dialog-delete
-                    v-model="dialogDelete"
-                    :selected="selected"
-                    :model="model"
-                    @delete="deleteItem"
-                    @close="dialogDelete = false"
-                >
-                    <template v-slot="{ item }">
-                        {{ item.name }}
-                    </template>
-                </the-dialog-delete>
-
-                <the-dialog-form
-                    v-model="dialogPercent"
-                    :title="formPercentTitle"
-                    @close="closePercent"
-                    @submit="savePercent"
-                    width="700px"
-                    :readonly="!form.authorized"
-                >
-                    <validation-observer ref="form_percent">
-                        <v-row>
-                            <v-col cols="12" sm="6">
-                                <validation-provider
-                                    name="formula"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-autocomplete
-                                        v-model="form.percents"
-                                        :items="list_products"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        :loading="!!loading"
-                                        :readonly="!form.authorized"
-                                        :clearable="form.authorized"
-                                        chips
-                                        multiple
-                                        auto-select-first
-                                        deletable-chips
-                                        item-text="product.name"
-                                        item-value="product.id"
-                                        label="Related products"
-                                        hint="The related products"
-                                        persistent-hint
-                                        return-object
-                                    ></v-autocomplete>
-                                </validation-provider>
-
-                                <validation-provider
-                                    name="percent_total"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-text-field
-                                        class="mt-3"
-                                        label="Total Percentage"
-                                        type="number"
-                                        :value="percentTotal"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        suffix="%"
-                                        hint="This should be 100%"
-                                        readonly
-                                        filled
-                                        persistent-hint
-                                    ></v-text-field>
-                                </validation-provider>
-                            </v-col>
-                            <v-col cols="12" sm="6">
-                                <validation-provider
-                                    v-for="(el, key) in form.percents"
-                                    :key="el.product.id"
-                                    :name="`formula.${key}.percent`"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-text-field
-                                        v-model.number="el.percent"
-                                        :label="el.product.name"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        :readonly="!form.authorized"
-                                        type="number"
-                                        suffix="%"
-                                        hint="This product's percentage"
-                                        persistent-hint
-                                    ></v-text-field>
-                                </validation-provider>
-                            </v-col>
-                        </v-row>
-                    </validation-observer>
-                </the-dialog-form>
-            </v-col>
-        </v-row>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <validation-provider
+                            v-for="(el, key) in form.percents"
+                            :key="el.product.id"
+                            :name="`formula.${key}.percent`"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model.number="el.percent"
+                                :label="el.product.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="!form.authorized"
+                                type="number"
+                                suffix="%"
+                                hint="This product's percentage"
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
+                    </v-col>
+                </v-row>
+            </validation-observer>
+        </the-dialog-form>
     </fragment>
 </template>
 
@@ -204,8 +228,10 @@ import TheDataCard from "../components/TheDataCard.vue";
 import TheDataTable from "../components/TheDataTable.vue";
 import TheDialogForm from "../components/TheDialogForm.vue";
 import TheDialogDelete from "../components/TheDialogDelete.vue";
+import mixins from "../mixins";
 
 export default {
+    mixins: [mixins],
     components: {
         AppTopBar,
         TheDataCard,

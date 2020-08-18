@@ -12,90 +12,122 @@
             crud
         ></app-top-bar>
 
-        <v-row align="start" justify="center" no-gutters>
-            <v-col cols="12">
-                <the-data-table
-                    v-model="selected"
-                    :headers="headers"
-                    :items="products"
-                    :total="total"
-                    :options.sync="options"
-                    @fetch="fetch"
-                >
-                    <template v-slot:item.name="{ item }">
-                        <v-chip
-                            :to="childRoute(item.id)"
-                            :color="item.prices.length ? 'green' : 'red'"
-                            :small="dense"
-                            dark
-                            >{{ item.name }}</v-chip
-                        >
-                    </template>
-                    <template v-slot:item.price_latest="{ item }">{{
-                        item.price_latest | currency
-                    }}</template>
-                    <template v-slot:item.price_count="{ item }">{{
-                        item.prices.length
-                    }}</template>
-                    <template v-slot:item.updated_at="{ item }">{{
-                        item.updated_at | moment("from")
-                    }}</template>
-                </the-data-table>
+        <v-alert v-if="!products.length" outlined type="info" border="top">
+            Oops, no {{ model }} data yet.
+        </v-alert>
+        <div v-else>
+            <the-data-card
+                v-if="mobile"
+                v-model="selected"
+                :items="products"
+                :options.sync="options"
+                @fetch="fetch"
+            >
+                <template v-slot="{ item }">
+                    <v-btn
+                        :to="childRoute(item.id)"
+                        :color="item.prices.length ? 'green' : 'red'"
+                        :outlined="!item.selected"
+                        absolute
+                        top
+                        right
+                        small
+                        tile
+                        >{{ item.price_latest | currency }}</v-btn
+                    >
+                    <v-card-text>
+                        <div class="overline">
+                            {{ item.updated_at | moment("from") }}
+                        </div>
+                        <div class="overline mb-2">
+                            {{ item.user.name }}
+                        </div>
+                        <div class="subtitle-2 font-weight-bold">
+                            {{ item.name }}
+                        </div>
+                        {{ item.description }}
+                    </v-card-text>
+                </template>
+            </the-data-card>
+            <the-data-table
+                v-else
+                v-model="selected"
+                :headers="headers"
+                :items="products"
+                :total="total"
+                :options.sync="options"
+                @fetch="fetch"
+            >
+                <template v-slot:[`item.name`]="{ item }">
+                    <v-chip
+                        :to="childRoute(item.id)"
+                        :color="item.prices.length ? 'green' : 'red'"
+                        :small="dense"
+                        dark
+                        >{{ item.name }}</v-chip
+                    >
+                </template>
+                <template v-slot:[`item.price_latest`]="{ item }">{{
+                    item.price_latest | currency
+                }}</template>
+                <template v-slot:[`item.price_count`]="{ item }">{{
+                    item.prices.length
+                }}</template>
+                <template v-slot:[`item.updated_at`]="{ item }">{{
+                    item.updated_at | moment("from")
+                }}</template>
+            </the-data-table>
+        </div>
 
-                <the-dialog-form
-                    v-model="dialog"
-                    :form="form"
-                    @close="close"
-                    @submit="save"
-                >
-                    <validation-observer ref="form">
-                        <validation-provider
-                            name="name"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                label="Product name"
-                                type="text"
-                                v-model="form.name"
-                                :error-messages="errors"
-                                :success="valid"
-                                counter
-                                hint="This is to identify the product"
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
+        <the-dialog-delete
+            v-model="dialogDelete"
+            :selected="selected"
+            :model="model"
+            @delete="deleteItem"
+            @close="dialogDelete = false"
+        >
+            <template v-slot="{ item }">
+                {{ item.name }}
+            </template>
+        </the-dialog-delete>
 
-                        <validation-provider
-                            name="description"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                label="Product description"
-                                type="text"
-                                v-model="form.description"
-                                :error-messages="errors"
-                                :success="valid"
-                                counter
-                                hint="Short description about the product"
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-                    </validation-observer>
-                </the-dialog-form>
+        <the-dialog-form
+            v-model="dialog"
+            :form="form"
+            @close="close"
+            @submit="save"
+        >
+            <validation-observer ref="form">
+                <validation-provider name="name" v-slot="{ errors, valid }">
+                    <v-text-field
+                        label="Product name"
+                        type="text"
+                        v-model="form.name"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="This is to identify the product"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
 
-                <the-dialog-delete
-                    v-model="dialogDelete"
-                    :selected="selected"
-                    :model="model"
-                    @delete="deleteItem"
-                    @close="dialogDelete = false"
+                <validation-provider
+                    name="description"
+                    v-slot="{ errors, valid }"
                 >
-                    <template v-slot="{ item }">
-                        {{ item.name }}
-                    </template>
-                </the-dialog-delete>
-            </v-col>
-        </v-row>
+                    <v-text-field
+                        label="Product description"
+                        type="text"
+                        v-model="form.description"
+                        :error-messages="errors"
+                        :success="valid"
+                        counter
+                        hint="Short description about the product"
+                        persistent-hint
+                    ></v-text-field>
+                </validation-provider>
+            </validation-observer>
+        </the-dialog-form>
     </fragment>
 </template>
 
@@ -111,13 +143,17 @@ import { Product } from "../models";
 import { eHandler } from "../utils/helper";
 import pluralize from "pluralize";
 import AppTopBar from "../components/app/AppTopBar.vue";
+import TheDataCard from "../components/TheDataCard.vue";
 import TheDataTable from "../components/TheDataTable.vue";
 import TheDialogForm from "../components/TheDialogForm.vue";
 import TheDialogDelete from "../components/TheDialogDelete.vue";
+import mixins from "../mixins";
 
 export default {
+    mixins: [mixins],
     components: {
         AppTopBar,
+        TheDataCard,
         TheDataTable,
         TheDialogForm,
         TheDialogDelete,

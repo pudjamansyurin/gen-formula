@@ -2,7 +2,7 @@
     <v-dialog
         :value="value"
         @input="$emit('input', $event)"
-        :fullscreen="$vuetify.breakpoint.smAndDown"
+        :fullscreen="mobile"
         max-width="290"
         persistent
         scrollable
@@ -15,9 +15,7 @@
 
             <v-card-text
                 class="pt-2"
-                :style="
-                    !$vuetify.breakpoint.smAndDown ? 'max-height: 300px;' : ''
-                "
+                :style="!mobile ? 'max-height: 300px;' : ''"
             >
                 Are you sure to delete {{ question }}
                 <v-chip-group column small active-class="primary--text">
@@ -47,9 +45,11 @@
 
 <script>
 import { mapState } from "vuex";
+import mixins from "../mixins";
 import pluralize from "pluralize";
 
 export default {
+    mixins: [mixins],
     props: {
         value: {
             type: Boolean,
