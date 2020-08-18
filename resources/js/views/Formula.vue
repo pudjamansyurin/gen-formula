@@ -12,16 +12,17 @@
             crud
         ></app-top-bar>
 
-        <v-alert v-if="!formulas.length" outlined type="info" border="top">
-            Oops, no {{ model }} data yet.
-        </v-alert>
+        <div v-if="!formulas.length">
+            <v-alert v-if="!loading" outlined type="info" border="top">
+                Oops, no {{ model }} data yet.
+            </v-alert>
+        </div>
         <div v-else>
             <the-data-card
                 v-if="mobile"
                 v-model="selected"
                 :items="formulas"
                 :options.sync="options"
-                @fetch="fetch"
             >
                 <template v-slot="{ item }">
                     <v-btn
@@ -56,7 +57,6 @@
                 :items="formulas"
                 :total="total"
                 :options.sync="options"
-                @fetch="fetch"
             >
                 <template v-slot:[`item.name`]="{ item }">
                     <v-chip
@@ -242,7 +242,16 @@ export default {
     data() {
         return {
             model: "formula",
-            options: {},
+            options: {
+                page: 1,
+                itemsPerPage: 10,
+                multiSort: false,
+                mustSort: true,
+                groupBy: [],
+                groupDesc: [],
+                sortBy: ["updated_at"],
+                sortDesc: [true],
+            },
             search: "",
             total: 0,
             selected: [],
@@ -440,6 +449,13 @@ export default {
             if (val && this.list_products.length == 0) {
                 this.fetchProducts();
             }
+        },
+        options: {
+            handler(val) {
+                this.fetch();
+            },
+            immediate: true,
+            deep: true,
         },
     },
 };

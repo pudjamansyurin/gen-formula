@@ -61,14 +61,6 @@ export default {
     computed: {
         ...mapState("app", ["loading", "dense"]),
     },
-    watch: {
-        options: {
-            handler() {
-                this.$emit("fetch");
-            },
-            deep: true,
-        },
-    },
 };
 </script>
 

@@ -12,16 +12,17 @@
             crud
         ></app-top-bar>
 
-        <v-alert v-if="!users.length" outlined type="info" border="top">
-            Oops, no {{ model }} data yet.
-        </v-alert>
+        <div v-if="!users.length">
+            <v-alert v-if="!loading" outlined type="info" border="top">
+                Oops, no {{ model }} data yet.
+            </v-alert>
+        </div>
         <div v-else>
             <the-data-card
                 v-if="mobile"
                 v-model="selected"
                 :items="users"
                 :options.sync="options"
-                @fetch="fetch"
             >
                 <template v-slot="{ item }">
                     <v-btn
@@ -57,7 +58,6 @@
                 :items="users"
                 :total="total"
                 :options.sync="options"
-                @fetch="fetch"
             >
                 <template v-slot:[`item.name`]="{ item }">
                     <v-chip
@@ -232,7 +232,16 @@ export default {
     data() {
         return {
             model: "user",
-            options: {},
+            options: {
+                page: 1,
+                itemsPerPage: 10,
+                multiSort: false,
+                mustSort: true,
+                groupBy: [],
+                groupDesc: [],
+                sortBy: ["updated_at"],
+                sortDesc: [true],
+            },
             search: "",
             total: 0,
             selected: [],
@@ -365,6 +374,13 @@ export default {
             if (val && this.list_roles.length == 0) {
                 this.fetchRoles();
             }
+        },
+        options: {
+            handler(val) {
+                this.fetch();
+            },
+            immediate: true,
+            deep: true,
         },
     },
 };

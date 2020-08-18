@@ -55,12 +55,6 @@ export default {
         },
     },
     watch: {
-        options: {
-            handler() {
-                this.$emit("fetch");
-            },
-            deep: true,
-        },
         items: function (items) {
             this.datas = this.$_.map(items, (el) => {
                 return {
@@ -76,19 +70,6 @@ export default {
                 });
             }
         },
-    },
-    mounted() {
-        this.$emit("update:options", {
-            groupBy: [],
-            groupDesc: [],
-            itemsPerPage: 10,
-            multiSort: false,
-            mustSort: true,
-            page: 1,
-            search: "",
-            sortBy: ["updated_at"],
-            sortDesc: [true],
-        });
     },
 };
 </script>

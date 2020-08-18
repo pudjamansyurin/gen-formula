@@ -12,16 +12,17 @@
             crud
         ></app-top-bar>
 
-        <v-alert v-if="!prices.length" outlined type="info" border="top">
-            Oops, no {{ model }} data yet.
-        </v-alert>
+        <div v-if="!prices.length">
+            <v-alert v-if="!loading" outlined type="info" border="top">
+                Oops, no {{ model }} data yet.
+            </v-alert>
+        </div>
         <div v-else>
             <the-data-card
                 v-if="mobile"
                 v-model="selected"
                 :items="prices"
                 :options.sync="options"
-                @fetch="fetch"
             >
                 <template v-slot="{ item }">
                     <v-btn
@@ -54,7 +55,6 @@
                 :items="prices"
                 :total="total"
                 :options.sync="options"
-                @fetch="fetch"
             >
                 <template v-slot:[`item.price`]="{ item }">{{
                     item.price | currency
@@ -206,7 +206,16 @@ export default {
     data() {
         return {
             model: "price",
-            options: {},
+            options: {
+                page: 1,
+                itemsPerPage: 10,
+                multiSort: false,
+                mustSort: true,
+                groupBy: [],
+                groupDesc: [],
+                sortBy: ["updated_at"],
+                sortDesc: [true],
+            },
             search: "",
             total: 0,
             selected: [],
@@ -343,8 +352,23 @@ export default {
                 this.fetchProducts();
             }
         },
+        options: {
+            handler(val) {
+                this.fetch();
+            },
+            immediate: true,
+            deep: true,
+        },
     },
 };
 </script>
 
 <style></style>
+
+        options: {
+            handler(val) {
+                this.fetch();
+            },
+            immediate: true,
+            deep: true,
+        },
