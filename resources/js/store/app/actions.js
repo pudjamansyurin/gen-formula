@@ -6,10 +6,9 @@ export default {
     [actions.LOGIN]({ commit }, payload) {
         return auth.login(payload).then(({ data }) => {
             const { user } = data;
-            const { remember } = payload;
 
             commit(mutations.SET_PROFILE, user);
-            commit(mutations.SET_REMEMBER, remember);
+            commit(mutations.SET_REMEMBER, payload);
         });
     },
     [actions.LOGOUT]({ commit }) {

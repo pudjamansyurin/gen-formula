@@ -67,7 +67,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import { LOGIN } from "../../../store/app/action-types";
-import { eHandler } from "../../../utils/helper";
+import { ls, eHandler } from "../../../utils/helper";
 import mixins from "../../../mixins";
 
 export default {
@@ -101,10 +101,19 @@ export default {
     },
     watch: {
         remember: {
-            immediate: true,
             handler(val) {
-                this.form.remember = this.remember;
+                this.form.remember = val;
+
+                if (val) {
+                    let credential = ls.get("credential");
+
+                    if (credential) {
+                        this.form.email = credential.email;
+                        this.form.password = credential.password;
+                    }
+                }
             },
+            immediate: true,
         },
     },
 };

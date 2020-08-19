@@ -49,9 +49,18 @@ export default {
             type: "info"
         };
     },
-    [mutations.SET_REMEMBER](state, remember) {
+    [mutations.SET_REMEMBER](state, { email, password, remember }) {
         state.remember = remember;
         ls.set("remember", remember);
+
+        if (remember) {
+            ls.set("credential", {
+                email,
+                password
+            });
+        } else {
+            ls.remove("credential");
+        }
     },
     [mutations.SET_PROFILE](state, data) {
         state.profile = data;
