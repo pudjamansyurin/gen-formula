@@ -19,9 +19,7 @@ export default {
     computed: {
         items() {
             return this.$_.cloneDeep(
-                navs.filter((el) => {
-                    return el.icon && el.bottomNav;
-                })
+                navs.filter((el) => el.icon && el.bottomNav)
             );
         },
     },

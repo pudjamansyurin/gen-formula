@@ -12,11 +12,15 @@
             crud
         ></app-top-bar>
 
-        <div v-if="!users.length">
-            <v-alert v-if="!loading" outlined type="info" border="top">
-                Oops, no {{ model }} data yet.
-            </v-alert>
-        </div>
+        <v-alert
+            v-if="!users.length"
+            :type="!!loading ? 'info' : 'warning'"
+            border="top"
+            outlined
+        >
+            <span v-if="!!loading">Fetching {{ model }} data...</span>
+            <span v-else>Oops, no {{ model }} data yet.</span>
+        </v-alert>
         <div v-else>
             <the-data-card
                 v-if="mobile"
@@ -54,10 +58,10 @@
             <the-data-table
                 v-else
                 v-model="selected"
-                :headers="headers"
                 :items="users"
-                :total="total"
                 :options.sync="options"
+                :headers="headers"
+                :total="total"
             >
                 <template v-slot:[`item.name`]="{ item }">
                     <v-chip
@@ -106,26 +110,26 @@
             <validation-observer ref="form">
                 <validation-provider name="name" v-slot="{ errors, valid }">
                     <v-text-field
-                        label="Name"
-                        type="text"
                         v-model="form.name"
                         :error-messages="errors"
                         :success="valid"
-                        counter
+                        label="Name"
+                        type="text"
                         hint="This is to identify the user"
+                        counter
                         persistent-hint
                     ></v-text-field>
                 </validation-provider>
 
                 <validation-provider name="email" v-slot="{ errors, valid }">
                     <v-text-field
-                        label="E-mail"
-                        type="email"
                         v-model="form.email"
                         :error-messages="errors"
                         :success="valid"
-                        counter
+                        label="E-mail"
+                        type="email"
                         hint="This email is for recovery"
+                        counter
                         persistent-hint
                     ></v-text-field>
                 </validation-provider>
@@ -137,11 +141,11 @@
                         :error-messages="errors"
                         :success="valid"
                         :loading="!!loading"
-                        chips
                         item-text="name"
                         item-value="id"
                         label="Role"
                         hint="Role for this user"
+                        chips
                         persistent-hint
                         return-object
                     ></v-select>
@@ -161,19 +165,19 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Password"
                             v-model="form.password"
                             :type="show_password ? 'text' : 'password'"
                             :append-icon="
                                 show_password ? 'mdi-eye' : 'mdi-eye-off'
                             "
-                            @click:append="show_password = !show_password"
                             :error-messages="errors"
                             :success="valid"
+                            @click:append="show_password = !show_password"
+                            label="Password"
                             hint="Password for this user"
+                            autocomplete="off"
                             persistent-hint
                             counter
-                            autocomplete="off"
                         ></v-text-field>
                     </validation-provider>
 
@@ -182,19 +186,19 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Password Confirmation"
                             v-model="form.password_confirmation"
                             :type="show_password ? 'text' : 'password'"
                             :append-icon="
                                 show_password ? 'mdi-eye' : 'mdi-eye-off'
                             "
-                            @click:append="show_password = !show_password"
                             :error-messages="errors"
                             :success="valid"
+                            @click:append="show_password = !show_password"
+                            label="Password Confirmation"
                             hint="Fill again the password"
+                            autocomplete="off"
                             persistent-hint
                             counter
-                            autocomplete="off"
                         ></v-text-field>
                     </validation-provider>
                 </template>
@@ -261,7 +265,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "dense", "profile"]),
+        ...mapState("app", ["profile"]),
         ...mapState("model", ["users"]),
     },
     methods: {
@@ -287,9 +291,7 @@ export default {
         },
         close() {
             this.dialog = false;
-            this.$nextTick(() => {
-                this.$refs.form.reset();
-            });
+            this.$nextTick(() => this.$refs.form.reset());
         },
         fetchRoles: async function () {
             await this.GET_MODELS({
@@ -298,11 +300,12 @@ export default {
                     temporary: true,
                 },
             })
-                .then(({ data }) => {
-                    this.list_roles = this.$_.map(data, (el) =>
-                        this.$_.pick(el, ["id", "name"])
-                    );
-                })
+                .then(
+                    ({ data }) =>
+                        (this.list_roles = this.$_.map(data, (el) =>
+                            this.$_.pick(el, ["id", "name"])
+                        ))
+                )
                 .catch((e) => eHandler(e));
         },
         fetch: async function () {
@@ -315,9 +318,7 @@ export default {
                     search,
                 },
             })
-                .then(({ meta }) => {
-                    this.total = meta.total;
-                })
+                .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
         },
         save() {
@@ -347,10 +348,7 @@ export default {
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => {
-                            let errors = eHandler(e);
-                            this.$refs.form.setErrors(errors);
-                        });
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
                 }
             });
         },

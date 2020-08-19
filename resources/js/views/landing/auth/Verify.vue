@@ -14,27 +14,24 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { VERIFY } from "../../../store/app/action-types";
 import { eHandler } from "../../../utils/helper";
+import mixins from "../../../mixins";
 
 export default {
+    mixins: [mixins],
     data() {
         return {
             title: "VERIFY",
             subtitle: "Click button bellow to verify",
         };
     },
-    computed: {
-        ...mapState("app", ["loading"]),
-    },
     methods: {
         ...mapActions("app", [VERIFY]),
         submit() {
             this.VERIFY(this.$route.query.url)
-                .then(() => {
-                    this.$router.push({ name: "profile" });
-                })
+                .then(() => this.$router.push({ name: "profile" }))
                 .catch((e) => eHandler(e));
         },
     },

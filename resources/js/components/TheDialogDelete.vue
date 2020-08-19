@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import mixins from "../mixins";
 import pluralize from "pluralize";
 
@@ -65,7 +64,6 @@ export default {
         },
     },
     computed: {
-        ...mapState("app", ["loading"]),
         question() {
             const { length } = this.selected;
             const single = length === 1;

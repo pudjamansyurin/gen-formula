@@ -11,15 +11,15 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Email"
-                            type="email"
                             v-model="form.email"
                             :error-messages="errors"
                             :success="valid"
+                            label="Email"
+                            type="email"
                             hint="Your verified account's email"
-                            persistent-hint
                             prepend-icon="mdi-account"
                             autocomplete="on"
+                            persistent-hint
                         ></v-text-field>
                     </validation-provider>
                 </v-card-text>
@@ -36,11 +36,13 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { FORGET } from "../../../store/app/action-types";
 import { eHandler } from "../../../utils/helper";
+import mixins from "../../../mixins";
 
 export default {
+    mixins: [mixins],
     data() {
         return {
             title: "FORGET PASSWORD",
@@ -50,16 +52,12 @@ export default {
             },
         };
     },
-    computed: {
-        ...mapState("app", ["loading"]),
-    },
     methods: {
         ...mapActions("app", [FORGET]),
         submit() {
-            this.FORGET(this.form).catch((e) => {
-                let errors = eHandler(e);
-                this.$refs.form.setErrors(errors);
-            });
+            this.FORGET(this.form).catch((e) =>
+                this.$refs.form.setErrors(eHandler(e))
+            );
         },
     },
 };

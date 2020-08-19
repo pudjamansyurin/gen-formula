@@ -7,20 +7,14 @@ import {
 } from "../utils/response";
 import { CLEAR_PROFILE, SET_ERROR } from "../store/app/mutation-types";
 
-export const ns = (namespace, definition) => {
-    return `${namespace.toLowerCase()}/${definition}`;
-};
+export const ns = (namespace, definition) =>
+    `${namespace.toLowerCase()}/${definition}`;
 
 export const ls = {
-    set: (item, value) => {
-        window.localStorage.setItem(item, JSON.stringify(value));
-    },
-    get: item => {
-        return JSON.parse(window.localStorage.getItem(item));
-    },
-    remove: item => {
-        window.localStorage.removeItem(item);
-    }
+    set: (item, value) =>
+        window.localStorage.setItem(item, JSON.stringify(value)),
+    get: item => JSON.parse(window.localStorage.getItem(item)),
+    remove: item => window.localStorage.removeItem(item)
 };
 
 export const castParamsId = value => {

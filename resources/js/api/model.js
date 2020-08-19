@@ -1,35 +1,20 @@
 import { http } from "./http";
 
-export const viewAny = async (model, params) => {
-    return await http.get(`api/${model}`, { params }).then(({ data }) => {
-        return data;
-    });
-};
+export const viewAny = async (model, params) =>
+    await http.get(`api/${model}`, { params }).then(({ data }) => data);
 
-export const view = async (model, id) => {
-    return await http.get(`api/${model}/${id}`).then(({ data }) => {
-        return data;
-    });
-};
+export const view = async (model, id) =>
+    await http.get(`api/${model}/${id}`).then(({ data }) => data);
 
-export const create = async (model, payload) => {
-    return await http.post(`api/${model}`, payload).then(({ data }) => {
-        return data;
-    });
-};
+export const create = async (model, payload) =>
+    await http.post(`api/${model}`, payload).then(({ data }) => data);
 
-export const update = async (model, payload) => {
-    const { id } = payload;
+export const update = async (model, payload) =>
+    await http
+        .put(`api/${model}/${payload.id}`, payload)
+        .then(({ data }) => data);
 
-    return await http.put(`api/${model}/${id}`, payload).then(({ data }) => {
-        return data;
-    });
-};
-
-export const destroy = async (model, ids) => {
-    return await http
+export const destroy = async (model, ids) =>
+    await http
         .delete(`api/${model}/-1`, { data: { ids } })
-        .then(({ data }) => {
-            return data;
-        });
-};
+        .then(({ data }) => data);

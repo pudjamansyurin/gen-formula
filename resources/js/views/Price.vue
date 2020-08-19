@@ -12,11 +12,15 @@
             crud
         ></app-top-bar>
 
-        <div v-if="!prices.length">
-            <v-alert v-if="!loading" outlined type="info" border="top">
-                Oops, no {{ model }} data yet.
-            </v-alert>
-        </div>
+        <v-alert
+            v-if="!prices.length"
+            :type="!!loading ? 'info' : 'warning'"
+            border="top"
+            outlined
+        >
+            <span v-if="!!loading">Fetching {{ model }} data...</span>
+            <span v-else>Oops, no {{ model }} data yet.</span>
+        </v-alert>
         <div v-else>
             <the-data-card
                 v-if="mobile"
@@ -51,10 +55,10 @@
             <the-data-table
                 v-else
                 v-model="selected"
-                :headers="headers"
                 :items="prices"
-                :total="total"
                 :options.sync="options"
+                :headers="headers"
+                :total="total"
             >
                 <template v-slot:[`item.price`]="{ item }">{{
                     item.price | currency
@@ -102,11 +106,11 @@
                         :error-messages="errors"
                         :success="valid"
                         :loading="!!loading"
-                        chips
                         item-text="name"
                         item-value="id"
                         label="Product"
                         hint="The product being updated"
+                        chips
                         persistent-hint
                     ></v-autocomplete>
                 </validation-provider>
@@ -126,13 +130,13 @@
                         >
                             <v-text-field
                                 v-model="form.changed_at"
+                                v-bind="attrs"
+                                v-on="on"
                                 :error-messages="errors"
                                 :success="valid"
                                 label="Changed At"
                                 hint="When the price changed"
                                 readonly
-                                v-bind="attrs"
-                                v-on="on"
                             ></v-text-field>
                         </validation-provider>
                     </template>
@@ -233,7 +237,6 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["prices"]),
         formTitle() {
             const { id } = this.form;
@@ -263,9 +266,7 @@ export default {
         },
         close() {
             this.dialog = false;
-            this.$nextTick(() => {
-                this.$refs.form.reset();
-            });
+            this.$nextTick(() => this.$refs.form.reset());
         },
         fetchProducts: async function () {
             await this.GET_MODELS({
@@ -275,11 +276,12 @@ export default {
                     temporary: true,
                 },
             })
-                .then(({ data }) => {
-                    this.list_products = this.$_.map(data, (el) =>
-                        this.$_.pick(el, ["id", "name"])
-                    );
-                })
+                .then(
+                    ({ data }) =>
+                        (this.list_products = this.$_.map(data, (el) =>
+                            this.$_.pick(el, ["id", "name"])
+                        ))
+                )
                 .catch((e) => eHandler(e));
         },
         fetch: async function () {
@@ -293,10 +295,7 @@ export default {
                     search,
                 },
             })
-                .then(({ meta }) => {
-                    const { total } = meta;
-                    this.total = total;
-                })
+                .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
         },
         save() {
@@ -323,10 +322,7 @@ export default {
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => {
-                            let errors = eHandler(e);
-                            this.$refs.form.setErrors(errors);
-                        });
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
                 }
             });
         },

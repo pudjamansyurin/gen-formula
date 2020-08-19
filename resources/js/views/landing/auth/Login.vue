@@ -12,15 +12,15 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Email"
-                            type="email"
                             v-model="form.email"
                             :error-messages="errors"
                             :success="valid"
+                            label="Email"
+                            type="email"
                             hint="Your account's email"
-                            persistent-hint
                             prepend-icon="mdi-account"
                             autocomplete="on"
+                            persistent-hint
                         ></v-text-field>
                     </validation-provider>
 
@@ -29,19 +29,19 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Password"
                             v-model="form.password"
                             :type="show_password ? 'text' : 'password'"
                             :append-icon="
                                 show_password ? 'mdi-eye' : 'mdi-eye-off'
                             "
-                            @click:append="show_password = !show_password"
                             :error-messages="errors"
                             :success="valid"
+                            @click:append="show_password = !show_password"
+                            label="Password"
                             hint="Your account's password"
-                            persistent-hint
                             prepend-icon="mdi-lock"
                             autocomplete="on"
+                            persistent-hint
                         ></v-text-field>
                     </validation-provider>
 
@@ -68,8 +68,10 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { LOGIN } from "../../../store/app/action-types";
 import { eHandler } from "../../../utils/helper";
+import mixins from "../../../mixins";
 
 export default {
+    mixins: [mixins],
     data() {
         return {
             title: "LOGIN",
@@ -83,21 +85,18 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "remember"]),
+        ...mapState("app", ["remember"]),
     },
     methods: {
         ...mapActions("app", [LOGIN]),
         submit() {
             this.LOGIN(this.form)
-                .then(() => {
+                .then(() =>
                     this.$router.push({
                         path: this.$route.query.redirect || "/app",
-                    });
-                })
-                .catch((e) => {
-                    let errors = eHandler(e);
-                    this.$refs.form.setErrors(errors);
-                });
+                    })
+                )
+                .catch((e) => this.$refs.form.setErrors(eHandler(e)));
         },
     },
     watch: {

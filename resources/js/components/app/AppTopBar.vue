@@ -277,9 +277,7 @@ export default {
         },
         logout() {
             this.LOGOUT()
-                .then(() => {
-                    this.$router.push({ name: "login" });
-                })
+                .then(() => this.$router.push({ name: "login" }))
                 .catch((e) => eHandler(e));
         },
     },

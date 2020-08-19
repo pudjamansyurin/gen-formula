@@ -29,20 +29,20 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Password"
                             v-model="form.password"
                             :type="show_password ? 'text' : 'password'"
                             :append-icon="
                                 show_password ? 'mdi-eye' : 'mdi-eye-off'
                             "
-                            @click:append="show_password = !show_password"
                             :error-messages="errors"
                             :success="valid"
+                            @click:append="show_password = !show_password"
+                            label="Password"
                             hint="Your new password"
-                            persistent-hint
-                            counter
                             prepend-icon="mdi-lock"
                             autocomplete="off"
+                            persistent-hint
+                            counter
                         ></v-text-field>
                     </validation-provider>
 
@@ -51,20 +51,20 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Password Confirmation"
                             v-model="form.password_confirmation"
                             :type="show_password ? 'text' : 'password'"
                             :append-icon="
                                 show_password ? 'mdi-eye' : 'mdi-eye-off'
                             "
-                            @click:append="show_password = !show_password"
                             :error-messages="errors"
                             :success="valid"
+                            @click:append="show_password = !show_password"
+                            label="Password Confirmation"
                             hint="Fill again the password"
-                            persistent-hint
-                            counter
                             prepend-icon="mdi-lock"
                             autocomplete="off"
+                            persistent-hint
+                            counter
                         ></v-text-field>
                     </validation-provider>
                 </v-card-text>
@@ -83,11 +83,13 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { RESET } from "../../../store/app/action-types";
 import { eHandler } from "../../../utils/helper";
+import mixins from "../../../mixins";
 
 export default {
+    mixins: [mixins],
     props: {
         token: String,
         email: String,
@@ -103,9 +105,6 @@ export default {
             },
         };
     },
-    computed: {
-        ...mapState("app", ["loading"]),
-    },
     methods: {
         ...mapActions("app", [RESET]),
         submit() {
@@ -116,13 +115,8 @@ export default {
             };
 
             this.RESET(payload)
-                .then(() => {
-                    this.$router.push({ path: "/app" });
-                })
-                .catch((e) => {
-                    let errors = eHandler(e);
-                    this.$refs.form.setErrors(errors);
-                });
+                .then(() => this.$router.push({ path: "/app" }))
+                .catch((e) => this.$refs.form.setErrors(eHandler(e)));
         },
     },
     mounted() {

@@ -40,7 +40,6 @@
 
 <script>
 import mixins from "../mixins";
-import { mapState } from "vuex";
 
 export default {
     mixins: [mixins],
@@ -67,7 +66,6 @@ export default {
         },
     },
     computed: {
-        ...mapState("app", ["loading"]),
         formTitle() {
             if (this.title) {
                 return this.title;

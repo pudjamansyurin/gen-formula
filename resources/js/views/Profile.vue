@@ -133,11 +133,11 @@
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
-                                label="Name"
-                                type="text"
                                 v-model="form.name"
                                 :error-messages="errors"
                                 :success="valid"
+                                label="Name"
+                                type="text"
                                 hint="This is to identify the user"
                                 persistent-hint
                             ></v-text-field>
@@ -148,11 +148,11 @@
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
-                                label="E-mail"
-                                type="email"
                                 v-model="form.email"
                                 :error-messages="errors"
                                 :success="valid"
+                                label="E-mail"
+                                type="email"
                                 hint="This email is for recovery"
                                 persistent-hint
                             ></v-text-field>
@@ -167,11 +167,11 @@
                                 :items="[form.role]"
                                 :error-messages="errors"
                                 :success="valid"
-                                chips
                                 item-text="name"
                                 item-value="id"
                                 label="Role"
                                 hint="Role for this user"
+                                chips
                                 persistent-hint
                                 return-object
                             ></v-select>
@@ -193,7 +193,6 @@
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
-                                    label="Password"
                                     v-model="form.password"
                                     :type="show_password ? 'text' : 'password'"
                                     :append-icon="
@@ -201,15 +200,16 @@
                                             ? 'mdi-eye'
                                             : 'mdi-eye-off'
                                     "
+                                    :error-messages="errors"
+                                    :success="valid"
                                     @click:append="
                                         show_password = !show_password
                                     "
-                                    :error-messages="errors"
-                                    :success="valid"
+                                    label="Password"
                                     hint="Your new password"
+                                    autocomplete="off"
                                     persistent-hint
                                     counter
-                                    autocomplete="off"
                                 ></v-text-field>
                             </validation-provider>
 
@@ -218,7 +218,6 @@
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
-                                    label="Password Confirmation"
                                     v-model="form.password_confirmation"
                                     :type="show_password ? 'text' : 'password'"
                                     :append-icon="
@@ -226,15 +225,16 @@
                                             ? 'mdi-eye'
                                             : 'mdi-eye-off'
                                     "
+                                    :error-messages="errors"
+                                    :success="valid"
                                     @click:append="
                                         show_password = !show_password
                                     "
-                                    :error-messages="errors"
-                                    :success="valid"
+                                    label="Password Confirmation"
                                     hint="Fill again the password"
+                                    autocomplete="off"
                                     persistent-hint
                                     counter
-                                    autocomplete="off"
                                 ></v-text-field>
                             </validation-provider>
                         </template>
@@ -263,8 +263,10 @@ import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
 import { RESEND, PROFILE } from "../store/app/action-types";
 import { eHandler } from "../utils/helper";
 import AppTopBar from "../components/app/AppTopBar.vue";
+import mixins from "../mixins";
 
 export default {
+    mixins: [mixins],
     components: {
         AppTopBar,
     },
@@ -278,7 +280,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "profile"]),
+        ...mapState("app", ["profile"]),
     },
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
@@ -321,10 +323,7 @@ export default {
                             });
                             this.close();
                         })
-                        .catch((e) => {
-                            let errors = eHandler(e);
-                            this.$refs.form.setErrors(errors);
-                        });
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
                 }
             });
         },

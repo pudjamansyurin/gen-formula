@@ -12,11 +12,15 @@
             crud
         ></app-top-bar>
 
-        <div v-if="!products.length">
-            <v-alert v-if="!loading" outlined type="info" border="top">
-                Oops, no {{ model }} data yet.
-            </v-alert>
-        </div>
+        <v-alert
+            v-if="!products.length"
+            :type="!!loading ? 'info' : 'warning'"
+            border="top"
+            outlined
+        >
+            <span v-if="!!loading">Fetching {{ model }} data...</span>
+            <span v-else>Oops, no {{ model }} data yet.</span>
+        </v-alert>
         <div v-else>
             <the-data-card
                 v-if="mobile"
@@ -53,10 +57,10 @@
             <the-data-table
                 v-else
                 v-model="selected"
-                :headers="headers"
                 :items="products"
-                :total="total"
                 :options.sync="options"
+                :headers="headers"
+                :total="total"
             >
                 <template v-slot:[`item.name`]="{ item }">
                     <v-chip
@@ -100,13 +104,13 @@
             <validation-observer ref="form">
                 <validation-provider name="name" v-slot="{ errors, valid }">
                     <v-text-field
-                        label="Product name"
-                        type="text"
                         v-model="form.name"
                         :error-messages="errors"
                         :success="valid"
-                        counter
+                        label="Product name"
+                        type="text"
                         hint="This is to identify the product"
+                        counter
                         persistent-hint
                     ></v-text-field>
                 </validation-provider>
@@ -116,13 +120,13 @@
                     v-slot="{ errors, valid }"
                 >
                     <v-text-field
-                        label="Product description"
-                        type="text"
                         v-model="form.description"
                         :error-messages="errors"
                         :success="valid"
-                        counter
+                        label="Product description"
+                        type="text"
                         hint="Short description about the product"
+                        counter
                         persistent-hint
                     ></v-text-field>
                 </validation-provider>
@@ -199,7 +203,6 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["products"]),
     },
     methods: {
@@ -215,9 +218,7 @@ export default {
         },
         close() {
             this.dialog = false;
-            this.$nextTick(() => {
-                this.$refs.form.reset();
-            });
+            this.$nextTick(() => this.$refs.form.reset());
         },
         fetch: async function () {
             let { model, options, search } = this;
@@ -229,9 +230,7 @@ export default {
                     search,
                 },
             })
-                .then(({ meta }) => {
-                    this.total = meta.total;
-                })
+                .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
         },
         save() {
@@ -257,10 +256,7 @@ export default {
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => {
-                            let errors = eHandler(e);
-                            this.$refs.form.setErrors(errors);
-                        });
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
                 }
             });
         },

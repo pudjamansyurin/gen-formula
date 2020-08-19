@@ -33,9 +33,11 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
+import mixins from "../mixins";
 
 export default {
+    mixins: [mixins],
     props: {
         value: {
             type: Array,
@@ -57,9 +59,6 @@ export default {
             type: Number,
             default: 0,
         },
-    },
-    computed: {
-        ...mapState("app", ["loading", "dense"]),
     },
 };
 </script>

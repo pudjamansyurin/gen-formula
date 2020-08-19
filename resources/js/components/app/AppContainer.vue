@@ -15,12 +15,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import mixins from "../../mixins";
 
 export default {
-    computed: {
-        ...mapState("app", ["loading"]),
-    },
+    mixins: [mixins],
 };
 </script>
 

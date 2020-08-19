@@ -18,10 +18,10 @@
 
 <script>
 import pluralize from "pluralize";
-import { debounce } from "lodash";
-import { mapState, mapMutations } from "vuex";
+import mixins from "../mixins";
 
 export default {
+    mixins: [mixins],
     props: {
         value: {
             type: Array,
@@ -41,11 +41,10 @@ export default {
             datas: [],
         };
     },
-    computed: {
-        ...mapState("app", ["loading"]),
-    },
     methods: {
         toggleSelect(item) {
+            if (!item.authorized) return;
+
             item.selected = !item.selected;
 
             this.$emit(
@@ -55,20 +54,24 @@ export default {
         },
     },
     watch: {
-        items: function (items) {
-            this.datas = this.$_.map(items, (el) => {
-                return {
+        items: {
+            handler(val) {
+                this.datas = this.$_.map(val, (el) => ({
                     ...el,
                     selected: false,
-                };
-            });
+                }));
+            },
+            immediate: true,
+            // deep: true,
         },
-        value: function (val) {
-            if (!val.length) {
-                this.datas.forEach((el) => {
-                    el.selected = false;
-                });
-            }
+        value: {
+            handler(selected) {
+                if (!selected.length) {
+                    this.datas.forEach((el) => (el.selected = false));
+                }
+            },
+            immediate: true,
+            // deep: true,
         },
     },
 };

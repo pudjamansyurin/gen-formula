@@ -13,38 +13,35 @@ export default {
         });
     },
     [actions.LOGOUT]({ commit }) {
-        return auth.logout().then(() => {
-            commit(mutations.CLEAR_PROFILE);
-        });
+        return auth.logout().then(() => commit(mutations.CLEAR_PROFILE));
     },
     [actions.FORGET]({ commit }, payload) {
-        return auth.forget(payload).then(() => {
+        return auth.forget(payload).then(() =>
             commit(mutations.SET_MESSAGE, {
                 text: "Check your email",
                 type: "success"
-            });
-        });
+            })
+        );
     },
     [actions.RESET]({ commit }, payload) {
-        return auth.reset(payload).then(({ data }) => {
-            const { user } = data;
-            commit(mutations.SET_PROFILE, user);
-        });
+        return auth
+            .reset(payload)
+            .then(({ data }) => commit(mutations.SET_PROFILE, data.user));
     },
     [actions.RESEND]({ commit }) {
-        return auth.resend().then(() => {
+        return auth.resend().then(() =>
             commit(mutations.SET_MESSAGE, {
                 text: "Check your email",
                 type: "success"
-            });
-        });
+            })
+        );
     },
     [actions.VERIFY]({ commit }, url) {
         return auth.verify(url);
     },
     [actions.PROFILE]({ commit }) {
-        return auth.profile().then(({ user }) => {
-            commit(mutations.SET_PROFILE, user);
-        });
+        return auth
+            .profile()
+            .then(({ user }) => commit(mutations.SET_PROFILE, user));
     }
 };

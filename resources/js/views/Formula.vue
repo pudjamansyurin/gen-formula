@@ -12,11 +12,15 @@
             crud
         ></app-top-bar>
 
-        <div v-if="!formulas.length">
-            <v-alert v-if="!loading" outlined type="info" border="top">
-                Oops, no {{ model }} data yet.
-            </v-alert>
-        </div>
+        <v-alert
+            v-if="!formulas.length"
+            :type="!!loading ? 'info' : 'warning'"
+            border="top"
+            outlined
+        >
+            <span v-if="!!loading">Fetching {{ model }} data...</span>
+            <span v-else>Oops, no {{ model }} data yet.</span>
+        </v-alert>
         <div v-else>
             <the-data-card
                 v-if="mobile"
@@ -53,10 +57,10 @@
             <the-data-table
                 v-else
                 v-model="selected"
-                :headers="headers"
                 :items="formulas"
-                :total="total"
                 :options.sync="options"
+                :headers="headers"
+                :total="total"
             >
                 <template v-slot:[`item.name`]="{ item }">
                     <v-chip
@@ -103,13 +107,13 @@
             <validation-observer ref="form">
                 <validation-provider name="name" v-slot="{ errors, valid }">
                     <v-text-field
-                        label="Formula name"
-                        type="text"
                         v-model="form.name"
                         :error-messages="errors"
                         :success="valid"
-                        counter
+                        label="Formula name"
+                        type="text"
                         hint="This is to identify the formula"
+                        counter
                         persistent-hint
                     ></v-text-field>
                 </validation-provider>
@@ -119,13 +123,13 @@
                     v-slot="{ errors, valid }"
                 >
                     <v-text-field
-                        label="Formula description"
-                        type="text"
                         v-model="form.description"
                         :error-messages="errors"
                         :success="valid"
-                        counter
+                        label="Formula description"
+                        type="text"
                         hint="Short description about the formula"
+                        counter
                         persistent-hint
                     ></v-text-field>
                 </validation-provider>
@@ -155,14 +159,14 @@
                                 :loading="!!loading"
                                 :readonly="!form.authorized"
                                 :clearable="form.authorized"
-                                chips
-                                multiple
-                                auto-select-first
-                                deletable-chips
                                 item-text="product.name"
                                 item-value="product.id"
                                 label="Related products"
                                 hint="The related products"
+                                chips
+                                multiple
+                                auto-select-first
+                                deletable-chips
                                 persistent-hint
                                 return-object
                             ></v-autocomplete>
@@ -288,7 +292,6 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["loading", "dense"]),
         ...mapState("model", ["formulas"]),
         formPercentTitle() {
             return this.form.name || "Related products";
@@ -296,9 +299,7 @@ export default {
         percentTotal() {
             return this.$_.reduce(
                 this.form.percents,
-                (sum, el) => {
-                    return sum + Number(el.percent);
-                },
+                (sum, el) => sum + Number(el.percent),
                 0
             );
         },
@@ -322,15 +323,11 @@ export default {
         },
         close() {
             this.dialog = false;
-            this.$nextTick(() => {
-                this.$refs.form.reset();
-            });
+            this.$nextTick(() => this.$refs.form.reset());
         },
         closePercent() {
             this.dialogPercent = false;
-            this.$nextTick(() => {
-                this.$refs.form_percent.reset();
-            });
+            this.$nextTick(() => this.$refs.form_percent.reset());
         },
         fetchProducts: async function () {
             await this.GET_MODELS({
@@ -340,17 +337,19 @@ export default {
                     temporary: true,
                 },
             })
-                .then(({ data }) => {
-                    this.list_products = this.$_.map(data, ({ id, name }) => {
-                        return {
-                            product: {
-                                id,
-                                name,
-                            },
-                            percent: 0,
-                        };
-                    });
-                })
+                .then(
+                    ({ data }) =>
+                        (this.list_products = this.$_.map(
+                            data,
+                            ({ id, name }) => ({
+                                product: {
+                                    id,
+                                    name,
+                                },
+                                percent: 0,
+                            })
+                        ))
+                )
                 .catch((e) => eHandler(e));
         },
         fetch: async function () {
@@ -363,9 +362,7 @@ export default {
                     search,
                 },
             })
-                .then(({ meta }) => {
-                    this.total = meta.total;
-                })
+                .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
         },
         savePercent() {
@@ -377,12 +374,10 @@ export default {
                     this.SAVE_MODEL({
                         url: `formula/${payload.id}/percent`,
                         payload: {
-                            formula: this.$_.map(payload.percents, (el) => {
-                                return {
-                                    product_id: el.product.id,
-                                    percent: el.percent,
-                                };
-                            }),
+                            formula: this.$_.map(payload.percents, (el) => ({
+                                product_id: el.product.id,
+                                percent: el.percent,
+                            })),
                         },
                     })
                         .then(async (data) => {
@@ -392,10 +387,9 @@ export default {
                             });
                             this.closePercent();
                         })
-                        .catch((e) => {
-                            let errors = eHandler(e);
-                            this.$refs.form_percent.setErrors(errors);
-                        });
+                        .catch((e) =>
+                            this.$refs.form_percent.setErrors(eHandler(e))
+                        );
                 }
             });
         },
@@ -422,10 +416,7 @@ export default {
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => {
-                            let errors = eHandler(e);
-                            this.$refs.form.setErrors(errors);
-                        });
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
                 }
             });
         },
