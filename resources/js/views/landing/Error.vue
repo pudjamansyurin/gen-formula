@@ -10,10 +10,12 @@
                             >Back</v-btn
                         >
                         <v-btn
-                            :to="{ path: profile ? '/app' : '/' }"
+                            :to="{ path: profile.id > -1 ? '/app' : '/' }"
                             elevation="1"
                             color="primary"
-                            >{{ profile ? "Dashboard" : "Login" }}</v-btn
+                            >{{
+                                profile.id > -1 ? "Dashboard" : "Login"
+                            }}</v-btn
                         >
                     </div>
                 </v-col>

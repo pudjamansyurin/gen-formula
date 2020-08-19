@@ -7,7 +7,7 @@
     >
         <v-list>
             <v-list-item
-                v-if="profile"
+                v-if="profile.id > -1"
                 :to="{ name: 'profile' }"
                 color="red"
                 link

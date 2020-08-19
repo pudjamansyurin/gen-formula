@@ -2,6 +2,8 @@
 import actions from "./actions";
 import mutations from "./mutations";
 import { ls } from "../../utils/helper";
+import { User } from "../../models";
+import { cloneDeep } from "lodash";
 
 const state = {
     title: "GEN Formula",
@@ -19,7 +21,7 @@ const state = {
         text: ""
     },
     remember: ls.get("remember") || false,
-    profile: ls.get("profile") || null
+    profile: ls.get("profile") || cloneDeep(User)
 };
 
 export default {

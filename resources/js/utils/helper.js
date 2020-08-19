@@ -43,7 +43,7 @@ export const eHandler = e => {
             break;
 
         case HTTP_UNAUTHORIZED:
-            if (profile) {
+            if (profile.id > -1) {
                 // remove session
                 store.commit(ns("app", CLEAR_PROFILE));
                 // session expired

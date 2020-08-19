@@ -1,4 +1,6 @@
 import { ls } from "../../utils/helper";
+import { User } from "../../models";
+import { cloneDeep } from "lodash";
 import * as mutations from "./mutation-types";
 
 export default {
@@ -56,7 +58,7 @@ export default {
         ls.set("profile", data);
     },
     [mutations.CLEAR_PROFILE](state) {
-        state.profile = null;
+        state.profile = cloneDeep(User);
         ls.remove("profile");
     }
 };

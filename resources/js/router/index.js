@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
 
     if (to.matched.some(record => record.meta.auth)) {
         // secured pages
-        if (profile) {
+        if (profile.id > -1) {
             let passedRoles = to.matched[to.matched.length - 1].meta.roles;
             if (passedRoles) {
                 // pages with authorization
@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
                 }
             });
         }
-    } else if (profile) {
+    } else if (profile.id > -1) {
         // non-secured pages, session exist
         if (to.name == "error") {
             next();
