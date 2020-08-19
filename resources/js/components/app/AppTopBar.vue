@@ -105,13 +105,21 @@
                 </template>
 
                 <template>
-                    <v-toolbar-title>{{ theTitle }}</v-toolbar-title>
-                    <v-divider
+                    <v-toolbar-title v-if="selected.length"
+                        >{{ selected.length }} selected</v-toolbar-title
+                    >
+                    <v-tabs v-else align-with-title>
+                        <v-tabs-slider color="white"></v-tabs-slider>
+                        <v-tab>{{ theTitle }}</v-tab>
+                        <v-tab>Mine</v-tab>
+                    </v-tabs>
+                    <!-- <v-divider
                         :dark="!!selected.length"
                         class="mx-4"
                         inset
                         vertical
                     ></v-divider>
+                    <h4>Mine</h4>  -->
                 </template>
 
                 <v-spacer></v-spacer>
@@ -243,10 +251,6 @@ export default {
             return isWebview(window.navigator.userAgent);
         },
         theTitle() {
-            const { length } = this.selected;
-            if (length > 0) {
-                return `${length} selected`;
-            }
             return `${pluralize(this.$_.startCase(this.page))}`;
         },
     },

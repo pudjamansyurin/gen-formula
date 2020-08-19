@@ -104,13 +104,10 @@ export default {
             handler(val) {
                 this.form.remember = val;
 
-                if (val) {
-                    let credential = ls.get("credential");
-
-                    if (credential) {
-                        this.form.email = credential.email;
-                        this.form.password = credential.password;
-                    }
+                let credential = ls.get("credential");
+                if (val && credential) {
+                    this.form.email = credential.email;
+                    this.form.password = credential.password;
                 }
             },
             immediate: true,
