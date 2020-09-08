@@ -2,7 +2,7 @@
     <fragment>
         <v-app-bar
             :color="selected.length ? 'black' : 'primary'"
-            :collapse-on-scroll="!(selected.length || searchBox)"
+            :collapse-on-scroll="!(selected.length || searchBox || !mobile)"
             dark
             app
         >

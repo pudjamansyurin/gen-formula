@@ -12,82 +12,62 @@
             crud
         ></app-top-bar>
 
-        <v-alert
-            v-if="!users.length"
-            :type="!!loading ? 'info' : 'warning'"
-            border="top"
-            outlined
+        <the-data
+            v-model="selected"
+            :items="users"
+            :options.sync="options"
+            :headers="headers"
+            :total="total"
+            :model="model"
         >
-            <span v-if="!!loading">Fetching {{ model }} data...</span>
-            <span v-else>Oops, no {{ model }} data yet.</span>
-        </v-alert>
-        <div v-else>
-            <the-data-card
-                v-if="mobile"
-                v-model="selected"
-                :items="users"
-                :options.sync="options"
-            >
-                <template v-slot="{ item }">
-                    <v-btn
-                        v-if="profile.id == item.id"
-                        :to="{ name: 'profile' }"
-                        :outlined="!item.selected"
-                        color="green"
-                        absolute
-                        top
-                        right
-                        small
-                        tile
-                        >Profile</v-btn
-                    >
-                    <v-card-text>
-                        <div class="overline">
-                            {{ item.last_at | moment("from") }}
-                        </div>
-                        <div class="overline mb-2">
-                            {{ item.role.name }}
-                        </div>
-                        <div class="subtitle-2 font-weight-bold">
-                            {{ item.name }}
-                        </div>
-                        {{ item.email }}
-                    </v-card-text>
-                </template>
-            </the-data-card>
-            <the-data-table
-                v-else
-                v-model="selected"
-                :items="users"
-                :options.sync="options"
-                :headers="headers"
-                :total="total"
-            >
-                <template v-slot:[`item.name`]="{ item }">
-                    <v-chip
-                        v-if="profile.id == item.id"
-                        :to="{ name: 'profile' }"
-                        color="primary"
-                        :small="dense"
-                        >{{ item.name }}</v-chip
-                    >
-                    <template v-else>
-                        {{ item.name }}
-                    </template>
-                </template>
-                <template v-slot:[`item.last_at`]="{ item }">
-                    <template v-if="item.last_at">
+            <template v-slot:card="{ item }">
+                <v-btn
+                    v-if="profile.id == item.id"
+                    :to="{ name: 'profile' }"
+                    :outlined="!item.selected"
+                    color="green"
+                    absolute
+                    top
+                    right
+                    small
+                    tile
+                    >Profile</v-btn
+                >
+                <v-card-text>
+                    <div class="overline">
                         {{ item.last_at | moment("from") }}
-                    </template>
-                    <template v-else>
-                        Never
-                    </template>
+                    </div>
+                    <div class="overline mb-2">
+                        {{ item.role.name }}
+                    </div>
+                    <div class="subtitle-2 font-weight-bold">
+                        {{ item.name }}
+                    </div>
+                    {{ item.email }}
+                </v-card-text>
+            </template>
+            <template v-slot:[`item.name`]="{ item }">
+                <v-chip
+                    v-if="profile.id == item.id"
+                    :to="{ name: 'profile' }"
+                    color="primary"
+                    :small="dense"
+                    >{{ item.name }}</v-chip
+                >
+                <template v-else>
+                    {{ item.name }}
                 </template>
-                <template v-slot:[`item.last_ip`]="{ item }">
-                    {{ item.last_ip || "None" }}
+            </template>
+            <template v-slot:[`item.last_at`]="{ item }">
+                <template v-if="item.last_at">
+                    {{ item.last_at | moment("from") }}
                 </template>
-            </the-data-table>
-        </div>
+                <template v-else> Never </template>
+            </template>
+            <template v-slot:[`item.last_ip`]="{ item }">
+                {{ item.last_ip || "None" }}
+            </template>
+        </the-data>
 
         <the-dialog-delete
             v-model="dialogDelete"
@@ -218,8 +198,7 @@ import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
 import AppTopBar from "../components/app/AppTopBar.vue";
-import TheDataCard from "../components/TheDataCard.vue";
-import TheDataTable from "../components/TheDataTable.vue";
+import TheData from "../components/TheData.vue";
 import TheDialogForm from "../components/TheDialogForm.vue";
 import TheDialogDelete from "../components/TheDialogDelete.vue";
 import mixins from "../mixins";
@@ -228,8 +207,7 @@ export default {
     mixins: [mixins],
     components: {
         AppTopBar,
-        TheDataCard,
-        TheDataTable,
+        TheData,
         TheDialogForm,
         TheDialogDelete,
     },
