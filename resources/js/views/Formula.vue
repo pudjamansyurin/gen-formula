@@ -30,8 +30,8 @@
       >
         <template v-slot="{ item }">
           <v-btn
-            @click.stop="editPercent(item.id)"
-            :color="item.percent_total == 100 ? 'green' : 'red'"
+            @click.stop="editPortion(item.id)"
+            :color="item.portion_total == 100 ? 'green' : 'red'"
             :outlined="!item.selected"
             absolute
             top
@@ -58,8 +58,8 @@
       >
         <template v-slot:[`item.name`]="{ item }">
           <v-chip
-            @click="editPercent(item.id)"
-            :color="item.percent_total == 100 ? 'green' : 'red'"
+            @click="editPortion(item.id)"
+            :color="item.portion_total == 100 ? 'green' : 'red'"
             :small="dense"
             dark
             >{{ item.name }}</v-chip
@@ -68,11 +68,11 @@
         <template v-slot:[`item.price_total`]="{ item }">
           {{ item.price_total | currency }}
         </template>
-        <template v-slot:[`item.percent_total`]="{ item }"
-          >{{ item.percent_total }} %</template
+        <template v-slot:[`item.portion_total`]="{ item }"
+          >{{ item.portion_total }} %</template
         >
-        <template v-slot:[`item.percent_count`]="{ item }">
-          {{ item.percents.length }}
+        <template v-slot:[`item.portion_count`]="{ item }">
+          {{ item.portions.length }}
         </template>
         <template v-slot:[`item.updated_at`]="{ item }">
           {{ item.updated_at | moment("from") }}
@@ -126,19 +126,19 @@
     </the-dialog-form>
 
     <the-dialog-form
-      v-model="dialogPercent"
-      :title="formPercentTitle"
-      @close="closePercent"
-      @submit="savePercent"
+      v-model="dialogPortion"
+      :title="formPortionTitle"
+      @close="closePortion"
+      @submit="savePortion"
       width="700px"
       :readonly="!form.authorized"
     >
-      <validation-observer ref="form_percent">
+      <validation-observer ref="form_portion">
         <v-row>
           <v-col cols="12" sm="6">
             <validation-provider name="formula" v-slot="{ errors, valid }">
               <v-autocomplete
-                v-model="form.percents"
+                v-model="form.portions"
                 :items="list_materials"
                 :error-messages="errors"
                 :success="valid"
@@ -159,14 +159,14 @@
             </validation-provider>
 
             <validation-provider
-              name="percent_total"
+              name="portion_total"
               v-slot="{ errors, valid }"
             >
               <v-text-field
                 class="mt-3"
-                label="Total Percentage"
+                label="Total Portion"
                 type="number"
-                :value="percentTotal"
+                :value="portionTotal"
                 :error-messages="errors"
                 :success="valid"
                 suffix="%"
@@ -179,20 +179,20 @@
           </v-col>
           <v-col cols="12" sm="6">
             <validation-provider
-              v-for="(el, key) in form.percents"
+              v-for="(el, key) in form.portions"
               :key="el.material.id"
-              :name="`formula.${key}.percent`"
+              :name="`formula.${key}.portion`"
               v-slot="{ errors, valid }"
             >
               <v-text-field
-                v-model.number="el.percent"
+                v-model.number="el.portion"
                 :label="el.material.name"
                 :error-messages="errors"
                 :success="valid"
                 :readonly="!form.authorized"
                 type="number"
                 suffix="%"
-                hint="This material's percentage"
+                hint="This material's portion"
                 persistent-hint
               ></v-text-field>
             </validation-provider>
@@ -256,14 +256,14 @@ export default {
           width: 150,
         },
         {
-          text: "Tot.Percent",
-          value: "percent_total",
+          text: "Tot.Portion",
+          value: "portion_total",
           align: "center",
           sortable: false,
         },
         {
           text: "Rel.Material",
-          value: "percent_count",
+          value: "portion_count",
           align: "center",
           sortable: false,
         },
@@ -272,20 +272,20 @@ export default {
       ],
       dialog: false,
       dialogDelete: false,
-      dialogPercent: false,
+      dialogPortion: false,
       list_materials: [],
       form: this.$_.cloneDeep(Formula),
     };
   },
   computed: {
     ...mapState("model", ["formulas"]),
-    formPercentTitle() {
+    formPortionTitle() {
       return this.form.name || "Related materials";
     },
-    percentTotal() {
+    portionTotal() {
       return this.$_.reduce(
-        this.form.percents,
-        (sum, el) => sum + Number(el.percent),
+        this.form.portions,
+        (sum, el) => sum + Number(el.portion),
         0
       );
     },
@@ -301,17 +301,17 @@ export default {
       this.form = this.$_.cloneDeep(this.selected[0]);
       this.dialog = true;
     },
-    editPercent(id) {
+    editPortion(id) {
       this.form = this.$_.cloneDeep(this.$_.find(this.formulas, { id: id }));
-      this.dialogPercent = true;
+      this.dialogPortion = true;
     },
     close() {
       this.dialog = false;
       this.$nextTick(() => this.$refs.form.reset());
     },
-    closePercent() {
-      this.dialogPercent = false;
-      this.$nextTick(() => this.$refs.form_percent.reset());
+    closePortion() {
+      this.dialogPortion = false;
+      this.$nextTick(() => this.$refs.form_portion.reset());
     },
     fetchMaterials: async function () {
       await this.GET_MODELS({
@@ -328,7 +328,7 @@ export default {
                 id,
                 name,
               },
-              percent: 0,
+              portion: 0,
             })))
         )
         .catch((e) => eHandler(e));
@@ -346,18 +346,18 @@ export default {
         .then(({ meta }) => (this.total = meta.total))
         .catch((e) => eHandler(e));
     },
-    savePercent() {
+    savePortion() {
       // validate
-      this.$refs.form_percent.validate().then((valid) => {
+      this.$refs.form_portion.validate().then((valid) => {
         if (valid) {
           let { model, form: payload } = this;
           // pass validation
           this.SAVE_MODEL({
-            url: `formula/${payload.id}/percent`,
+            url: `formula/${payload.id}/portion`,
             payload: {
-              formula: this.$_.map(payload.percents, (el) => ({
+              formula: this.$_.map(payload.portions, (el) => ({
                 material_id: el.material.id,
-                percent: el.percent,
+                portion: el.portion,
               })),
             },
           })
@@ -366,9 +366,9 @@ export default {
                 model,
                 data,
               });
-              this.closePercent();
+              this.closePortion();
             })
-            .catch((e) => this.$refs.form_percent.setErrors(eHandler(e)));
+            .catch((e) => this.$refs.form_portion.setErrors(eHandler(e)));
         }
       });
     },
@@ -415,7 +415,7 @@ export default {
     },
   },
   watch: {
-    dialogPercent: function (val) {
+    dialogPortion: function (val) {
       if (val && this.list_materials.length == 0) {
         this.fetchMaterials();
       }

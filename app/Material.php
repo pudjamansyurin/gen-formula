@@ -68,14 +68,14 @@ class Material extends Model
         return $this->hasMany(Price::class)->orderBy('changed_at', 'desc');
     }
 
-    public function percents()
+    public function portions()
     {
-        return $this->hasMany(Percent::class);
+        return $this->hasMany(Portion::class);
     }
 
     public function formulas()
     {
-        return $this->hasManyThrough(Formula::class, Percent::class);
+        return $this->hasManyThrough(Formula::class, Portion::class);
     }
 
     public function user()

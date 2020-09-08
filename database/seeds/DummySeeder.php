@@ -31,17 +31,17 @@ class DummySeeder extends Seeder
         factory(App\Formula::class, 25)->create()
             ->each(function ($formula) use ($materials) {
                 $materialsUsed = [];
-                $percentQuota = 100;
+                $portionQuota = 100;
 
-                while ($percentQuota) {
-                    $percent = rand(1, $percentQuota);
-                    $percentQuota -= $percent;
+                while ($portionQuota) {
+                    $portion = rand(1, $portionQuota);
+                    $portionQuota -= $portion;
 
                     $material = $materials->whereNotIn('id', $materialsUsed)->random();
                     array_push($materialsUsed, $material->id);
 
-                    factory(App\Percent::class)->create([
-                        'percent' => $percent,
+                    factory(App\Portion::class)->create([
+                        'portion' => $portion,
                         'formula_id' => $formula->id,
                         'material_id' => $material->id,
                         'user_id' => $formula->user_id,

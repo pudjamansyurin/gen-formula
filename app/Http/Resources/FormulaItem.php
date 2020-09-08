@@ -21,18 +21,18 @@ class FormulaItem extends JsonResource
             'description' => $this->description,
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),
-            'percents' => PercentItem::collection($this->whenLoaded('percents')),
-            'percent_total' => $this->whenLoaded('percents', function () {
-                return $this->percents->reduce(function ($total, $item) {
-                    return $total + $item->percent;
+            'portions' => PortionItem::collection($this->whenLoaded('portions')),
+            'portion_total' => $this->whenLoaded('portions', function () {
+                return $this->portions->reduce(function ($total, $item) {
+                    return $total + $item->portion;
                 }, 0);
             }),
-            'price_total' => $this->whenLoaded('percents', function () {
-                $total =  $this->percents->reduce(function ($total, $item) {
+            'price_total' => $this->whenLoaded('portions', function () {
+                $total =  $this->portions->reduce(function ($total, $item) {
                     $value = 0;
                     if ($material = $item->material) {
                         if ($price = $material->prices->first()) {
-                            $value = ($price->price * $item->percent / 100);
+                            $value = ($price->price * $item->portion / 100);
                         }
                     }
                     return $total + $value;

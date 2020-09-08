@@ -29,5 +29,5 @@ export const Formula = {
     name: "",
     description: "",
     user: User,
-    percents: []
+    portions: []
 };

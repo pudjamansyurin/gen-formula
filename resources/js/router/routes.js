@@ -27,7 +27,7 @@ const Profile = () =>
 // const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
 const Material = () =>
     import(/* webpackChunkName: "material" */ "../views/Material");
-const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
+// const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
 
@@ -97,12 +97,12 @@ export default [
                 name: "material",
                 component: Material
             },
-            {
-                path: "price/:id?",
-                name: "price",
-                component: Price,
-                props: true
-            },
+            // {
+            //     path: "price/:id?",
+            //     name: "price",
+            //     component: Price,
+            //     props: true
+            // },
             {
                 path: "user",
                 name: "user",

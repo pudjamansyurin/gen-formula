@@ -32,7 +32,6 @@ class Formula extends Model
      *
      * @var array
      */
-    // protected $with = ['user:id,name', 'percents'];
 
     /**
      * Client query scope
@@ -62,14 +61,14 @@ class Formula extends Model
     /**
      * Set relation tables.
      */
-    public function percents()
+    public function portions()
     {
-        return $this->hasMany(Percent::class);
+        return $this->hasMany(Portion::class);
     }
 
     public function materials()
     {
-        return $this->hasManyThrough(Material::class, Percent::class);
+        return $this->hasManyThrough(Material::class, Portion::class);
     }
 
     public function user()
