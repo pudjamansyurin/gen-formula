@@ -352,8 +352,10 @@ export default {
             }
         },
         options: {
-            handler(val) {
-                this.fetch();
+            handler(a, b) {
+                if (!this.$_.isEqual(a, b)) {
+                    this.fetch();
+                }
             },
             immediate: true,
             deep: true,

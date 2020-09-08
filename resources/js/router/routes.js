@@ -19,17 +19,17 @@ const Policy = () =>
 
 const Dashboard = () =>
     import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
-const Setting = () =>
-    import(/* webpackChunkName: "setting" */ "../views/Setting");
+const Material = () =>
+    import(/* webpackChunkName: "material" */ "../views/Material");
+const Formula = () =>
+    import(/* webpackChunkName: "formula" */ "../views/Formula");
 const User = () => import(/* webpackChunkName: "user" */ "../views/User");
 const Profile = () =>
     import(/* webpackChunkName: "profile" */ "../views/Profile");
-// const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
-const Material = () =>
-    import(/* webpackChunkName: "material" */ "../views/Material");
 // const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
-const Formula = () =>
-    import(/* webpackChunkName: "formula" */ "../views/Formula");
+// const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
+// const Setting = () =>
+//     import(/* webpackChunkName: "setting" */ "../views/Setting");
 
 import store from "../store";
 
@@ -111,11 +111,11 @@ export default [
                     roles: ["admin"]
                 }
             },
-            {
-                path: "setting",
-                name: "setting",
-                component: Setting
-            },
+            // {
+            //     path: "setting",
+            //     name: "setting",
+            //     component: Setting
+            // },
             {
                 path: "profile",
                 name: "profile",

@@ -22,7 +22,6 @@
         >
             <template v-slot:card="{ item }">
                 <v-btn
-                    :to="childRoute(item.id)"
                     :color="item.prices.length ? 'green' : 'red'"
                     :outlined="!item.selected"
                     absolute
@@ -45,7 +44,6 @@
             </template>
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
-                    :to="childRoute(item.id)"
                     :color="item.prices.length ? 'green' : 'red'"
                     :small="dense"
                     dark
@@ -250,17 +248,13 @@ export default {
                 })
                 .catch((e) => eHandler(e));
         },
-        childRoute(id) {
-            return {
-                name: "price",
-                params: { id },
-            };
-        },
     },
     watch: {
         options: {
-            handler(val) {
-                this.fetch();
+            handler(a, b) {
+                if (!this.$_.isEqual(a, b)) {
+                    this.fetch();
+                }
             },
             immediate: true,
             deep: true,

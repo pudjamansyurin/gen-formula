@@ -18,8 +18,8 @@ export const navs = [
         to: "material",
         bottomNav: true
     },
-    // { icon: "mdi-currency-usd", text: "Price", to: "price", bottomNav: true },
     { icon: "mdi-account-group", text: "User", to: "user" }
+    // { icon: "mdi-currency-usd", text: "Price", to: "price", bottomNav: true },
     // { icon: "mdi-account-cog", text: "Profile", to: "profile" }
     // { icon: "mdi-cogs", text: "Setting", to: "setting" }
     //     { icon: "mdi-content-copy", text: "Duplicates" }
