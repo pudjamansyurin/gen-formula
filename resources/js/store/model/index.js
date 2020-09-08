@@ -4,7 +4,7 @@ import mutations from "./mutations";
 
 const state = {
     users: [],
-    products: [],
+    materials: [],
     prices: [],
     formulas: []
 };

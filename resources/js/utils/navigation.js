@@ -14,8 +14,8 @@ export const navs = [
     },
     {
         icon: "mdi-package-variant-closed",
-        text: "Product",
-        to: "product",
+        text: "Material",
+        to: "material",
         bottomNav: true
     },
     { icon: "mdi-currency-usd", text: "Price", to: "price", bottomNav: true },

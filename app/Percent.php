@@ -13,7 +13,7 @@ class Percent extends Model
      */
     protected $fillable = [
         'formula_id',
-        'product_id',
+        'material_id',
         'percent',
         'user_id'
     ];
@@ -30,7 +30,6 @@ class Percent extends Model
      *
      * @var array
      */
-    // protected $with = ['product:id,name'];
 
     /**
      * Get the associated table.
@@ -40,9 +39,9 @@ class Percent extends Model
         return $this->belongsTo(Formula::class);
     }
 
-    public function product()
+    public function material()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Material::class);
     }
 
     public function user()

@@ -17,11 +17,11 @@ class PriceItem extends JsonResource
     {
         return [
             'id' => $this->id,
-            'product_id' => $this->product_id,
+            'material_id' => $this->material_id,
             'price' => $this->price,
             'changed_at' => $this->changed_at,
             'user' => new UserItem($this->whenLoaded('user')),
-            'product' => new ProductItem($this->whenLoaded('product')),
+            'material' => new MaterialItem($this->whenLoaded('material')),
             'authorized' => Gate::allows('update', $this->resource)
         ];
     }

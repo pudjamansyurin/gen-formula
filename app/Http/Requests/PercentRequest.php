@@ -28,11 +28,11 @@ class PercentRequest extends FormRequest
                 'required',
                 'array',
             ],
-            'formula.*.product_id' => [
+            'formula.*.material_id' => [
                 'integer',
                 'min:1',
                 'distinct',
-                'exists:products,id'
+                'exists:materials,id'
             ],
             'formula.*.percent' => [
                 'integer',

@@ -15,7 +15,7 @@ class CreatePricesTable extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id');
+            $table->foreignId('material_id');
             $table->double('price');
             $table->date('changed_at');
             $table->foreignId('user_id');
@@ -23,9 +23,9 @@ class CreatePricesTable extends Migration
         });
 
         Schema::table('prices', function (Blueprint $table) {
-            $table->foreign('product_id')
+            $table->foreign('material_id')
                 ->references('id')
-                ->on('products')
+                ->on('materials')
                 ->onDelete('cascade');
             $table->foreign('user_id')
                 ->references('id')

@@ -71,9 +71,9 @@ class User extends Authenticatable
      * Set relation tables.
      */
 
-    public function products()
+    public function materials()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Material::class);
     }
 
     public function formulas()

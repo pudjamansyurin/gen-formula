@@ -24,11 +24,11 @@ class PriceRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' => [
+            'material_id' => [
                 'required',
                 'integer',
                 'min:1',
-                'exists:products,id'
+                'exists:materials,id'
             ],
             'price' => [
                 'required',

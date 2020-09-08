@@ -18,32 +18,32 @@ class DummySeeder extends Seeder
                 $user->assignRole(Role::inRandomOrder()->first());
             });
 
-        $products = factory(App\Product::class, 50)->create()
-            ->each(function ($product) {
+        $materials = factory(App\Material::class, 50)->create()
+            ->each(function ($material) {
                 for ($i = 1; $i < rand(1, 10); $i++) {
                     factory(App\Price::class)->create([
-                        'product_id' => $product->id,
-                        'user_id' => $product->user_id,
+                        'material_id' => $material->id,
+                        'user_id' => $material->user_id,
                     ]);
                 }
             });
 
         factory(App\Formula::class, 25)->create()
-            ->each(function ($formula) use ($products) {
-                $productsUsed = [];
+            ->each(function ($formula) use ($materials) {
+                $materialsUsed = [];
                 $percentQuota = 100;
 
                 while ($percentQuota) {
                     $percent = rand(1, $percentQuota);
                     $percentQuota -= $percent;
 
-                    $product = $products->whereNotIn('id', $productsUsed)->random();
-                    array_push($productsUsed, $product->id);
+                    $material = $materials->whereNotIn('id', $materialsUsed)->random();
+                    array_push($materialsUsed, $material->id);
 
                     factory(App\Percent::class)->create([
                         'percent' => $percent,
                         'formula_id' => $formula->id,
-                        'product_id' => $product->id,
+                        'material_id' => $material->id,
                         'user_id' => $formula->user_id,
                     ]);
                 }

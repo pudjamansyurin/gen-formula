@@ -8,7 +8,7 @@ export const User = {
     }
 };
 
-export const Product = {
+export const Material = {
     id: -1,
     name: "",
     description: "",
@@ -17,10 +17,10 @@ export const Product = {
 
 export const Price = {
     id: -1,
-    product_id: -1,
+    material_id: -1,
     price: 0,
     changed_at: null,
-    product: Product,
+    material: Material,
     user: User
 };
 

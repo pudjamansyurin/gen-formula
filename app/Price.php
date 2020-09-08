@@ -15,7 +15,7 @@ class Price extends Model
      * @var array
      */
     protected $fillable = [
-        'product_id',
+        'material_id',
         'price',
         'changed_at',
         'user_id'
@@ -26,18 +26,17 @@ class Price extends Model
      *
      * @var array
      */
-    // protected $with = ['user:id,name', 'product:id,name'];
 
     /**
      * Client query scope
      */
     protected $aQuery = [
         'filter' => [
-            'product.name',
+            'material.name',
             'user.name'
         ],
         'sorter' =>  [
-            'product.name' => 'product_id',
+            'material.name' => 'material_id',
             'user.name' => 'user_id'
         ]
     ];
@@ -45,9 +44,9 @@ class Price extends Model
     /**
      * Get the associated table.
      */
-    public function product()
+    public function material()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Material::class);
     }
 
     public function user()

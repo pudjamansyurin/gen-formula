@@ -25,8 +25,8 @@ const User = () => import(/* webpackChunkName: "user" */ "../views/User");
 const Profile = () =>
     import(/* webpackChunkName: "profile" */ "../views/Profile");
 // const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
-const Product = () =>
-    import(/* webpackChunkName: "product" */ "../views/Product");
+const Material = () =>
+    import(/* webpackChunkName: "material" */ "../views/Material");
 const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
@@ -76,7 +76,7 @@ export default [
                     if (["admin", "manager"].includes(role.name)) {
                         return { name: "formula" };
                     }
-                    return { name: "product" };
+                    return { name: "material" };
                 }
             },
             // {
@@ -93,9 +93,9 @@ export default [
                 }
             },
             {
-                path: "product",
-                name: "product",
-                component: Product
+                path: "material",
+                name: "material",
+                component: Material
             },
             {
                 path: "price/:id?",

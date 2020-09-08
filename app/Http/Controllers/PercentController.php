@@ -24,13 +24,13 @@ class PercentController extends Controller
     {
         $this->authorize('update', $formula);
 
-        $formula = $formula->loadMissing(['user:id,name', 'percents.product.prices']);
+        $formula = $formula->loadMissing(['user:id,name', 'percents.material.prices']);
 
         $formulaNew = collect($request->formula)
             ->map(function ($el) use ($formula) {
                 return [
                     'formula_id' => $formula->id,
-                    'product_id' => $el['product_id'],
+                    'material_id' => $el['material_id'],
                     'percent' => $el['percent'],
                     'user_id' => auth()->id(),
                 ];
@@ -42,29 +42,29 @@ class PercentController extends Controller
             $same = [];
             $changed = [];
             $formulaNew->each(function ($el) use ($formula, &$same, &$changed) {
-                $old = $formula->percents->firstWhere('product_id', $el['product_id']);
+                $old = $formula->percents->firstWhere('material_id', $el['material_id']);
                 if ($old) {
                     // check is percent same
                     if ($old->percent == $el['percent']) {
-                        array_push($same, $old->product_id);
+                        array_push($same, $old->material_id);
                     } else {
-                        array_push($changed, $old->product_id);
+                        array_push($changed, $old->material_id);
                     }
                 }
             });
             // delete removed
             $formula->percents()
-                ->whereNotIn('product_id', array_merge($same, $changed))
+                ->whereNotIn('material_id', array_merge($same, $changed))
                 ->delete();
             // update existing
-            $formulaNew->whereIn('product_id', $changed)
+            $formulaNew->whereIn('material_id', $changed)
                 ->each(function ($el) use ($formula) {
                     $formula->percents()
-                        ->where('product_id', $el['product_id'])
+                        ->where('material_id', $el['material_id'])
                         ->update($el);
                 });
             // create new
-            $formulaNew->whereNotIn('product_id', array_merge($same, $changed))
+            $formulaNew->whereNotIn('material_id', array_merge($same, $changed))
                 ->each(function ($el) use ($formula) {
                     $formula->percents()->create($el);
                 });

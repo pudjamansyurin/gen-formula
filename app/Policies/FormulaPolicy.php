@@ -53,7 +53,6 @@ class FormulaPolicy
      */
     public function update(User $user, Formula $formula)
     {
-        debug('update');
         // only owner can update
         if ($user->id === $formula->user_id) {
             return true;

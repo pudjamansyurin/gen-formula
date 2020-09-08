@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MassDeleteRequest;
 use App\Http\Requests\PriceRequest;
-use App\Product;
+use App\Material;
 use App\Price;
 use App\Http\Resources\PriceCollection;
 use App\Http\Resources\PriceItem;
@@ -18,16 +18,16 @@ class PriceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $productId)
+    public function index(Request $request, $materialId)
     {
         $this->authorize('viewAny', Price::class);
 
         // Model instance
-        $q = Price::with(['user:id,name', 'product:id,name']);
+        $q = Price::with(['user:id,name', 'material:id,name']);
         // Parent
-        if ($productId > 0) {
-            $q = $q->whereHas('product', function ($q) use ($productId) {
-                $q->where('id', $productId);
+        if ($materialId > 0) {
+            $q = $q->whereHas('material', function ($q) use ($materialId) {
+                $q->where('id', $materialId);
             });
         }
         // Client Query
@@ -50,25 +50,25 @@ class PriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PriceRequest $request, $product_id)
+    public function store(PriceRequest $request, $material_id)
     {
         $this->authorize('create', Price::class);
 
-        if (!$product = Product::find($product_id)) {
+        if (!$material = Material::find($material_id)) {
             return response([
-                'message' => 'Product category not found'
+                'message' => 'Material category not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
         $price = Price::create([
-            'product_id' => $product->id,
+            'material_id' => $material->id,
             'price' => $request->price,
             'changed_at' => $request->changed_at,
             'user_id' => auth()->id()
         ]);
 
         return response(
-            new PriceItem($price->loadMissing(['user:id,name', 'product:id,name'])),
+            new PriceItem($price->loadMissing(['user:id,name', 'material:id,name'])),
             Response::HTTP_CREATED
         );
     }
@@ -94,18 +94,18 @@ class PriceController extends Controller
      * @param  \App\Price  $price
      * @return \Illuminate\Http\Response
      */
-    public function update(PriceRequest $request, $product_id, Price $price)
+    public function update(PriceRequest $request, $material_id, Price $price)
     {
         $this->authorize('update', $price);
 
         $price->update([
-            'product_id' => $request->product_id,
+            'material_id' => $request->material_id,
             'price' => $request->price,
             'changed_at' => $request->changed_at,
         ]);
 
         return response(
-            new PriceItem($price->loadMissing(['user:id,name', 'product:id,name'])),
+            new PriceItem($price->loadMissing(['user:id,name', 'material:id,name'])),
             Response::HTTP_OK
         );
     }

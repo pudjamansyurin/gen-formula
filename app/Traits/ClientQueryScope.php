@@ -83,7 +83,6 @@ trait ClientQueryScope
     {
         if (property_exists($this, 'aQuery')) {
             if (array_key_exists('filter', $this->aQuery)) {
-                debug($this->aQuery);
                 return $this->aQuery['filter'];
             }
         }

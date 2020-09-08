@@ -17,9 +17,9 @@ class PercentItem extends JsonResource
         return [
             'id' => $this->id,
             'formula_id' => $this->formula_id,
-            'product_id' => $this->product_id,
+            'material_id' => $this->material_id,
             'percent' => $this->percent,
-            'product' => new ProductItem($this->whenLoaded('product')),
+            'material' => new MaterialItem($this->whenLoaded('material')),
         ];
     }
 }

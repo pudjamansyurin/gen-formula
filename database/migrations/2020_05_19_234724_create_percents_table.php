@@ -16,7 +16,7 @@ class CreatePercentsTable extends Migration
         Schema::create('percents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('formula_id');
-            $table->foreignId('product_id');
+            $table->foreignId('material_id');
             $table->integer('percent');
             $table->foreignId('user_id');
             $table->timestamps();
@@ -27,9 +27,9 @@ class CreatePercentsTable extends Migration
                 ->references('id')
                 ->on('formulas')
                 ->onDelete('cascade');
-            $table->foreign('product_id')
+            $table->foreign('material_id')
                 ->references('id')
-                ->on('products')
+                ->on('materials')
                 ->onDelete('cascade');
             $table->foreign('user_id')
                 ->references('id')

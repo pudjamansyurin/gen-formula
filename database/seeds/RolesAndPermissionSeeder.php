@@ -18,7 +18,7 @@ class RolesAndPermissionSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $models = [
-            'products',
+            'materials',
             'formulas',
             'users'
         ];
@@ -29,9 +29,9 @@ class RolesAndPermissionSeeder extends Seeder
             'delete',
         ];
         $roles = [
-            'inputor' => ['products'],
-            'manager' => ['products', 'formulas'],
-            'admin' => ['products', 'formulas', 'users']
+            'inputor' => ['materials'],
+            'manager' => ['materials', 'formulas'],
+            'admin' => ['materials', 'formulas', 'users']
         ];
 
         // create permissions

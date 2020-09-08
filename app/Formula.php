@@ -67,9 +67,9 @@ class Formula extends Model
         return $this->hasMany(Percent::class);
     }
 
-    public function products()
+    public function materials()
     {
-        return $this->hasManyThrough(Product::class, Percent::class);
+        return $this->hasManyThrough(Material::class, Percent::class);
     }
 
     public function user()

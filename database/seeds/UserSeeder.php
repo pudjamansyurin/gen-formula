@@ -18,19 +18,19 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Inputor',
                 'email' => 'inputor@gen.com',
-                'password' => 'inputorpassword',
+                'password' => 'inputorpass',
                 'role' => 'inputor'
             ],
             [
                 'name' => 'Manager',
                 'email' => 'manager@gen.com',
-                'password' => 'managerpassword',
+                'password' => 'managerpass',
                 'role' => 'manager'
             ],
             [
                 'name' => 'Admin',
                 'email' => 'admin@gen.com',
-                'password' => 'adminpassword',
+                'password' => 'adminpass',
                 'role' => 'admin'
             ],
         ];

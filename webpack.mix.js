@@ -1,4 +1,6 @@
 const mix = require("laravel-mix");
+const homedir = require("os").homedir();
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -9,9 +11,6 @@ const mix = require("laravel-mix");
  | file for the application as well as bundling up all the JS files.
  |
  */
-// mix.babelConfig({
-//     plugins: ["@babel/plugin-syntax-dynamic-import"] // important to install -D
-// });
 
 mix.config.webpackConfig.output = {
     chunkFilename: "js/[name].js?id=[chunkhash]",
@@ -19,20 +18,6 @@ mix.config.webpackConfig.output = {
 };
 
 mix.js("resources/js/app.js", "public/js");
-// .extract(["vue"]);
-// .webpackConfig({
-//     resolve: {
-//         alias: {
-//             "@": path.resolve("resources/js/") // just to use relative path properly
-//         }
-//     }
-// });
-// mix.webpackConfig({
-//     resolve: {
-//         extensions: [".js", ".vue"],
-//         alias: { "@": __dirname + "/resources/js/" }
-//     }
-// });
 mix.sass("resources/sass/app.scss", "public/css");
 
 mix.version();
@@ -41,9 +26,16 @@ if (mix.inProduction()) {
     // mix.version();
 } else {
     mix.sourceMaps();
+
+    const domain = "gen-formula.test";
     mix.browserSync({
-        proxy: "gen-formula.test",
-        port: 8080
-        // open: "external"
+        proxy: "https://" + domain,
+        host: domain,
+        open: "external",
+        port: 3000,
+        https: {
+            key: homedir + "/.valet/Certificates/" + domain + ".key",
+            cert: homedir + "/.valet/Certificates/" + domain + ".crt"
+        }
     });
 }

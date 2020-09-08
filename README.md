@@ -1,3 +1,3 @@
 # GEN-Formula
 
-## Web Application to track & calculate daily updated product prices
+## Web Application to track & calculate raw material cost
