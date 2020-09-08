@@ -262,7 +262,7 @@ import { SAVE_MODEL } from "../store/model/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
 import { RESEND, PROFILE } from "../store/app/action-types";
 import { eHandler } from "../utils/helper";
-import AppTopBar from "../components/app/AppTopBar.vue";
+import AppTopBar from "../components/app/AppTopBar";
 import mixins from "../mixins";
 
 export default {

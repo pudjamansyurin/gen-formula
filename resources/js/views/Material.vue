@@ -65,7 +65,7 @@
             v-model="dialogDelete"
             :selected="selected"
             :model="model"
-            @delete="deleteItem"
+            @delete="remove"
             @close="dialogDelete = false"
         >
             <template v-slot="{ item }">{{ item.name }}</template>
@@ -122,10 +122,10 @@ import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Material } from "../models";
 import { eHandler } from "../utils/helper";
 import pluralize from "pluralize";
-import AppTopBar from "../components/app/AppTopBar.vue";
-import TheData from "../components/TheData.vue";
-import TheDialogForm from "../components/TheDialogForm.vue";
-import TheDialogDelete from "../components/TheDialogDelete.vue";
+import AppTopBar from "../components/app/AppTopBar";
+import TheData from "../components/TheData";
+import TheDialogForm from "../components/TheDialogForm";
+import TheDialogDelete from "../components/TheDialogDelete";
 import mixins from "../mixins";
 
 export default {
@@ -190,9 +190,19 @@ export default {
             this.form = this.$_.cloneDeep(this.selected[0]);
             this.dialog = true;
         },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
+        remove: async function () {
+            let { model } = this;
+
+            await this.DELETE_MODELS({
+                model,
+                ids: this.$_.map(this.selected, "id"),
+            })
+                .then(async () => {
+                    await this.fetch();
+                    this.selected = [];
+                    this.dialogDelete = false;
+                })
+                .catch((e) => eHandler(e));
         },
         fetch: async function () {
             let { model, options, search } = this;
@@ -234,19 +244,9 @@ export default {
                 }
             });
         },
-        deleteItem: async function () {
-            let { model } = this;
-
-            await this.DELETE_MODELS({
-                model,
-                ids: this.$_.map(this.selected, "id"),
-            })
-                .then(async () => {
-                    await this.fetch();
-                    this.selected = [];
-                    this.dialogDelete = false;
-                })
-                .catch((e) => eHandler(e));
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => this.$refs.form.reset());
         },
     },
     watch: {

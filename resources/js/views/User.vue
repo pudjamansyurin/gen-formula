@@ -73,7 +73,7 @@
             v-model="dialogDelete"
             :selected="selected"
             :model="model"
-            @delete="deleteItem"
+            @delete="remove"
             @close="dialogDelete = false"
         >
             <template v-slot="{ item }">
@@ -197,10 +197,10 @@ import {
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
-import AppTopBar from "../components/app/AppTopBar.vue";
-import TheData from "../components/TheData.vue";
-import TheDialogForm from "../components/TheDialogForm.vue";
-import TheDialogDelete from "../components/TheDialogDelete.vue";
+import AppTopBar from "../components/app/AppTopBar";
+import TheData from "../components/TheData";
+import TheDialogForm from "../components/TheDialogForm";
+import TheDialogDelete from "../components/TheDialogDelete";
 import mixins from "../mixins";
 
 export default {
@@ -249,6 +249,10 @@ export default {
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => this.$refs.form.reset());
+        },
         create() {
             this.form = {
                 ...this.$_.cloneDeep(User),
@@ -267,23 +271,18 @@ export default {
             this.change_password = false;
             this.dialog = true;
         },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
-        },
-        fetchRoles: async function () {
-            await this.GET_MODELS({
-                model: "role",
-                params: {
-                    temporary: true,
-                },
+        remove: async function () {
+            let { model } = this;
+
+            await this.DELETE_MODELS({
+                model,
+                ids: this.$_.map(this.selected, "id"),
             })
-                .then(
-                    ({ data }) =>
-                        (this.list_roles = this.$_.map(data, (el) =>
-                            this.$_.pick(el, ["id", "name"])
-                        ))
-                )
+                .then(async () => {
+                    await this.fetch();
+                    this.selected = [];
+                    this.dialogDelete = false;
+                })
                 .catch((e) => eHandler(e));
         },
         fetch: async function () {
@@ -330,18 +329,19 @@ export default {
                 }
             });
         },
-        deleteItem: async function () {
-            let { model } = this;
-
-            await this.DELETE_MODELS({
-                model,
-                ids: this.$_.map(this.selected, "id"),
+        fetchRoles: async function () {
+            await this.GET_MODELS({
+                model: "role",
+                params: {
+                    temporary: true,
+                },
             })
-                .then(async () => {
-                    await this.fetch();
-                    this.selected = [];
-                    this.dialogDelete = false;
-                })
+                .then(
+                    ({ data }) =>
+                        (this.list_roles = this.$_.map(data, (el) =>
+                            this.$_.pick(el, ["id", "name"])
+                        ))
+                )
                 .catch((e) => eHandler(e));
         },
     },

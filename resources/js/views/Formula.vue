@@ -71,7 +71,7 @@
             v-model="dialogDelete"
             :selected="selected"
             :model="model"
-            @delete="deleteItem"
+            @delete="remove"
             @close="dialogDelete = false"
         >
             <template v-slot="{ item }">{{ item.name }}</template>
@@ -206,10 +206,10 @@ import {
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Formula } from "../models";
 import { eHandler } from "../utils/helper";
-import AppTopBar from "../components/app/AppTopBar.vue";
+import AppTopBar from "../components/app/AppTopBar";
 import TheData from "../components/TheData";
-import TheDialogForm from "../components/TheDialogForm.vue";
-import TheDialogDelete from "../components/TheDialogDelete.vue";
+import TheDialogForm from "../components/TheDialogForm";
+import TheDialogDelete from "../components/TheDialogDelete";
 import mixins from "../mixins";
 
 export default {
@@ -284,6 +284,10 @@ export default {
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => this.$refs.form.reset());
+        },
         create() {
             this.form = this.$_.cloneDeep(Formula);
             this.dialog = true;
@@ -292,42 +296,46 @@ export default {
             this.form = this.$_.cloneDeep(this.selected[0]);
             this.dialog = true;
         },
-        editPortion(id) {
-            this.form = this.$_.cloneDeep(
-                this.$_.find(this.formulas, { id: id })
-            );
-            this.dialogPortion = true;
-        },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
-        },
-        closePortion() {
-            this.dialogPortion = false;
-            this.$nextTick(() => this.$refs.form_portion.reset());
-        },
-        fetchMaterials: async function () {
-            await this.GET_MODELS({
-                model: "material",
-                params: {
-                    itemsPerPage: -1,
-                    temporary: true,
-                },
+        remove: async function () {
+            let { model } = this;
+
+            await this.DELETE_MODELS({
+                model,
+                ids: this.$_.map(this.selected, "id"),
             })
-                .then(
-                    ({ data }) =>
-                        (this.list_materials = this.$_.map(
-                            data,
-                            ({ id, name }) => ({
-                                material: {
-                                    id,
-                                    name,
-                                },
-                                portion: 0,
-                            })
-                        ))
-                )
+                .then(async () => {
+                    await this.fetch();
+                    this.selected = [];
+                    this.dialogDelete = false;
+                })
                 .catch((e) => eHandler(e));
+        },
+        save() {
+            // validate
+            this.$refs.form.validate().then((valid) => {
+                if (valid) {
+                    // pass validation
+                    const { model, form: payload } = this;
+                    // submit to backend
+                    this.SAVE_MODEL({
+                        model,
+                        payload,
+                    })
+                        .then(async (data) => {
+                            if (payload.id > 0) {
+                                this.UPDATE_MODEL({
+                                    model,
+                                    data,
+                                });
+                            } else {
+                                await this.fetch();
+                            }
+                            this.selected = [];
+                            this.close();
+                        })
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                }
+            });
         },
         fetch: async function () {
             let { model, options, search } = this;
@@ -341,6 +349,16 @@ export default {
             })
                 .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
+        },
+        closePortion() {
+            this.dialogPortion = false;
+            this.$nextTick(() => this.$refs.form_portion.reset());
+        },
+        editPortion(id) {
+            this.form = this.$_.cloneDeep(
+                this.$_.find(this.formulas, { id: id })
+            );
+            this.dialogPortion = true;
         },
         savePortion() {
             // validate
@@ -370,45 +388,27 @@ export default {
                 }
             });
         },
-        save() {
-            // validate
-            this.$refs.form.validate().then((valid) => {
-                if (valid) {
-                    // pass validation
-                    const { model, form: payload } = this;
-                    // submit to backend
-                    this.SAVE_MODEL({
-                        model,
-                        payload,
-                    })
-                        .then(async (data) => {
-                            if (payload.id > 0) {
-                                this.UPDATE_MODEL({
-                                    model,
-                                    data,
-                                });
-                            } else {
-                                await this.fetch();
-                            }
-                            this.selected = [];
-                            this.close();
-                        })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
-                }
-            });
-        },
-        deleteItem: async function () {
-            let { model } = this;
-
-            await this.DELETE_MODELS({
-                model,
-                ids: this.$_.map(this.selected, "id"),
+        fetchMaterials: async function () {
+            await this.GET_MODELS({
+                model: "material",
+                params: {
+                    itemsPerPage: -1,
+                    temporary: true,
+                },
             })
-                .then(async () => {
-                    await this.fetch();
-                    this.selected = [];
-                    this.dialogDelete = false;
-                })
+                .then(
+                    ({ data }) =>
+                        (this.list_materials = this.$_.map(
+                            data,
+                            ({ id, name }) => ({
+                                material: {
+                                    id,
+                                    name,
+                                },
+                                portion: 0,
+                            })
+                        ))
+                )
                 .catch((e) => eHandler(e));
         },
     },
