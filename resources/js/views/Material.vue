@@ -182,6 +182,10 @@ export default {
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => this.$refs.form.reset());
+        },
         create() {
             this.form = this.$_.cloneDeep(Material);
             this.dialog = true;
@@ -244,17 +248,11 @@ export default {
                 }
             });
         },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
-        },
     },
     watch: {
         options: {
-            handler(a, b) {
-                if (!this.$_.isEqual(a, b)) {
-                    this.fetch();
-                }
+            handler() {
+                this.fetch();
             },
             immediate: true,
             deep: true,

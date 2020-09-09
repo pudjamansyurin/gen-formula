@@ -15,7 +15,7 @@
                 :value="value"
                 @input="$emit('input', $event)"
                 :options="options"
-                @update:options="$emit('update:options', $event)"
+                @update:options="fetch($event)"
                 :items="items"
             >
                 <template v-slot="{ item }">
@@ -28,7 +28,7 @@
                 :value="value"
                 @input="$emit('input', $event)"
                 :options="options"
-                @update:options="$emit('update:options', $event)"
+                @update:options="fetch($event)"
                 :items="items"
                 :headers="headers"
                 :total="total"
@@ -80,6 +80,13 @@ export default {
     components: {
         TheDataCard,
         TheDataTable,
+    },
+    methods: {
+        fetch(options) {
+            if (!this.$_.isEqual(this.options, options)) {
+                this.$emit("update:options", options);
+            }
+        },
     },
 };
 </script>

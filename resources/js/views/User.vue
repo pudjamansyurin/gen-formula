@@ -117,7 +117,7 @@
                 <validation-provider name="role.id" v-slot="{ errors, valid }">
                     <v-select
                         v-model="form.role"
-                        :items="list_roles"
+                        :items="roles"
                         :error-messages="errors"
                         :success="valid"
                         :loading="!!loading"
@@ -238,7 +238,7 @@ export default {
             dialogDelete: false,
             change_password: false,
             show_password: false,
-            list_roles: [],
+            roles: [],
             form: {},
         };
     },
@@ -338,7 +338,7 @@ export default {
             })
                 .then(
                     ({ data }) =>
-                        (this.list_roles = this.$_.map(data, (el) =>
+                        (this.roles = this.$_.map(data, (el) =>
                             this.$_.pick(el, ["id", "name"])
                         ))
                 )
@@ -347,15 +347,13 @@ export default {
     },
     watch: {
         dialog: function (val) {
-            if (val && this.list_roles.length == 0) {
+            if (val && this.roles.length == 0) {
                 this.fetchRoles();
             }
         },
         options: {
-            handler(a, b) {
-                if (!this.$_.isEqual(a, b)) {
-                    this.fetch();
-                }
+            handler() {
+                this.fetch();
             },
             immediate: true,
             deep: true,

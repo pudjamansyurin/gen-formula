@@ -132,7 +132,7 @@
                         >
                             <v-autocomplete
                                 v-model="form.portions"
-                                :items="list_materials"
+                                :items="materials"
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
@@ -264,7 +264,7 @@ export default {
             dialog: false,
             dialogDelete: false,
             dialogPortion: false,
-            list_materials: [],
+            materials: [],
             form: this.$_.cloneDeep(Formula),
         };
     },
@@ -398,31 +398,26 @@ export default {
             })
                 .then(
                     ({ data }) =>
-                        (this.list_materials = this.$_.map(
-                            data,
-                            ({ id, name }) => ({
-                                material: {
-                                    id,
-                                    name,
-                                },
-                                portion: 0,
-                            })
-                        ))
+                        (this.materials = this.$_.map(data, ({ id, name }) => ({
+                            material: {
+                                id,
+                                name,
+                            },
+                            portion: 0,
+                        })))
                 )
                 .catch((e) => eHandler(e));
         },
     },
     watch: {
         dialogPortion: function (val) {
-            if (val && this.list_materials.length == 0) {
+            if (val && this.materials.length == 0) {
                 this.fetchMaterials();
             }
         },
         options: {
-            handler(a, b) {
-                if (!this.$_.isEqual(a, b)) {
-                    this.fetch();
-                }
+            handler() {
+                this.fetch();
             },
             immediate: true,
             deep: true,

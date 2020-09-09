@@ -83,7 +83,7 @@
                 >
                     <v-autocomplete
                         v-model="form.material_id"
-                        :items="list_materials"
+                        :items="materials"
                         :readonly="id > 0"
                         :error-messages="errors"
                         :success="valid"
@@ -212,7 +212,7 @@ export default {
             dialog: false,
             dialogDelete: false,
             menuChangedAt: false,
-            list_materials: [],
+            materials: [],
             form: {},
         };
     },
@@ -315,7 +315,7 @@ export default {
             })
                 .then(
                     ({ data }) =>
-                        (this.list_materials = this.$_.map(data, (el) =>
+                        (this.materials = this.$_.map(data, (el) =>
                             this.$_.pick(el, ["id", "name"])
                         ))
                 )
@@ -324,15 +324,13 @@ export default {
     },
     watch: {
         dialog: function (val) {
-            if (val && this.list_materials.length == 0) {
+            if (val && this.materials.length == 0) {
                 this.fetchMaterials();
             }
         },
         options: {
-            handler(a, b) {
-                if (!this.$_.isEqual(a, b)) {
-                    this.fetch();
-                }
+            handler() {
+                this.fetch();
             },
             immediate: true,
             deep: true,
