@@ -19,19 +19,6 @@ class Portion extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
-    /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-
-    /**
      * Get the associated table.
      */
     public function formula()

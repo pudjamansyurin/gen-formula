@@ -10,7 +10,7 @@ use Faker\Generator as Faker;
 $factory->define(Price::class, function (Faker $faker) {
     return [
         'price' => $faker->randomNumber(6),
-        'changed_at' => $faker->dateTimeBetween('-6 months', 'now'),
-        'created_at' => $faker->dateTimeBetween('-10 months', 'now'),
+        'changed_at' => $faker->dateTimeBetween('-1 year', 'now'),
+        'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
     ];
 });

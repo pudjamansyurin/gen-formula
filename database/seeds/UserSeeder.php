@@ -1,6 +1,5 @@
 <?php
 
-use App\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -36,11 +35,10 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            $the_user = User::create([
+            $the_user = App\User::create([
                 'name' => $user['name'],
                 'email' => $user['email'],
-                'password' => $user['password'],
-                'created_at' => now()
+                'password' => $user['password']
             ]);
             $the_user->assignRole(Role::firstWhere('name', $user['role']));
         }

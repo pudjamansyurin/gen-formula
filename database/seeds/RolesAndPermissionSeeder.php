@@ -29,9 +29,18 @@ class RolesAndPermissionSeeder extends Seeder
             'delete',
         ];
         $roles = [
-            'inputor' => ['materials'],
-            'manager' => ['materials', 'formulas'],
-            'admin' => ['materials', 'formulas', 'users']
+            'inputor' => [
+                'materials'
+            ],
+            'manager' => [
+                'materials',
+                'formulas'
+            ],
+            'admin' => [
+                'materials',
+                'formulas',
+                'users'
+            ]
         ];
 
         // create permissions

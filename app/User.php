@@ -44,14 +44,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    // protected $with = ['roles:id,name'];
-
-
-    /**
      * Accessors
      */
     public function getNameAttribute($value)

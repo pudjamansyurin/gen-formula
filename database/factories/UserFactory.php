@@ -10,6 +10,6 @@ $factory->define(User::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $faker->email,
         'password' => $faker->password,
-        'created_at' => $faker->dateTimeBetween('-10 months', 'now'),
+        'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
     ];
 });

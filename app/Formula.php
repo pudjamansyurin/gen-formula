@@ -21,19 +21,6 @@ class Formula extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
-    /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-
-    /**
      * Client query scope
      */
     protected $aQuery = [

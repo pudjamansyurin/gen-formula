@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
-class DummySeeder extends Seeder
+class DummyFormulaAndPortionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,22 +11,9 @@ class DummySeeder extends Seeder
      */
     public function run()
     {
+        $materials = App\Material::all();
 
-        factory(App\User::class, 10)->create()
-            ->each(function ($user) {
-                $user->assignRole(Role::inRandomOrder()->first());
-            });
-
-        $materials = factory(App\Material::class, 50)->create()
-            ->each(function ($material) {
-                for ($i = 1; $i < rand(1, 10); $i++) {
-                    factory(App\Price::class)->create([
-                        'material_id' => $material->id,
-                        'user_id' => $material->user_id,
-                    ]);
-                }
-            });
-
+        // Create formulas
         factory(App\Formula::class, 25)->create()
             ->each(function ($formula) use ($materials) {
                 $materialsUsed = [];
@@ -40,6 +26,7 @@ class DummySeeder extends Seeder
                     $material = $materials->whereNotIn('id', $materialsUsed)->random();
                     array_push($materialsUsed, $material->id);
 
+                    // Create formula_portions
                     factory(App\Portion::class)->create([
                         'portion' => $portion,
                         'formula_id' => $formula->id,
