@@ -16,7 +16,6 @@ class CreatePackageTypesTable extends Migration
         Schema::create('package_types', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->boolean('is_base');
             $table->timestamps();
         });
     }

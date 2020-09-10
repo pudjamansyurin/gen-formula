@@ -56,6 +56,7 @@ class Formula extends Model
     public function materials()
     {
         return $this->hasManyThrough(Material::class, Portion::class);
+        // return $this->belongsToMany(Material::class, 'formula_material');
     }
 
     public function user()

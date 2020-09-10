@@ -13,6 +13,25 @@ class PackageType extends Model
      */
     protected $fillable = [
         'name',
-        'is_base',
     ];
+
+    /**
+     * Set relation tables.
+     */
+    public function packages()
+    {
+        return $this->belongsToMany(Package::class, 'package_type')
+            ->withTimestamps();
+    }
+
+    public function parts()
+    {
+        return $this->belongsToMany(PackageTypePart::class, 'package_type_part')
+            ->withTimestamps();
+    }
+
+    public function the_parts()
+    {
+        return $this->hasMany(PackageTypePart::class);
+    }
 }

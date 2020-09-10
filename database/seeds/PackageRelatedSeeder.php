@@ -11,35 +11,37 @@ class PackageRelatedSeeder extends Seeder
      */
     public function run()
     {
+        $fields = [
+            'name' => 0,
+            'symbol' => 1,
+        ];
+
         $units = [
-            [ 'Liter', 'L' ],
-            [ 'Kilogram', 'KG' ]
+            ['Liter', 'L'],
+            ['Kilogram', 'KG']
         ];
 
         $types = [
             [
                 'name' => 'KALENG',
-                'is_base' => true,
                 'parts' => ['KALENG', 'STIKER KALENG']
             ],
             [
                 'name' => 'KARTON',
-                'is_base' => false,
                 'parts' => ['KARTON BOX', 'STIKER KARTON', 'ISOLASI KARTON']
             ]
         ];
 
         foreach ($units as $unit) {
             App\PackageUnit::create([
-                'name' => $unit[0],
-                'symbol' => $unit[1],
+                'name' => $unit[$fields['name']],
+                'symbol' => $unit[$fields['symbol']],
             ]);
         }
 
         foreach ($types as $type) {
             $theType = App\PackageType::create([
                 'name' => $type['name'],
-                'is_base' => $type['is_base'],
             ]);
 
             foreach ($type['parts'] as $part) {

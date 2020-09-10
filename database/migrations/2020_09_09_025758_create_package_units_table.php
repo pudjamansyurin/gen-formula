@@ -15,7 +15,7 @@ class CreatePackageUnitsTable extends Migration
     {
         Schema::create('package_units', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
+            $table->text('name')->unique();
             $table->string('symbol')->unique();
             $table->timestamps();
         });

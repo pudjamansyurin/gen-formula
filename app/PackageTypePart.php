@@ -15,4 +15,19 @@ class PackageTypePart extends Model
         'name',
         'package_type_id',
     ];
+
+    /**
+     * Set relation tables.
+     */
+
+    public function types()
+    {
+        return $this->belongsToMany(PackageType::class, 'package_type_part')
+            ->withTimestamps();
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(PackageType::class);
+    }
 }

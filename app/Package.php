@@ -13,9 +13,28 @@ class Package extends Model
      */
     protected $fillable = [
         'name',
-        'description',
+        // 'description',
         'unit_id',
         'capacity',
         'user_id'
     ];
+
+    /**
+     * Set relation tables.
+     */
+    public function units()
+    {
+        return $this->belongsTo(PackageUnit::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function types()
+    {
+        return $this->belongsToMany(PackageType::class, 'package_type')
+            ->withTimestamps();
+    }
 }

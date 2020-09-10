@@ -49,11 +49,6 @@ class Material extends Model
     /**
      * Set relation tables.
      */
-    public function prices()
-    {
-        return $this->hasMany(Price::class)->orderBy('changed_at', 'desc');
-    }
-
     public function portions()
     {
         return $this->hasMany(Portion::class);
@@ -62,6 +57,12 @@ class Material extends Model
     public function formulas()
     {
         return $this->hasManyThrough(Formula::class, Portion::class);
+        // return $this->belongsToMany(Formula::class, 'formula_material');
+    }
+
+    public function prices()
+    {
+        return $this->hasMany(Price::class)->orderBy('changed_at', 'desc');
     }
 
     public function user()

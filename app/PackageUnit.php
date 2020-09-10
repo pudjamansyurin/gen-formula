@@ -15,4 +15,13 @@ class PackageUnit extends Model
         'name',
         'symbol',
     ];
+
+    /**
+     * Set relation tables.
+     */
+
+    public function packages()
+    {
+        return $this->hasMany(Package::class);
+    }
 }
