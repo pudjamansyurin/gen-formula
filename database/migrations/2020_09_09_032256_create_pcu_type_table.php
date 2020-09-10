@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePackagesTable extends Migration
+class CreatePcuTypeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,22 @@ class CreatePackagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('packages', function (Blueprint $table) {
+        Schema::create('pcu_type', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            // $table->text('description');
-            $table->foreignId('unit_id');
-            $table->float('capacity');
-            $table->foreignId('user_id');
+            $table->foreignId('pcu_id');
+            $table->foreignId('pcu_type_id');
+            $table->integer('content');
             $table->timestamps();
         });
 
-        Schema::table('packages', function (Blueprint $table) {
-            $table->foreign('unit_id')
+        Schema::table('pcu_type', function (Blueprint $table) {
+            $table->foreign('pcu_id')
                 ->references('id')
-                ->on('package_units')
+                ->on('pcus')
                 ->onDelete('cascade');
-            $table->foreign('user_id')
+            $table->foreign('pcu_type_id')
                 ->references('id')
-                ->on('users')
+                ->on('pcu_types')
                 ->onDelete('cascade');
         });
     }
@@ -42,6 +40,6 @@ class CreatePackagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('package');
+        Schema::dropIfExists('pcu_type');
     }
 }

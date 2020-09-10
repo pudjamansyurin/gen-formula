@@ -69,13 +69,13 @@ class MaterialPolicy
      * @param  \App\Material  $material
      * @return mixed
      */
-    public function delete(User $user, $materials_id)
+    public function delete(User $user, $materialsId)
     {
-        $belonging = Material::whereIn('id', $materials_id)
+        $belonging = Material::whereIn('id', $materialsId)
             ->where('user_id', $user->id)
             ->count();
         // only owner can delete
-        if ($belonging == count($materials_id)) {
+        if ($belonging == count($materialsId)) {
             return true;
         }
         // above role can delete all

@@ -71,10 +71,10 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function delete(User $user, $users_id)
+    public function delete(User $user, $usersId)
     {
         // user can't delete their profile
-        if (in_array($user->id, $users_id)) {
+        if (in_array($user->id, $usersId)) {
             return false;
         }
         // admin can delete all

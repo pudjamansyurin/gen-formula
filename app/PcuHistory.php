@@ -4,24 +4,26 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PackageUnit extends Model
+class PcuHistory extends Model
 {
+    protected $table = 'pcu_histories';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
-        'symbol',
+        'pcu_id',
+        'total_price',
     ];
 
     /**
      * Set relation tables.
      */
 
-    public function packages()
+    public function pcus()
     {
-        return $this->hasMany(Package::class);
+        return $this->hasMany(Pcu::class);
     }
 }

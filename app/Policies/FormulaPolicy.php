@@ -69,13 +69,13 @@ class FormulaPolicy
      * @param  \App\Formula  $formula
      * @return mixed
      */
-    public function delete(User $user, $formulas_id)
+    public function delete(User $user, $formulasId)
     {
-        $belonging = Formula::whereIn('id', $formulas_id)
+        $belonging = Formula::whereIn('id', $formulasId)
             ->where('user_id', $user->id)
             ->count();
         // only owner can delete
-        if ($belonging == count($formulas_id)) {
+        if ($belonging == count($formulasId)) {
             return true;
         }
         // above role can delete all

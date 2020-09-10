@@ -63,9 +63,9 @@ class User extends Authenticatable
      * Set relation tables.
      */
 
-    public function packages()
+    public function pcus()
     {
-        return $this->hasMany(Package::class);
+        return $this->hasMany(Pcu::class);
     }
 
     public function materials()

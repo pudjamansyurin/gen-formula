@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePackageUnitsTable extends Migration
+class CreatePcuUnitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePackageUnitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('package_units', function (Blueprint $table) {
+        Schema::create('pcu_units', function (Blueprint $table) {
             $table->id();
             $table->text('name')->unique();
             $table->string('symbol')->unique();
@@ -28,6 +28,6 @@ class CreatePackageUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('package_units');
+        Schema::dropIfExists('pcu_units');
     }
 }

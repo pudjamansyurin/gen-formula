@@ -1,21 +1,22 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Generator as Faker;
 
-class DummyPackageSeeder extends Seeder
+class DummyPcuSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run()
+    public function run(Faker $faker)
     {
         $fields = [
             'name' => 0,
             'symbol' => 1,
             'capacity' => 2,
-            'karton_content' => 3
+            'kartonContent' => 3
         ];
 
         $products = [
@@ -50,31 +51,52 @@ class DummyPackageSeeder extends Seeder
             ['BLAZER PAIL', 'L', 50, 0]
         ];
 
-        $units = App\PackageUnit::all();
-        $types = App\PackageType::all();
-        $parts = App\PackageTypePart::with('type')->get();
+        $units = App\PcuUnit::all();
+        $types = App\PcuType::all();
 
         foreach ($products as $product) {
-            $package = factory(App\Package::class)->create([
+            $pcu = factory(App\Pcu::class)->create([
                 'name' => $product[$fields['name']],
                 'unit_id' => $units->firstWhere('symbol', $product[$fields['symbol']])['id'],
                 'capacity' => $product[$fields['capacity']],
             ]);
 
+            // attach types
             // create kaleng
-            $package->types()->attach(
-                $types->firstWhere('name', 'KALENG'),
-                ['content' => 1]
-            );
-
+            $kalengType = $types->firstWhere('name', 'KALENG');
+            $pcu->types()->attach($kalengType, ['content' => 1]);
             // create karton
-            $karton_content = $product[$fields['karton_content']];
-            if ($karton_content > 0) {
-                $package->types()->attach(
-                    $types->firstWhere('name', 'KARTON'),
-                    ['content' => $karton_content]
-                );
+            $kartonType = $types->firstWhere('name', 'KARTON');
+            if ($kartonContent = $product[$fields['kartonContent']]) {
+                $pcu->types()->attach($kartonType, ['content' => $kartonContent]);
             }
+
+            // attach parts
+            // prices
+            $pcu->types()->each(function ($type) use ($faker, $pcu) {
+                $type->parts()->each(function ($part) use ($faker, $pcu) {
+                    $pcu->parts()->attach($part, [
+                        'price' => $faker->randomNumber(4)
+                    ]);
+                });
+            });
+
+            $pcu->load(['parts', 'parts.type']);
+            // // calculate total price
+            // $total = 0;
+            // $pcu->types()->each(function ($type) use (&$total, $pcu) {
+
+            //     $subTotal = $type->_parts->reduce(function ($carry, $item) {
+            //         return $carry + $item->pivot->price;
+            //     }, 0);
+            //     $total = $total + ($subTotal / $type->pivot->content);
+            // });
+
+            // // create history
+            // $pcu->histories()->create([
+            //     'pcu_id' => $pcu->id,
+            //     'total_price' => $total
+            // ]);
         }
     }
 }

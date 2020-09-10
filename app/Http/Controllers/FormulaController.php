@@ -104,10 +104,10 @@ class FormulaController extends Controller
      */
     public function destroy(MassDeleteRequest $request)
     {
-        $formulas_id = $request->ids;
-        $this->authorize('delete', [Formula::class, $formulas_id]);
+        $formulasId = $request->ids;
+        $this->authorize('delete', [Formula::class, $formulasId]);
 
-        Formula::destroy($formulas_id);
-        return response($formulas_id, Response::HTTP_OK);
+        Formula::destroy($formulasId);
+        return response($formulasId, Response::HTTP_OK);
     }
 }

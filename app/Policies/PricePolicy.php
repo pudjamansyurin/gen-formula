@@ -68,13 +68,13 @@ class PricePolicy
      * @param  \App\Price  $price
      * @return mixed
      */
-    public function delete(User $user, $prices_id)
+    public function delete(User $user, $pricesId)
     {
-        $belonging = Price::whereIn('id', $prices_id)
+        $belonging = Price::whereIn('id', $pricesId)
             ->where('user_id', $user->id)
             ->count();
         // only owner can delete
-        if ($belonging == count($prices_id)) {
+        if ($belonging == count($pricesId)) {
             return true;
         }
         // above role can delete all

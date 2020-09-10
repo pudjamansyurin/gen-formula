@@ -50,11 +50,11 @@ class PriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PriceRequest $request, $material_id)
+    public function store(PriceRequest $request, $materialId)
     {
         $this->authorize('create', Price::class);
 
-        if (!$material = Material::find($material_id)) {
+        if (!$material = Material::find($materialId)) {
             return response([
                 'message' => 'Material category not found'
             ], Response::HTTP_NOT_FOUND);
@@ -94,7 +94,7 @@ class PriceController extends Controller
      * @param  \App\Price  $price
      * @return \Illuminate\Http\Response
      */
-    public function update(PriceRequest $request, $material_id, Price $price)
+    public function update(PriceRequest $request, $materialId, Price $price)
     {
         $this->authorize('update', $price);
 
@@ -118,10 +118,10 @@ class PriceController extends Controller
      */
     public function destroy(MassDeleteRequest $request)
     {
-        $prices_id = $request->ids;
-        $this->authorize('delete', [Price::class, $prices_id]);
+        $pricesId = $request->ids;
+        $this->authorize('delete', [Price::class, $pricesId]);
 
-        Price::destroy($prices_id);
-        return response($prices_id, Response::HTTP_OK);
+        Price::destroy($pricesId);
+        return response($pricesId, Response::HTTP_OK);
     }
 }

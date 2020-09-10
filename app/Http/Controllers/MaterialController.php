@@ -103,10 +103,10 @@ class MaterialController extends Controller
      */
     public function destroy(MassDeleteRequest $request)
     {
-        $materials_id = $request->ids;
-        $this->authorize('delete', [Material::class, $materials_id]);
+        $materialsId = $request->ids;
+        $this->authorize('delete', [Material::class, $materialsId]);
 
-        Material::destroy($materials_id);
-        return response($materials_id, Response::HTTP_OK);
+        Material::destroy($materialsId);
+        return response($materialsId, Response::HTTP_OK);
     }
 }

@@ -135,11 +135,11 @@ class UserController extends Controller
      */
     public function destroy(MassDeleteRequest $request)
     {
-        $users_id = $request->ids;
-        $this->authorize('delete', [User::class, $users_id]);
+        $usersId = $request->ids;
+        $this->authorize('delete', [User::class, $usersId]);
 
-        User::destroy($users_id);
-        return response($users_id, Response::HTTP_OK);
+        User::destroy($usersId);
+        return response($usersId, Response::HTTP_OK);
     }
 
     /**

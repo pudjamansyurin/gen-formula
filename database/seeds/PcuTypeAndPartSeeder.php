@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class PackageRelatedSeeder extends Seeder
+class PcuTypeAndPartSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -33,21 +33,21 @@ class PackageRelatedSeeder extends Seeder
         ];
 
         foreach ($units as $unit) {
-            App\PackageUnit::create([
+            App\PcuUnit::create([
                 'name' => $unit[$fields['name']],
                 'symbol' => $unit[$fields['symbol']],
             ]);
         }
 
         foreach ($types as $type) {
-            $theType = App\PackageType::create([
+            $theType = App\PcuType::create([
                 'name' => $type['name'],
             ]);
 
             foreach ($type['parts'] as $part) {
-                App\PackageTypePart::create([
+                App\PcuTypePart::create([
                     'name' => $part,
-                    'package_type_id' => $theType->id
+                    'pcu_type_id' => $theType->id
                 ]);
             }
         }
