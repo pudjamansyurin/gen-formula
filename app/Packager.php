@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PcuTypePart extends Model
+class Packager extends Model
 {
-    protected $table = 'pcu_type_parts';
+    protected $table = 'packagers';
 
     /**
      * The attributes that are mass assignable.
@@ -14,23 +14,23 @@ class PcuTypePart extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'pcu_type_id',
+        'package_id',
+        'packer_id',
+        'content',
     ];
 
     /**
      * Set relation tables.
      */
 
-    public function type()
+    public function package()
     {
-        return $this->belongsTo(PcuType::class);
+        return $this->belongsTo(Package::class);
     }
 
-    public function pcus()
+    public function packs()
     {
-        return $this->belongsToMany(Pcu::class, 'pcu_part')
-            // ->using(PcuPartPivot::class)
+        return $this->belongsToMany(Pack::class, 'packager_pack')
             ->withPivot(['price'])
             ->withTimestamps();
     }

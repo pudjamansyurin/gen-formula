@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePcuPartTable extends Migration
+class CreatePackagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,23 @@ class CreatePcuPartTable extends Migration
      */
     public function up()
     {
-        Schema::create('pcu_part', function (Blueprint $table) {
+        Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pcu_id');
-            $table->foreignId('pcu_type_part_id');
-            $table->double('price');
+            $table->string('name')->unique();
+            $table->foreignId('unit_id');
+            $table->float('capacity');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
 
-        Schema::table('pcu_part', function (Blueprint $table) {
-            $table->foreign('pcu_id')
+        Schema::table('packages', function (Blueprint $table) {
+            $table->foreign('unit_id')
                 ->references('id')
-                ->on('pcus')
+                ->on('units')
                 ->onDelete('cascade');
-            $table->foreign('pcu_type_part_id')
+            $table->foreign('user_id')
                 ->references('id')
-                ->on('pcu_type_parts')
+                ->on('users')
                 ->onDelete('cascade');
         });
     }
@@ -40,6 +41,6 @@ class CreatePcuPartTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pcu_part');
+        Schema::dropIfExists('packages');
     }
 }

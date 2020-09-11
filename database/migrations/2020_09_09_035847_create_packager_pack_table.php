@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePcuTypeTable extends Migration
+class CreatePackagerPackTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,22 @@ class CreatePcuTypeTable extends Migration
      */
     public function up()
     {
-        Schema::create('pcu_type', function (Blueprint $table) {
+        Schema::create('packager_pack', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pcu_id');
-            $table->foreignId('pcu_type_id');
-            $table->integer('content');
+            $table->foreignId('packager_id');
+            $table->foreignId('pack_id');
+            $table->double('price');
             $table->timestamps();
         });
 
-        Schema::table('pcu_type', function (Blueprint $table) {
-            $table->foreign('pcu_id')
+        Schema::table('packager_pack', function (Blueprint $table) {
+            $table->foreign('packager_id')
                 ->references('id')
-                ->on('pcus')
+                ->on('packagers')
                 ->onDelete('cascade');
-            $table->foreign('pcu_type_id')
+            $table->foreign('pack_id')
                 ->references('id')
-                ->on('pcu_types')
+                ->on('packs')
                 ->onDelete('cascade');
         });
     }
@@ -40,6 +40,6 @@ class CreatePcuTypeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pcu_type');
+        Schema::dropIfExists('packager_pack');
     }
 }

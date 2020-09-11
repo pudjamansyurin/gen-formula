@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePcusTable extends Migration
+class CreatePackagersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,22 @@ class CreatePcusTable extends Migration
      */
     public function up()
     {
-        Schema::create('pcus', function (Blueprint $table) {
+        Schema::create('packagers', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->foreignId('unit_id');
-            $table->float('capacity');
-            $table->foreignId('user_id');
+            $table->foreignId('package_id');
+            $table->foreignId('packer_id');
+            $table->integer('content');
             $table->timestamps();
         });
 
-        Schema::table('pcus', function (Blueprint $table) {
-            $table->foreign('unit_id')
+        Schema::table('packagers', function (Blueprint $table) {
+            $table->foreign('package_id')
                 ->references('id')
-                ->on('pcu_units')
+                ->on('packages')
                 ->onDelete('cascade');
-            $table->foreign('user_id')
+            $table->foreign('packer_id')
                 ->references('id')
-                ->on('users')
+                ->on('packers')
                 ->onDelete('cascade');
         });
     }
@@ -41,6 +40,6 @@ class CreatePcusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pcu');
+        Schema::dropIfExists('packagers');
     }
 }

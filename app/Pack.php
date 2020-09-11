@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PcuHistory extends Model
+class Pack extends Model
 {
-    protected $table = 'pcu_histories';
+    protected $table = 'packs';
 
     /**
      * The attributes that are mass assignable.
@@ -14,16 +14,16 @@ class PcuHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'pcu_id',
-        'total_price',
+        'name',
+        'packer_id',
     ];
 
     /**
      * Set relation tables.
      */
 
-    public function pcus()
+    public function packer()
     {
-        return $this->hasMany(Pcu::class);
+        return $this->belongsTo(Packer::class);
     }
 }

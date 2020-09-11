@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePcuTypesTable extends Migration
+class CreateUnitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreatePcuTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pcu_types', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->text('name')->unique();
+            $table->string('symbol')->unique();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreatePcuTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pcu_types');
+        Schema::dropIfExists('units');
     }
 }

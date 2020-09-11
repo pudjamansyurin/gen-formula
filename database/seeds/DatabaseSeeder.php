@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionSeeder::class,
             UserSeeder::class,
-            PcuTypeAndPartSeeder::class,
+            PackerAndPackSeeder::class,
 
             DummyUserSeeder::class,
-            DummyPcuSeeder::class,
+            DummyPackageSeeder::class,
             DummyMaterialAndPriceSeeder::class,
             DummyFormulaAndPortionSeeder::class
         ]);

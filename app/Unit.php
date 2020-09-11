@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PcuUnit extends Model
+class Unit extends Model
 {
-    protected $table = 'pcu_units';
+    protected $table = 'units';
 
     /**
      * The attributes that are mass assignable.
@@ -22,8 +22,8 @@ class PcuUnit extends Model
      * Set relation tables.
      */
 
-    public function pcus()
+    public function packages()
     {
-        return $this->hasMany(Pcu::class);
+        return $this->hasMany(Packages::class);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePcuTypePartsTable extends Migration
+class CreatePacksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,17 @@ class CreatePcuTypePartsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pcu_type_parts', function (Blueprint $table) {
+        Schema::create('packs', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->foreignId('pcu_type_id');
+            $table->foreignId('packer_id');
             $table->timestamps();
         });
 
-        Schema::table('pcu_type_parts', function (Blueprint $table) {
-            $table->foreign('pcu_type_id')
+        Schema::table('packs', function (Blueprint $table) {
+            $table->foreign('packer_id')
                 ->references('id')
-                ->on('pcu_types')
+                ->on('packers')
                 ->onDelete('cascade');
         });
     }
@@ -35,6 +35,6 @@ class CreatePcuTypePartsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pcu_type_parts');
+        Schema::dropIfExists('packs');
     }
 }

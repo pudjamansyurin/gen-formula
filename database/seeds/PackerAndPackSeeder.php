@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class PcuTypeAndPartSeeder extends Seeder
+class PackerAndPackSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,17 +11,17 @@ class PcuTypeAndPartSeeder extends Seeder
      */
     public function run()
     {
-        $fields = [
-            'name' => 0,
-            'symbol' => 1,
-        ];
+        // $fields = [
+        //     'name' => 0,
+        //     'symbol' => 1,
+        // ];
 
         $units = [
             ['Liter', 'L'],
             ['Kilogram', 'KG']
         ];
 
-        $types = [
+        $packers = [
             [
                 'name' => 'KALENG',
                 'parts' => ['KALENG', 'STIKER KALENG']
@@ -33,21 +33,21 @@ class PcuTypeAndPartSeeder extends Seeder
         ];
 
         foreach ($units as $unit) {
-            App\PcuUnit::create([
-                'name' => $unit[$fields['name']],
-                'symbol' => $unit[$fields['symbol']],
+            App\Unit::create([
+                'name' => $unit[0],
+                'symbol' => $unit[1],
             ]);
         }
 
-        foreach ($types as $type) {
-            $theType = App\PcuType::create([
-                'name' => $type['name'],
+        foreach ($packers as $packer) {
+            $thePacker = App\Packer::create([
+                'name' => $packer['name'],
             ]);
 
-            foreach ($type['parts'] as $part) {
-                App\PcuTypePart::create([
+            foreach ($packer['parts'] as $part) {
+                App\Pack::create([
                     'name' => $part,
-                    'pcu_type_id' => $theType->id
+                    'packer_id' => $thePacker->id
                 ]);
             }
         }
