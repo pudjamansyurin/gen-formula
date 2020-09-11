@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class DummyMaterialAndPriceSeeder extends Seeder
+class DummyMaterialSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,8 +15,8 @@ class DummyMaterialAndPriceSeeder extends Seeder
         factory(App\Material::class, 50)->create()
             ->each(function ($material) {
                 for ($i = 1; $i < rand(1, 10); $i++) {
-                    // Create material_prices
-                    factory(App\Price::class)->create([
+                    // Create stories
+                    factory(App\MaterialStory::class)->create([
                         'material_id' => $material->id,
                         'user_id' => $material->user_id,
                     ]);

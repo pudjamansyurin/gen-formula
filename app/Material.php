@@ -9,6 +9,8 @@ class Material extends Model
 {
     use ClientQueryScope;
 
+    protected $table = 'materials';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -16,8 +18,8 @@ class Material extends Model
      */
     protected $fillable = [
         'name',
-        'description',
-        'user_id'
+        'matter_id',
+        'user_id',
     ];
 
     /**
@@ -40,33 +42,35 @@ class Material extends Model
         return strtoupper($value);
     }
 
-    public function getDescriptionAttribute($value)
-    {
-        return ucfirst($value);
-    }
-
-
     /**
      * Set relation tables.
      */
-    public function portions()
+
+    public function matter()
     {
-        return $this->hasMany(Portion::class);
+        return $this->belongsTo(Matter::class);
     }
 
-    public function formulas()
+    public function stories()
     {
-        return $this->hasManyThrough(Formula::class, Portion::class);
-        // return $this->belongsToMany(Formula::class, 'formula_material');
-    }
-
-    public function prices()
-    {
-        return $this->hasMany(Price::class)->orderBy('changed_at', 'desc');
+        return $this->hasMany(MaterialStory::class)->latest();
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+
+
+    // public function portions()
+    // {
+    //     return $this->hasMany(Portion::class);
+    // }
+
+    // public function formulas()
+    // {
+    //     return $this->hasManyThrough(Formula::class, Portion::class);
+    //     // return $this->belongsToMany(Formula::class, 'formula_material');
+    // }
 }

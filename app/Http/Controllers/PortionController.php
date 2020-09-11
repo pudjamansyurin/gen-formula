@@ -24,7 +24,7 @@ class PortionController extends Controller
     {
         $this->authorize('update', $formula);
 
-        $formula = $formula->loadMissing(['user:id,name', 'portions.material.prices']);
+        $formula = $formula->loadMissing(['user:id,name', 'portions.material.stories']);
 
         $formulaNew = collect($request->formula)
             ->map(function ($el) use ($formula) {

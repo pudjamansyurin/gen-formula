@@ -16,7 +16,7 @@ class CreatePackageStoriesTable extends Migration
         Schema::create('package_stories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('package_id');
-            $table->double('total_price');
+            $table->double('price');
             $table->timestamps();
         });
 

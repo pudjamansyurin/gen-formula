@@ -71,11 +71,11 @@ class DummyPackageSeeder extends Seeder
                         'content' => $content
                     ]);
 
-                    // create packager_pack
+                    // create packets
                     $packer->packs->each(function ($pack) use ($thePackager, $faker, $packer) {
                         $digitPrice = ($packer->name == 'KALENG' ? 5 : 4);
 
-                        $thePackager->packs()->attach($pack, [
+                        $thePackager->packets()->attach($pack, [
                             'price' => $faker->randomNumber($digitPrice)
                         ]);
                     });
@@ -84,16 +84,16 @@ class DummyPackageSeeder extends Seeder
 
             // calculate total price
             $total = $thePackage->packagers->reduce(function ($carry, $packager) {
-                $pricePacks = $packager->packs->reduce(function ($carry, $pack) {
-                    return $carry + $pack->pivot->price;
+                $pricePackets = $packager->packets->reduce(function ($carry, $packet) {
+                    return $carry + $packet->pivot->price;
                 });
 
-                return $carry + ($pricePacks / $packager->content);
+                return $carry + ($pricePackets / $packager->content);
             });
 
             // create stories
             $thePackage->stories()->create([
-                'total_price' => $total
+                'price' => $total
             ]);
         }
     }

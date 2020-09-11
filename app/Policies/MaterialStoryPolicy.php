@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Price;
+use App\MaterialStory;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PricePolicy
+class MaterialStoryPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class PricePolicy
     //  * Determine whether the user can view the model.
     //  *
     //  * @param  \App\User  $user
-    //  * @param  \App\Price  $price
+    //  * @param  \App\MaterialStory  $story
     //  * @return mixed
     //  */
-    // public function view(User $user, Price $price)
+    // public function view(User $user, MaterialStory $story)
     // {
     //     //
     // }
@@ -48,13 +48,13 @@ class PricePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Price  $price
+     * @param  \App\MaterialStory  $story
      * @return mixed
      */
-    public function update(User $user, Price $price)
+    public function update(User $user, MaterialStory $story)
     {
         // only owner can update
-        if ($user->id === $price->user_id) {
+        if ($user->id === $story->user_id) {
             return true;
         }
         // above role can update all
@@ -65,16 +65,16 @@ class PricePolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Price  $price
+     * @param  \App\MaterialStory  $storiesId
      * @return mixed
      */
-    public function delete(User $user, $pricesId)
+    public function delete(User $user, $storiesId)
     {
-        $belonging = Price::whereIn('id', $pricesId)
+        $belonging = MaterialStory::whereIn('id', $storiesId)
             ->where('user_id', $user->id)
             ->count();
         // only owner can delete
-        if ($belonging == count($pricesId)) {
+        if ($belonging == count($storiesId)) {
             return true;
         }
         // above role can delete all

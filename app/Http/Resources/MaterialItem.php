@@ -18,13 +18,12 @@ class MaterialItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description,
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),
-            'prices' => PriceItem::collection($this->whenLoaded('prices')),
-            'price_latest' => $this->whenLoaded('prices', function () {
-                if ($item = $this->prices->first()) {
-                    return $item['price'];
+            'stories' => MaterialStoryItem::collection($this->whenLoaded('stories')),
+            'price_latest' => $this->whenLoaded('stories', function () {
+                if ($story = $this->stories->first()) {
+                    return $story->price;
                 }
                 return 0;
             }),

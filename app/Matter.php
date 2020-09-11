@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PackageStory extends Model
+class Matter extends Model
 {
-    protected $table = 'package_stories';
+    protected $table = 'matters';
 
     /**
      * The attributes that are mass assignable.
@@ -14,16 +14,15 @@ class PackageStory extends Model
      * @var array
      */
     protected $fillable = [
-        'package_id',
-        'price',
+        'name',
     ];
 
     /**
      * Set relation tables.
      */
 
-    public function packages()
+    public function materials()
     {
-        return $this->belongsTo(Package::class);
+        return $this->hasMany(Material::class);
     }
 }

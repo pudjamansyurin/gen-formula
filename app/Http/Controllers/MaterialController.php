@@ -22,7 +22,7 @@ class MaterialController extends Controller
         $this->authorize('viewAny', Material::class);
 
         // Model instance
-        $q = Material::with(['user:id,name', 'prices']);
+        $q = Material::with(['user:id,name', 'stories']);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -49,12 +49,11 @@ class MaterialController extends Controller
 
         $material = Material::create([
             'name' => $request->name,
-            'description' => $request->description,
             'user_id' => auth()->id()
         ]);
 
         return response(
-            new MaterialItem($material->loadMissing(['user:id,name', 'prices'])),
+            new MaterialItem($material->loadMissing(['user:id,name', 'stories'])),
             Response::HTTP_CREATED
         );
     }
@@ -86,11 +85,10 @@ class MaterialController extends Controller
 
         $material->update([
             'name' => $request->name,
-            'description' => $request->description,
         ]);
 
         return response(
-            new MaterialItem($material->loadMissing(['user:id,name', 'prices'])),
+            new MaterialItem($material->loadMissing(['user:id,name', 'stories'])),
             Response::HTTP_OK
         );
     }

@@ -2,12 +2,11 @@
 
 namespace App;
 
-use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
-class Price extends Model
+class MaterialStory extends Model
 {
-    use ClientQueryScope;
+    protected $table = 'material_stories';
 
     /**
      * The attributes that are mass assignable.
@@ -17,23 +16,22 @@ class Price extends Model
     protected $fillable = [
         'material_id',
         'price',
-        'changed_at',
         'user_id'
     ];
 
-    /**
-     * Client query scope
-     */
-    protected $aQuery = [
-        'filter' => [
-            'material.name',
-            'user.name'
-        ],
-        'sorter' =>  [
-            'material.name' => 'material_id',
-            'user.name' => 'user_id'
-        ]
-    ];
+    // /**
+    //  * Client query scope
+    //  */
+    // protected $aQuery = [
+    //     'filter' => [
+    //         'material.name',
+    //         'user.name'
+    //     ],
+    //     'sorter' =>  [
+    //         'material.name' => 'material_id',
+    //         'user.name' => 'user_id'
+    //     ]
+    // ];
 
     /**
      * Get the associated table.

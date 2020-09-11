@@ -8,8 +8,8 @@ use Faker\Generator as Faker;
 $factory->define(Material::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->word,
-        'description' => $faker->sentence,
+        'matter_id' => App\Matter::all('id')->random(),
+        'user_id' => App\User::all('id')->random(),
         'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
-        'user_id' => App\User::all('id')->random()
     ];
 });

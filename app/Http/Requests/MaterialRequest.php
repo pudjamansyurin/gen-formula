@@ -30,10 +30,6 @@ class MaterialRequest extends FormRequest
                 'min:3',
                 Rule::unique('materials', 'name')->ignore($this->material)
             ],
-            'description'   => [
-                'required',
-                'min:5'
-            ]
         ];
     }
 }

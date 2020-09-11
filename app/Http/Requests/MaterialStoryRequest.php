@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PriceRequest extends FormRequest
+class MaterialStoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,7 +35,7 @@ class PriceRequest extends FormRequest
                 'integer',
                 'min:1',
             ],
-            'changed_at' => [
+            'updated_at' => [
                 'required',
                 'date_format:"Y-m-d"'
             ]

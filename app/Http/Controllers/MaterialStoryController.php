@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MassDeleteRequest;
-use App\Http\Requests\PriceRequest;
+use App\Http\Requests\MaterialStoryRequest;
 use App\Material;
-use App\Price;
-use App\Http\Resources\PriceCollection;
-use App\Http\Resources\PriceItem;
+use App\MaterialStory;
+use App\Http\Resources\MaterialStoryCollection;
+use App\Http\Resources\MaterialStoryItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class PriceController extends Controller
+class MaterialStoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,10 +20,10 @@ class PriceController extends Controller
      */
     public function index(Request $request, $materialId)
     {
-        $this->authorize('viewAny', Price::class);
+        $this->authorize('viewAny', MaterialStory::class);
 
         // Model instance
-        $q = Price::with(['user:id,name', 'material:id,name']);
+        $q = MaterialStory::with(['user:id,name', 'material:id,name']);
         // Parent
         if ($materialId > 0) {
             $q = $q->whereHas('material', function ($q) use ($materialId) {
@@ -36,7 +36,7 @@ class PriceController extends Controller
         $q = $q->clientSorter($request);
         $q = $q->clientLimiter($request);
         // Response
-        return (new PriceCollection($q->get()))
+        return (new MaterialStoryCollection($q->get()))
             ->additional([
                 'meta' => [
                     'total' => $total
@@ -50,9 +50,9 @@ class PriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PriceRequest $request, $materialId)
+    public function store(MaterialStoryRequest $request, $materialId)
     {
-        $this->authorize('create', Price::class);
+        $this->authorize('create', MaterialStory::class);
 
         if (!$material = Material::find($materialId)) {
             return response([
@@ -60,7 +60,7 @@ class PriceController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $price = Price::create([
+        $price = MaterialStory::create([
             'material_id' => $material->id,
             'price' => $request->price,
             'changed_at' => $request->changed_at,
@@ -68,7 +68,7 @@ class PriceController extends Controller
         ]);
 
         return response(
-            new PriceItem($price->loadMissing(['user:id,name', 'material:id,name'])),
+            new MaterialStoryItem($price->loadMissing(['user:id,name', 'material:id,name'])),
             Response::HTTP_CREATED
         );
     }
@@ -76,13 +76,13 @@ class PriceController extends Controller
     // /**
     //  * Display the specified resource.
     //  *
-    //  * @param  \App\Price  $price
+    //  * @param  \App\MaterialStory  $price
     //  * @return \Illuminate\Http\Response
     //  */
-    // public function show(Price $price)
+    // public function show(MaterialStory $price)
     // {
     //     return response(
-    //         new PriceItem($price),
+    //         new MaterialStoryItem($price),
     //         Response::HTTP_OK
     //     );
     // }
@@ -91,10 +91,10 @@ class PriceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Price  $price
+     * @param  \App\MaterialStory  $price
      * @return \Illuminate\Http\Response
      */
-    public function update(PriceRequest $request, $materialId, Price $price)
+    public function update(MaterialStoryRequest $request, $materialId, MaterialStory $price)
     {
         $this->authorize('update', $price);
 
@@ -105,7 +105,7 @@ class PriceController extends Controller
         ]);
 
         return response(
-            new PriceItem($price->loadMissing(['user:id,name', 'material:id,name'])),
+            new MaterialStoryItem($price->loadMissing(['user:id,name', 'material:id,name'])),
             Response::HTTP_OK
         );
     }
@@ -113,15 +113,15 @@ class PriceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Price  $price
+     * @param  \App\MaterialStory  $price
      * @return \Illuminate\Http\Response
      */
     public function destroy(MassDeleteRequest $request)
     {
         $pricesId = $request->ids;
-        $this->authorize('delete', [Price::class, $pricesId]);
+        $this->authorize('delete', [MaterialStory::class, $pricesId]);
 
-        Price::destroy($pricesId);
+        MaterialStory::destroy($pricesId);
         return response($pricesId, Response::HTTP_OK);
     }
 }

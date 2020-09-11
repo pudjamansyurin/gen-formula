@@ -23,22 +23,20 @@ class FormulaItem extends JsonResource
             'user' => new UserItem($this->whenLoaded('user')),
             'portions' => PortionItem::collection($this->whenLoaded('portions')),
             'portion_total' => $this->whenLoaded('portions', function () {
-                return $this->portions->reduce(function ($total, $item) {
-                    return $total + $item->portion;
-                }, 0);
+                return $this->portions->reduce(function ($carry, $item) {
+                    return $carry + $item->portion;
+                });
             }),
             'price_total' => $this->whenLoaded('portions', function () {
-                $total =  $this->portions->reduce(function ($total, $item) {
+                return $this->portions->reduce(function ($carry, $item) {
                     $value = 0;
                     if ($material = $item->material) {
-                        if ($price = $material->prices->first()) {
-                            $value = ($price->price * $item->portion / 100);
+                        if ($story = $material->stories->first()) {
+                            $value = ($story->price * $item->portion / 100);
                         }
                     }
-                    return $total + $value;
-                }, 0);
-
-                return $total;
+                    return $carry + $value;
+                });
             }),
             'authorized' => Gate::allows('update', $this->resource)
         ];
