@@ -22,39 +22,43 @@
         >
             <template v-slot:card="{ item }">
                 <v-btn
-                    :color="item.prices.length ? 'green' : 'red'"
+                    @click="edit(item)"
+                    :color="item.stories.length ? 'green' : 'red'"
                     :outlined="!item.selected"
                     absolute
                     top
                     right
                     small
                     tile
-                    >{{ item.price_latest | currency }}</v-btn
+                    >{{ item.price | currency }}</v-btn
                 >
                 <v-card-text>
                     <div class="overline">
                         {{ item.updated_at | moment("from") }}
                     </div>
-                    <div class="overline mb-2">{{ item.user.name }}</div>
+                    <div class="overline">
+                        {{ item.user.name }}
+                    </div>
                     <div class="subtitle-2 font-weight-bold">
                         {{ item.name }}
                     </div>
-                    {{ item.description }}
                 </v-card-text>
             </template>
+
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
-                    :color="item.prices.length ? 'green' : 'red'"
+                    @click="edit(item)"
+                    :color="item.stories.length ? 'green' : 'red'"
                     :small="dense"
                     dark
                     >{{ item.name }}</v-chip
                 >
             </template>
-            <template v-slot:[`item.price_latest`]="{ item }">
-                {{ item.price_latest | currency }}
+            <template v-slot:[`item.price`]="{ item }">
+                {{ item.price | currency }}
             </template>
             <template v-slot:[`item.price_count`]="{ item }">
-                {{ item.prices.length }}
+                {{ item.stories.length }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -91,21 +95,66 @@
                     ></v-text-field>
                 </validation-provider>
 
-                <validation-provider
-                    name="description"
-                    v-slot="{ errors, valid }"
-                >
+                <validation-provider name="price" v-slot="{ errors, valid }">
                     <v-text-field
-                        v-model="form.description"
+                        label="Material price"
+                        type="number"
+                        v-model.number="form.price"
                         :error-messages="errors"
                         :success="valid"
-                        label="Material description"
-                        type="text"
-                        hint="Short description about the material"
+                        prefix="Rp"
                         counter
+                        hint="The updated material price"
                         persistent-hint
                     ></v-text-field>
                 </validation-provider>
+
+                <v-menu
+                    ref="menuUpdatedAt"
+                    v-model="menuUpdatedAt"
+                    :return-value.sync="form.updated_at"
+                    :close-on-content-click="false"
+                    min-width="290px"
+                    offset-y
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                        <validation-provider
+                            name="updated_at"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.updated_at"
+                                v-bind="attrs"
+                                v-on="on"
+                                :error-messages="errors"
+                                :success="valid"
+                                label="Updated At"
+                                hint="When the price updated"
+                                readonly
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                    <v-date-picker
+                        v-model="form.updated_at"
+                        :max="$moment().format('YYYY-MM-DD')"
+                        no-title
+                        scrollable
+                    >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            text
+                            color="primary"
+                            @click="menuUpdatedAt = false"
+                            >Cancel</v-btn
+                        >
+                        <v-btn
+                            text
+                            color="primary"
+                            @click="$refs.menuUpdatedAt.save(form.updated_at)"
+                            >OK</v-btn
+                        >
+                    </v-date-picker>
+                </v-menu>
             </validation-observer>
         </the-dialog-form>
     </fragment>
@@ -154,25 +203,25 @@ export default {
             selected: [],
             headers: [
                 { text: "Name", value: "name" },
-                { text: "Description", value: "description" },
                 {
-                    text: "Last.Price",
-                    value: "price_latest",
+                    text: "Price",
+                    value: "price",
                     align: "right",
                     sortable: false,
                     width: 150,
                 },
                 {
-                    text: "Tot.Price",
+                    text: "Revision",
                     value: "price_count",
                     align: "center",
                     sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
-                { text: "Updated At", value: "updated_at" },
+                { text: "UpdatedAt", value: "updated_at" },
             ],
             dialog: false,
             dialogDelete: false,
+            menuUpdatedAt: false,
             form: {},
         };
     },
@@ -190,8 +239,9 @@ export default {
             this.form = this.$_.cloneDeep(Material);
             this.dialog = true;
         },
-        edit() {
-            this.form = this.$_.cloneDeep(this.selected[0]);
+        edit(item) {
+            item = item || this.selected[0];
+            this.form = this.$_.cloneDeep(item);
             this.dialog = true;
         },
         remove: async function () {

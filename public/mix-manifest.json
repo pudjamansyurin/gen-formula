@@ -1,5 +1,5 @@
 {
-    "/js/app.js": "/js/app.js?id=8ed3d8df442452e51565",
+    "/js/app.js": "/js/app.js?id=66d422d5544455338a64",
     "/css/app.css": "/css/app.css?id=3462204912f6bda7044e",
     "/js/auth-forget.js": "/js/auth-forget.js?id=feb036866831a91bbdd4",
     "/js/auth-login.js": "/js/auth-login.js?id=9e53808f65da2c914e78",
@@ -11,8 +11,10 @@
     "/js/formula.js": "/js/formula.js?id=57dc021b0a8e672b40f7",
     "/js/formula~material~user.js": "/js/formula~material~user.js?id=78bddf613be0dca557a2",
     "/js/home.js": "/js/home.js?id=2d6510ad26b183247435",
-    "/js/material.js": "/js/material.js?id=f9f06331fc0ada234ac0",
+    "/js/material.js": "/js/material.js?id=030ce2858ab3694ad7e7",
     "/js/policy.js": "/js/policy.js?id=9d3a32bdd6038c7ebf7b",
     "/js/profile.js": "/js/profile.js?id=f1dd32e0dd0b9a383427",
-    "/js/user.js": "/js/user.js?id=80457eb4e32f8b2c0156"
+    "/js/user.js": "/js/user.js?id=c1d7806b3221f9c30fc3",
+    "/js/dashboard~formula~profile~user.js": "/js/dashboard~formula~profile~user.js?id=70815a65c26e73d6791f",
+    "/js/formula~user.js": "/js/formula~user.js?id=8faf2be8a938cf0c968f"
 }

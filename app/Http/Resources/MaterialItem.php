@@ -20,8 +20,9 @@ class MaterialItem extends JsonResource
             'name' => $this->name,
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),
+
             'stories' => MaterialStoryItem::collection($this->whenLoaded('stories')),
-            'price_latest' => $this->whenLoaded('stories', function () {
+            'price' => $this->whenLoaded('stories', function () {
                 if ($story = $this->stories->first()) {
                     return $story->price;
                 }
