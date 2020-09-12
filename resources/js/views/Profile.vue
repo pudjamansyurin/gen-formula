@@ -2,7 +2,7 @@
     <fragment>
         <app-top-bar page="Profile"></app-top-bar>
 
-        <v-card v-if="!edit_profile" :loading="!!loading" class="mx-auto">
+        <v-card v-if="!editProfile" :loading="!!loading" class="mx-auto">
             <v-list-item>
                 <v-list-item-avatar color="grey">
                     <v-img src="/img/unknown.png" alt="Profile"></v-img>
@@ -179,32 +179,28 @@
 
                         <v-btn
                             color="blue darken-1"
-                            @click="change_password = !change_password"
+                            @click="changePassword = !changePassword"
                             text
                             >{{
-                                change_password ? "Keep" : "Change"
+                                changePassword ? "Keep" : "Change"
                             }}
                             Password</v-btn
                         >
 
-                        <template v-if="change_password">
+                        <template v-if="changePassword">
                             <validation-provider
                                 name="password"
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
                                     v-model="form.password"
-                                    :type="show_password ? 'text' : 'password'"
+                                    :type="showPassword ? 'text' : 'password'"
                                     :append-icon="
-                                        show_password
-                                            ? 'mdi-eye'
-                                            : 'mdi-eye-off'
+                                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
                                     "
                                     :error-messages="errors"
                                     :success="valid"
-                                    @click:append="
-                                        show_password = !show_password
-                                    "
+                                    @click:append="showPassword = !showPassword"
                                     label="Password"
                                     hint="Your new password"
                                     autocomplete="off"
@@ -219,17 +215,13 @@
                             >
                                 <v-text-field
                                     v-model="form.password_confirmation"
-                                    :type="show_password ? 'text' : 'password'"
+                                    :type="showPassword ? 'text' : 'password'"
                                     :append-icon="
-                                        show_password
-                                            ? 'mdi-eye'
-                                            : 'mdi-eye-off'
+                                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
                                     "
                                     :error-messages="errors"
                                     :success="valid"
-                                    @click:append="
-                                        show_password = !show_password
-                                    "
+                                    @click:append="showPassword = !showPassword"
                                     label="Password Confirmation"
                                     hint="Fill again the password"
                                     autocomplete="off"
@@ -244,7 +236,7 @@
 
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn @click="edit_profile = false" color="indigo" text
+                <v-btn @click="editProfile = false" color="indigo" text
                     >Cancel</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -273,9 +265,9 @@ export default {
     data() {
         return {
             model: "user",
-            edit_profile: false,
-            change_password: false,
-            show_password: false,
+            editProfile: false,
+            changePassword: false,
+            showPassword: false,
             form: {},
         };
     },
@@ -287,7 +279,7 @@ export default {
         ...mapActions("app", [RESEND, PROFILE]),
         ...mapActions("model", [SAVE_MODEL]),
         close() {
-            this.edit_profile = false;
+            this.editProfile = false;
         },
         edit() {
             this.form = this.$_.cloneDeep({
@@ -296,26 +288,22 @@ export default {
                 password_confirmation: null,
             });
 
-            this.change_password = false;
-            this.edit_profile = true;
+            this.changePassword = false;
+            this.editProfile = true;
         },
         save() {
-            // validate
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
-                    // pass validation
-                    const { model, form: payload, change_password } = this;
-                    if (!change_password) {
-                        this.$delete(payload, "password");
-                        this.$delete(payload, "password_confirmation");
+                    if (!this.changePassword) {
+                        this.$delete(this.form, "password");
+                        this.$delete(this.form, "password_confirmation");
                     }
-                    // submit to backend
+
                     this.SAVE_MODEL({
-                        model,
-                        payload,
+                        model: this.model,
+                        payload: this.form,
                     })
                         .then(async (data) => {
-                            // update profile
                             this.SET_PROFILE(data);
                             this.SET_MESSAGE({
                                 text: "Profile udpated successfully",

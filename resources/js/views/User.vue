@@ -134,25 +134,25 @@
                 <v-btn
                     v-if="form.id > 0"
                     color="red"
-                    @click="change_password = !change_password"
+                    @click="changePassword = !changePassword"
                     dark
                     small
-                    >{{ change_password ? "Keep" : "Change" }} Password</v-btn
+                    >{{ changePassword ? "Keep" : "Change" }} Password</v-btn
                 >
-                <template v-if="change_password">
+                <template v-if="changePassword">
                     <validation-provider
                         name="password"
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
                             v-model="form.password"
-                            :type="show_password ? 'text' : 'password'"
+                            :type="showPassword ? 'text' : 'password'"
                             :append-icon="
-                                show_password ? 'mdi-eye' : 'mdi-eye-off'
+                                showPassword ? 'mdi-eye' : 'mdi-eye-off'
                             "
                             :error-messages="errors"
                             :success="valid"
-                            @click:append="show_password = !show_password"
+                            @click:append="showPassword = !showPassword"
                             label="Password"
                             hint="Password for this user"
                             autocomplete="off"
@@ -167,13 +167,13 @@
                     >
                         <v-text-field
                             v-model="form.password_confirmation"
-                            :type="show_password ? 'text' : 'password'"
+                            :type="showPassword ? 'text' : 'password'"
                             :append-icon="
-                                show_password ? 'mdi-eye' : 'mdi-eye-off'
+                                showPassword ? 'mdi-eye' : 'mdi-eye-off'
                             "
                             :error-messages="errors"
                             :success="valid"
-                            @click:append="show_password = !show_password"
+                            @click:append="showPassword = !showPassword"
                             label="Password Confirmation"
                             hint="Fill again the password"
                             autocomplete="off"
@@ -188,15 +188,16 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
 } from "../store/model/action-types";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
+import { TABLE_OPTIONS } from "../utils/config";
 import AppTopBar from "../components/app/AppTopBar";
 import TheData from "../components/TheData";
 import TheDialogForm from "../components/TheDialogForm";
@@ -214,19 +215,6 @@ export default {
     data() {
         return {
             model: "user",
-            options: {
-                page: 1,
-                itemsPerPage: 10,
-                multiSort: false,
-                mustSort: true,
-                groupBy: [],
-                groupDesc: [],
-                sortBy: ["updated_at"],
-                sortDesc: [true],
-            },
-            search: "",
-            total: 0,
-            selected: [],
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Email", value: "email" },
@@ -234,10 +222,14 @@ export default {
                 { text: "LastAt", value: "last_at" },
                 { text: "LastIp", value: "last_ip" },
             ],
+            options: this.$_.cloneDeep(TABLE_OPTIONS),
+            search: "",
+            total: 0,
+            selected: [],
             dialog: false,
             dialogDelete: false,
-            change_password: false,
-            show_password: false,
+            changePassword: false,
+            showPassword: false,
             roles: [],
             form: {},
         };
@@ -259,7 +251,8 @@ export default {
                 password: null,
                 password_confirmation: null,
             };
-            this.change_password = true;
+
+            this.changePassword = true;
             this.dialog = true;
         },
         edit() {
@@ -268,14 +261,13 @@ export default {
                 password: null,
                 password_confirmation: null,
             };
-            this.change_password = false;
+
+            this.changePassword = false;
             this.dialog = true;
         },
         remove: async function () {
-            let { model } = this;
-
             await this.DELETE_MODELS({
-                model,
+                model: this.model,
                 ids: this.$_.map(this.selected, "id"),
             })
                 .then(async () => {
@@ -286,37 +278,32 @@ export default {
                 .catch((e) => eHandler(e));
         },
         fetch: async function () {
-            let { model, options, search } = this;
-
             await this.GET_MODELS({
-                model,
+                model: this.model,
                 params: {
-                    ...options,
-                    search,
+                    ...this.options,
+                    search: this.search,
                 },
             })
                 .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
         },
         save() {
-            // validate
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
-                    // pass validation
-                    const { model, form: payload, change_password } = this;
-                    if (!change_password) {
-                        this.$delete(payload, "password");
-                        this.$delete(payload, "password_confirmation");
+                    if (!this.changePassword) {
+                        this.$delete(this.form, "password");
+                        this.$delete(this.form, "password_confirmation");
                     }
-                    // submit to backend
+
                     this.SAVE_MODEL({
-                        model,
-                        payload,
+                        model: this.model,
+                        payload: this.form,
                     })
                         .then(async (data) => {
-                            if (payload.id > 0) {
+                            if (this.form.id > 0) {
                                 this.UPDATE_MODEL({
-                                    model,
+                                    model: this.model,
                                     data,
                                 });
                             } else {

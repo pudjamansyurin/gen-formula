@@ -8,3 +8,14 @@ export default {
     ENV_PRODUCTION: production,
     DEBUG: process.env.MIX_APP_DEBUG === "true"
 };
+
+export const TABLE_OPTIONS = {
+    page: 1,
+    itemsPerPage: 10,
+    multiSort: false,
+    mustSort: true,
+    groupBy: [],
+    groupDesc: [],
+    sortBy: ["updated_at"],
+    sortDesc: [true]
+};

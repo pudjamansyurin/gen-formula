@@ -161,15 +161,16 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
 } from "../store/model/action-types";
+import { mapState, mapMutations, mapActions } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Material } from "../models";
 import { eHandler } from "../utils/helper";
+import { TABLE_OPTIONS } from "../utils/config";
 import pluralize from "pluralize";
 import AppTopBar from "../components/app/AppTopBar";
 import TheData from "../components/TheData";
@@ -188,19 +189,6 @@ export default {
     data() {
         return {
             model: "material",
-            options: {
-                page: 1,
-                itemsPerPage: 10,
-                multiSort: false,
-                mustSort: true,
-                groupBy: [],
-                groupDesc: [],
-                sortBy: ["updated_at"],
-                sortDesc: [true],
-            },
-            search: "",
-            total: 0,
-            selected: [],
             headers: [
                 { text: "Name", value: "name" },
                 {
@@ -219,6 +207,10 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "UpdatedAt", value: "updated_at" },
             ],
+            options: this.$_.cloneDeep(TABLE_OPTIONS),
+            search: "",
+            total: 0,
+            selected: [],
             dialog: false,
             dialogDelete: false,
             menuUpdatedAt: false,
@@ -240,15 +232,12 @@ export default {
             this.dialog = true;
         },
         edit(item) {
-            item = item || this.selected[0];
-            this.form = this.$_.cloneDeep(item);
+            this.form = this.$_.cloneDeep(item || this.selected[0]);
             this.dialog = true;
         },
         remove: async function () {
-            let { model } = this;
-
             await this.DELETE_MODELS({
-                model,
+                model: this.model,
                 ids: this.$_.map(this.selected, "id"),
             })
                 .then(async () => {
@@ -259,33 +248,27 @@ export default {
                 .catch((e) => eHandler(e));
         },
         fetch: async function () {
-            let { model, options, search } = this;
-
             await this.GET_MODELS({
-                model,
+                model: this.model,
                 params: {
-                    ...options,
-                    search,
+                    ...this.options,
+                    search: this.search,
                 },
             })
                 .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
         },
         save() {
-            // validate
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
-                    // pass validation
-                    const { model, form: payload } = this;
-                    // submit to backend
                     this.SAVE_MODEL({
-                        model,
-                        payload,
+                        model: this.model,
+                        payload: this.form,
                     })
                         .then(async (data) => {
-                            if (payload.id > 0) {
+                            if (this.form.id > 0) {
                                 this.UPDATE_MODEL({
-                                    model,
+                                    model: this.model,
                                     data,
                                 });
                             } else {

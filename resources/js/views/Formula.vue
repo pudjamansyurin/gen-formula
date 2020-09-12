@@ -197,15 +197,16 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
 } from "../store/model/action-types";
+import { mapState, mapActions, mapMutations } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { Formula } from "../models";
 import { eHandler } from "../utils/helper";
+import { TABLE_OPTIONS } from "../utils/config";
 import AppTopBar from "../components/app/AppTopBar";
 import TheData from "../components/TheData";
 import TheDialogForm from "../components/TheDialogForm";
@@ -223,19 +224,6 @@ export default {
     data() {
         return {
             model: "formula",
-            options: {
-                page: 1,
-                itemsPerPage: 10,
-                multiSort: false,
-                mustSort: true,
-                groupBy: [],
-                groupDesc: [],
-                sortBy: ["updated_at"],
-                sortDesc: [true],
-            },
-            search: "",
-            total: 0,
-            selected: [],
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
@@ -261,6 +249,10 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "Updated At", value: "updated_at" },
             ],
+            options: this.$_.cloneDeep(TABLE_OPTIONS),
+            search: "",
+            total: 0,
+            selected: [],
             dialog: false,
             dialogDelete: false,
             dialogPortion: false,
@@ -297,10 +289,8 @@ export default {
             this.dialog = true;
         },
         remove: async function () {
-            let { model } = this;
-
             await this.DELETE_MODELS({
-                model,
+                model: this.model,
                 ids: this.$_.map(this.selected, "id"),
             })
                 .then(async () => {
@@ -311,20 +301,16 @@ export default {
                 .catch((e) => eHandler(e));
         },
         save() {
-            // validate
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
-                    // pass validation
-                    const { model, form: payload } = this;
-                    // submit to backend
                     this.SAVE_MODEL({
-                        model,
-                        payload,
+                        model: this.model,
+                        payload: this.form,
                     })
                         .then(async (data) => {
-                            if (payload.id > 0) {
+                            if (this.form.id > 0) {
                                 this.UPDATE_MODEL({
-                                    model,
+                                    model: this.model,
                                     data,
                                 });
                             } else {
@@ -338,13 +324,11 @@ export default {
             });
         },
         fetch: async function () {
-            let { model, options, search } = this;
-
             await this.GET_MODELS({
-                model,
+                model: this.model,
                 params: {
-                    ...options,
-                    search,
+                    ...this.options,
+                    search: this.search,
                 },
             })
                 .then(({ meta }) => (this.total = meta.total))
@@ -361,23 +345,23 @@ export default {
             this.dialogPortion = true;
         },
         savePortion() {
-            // validate
             this.$refs.form_portion.validate().then((valid) => {
                 if (valid) {
-                    let { model, form: payload } = this;
-                    // pass validation
                     this.SAVE_MODEL({
-                        url: `formula/${payload.id}/portion`,
+                        url: `formula/${this.form.id}/portion`,
                         payload: {
-                            formula: this.$_.map(payload.portions, (el) => ({
-                                material_id: el.material.id,
-                                portion: el.portion,
-                            })),
+                            formula: this.$_.map(
+                                this.form.portions,
+                                ({ material, portion }) => ({
+                                    material_id: material.id,
+                                    portion,
+                                })
+                            ),
                         },
                     })
                         .then(async (data) => {
                             this.UPDATE_MODEL({
-                                model,
+                                model: this.model,
                                 data,
                             });
                             this.closePortion();
