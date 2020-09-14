@@ -35,10 +35,10 @@ class MaterialStoryRequest extends FormRequest
                 'integer',
                 'min:1',
             ],
-            'updated_at' => [
-                'required',
-                'date_format:"Y-m-d"'
-            ]
+            // 'updated_at' => [
+            //     'required',
+            //     'date_format:"Y-m-d"'
+            // ]
         ];
     }
 }

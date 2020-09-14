@@ -120,7 +120,7 @@
             :title="formPortionTitle"
             @close="closePortion"
             @submit="savePortion"
-            width="700px"
+            width="1000"
             :readonly="!form.authorized"
         >
             <validation-observer ref="form_portion">
@@ -247,7 +247,7 @@ export default {
                     sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
-                { text: "Updated At", value: "updated_at" },
+                { text: "UpdatedAt", value: "updated_at" },
             ],
             options: this.$_.cloneDeep(TABLE_OPTIONS),
             search: "",

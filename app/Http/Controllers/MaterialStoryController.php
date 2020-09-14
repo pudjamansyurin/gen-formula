@@ -65,7 +65,7 @@ class MaterialStoryController extends Controller
         $price = MaterialStory::create([
             'material_id' => $material->id,
             'price' => $request->price,
-            'updated_at' => $request->updated_at,
+            'changed_at' => $request->updated_at,
             'user_id' => auth()->id()
         ]);
 
@@ -89,7 +89,7 @@ class MaterialStoryController extends Controller
         $price->update([
             'material_id' => $request->material_id,
             'price' => $request->price,
-            'updated_at' => $request->updated_at,
+            'changed_at' => $request->updated_at,
         ]);
 
         return response(

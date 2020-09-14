@@ -3,7 +3,7 @@
         :value="value"
         @input="$emit('input', $event)"
         :fullscreen="mobile"
-        max-width="290"
+        max-width="300"
         persistent
         scrollable
     >
@@ -71,7 +71,7 @@ export default {
             if (single) {
                 return `this ${this.model} ?`;
             }
-            return `these ${length} ${pluralize(this.model)} ?`;
+            return `these ${length} ${pluralize(this.model)}?`;
         },
     },
 };

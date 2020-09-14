@@ -22,13 +22,10 @@ class MaterialItem extends JsonResource
             'matter' => new MatterItem($this->whenLoaded('matter')),
             'stories' => MaterialStoryItem::collection($this->whenLoaded('stories')),
             'price' => $this->whenLoaded('stories', function () {
-                if ($story = $this->stories->first()) {
-                    return $story->price;
-                }
-                return 0;
+                return $this->stories->first()->price;
             }),
 
-            'updated_at' => $this->updated_at->format('Y-m-d'),
+            'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),
             'authorized' => Gate::allows('update', $this->resource)
         ];

@@ -7,9 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(MaterialStory::class, function (Faker $faker) {
     return [
-        'price' => $faker->randomNumber(6),
         'material_id' => App\Material::all('id')->random(),
+        'price' => $faker->randomNumber(6),
+        'updated_at' => $faker->dateTimeBetween('-1 year', 'now'),
         'user_id' => App\User::all('id')->random(),
-        'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
     ];
 });

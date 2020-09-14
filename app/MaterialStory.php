@@ -16,6 +16,7 @@ class MaterialStory extends Model
     protected $fillable = [
         'material_id',
         'price',
+        // 'updated_at',
         'user_id'
     ];
 

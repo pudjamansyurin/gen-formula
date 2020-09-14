@@ -104,16 +104,19 @@
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                    <v-list-item-title>{{
+                    <v-list-item-title v-if="profile.last_at">{{
                         profile.last_at | moment("from")
                     }}</v-list-item-title>
+                    <v-list-item-title v-else>Never</v-list-item-title>
                     <v-list-item-subtitle>Last login</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
             <v-list-item>
                 <v-list-item-action></v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title>{{ profile.last_ip }}</v-list-item-title>
+                    <v-list-item-title>{{
+                        profile.last_ip || "None"
+                    }}</v-list-item-title>
                     <v-list-item-subtitle>Last Ip Address</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>

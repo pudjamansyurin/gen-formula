@@ -231,7 +231,11 @@ export default {
             changePassword: false,
             showPassword: false,
             roles: [],
-            form: {},
+            form: {
+                ...this.$_.cloneDeep(User),
+                password: null,
+                password_confirmation: null,
+            },
         };
     },
     computed: {

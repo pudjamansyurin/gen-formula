@@ -13,7 +13,10 @@
             </v-card-title>
             <v-divider></v-divider>
 
-            <v-card-text :style="!mobile ? 'max-height: 500px;' : ''">
+            <v-card-text
+                class="pt-2"
+                :style="!mobile ? 'max-height: 500px;' : ''"
+            >
                 <v-form @submit.prevent="$emit('submit')">
                     <slot></slot>
                     <v-btn v-show="false" type="submit"></v-btn>
@@ -62,7 +65,7 @@ export default {
         },
         width: {
             type: String,
-            default: "500px",
+            default: "500",
         },
     },
     computed: {

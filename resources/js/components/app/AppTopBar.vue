@@ -98,7 +98,7 @@
                     </v-btn>
                     <v-divider
                         :dark="!!selected.length"
-                        class="mr-4"
+                        class="mx-2"
                         inset
                         vertical
                     ></v-divider>
@@ -113,13 +113,6 @@
                         <v-tab>{{ theTitle }}</v-tab>
                         <v-tab>Mine</v-tab>
                     </v-tabs>
-                    <!-- <v-divider
-                        :dark="!!selected.length"
-                        class="mx-4"
-                        inset
-                        vertical
-                    ></v-divider>
-                    <h4>Mine</h4>  -->
                 </template>
 
                 <v-spacer></v-spacer>

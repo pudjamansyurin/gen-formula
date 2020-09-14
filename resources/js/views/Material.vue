@@ -57,7 +57,7 @@
             <template v-slot:[`item.price`]="{ item }">
                 {{ item.price | currency }}
             </template>
-            <template v-slot:[`item.price_count`]="{ item }">
+            <template v-slot:[`item.count_stories`]="{ item }">
                 {{ item.stories.length }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
@@ -80,54 +80,63 @@
             :form="form"
             @close="close"
             @submit="save"
+            :width="form.id > 0 ? '1000' : '500'"
         >
-            <validation-observer ref="form">
-                <validation-provider
-                    name="matter_id"
-                    v-slot="{ errors, valid }"
-                >
-                    <v-select
-                        v-model="form.matter_id"
-                        :items="matters"
-                        :error-messages="errors"
-                        :success="valid"
-                        :loading="!!loading"
-                        item-text="name"
-                        item-value="id"
-                        label="Material's category"
-                        hint="The material's category"
-                        persistent-hint
-                    ></v-select>
-                </validation-provider>
+            <v-row>
+                <v-col cols="12" :sm="form.id > 0 ? '6' : '12'">
+                    <validation-observer ref="form">
+                        <validation-provider
+                            name="matter_id"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-autocomplete
+                                v-model="form.matter_id"
+                                :items="matters"
+                                :error-messages="errors"
+                                :success="valid"
+                                :loading="!!loading"
+                                item-text="name"
+                                item-value="id"
+                                label="Material's category"
+                                hint="The material's category"
+                                persistent-hint
+                            ></v-autocomplete>
+                        </validation-provider>
 
-                <validation-provider name="name" v-slot="{ errors, valid }">
-                    <v-text-field
-                        v-model="form.name"
-                        :error-messages="errors"
-                        :success="valid"
-                        label="Material name"
-                        type="text"
-                        hint="This is to identify the material"
-                        counter
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
+                        <validation-provider
+                            name="name"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                label="Material name"
+                                type="text"
+                                hint="This is to identify the material"
+                                counter
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
 
-                <validation-provider name="price" v-slot="{ errors, valid }">
-                    <v-text-field
-                        label="Material price"
-                        type="number"
-                        v-model.number="form.price"
-                        :error-messages="errors"
-                        :success="valid"
-                        prefix="Rp"
-                        counter
-                        hint="The updated material price"
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
+                        <validation-provider
+                            name="price"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                label="Material price"
+                                type="number"
+                                v-model.number="form.price"
+                                :error-messages="errors"
+                                :success="valid"
+                                prefix="Rp"
+                                hint="The updated material price"
+                                counter
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
 
-                <v-menu
+                        <!-- <v-menu
                     ref="menuUpdatedAt"
                     v-model="menuUpdatedAt"
                     :return-value.sync="form.updated_at"
@@ -148,6 +157,7 @@
                                 :success="valid"
                                 label="Updated At"
                                 hint="When the price updated"
+                                persistent-hint
                                 readonly
                             ></v-text-field>
                         </validation-provider>
@@ -168,12 +178,50 @@
                         <v-btn
                             text
                             color="primary"
-                            @click="$refs.menuUpdatedAt.save(form.updated_at)"
+                            @click="
+                                $refs.menuUpdatedAt.save(form.updated_at)
+                            "
                             >OK</v-btn
                         >
                     </v-date-picker>
-                </v-menu>
-            </validation-observer>
+                </v-menu> -->
+                    </validation-observer>
+                </v-col>
+                <v-col
+                    v-if="form.id > 0"
+                    cols="12"
+                    :sm="form.id > 0 ? '6' : '12'"
+                >
+                    <h5>Price Histories</h5>
+                    <v-list :max-height="300" class="overflow-y-auto" dense>
+                        <template v-for="(story, index) in form.stories">
+                            <v-list-item
+                                :key="story.id"
+                                :class="{ primary: index == 0 }"
+                                :dark="index == 0"
+                                two-line
+                                dense
+                            >
+                                <v-list-item-content>
+                                    <v-list-item-title
+                                        >{{ story.price | currency }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        {{ story.user.name }}
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+
+                                <v-list-item-action>
+                                    <v-list-item-action-text>
+                                        {{ story.updated_at | moment("from") }}
+                                    </v-list-item-action-text>
+                                </v-list-item-action>
+                            </v-list-item>
+                            <v-divider :key="story.updated_at"></v-divider>
+                        </template>
+                    </v-list>
+                </v-col>
+            </v-row>
         </the-dialog-form>
     </fragment>
 </template>
@@ -219,12 +267,15 @@ export default {
                 },
                 {
                     text: "Revision",
-                    value: "price_count",
+                    value: "count_stories",
                     align: "center",
                     sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
-                { text: "UpdatedAt", value: "updated_at" },
+                {
+                    text: "UpdatedAt",
+                    value: "updated_at",
+                },
             ],
             options: this.$_.cloneDeep(TABLE_OPTIONS),
             search: "",
@@ -232,8 +283,8 @@ export default {
             selected: [],
             dialog: false,
             dialogDelete: false,
-            menuUpdatedAt: false,
-            form: {},
+            // menuUpdatedAt: false,
+            form: this.$_.cloneDeep(Material),
             matters: [],
         };
     },
@@ -249,6 +300,7 @@ export default {
         },
         create() {
             this.form = this.$_.cloneDeep(Material);
+            // this.form.updated_at = this.$moment().format("YYYY-MM-DD");
             this.dialog = true;
         },
         edit(item) {

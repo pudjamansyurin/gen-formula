@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 
 class MaterialController extends Controller
 {
-    private $modelRelations = ['user:id,name', 'matter:id,name', 'stories'];
+    private $modelRelations = ['user:id,name', 'matter:id,name', 'stories', 'stories.user:id,name'];
 
     /**
      * Display a listing of the resource.
@@ -55,6 +55,12 @@ class MaterialController extends Controller
             'user_id' => auth()->id()
         ]);
 
+        // add price histories
+        $material->stories()->create([
+            'price' => $request->price,
+            'user_id' => auth()->id()
+        ]);
+
         return response(
             new MaterialItem($material->loadMissing($this->modelRelations)),
             Response::HTTP_CREATED
@@ -76,6 +82,15 @@ class MaterialController extends Controller
             'name' => $request->name,
             'matter_id' => $request->matter_id,
         ]);
+
+        // update price histories
+        $story = $material->stories();
+        if ($story->first()->price != $request->price) {
+            $story->create([
+                'price' => $request->price,
+                'user_id' => auth()->id(),
+            ]);
+        }
 
         return response(
             new MaterialItem($material->loadMissing($this->modelRelations)),

@@ -25,6 +25,7 @@ class UserItem extends JsonResource
                 return $this->roles->first();
             }),
 
+            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'authorized' => $this->id != auth()->id(),
         ];
