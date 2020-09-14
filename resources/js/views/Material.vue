@@ -82,6 +82,24 @@
             @submit="save"
         >
             <validation-observer ref="form">
+                <validation-provider
+                    name="matter_id"
+                    v-slot="{ errors, valid }"
+                >
+                    <v-select
+                        v-model="form.matter_id"
+                        :items="matters"
+                        :error-messages="errors"
+                        :success="valid"
+                        :loading="!!loading"
+                        item-text="name"
+                        item-value="id"
+                        label="Material's category"
+                        hint="The material's category"
+                        persistent-hint
+                    ></v-select>
+                </validation-provider>
+
                 <validation-provider name="name" v-slot="{ errors, valid }">
                     <v-text-field
                         v-model="form.name"
@@ -191,6 +209,7 @@ export default {
             model: "material",
             headers: [
                 { text: "Name", value: "name" },
+                { text: "Category", value: "matter.name" },
                 {
                     text: "Price",
                     value: "price",
@@ -215,6 +234,7 @@ export default {
             dialogDelete: false,
             menuUpdatedAt: false,
             form: {},
+            matters: [],
         };
     },
     computed: {
@@ -224,8 +244,8 @@ export default {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         close() {
+            this.$refs.form.reset();
             this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
         },
         create() {
             this.form = this.$_.cloneDeep(Material);
@@ -281,8 +301,30 @@ export default {
                 }
             });
         },
+        fetchMatters: async function () {
+            await this.GET_MODELS({
+                model: "matter",
+                params: {
+                    itemsPerPage: -1,
+                    temporary: true,
+                },
+            })
+                .then(
+                    ({ data }) =>
+                        (this.matters = this.$_.map(data, ({ id, name }) => ({
+                            id,
+                            name,
+                        })))
+                )
+                .catch((e) => eHandler(e));
+        },
     },
     watch: {
+        dialog: function (val) {
+            if (val && this.matters.length == 0) {
+                this.fetchMatters();
+            }
+        },
         options: {
             handler() {
                 this.fetch();

@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Matter extends Model
 {
+    use ClientQueryScope;
+
     protected $table = 'matters';
 
     /**
@@ -16,6 +19,19 @@ class Matter extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+     * Client query scope
+     */
+    protected $aRelatedQuery = [];
+
+    /**
+     * Accessors
+     */
+    public function getNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
 
     /**
      * Set relation tables.

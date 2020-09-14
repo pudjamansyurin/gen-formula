@@ -26,8 +26,8 @@ trait ClientQueryScope
             });
 
             // handle relations model
-            $aFilter = $this->aFilter();
-            foreach ($aFilter as $key => $relationFields) {
+            $aRelatedFilter = $this->aRelatedFilter();
+            foreach ($aRelatedFilter as $key => $relationFields) {
                 [$relation, $field] = explode(".", $relationFields);
 
                 $q = $q->orWhereHas($relation, function ($q) use ($field, $search) {
@@ -79,11 +79,11 @@ trait ClientQueryScope
         return [];
     }
 
-    private function aFilter()
+    private function aRelatedFilter()
     {
-        if (property_exists($this, 'aQuery')) {
-            if (array_key_exists('filter', $this->aQuery)) {
-                return $this->aQuery['filter'];
+        if (property_exists($this, 'aRelatedQuery')) {
+            if (array_key_exists('filter', $this->aRelatedQuery)) {
+                return $this->aRelatedQuery['filter'];
             }
         }
         return [];
@@ -91,9 +91,9 @@ trait ClientQueryScope
 
     private function aSorter()
     {
-        if (property_exists($this, 'aQuery')) {
-            if (array_key_exists('sorter', $this->aQuery)) {
-                return $this->aQuery['sorter'];
+        if (property_exists($this, 'aRelatedQuery')) {
+            if (array_key_exists('sorter', $this->aRelatedQuery)) {
+                return $this->aRelatedQuery['sorter'];
             }
         }
         return [];

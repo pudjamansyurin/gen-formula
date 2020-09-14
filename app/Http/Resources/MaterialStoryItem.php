@@ -19,8 +19,9 @@ class MaterialStoryItem extends JsonResource
             'id' => $this->id,
             'material_id' => $this->material_id,
             'price' => $this->price,
-            'user' => new UserItem($this->whenLoaded('user')),
             'material' => new MaterialItem($this->whenLoaded('material')),
+
+            'user' => new UserItem($this->whenLoaded('user')),
             'authorized' => Gate::allows('update', $this->resource)
         ];
     }

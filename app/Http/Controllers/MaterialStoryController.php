@@ -13,6 +13,8 @@ use Illuminate\Http\Response;
 
 class MaterialStoryController extends Controller
 {
+    private $modelRelations = ['user:id,name', 'material:id,name'];
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +25,7 @@ class MaterialStoryController extends Controller
         $this->authorize('viewAny', MaterialStory::class);
 
         // Model instance
-        $q = MaterialStory::with(['user:id,name', 'material:id,name']);
+        $q = MaterialStory::with($this->modelRelations);
         // Parent
         if ($materialId > 0) {
             $q = $q->whereHas('material', function ($q) use ($materialId) {
@@ -68,24 +70,10 @@ class MaterialStoryController extends Controller
         ]);
 
         return response(
-            new MaterialStoryItem($price->loadMissing(['user:id,name', 'material:id,name'])),
+            new MaterialStoryItem($price->loadMissing($this->modelRelations)),
             Response::HTTP_CREATED
         );
     }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\MaterialStory  $price
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(MaterialStory $price)
-    // {
-    //     return response(
-    //         new MaterialStoryItem($price),
-    //         Response::HTTP_OK
-    //     );
-    // }
 
     /**
      * Update the specified resource in storage.
@@ -105,7 +93,7 @@ class MaterialStoryController extends Controller
         ]);
 
         return response(
-            new MaterialStoryItem($price->loadMissing(['user:id,name', 'material:id,name'])),
+            new MaterialStoryItem($price->loadMissing($this->modelRelations)),
             Response::HTTP_OK
         );
     }

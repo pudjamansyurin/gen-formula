@@ -25,12 +25,14 @@ class Material extends Model
     /**
      * Client query scope
      */
-    protected $aQuery = [
+    protected $aRelatedQuery = [
         'filter' => [
-            'user.name'
+            'user.name',
+            'matter.name'
         ],
         'sorter' =>  [
-            'user.name' => 'user_id'
+            'user.name' => 'user_id',
+            'matter.name' => 'matter_id'
         ]
     ];
 
@@ -60,7 +62,6 @@ class Material extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
 
     // public function portions()

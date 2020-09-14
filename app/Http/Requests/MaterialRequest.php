@@ -30,6 +30,21 @@ class MaterialRequest extends FormRequest
                 'min:3',
                 Rule::unique('materials', 'name')->ignore($this->material)
             ],
+            'price' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+            'matter_id' => [
+                'required',
+                'integer',
+                'min:1',
+                'exists:matters,id'
+            ],
+            'updated_at' => [
+                'required',
+                'date_format:"Y-m-d"'
+            ]
         ];
     }
 }

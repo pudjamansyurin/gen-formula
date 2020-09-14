@@ -12,6 +12,8 @@ use Illuminate\Http\Response;
 
 class MaterialController extends Controller
 {
+    private $modelRelations = ['user:id,name', 'matter:id,name', 'stories'];
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +24,7 @@ class MaterialController extends Controller
         $this->authorize('viewAny', Material::class);
 
         // Model instance
-        $q = Material::with(['user:id,name', 'stories']);
+        $q = Material::with($this->modelRelations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -49,28 +51,15 @@ class MaterialController extends Controller
 
         $material = Material::create([
             'name' => $request->name,
+            'matter_id' => $request->matter_id,
             'user_id' => auth()->id()
         ]);
 
         return response(
-            new MaterialItem($material->loadMissing(['user:id,name', 'stories'])),
+            new MaterialItem($material->loadMissing($this->modelRelations)),
             Response::HTTP_CREATED
         );
     }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Material $material
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(Material $material)
-    // {
-    //     return response(
-    //         new MaterialItem($material),
-    //         Response::HTTP_OK
-    //     );
-    // }
 
     /**
      * Update the specified resource in storage.
@@ -85,10 +74,11 @@ class MaterialController extends Controller
 
         $material->update([
             'name' => $request->name,
+            'matter_id' => $request->matter_id,
         ]);
 
         return response(
-            new MaterialItem($material->loadMissing(['user:id,name', 'stories'])),
+            new MaterialItem($material->loadMissing($this->modelRelations)),
             Response::HTTP_OK
         );
     }

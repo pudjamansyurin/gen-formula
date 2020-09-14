@@ -14,6 +14,8 @@ use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
+    private $modelRelations = ['roles:id,name'];
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +26,7 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         // Model instance
-        $q = User::with(['roles:id,name']);
+        $q = User::with($this->modelRelations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -65,24 +67,10 @@ class UserController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response(
-            new UserItem($user->loadMissing(['roles:id,name'])),
+            new UserItem($user->loadMissing($this->modelRelations)),
             Response::HTTP_CREATED
         );
     }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\User  $user
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(User $user)
-    // {
-    //     return response(
-    //         new UserItem($user),
-    //         Response::HTTP_OK
-    //     );
-    // }
 
     /**
      * Update the specified resource in storage.
@@ -122,7 +110,7 @@ class UserController extends Controller
         }
 
         return response(
-            new UserItem($user->loadMissing(['roles:id,name'])),
+            new UserItem($user->loadMissing($this->modelRelations)),
             Response::HTTP_OK
         );
     }
@@ -162,7 +150,7 @@ class UserController extends Controller
         $user = User::find(auth()->id());
 
         return response([
-            'user' => new UserItem($user->loadMissing(['roles:id,name'])),
+            'user' => new UserItem($user->loadMissing($this->modelRelations)),
         ], Response::HTTP_OK);
     }
 }

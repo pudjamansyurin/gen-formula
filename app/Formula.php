@@ -23,7 +23,7 @@ class Formula extends Model
     /**
      * Client query scope
      */
-    protected $aQuery = [
+    protected $aRelatedQuery = [
         'filter' => [
             'user.name'
         ],

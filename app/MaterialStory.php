@@ -22,7 +22,7 @@ class MaterialStory extends Model
     // /**
     //  * Client query scope
     //  */
-    // protected $aQuery = [
+    // protected $aRelatedQuery = [
     //     'filter' => [
     //         'material.name',
     //         'user.name'

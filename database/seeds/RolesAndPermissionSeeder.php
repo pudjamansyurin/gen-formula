@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
@@ -18,6 +19,9 @@ class RolesAndPermissionSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $models = [
+            'packer',
+            'packages',
+            'matters',
             'materials',
             'formulas',
             'users'
@@ -30,17 +34,26 @@ class RolesAndPermissionSeeder extends Seeder
         ];
         $roles = [
             'inputor' => [
-                'materials'
+                'packer' => ['view'],
+                'packages' => '*',
+                'matters' => ['view'],
+                'materials' => '*',
             ],
             'manager' => [
-                'materials',
-                'formulas'
+                'packer' => '*',
+                'packages' => '*',
+                'matters' => '*',
+                'materials' => '*',
+                'formulas' => '*',
             ],
             'admin' => [
-                'materials',
-                'formulas',
-                'users'
-            ]
+                'packer' => '*',
+                'packages' => '*',
+                'matters' => '*',
+                'materials' => '*',
+                'formulas' => '*',
+                'users' => '*',
+            ],
         ];
 
         // create permissions
@@ -53,9 +66,12 @@ class RolesAndPermissionSeeder extends Seeder
         // create roles
         foreach ($roles as $role => $models) {
             $theRole = Role::create(['name' => $role]);
-            foreach ($models as $model) {
-                foreach ($actions as $action) {
-                    $theRole->givePermissionTo("{$model}.{$action}");
+            foreach ($models as $model => $action) {
+                $theActions = (is_array($action) ? $action : $actions);
+
+                // apply actions to this role-model
+                foreach ($theActions as $theAction) {
+                    $theRole->givePermissionTo("{$model}.{$theAction}");
                 }
             }
         }

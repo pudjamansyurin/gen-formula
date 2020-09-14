@@ -10,9 +10,15 @@ export const User = {
     role: Role
 };
 
+export const Matter = {
+    id: -1,
+    name: ""
+};
+
 export const Material = {
     id: -1,
     name: "",
+    matter_id: -1,
     price: 0,
     updated_at: null
 };

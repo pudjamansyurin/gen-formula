@@ -14,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 class PortionController extends Controller
 {
+    private $modelRelations = ['user:id,name', 'portions.material.stories'];
+
     /**
      * Store a newly created resource in storage.
      *
@@ -24,7 +26,7 @@ class PortionController extends Controller
     {
         $this->authorize('update', $formula);
 
-        $formula = $formula->loadMissing(['user:id,name', 'portions.material.stories']);
+        $formula = $formula->loadMissing($this->modelRelations);
 
         $formulaNew = collect($request->formula)
             ->map(function ($el) use ($formula) {

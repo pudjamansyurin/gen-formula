@@ -18,9 +18,8 @@ class MaterialItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'updated_at' => $this->updated_at,
-            'user' => new UserItem($this->whenLoaded('user')),
-
+            'matter_id' => $this->matter_id,
+            'matter' => new MatterItem($this->whenLoaded('matter')),
             'stories' => MaterialStoryItem::collection($this->whenLoaded('stories')),
             'price' => $this->whenLoaded('stories', function () {
                 if ($story = $this->stories->first()) {
@@ -28,6 +27,9 @@ class MaterialItem extends JsonResource
                 }
                 return 0;
             }),
+
+            'updated_at' => $this->updated_at->format('Y-m-d'),
+            'user' => new UserItem($this->whenLoaded('user')),
             'authorized' => Gate::allows('update', $this->resource)
         ];
     }

@@ -277,8 +277,8 @@ export default {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         close() {
+            this.$refs.form.reset();
             this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
         },
         create() {
             this.form = this.$_.cloneDeep(Formula);
@@ -334,9 +334,10 @@ export default {
                 .then(({ meta }) => (this.total = meta.total))
                 .catch((e) => eHandler(e));
         },
+
         closePortion() {
+            this.$refs.form_portion.reset();
             this.dialogPortion = false;
-            this.$nextTick(() => this.$refs.form_portion.reset());
         },
         editPortion(id) {
             this.form = this.$_.cloneDeep(

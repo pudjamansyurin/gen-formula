@@ -12,6 +12,8 @@ use Illuminate\Http\Response;
 
 class FormulaController extends Controller
 {
+    private $modelRelations = ['user:id,name', 'portions.material.stories'];
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +24,7 @@ class FormulaController extends Controller
         $this->authorize('viewAny', Formula::class);
 
         // Model instance
-        $q = Formula::with(['user:id,name', 'portions.material.stories']);
+        $q = Formula::with($this->modelRelations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -55,24 +57,10 @@ class FormulaController extends Controller
         ]);
 
         return response(
-            new FormulaItem($formula->loadMissing(['user:id,name', 'portions.material.stories'])),
+            new FormulaItem($formula->loadMissing($this->modelRelations)),
             Response::HTTP_CREATED
         );
     }
-
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Formula  $formula
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(Formula $formula)
-    // {
-    //     return response(
-    //         new FormulaItem($formula),
-    //         Response::HTTP_OK
-    //     );
-    // }
 
     /**
      * Update the specified resource in storage.
@@ -91,7 +79,7 @@ class FormulaController extends Controller
         ]);
 
         return response(
-            new FormulaItem($formula->loadMissing(['user:id,name', 'portions.material.stories'])),
+            new FormulaItem($formula->loadMissing($this->modelRelations)),
             Response::HTTP_OK
         );
     }
