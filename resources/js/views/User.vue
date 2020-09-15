@@ -139,7 +139,7 @@
                     </validation-provider>
 
                     <v-btn
-                        v-if="form.id > 0"
+                        v-if="!isNewModel(form)"
                         color="red"
                         @click="changePassword = !changePassword"
                         dark
@@ -320,13 +320,13 @@ export default {
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            if (this.form.id > 0) {
+                            if (this.isNewModel(this.form)) {
+                                await this.fetch();
+                            } else {
                                 this.UPDATE_MODEL({
                                     model: this.model,
                                     data,
                                 });
-                            } else {
-                                await this.fetch();
                             }
                             this.selected = [];
                             this.close();

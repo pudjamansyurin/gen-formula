@@ -109,6 +109,9 @@
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
+                                :readonly="
+                                    !isNewModel(form) && !form.authorized
+                                "
                                 item-text="name"
                                 item-value="id"
                                 label="Material's category"
@@ -125,6 +128,9 @@
                                 v-model="form.name"
                                 :error-messages="errors"
                                 :success="valid"
+                                :readonly="
+                                    !isNewModel(form) && !form.authorized
+                                "
                                 label="Material name"
                                 type="text"
                                 hint="This is to identify the material"
@@ -228,7 +234,10 @@
                                     {{ story.updated_at | moment("from") }}
                                 </v-list-item-action-text>
                                 <v-btn
-                                    v-if="index > 0 && story.authorized"
+                                    v-if="
+                                        form.stories.length > 1 &&
+                                        story.authorized
+                                    "
                                     @click="deleteStory(story)"
                                     color="red"
                                     dark
@@ -308,17 +317,18 @@ export default {
             // menuUpdatedAt: false,
             form: this.$_.cloneDeep(Material),
             matters: [],
-            formTabs: ["data", "stories"],
             formTab: 0,
         };
     },
     computed: {
         ...mapState("model", ["materials"]),
-        dialogWidth() {
-            return this.form.id > 0 ? "1000" : "500";
-        },
-        dialogColSm() {
-            return this.form.id > 0 ? "6" : "12";
+        formTabs() {
+            let tabs = ["data", "stories"];
+
+            if (this.isNewModel(this.form)) {
+                return [tabs[0]];
+            }
+            return tabs;
         },
     },
     methods: {
@@ -373,13 +383,13 @@ export default {
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            if (this.form.id > 0) {
+                            if (this.isNewModel(this.form)) {
+                                await this.fetch();
+                            } else {
                                 this.UPDATE_MODEL({
                                     model: this.model,
                                     data,
                                 });
-                            } else {
-                                await this.fetch();
                             }
                             this.selected = [];
                             this.close();
@@ -420,6 +430,7 @@ export default {
                     this.form.stories = this.form.stories.filter(
                         ({ id }) => !ids.includes(id)
                     );
+                    this.form.price = this.form.stories[0].price;
 
                     this.UPDATE_MODEL({
                         model: this.model,

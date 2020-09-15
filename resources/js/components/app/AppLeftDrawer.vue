@@ -22,23 +22,24 @@
                 </v-list-item-action>
 
                 <v-list-item-content>
-                    <v-list-item-title class="title">{{
-                        profile.name
-                    }}</v-list-item-title>
-                    <v-list-item-subtitle>{{
-                        profile.email
-                    }}</v-list-item-subtitle>
+                    <v-list-item-title class="title">
+                        {{ profile.name }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                        {{ profile.email }}
+                    </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
                     <v-icon>mdi-menu-down</v-icon>
                 </v-list-item-action>
             </v-list-item>
+
             <v-divider></v-divider>
             <template v-for="(item, index) in items">
                 <template v-if="item.heading">
-                    <v-subheader v-if="drawer" :key="index">{{
-                        item.heading
-                    }}</v-subheader>
+                    <v-subheader v-if="drawer" :key="index">
+                        {{ item.heading }}
+                    </v-subheader>
                 </template>
                 <v-divider v-else-if="item.divider" :key="index"></v-divider>
                 <!-- <v-list-group

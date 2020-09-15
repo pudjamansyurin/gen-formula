@@ -23,6 +23,7 @@ class RolesAndPermissionSeeder extends Seeder
             'packages',
             'matters',
             'materials',
+            'material-stories',
             'formulas',
             'users'
         ];
@@ -38,12 +39,14 @@ class RolesAndPermissionSeeder extends Seeder
                 'packages' => '*',
                 'matters' => ['view'],
                 'materials' => '*',
+                'material-stories' => '*'
             ],
             'manager' => [
                 'packer' => '*',
                 'packages' => '*',
                 'matters' => '*',
                 'materials' => '*',
+                'material-stories' => '*',
                 'formulas' => '*',
             ],
             'admin' => [
@@ -51,6 +54,7 @@ class RolesAndPermissionSeeder extends Seeder
                 'packages' => '*',
                 'matters' => '*',
                 'materials' => '*',
+                'material-stories' => '*',
                 'formulas' => '*',
                 'users' => '*',
             ],

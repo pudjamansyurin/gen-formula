@@ -7,6 +7,7 @@ use App\Http\Requests\MaterialRequest;
 use App\Http\Resources\MaterialCollection;
 use App\Http\Resources\MaterialItem;
 use App\Material;
+use App\MaterialStory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -76,17 +77,26 @@ class MaterialController extends Controller
      */
     public function update(MaterialRequest $request, Material $material)
     {
-        $this->authorize('update', $material);
+        $fields = ['name', 'matter_id'];
 
-        $material->update([
-            'name' => $request->name,
-            'matter_id' => $request->matter_id,
-        ]);
+        if (array_diff(
+            $material->only($fields),
+            $request->only($fields)
+        )) {
+            $this->authorize('update', $material);
+
+            $material->update([
+                'name' => $request->name,
+                'matter_id' => $request->matter_id,
+            ]);
+        }
 
         // update price stories
-        $story = $material->stories();
-        if ($story->first()->price != $request->price) {
-            $story->create([
+        $stories = $material->stories();
+        if ($stories->first()->price != $request->price) {
+            $this->authorize('create', MaterialStory::class);
+
+            $stories->create([
                 'price' => $request->price,
                 'user_id' => auth()->id(),
             ]);

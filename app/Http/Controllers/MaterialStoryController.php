@@ -16,10 +16,16 @@ class MaterialStoryController extends Controller
      */
     public function destroy(MassDeleteRequest $request)
     {
-        $storyId = $request->ids;
-        $this->authorize('delete', [MaterialStory::class, $storyId]);
+        $storiesId = $request->ids;
+        $this->authorize('delete', [MaterialStory::class, $storiesId]);
 
-        MaterialStory::destroy($storyId);
-        return response($storyId, Response::HTTP_OK);
+        $story = MaterialStory::with('material', 'material.stories')->find($storiesId[0]);
+        $storiesCount = $story->material->stories->count();
+
+        if ($storiesCount > 1) {
+            MaterialStory::destroy($storiesId);
+            return response($storiesId, Response::HTTP_OK);
+        }
+        return response([], Response::HTTP_BAD_REQUEST);
     }
 }

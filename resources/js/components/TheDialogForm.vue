@@ -21,9 +21,9 @@
                             height="30"
                             right
                         >
-                            <v-tab v-for="item in tabs" :key="item">{{
-                                item
-                            }}</v-tab>
+                            <v-tab v-for="item in tabs" :key="item">
+                                {{ item }}
+                            </v-tab>
                         </v-tabs>
                     </v-col>
                 </v-row>
@@ -45,17 +45,18 @@
 
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn @click="$emit('close')" color="blue darken-1" text
-                    >Cancel</v-btn
-                >
+                <v-btn @click="$emit('close')" color="blue darken-1" text>
+                    Cancel
+                </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
                     v-if="!readonly"
                     :disabled="!!loading"
                     @click="$emit('submit')"
                     color="primary"
-                    >Save</v-btn
                 >
+                    Save
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -98,7 +99,10 @@ export default {
     },
     computed: {
         formTitle() {
-            return this.title || `${this.form.id === -1 ? "New" : "Edit"} Item`;
+            return (
+                this.title ||
+                `${this.isNewModel(this.form) ? "New" : "Edit"} Item`
+            );
         },
         cardTextHeight() {
             return !this.mobile ? "max-height: 500px;" : "";

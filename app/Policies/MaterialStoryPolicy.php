@@ -12,6 +12,17 @@ class MaterialStoryPolicy
 
 
     /**
+     * Determine whether the user can create models.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function create(User $user)
+    {
+        return $user->can('material-stories.create');
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user

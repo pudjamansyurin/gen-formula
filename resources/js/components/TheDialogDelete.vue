@@ -8,9 +8,9 @@
         scrollable
     >
         <v-card :loading="!!loading">
-            <v-card-title class="headline grey lighten-2" primary-title
-                >Confirmation</v-card-title
-            >
+            <v-card-title class="headline grey lighten-2" primary-title>
+                Confirmation
+            </v-card-title>
             <v-divider></v-divider>
 
             <v-card-text class="pt-2" :style="cardTextHeight">
@@ -24,17 +24,18 @@
 
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn color="darken-1" @click="$emit('close')" text
-                    >Cancel</v-btn
-                >
+                <v-btn color="darken-1" @click="$emit('close')" text>
+                    Cancel
+                </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
                     :disabled="!!loading"
                     @click="$emit('delete')"
                     color="red"
                     dark
-                    >Yes, sure</v-btn
                 >
+                    Yes, sure
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

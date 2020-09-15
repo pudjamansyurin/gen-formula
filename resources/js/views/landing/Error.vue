@@ -6,15 +6,16 @@
                     <p class="display-2 font-weight-thin">{{ errorCode }}</p>
                     <p class="display-1 font-weight-thin">{{ errorText }}</p>
                     <div>
-                        <v-btn v-if="!direct" @click="handleBack" elevation="1"
-                            >Back</v-btn
-                        >
+                        <v-btn v-if="!direct" @click="handleBack" elevation="1">
+                            Back
+                        </v-btn>
                         <v-btn
-                            :to="{ path: redirectPath }"
+                            :to="{ path: redirect.path }"
                             elevation="1"
                             color="primary"
-                            >{{ redirectText }}</v-btn
                         >
+                            {{ redirect.text }}
+                        </v-btn>
                     </div>
                 </v-col>
             </v-row>
@@ -62,11 +63,11 @@ export default {
         direct: function () {
             return window.history.length <= 2;
         },
-        redirectPath() {
-            return this.profile.id > -1 ? "/app" : "/";
-        },
-        redirectText() {
-            return this.profile.id > -1 ? "Dashboard" : "Login";
+        redirect() {
+            return {
+                path: this.profile.id > -1 ? "/app" : "/",
+                text: this.profile.id > -1 ? "Dashboard" : "Login",
+            };
         },
     },
     methods: {

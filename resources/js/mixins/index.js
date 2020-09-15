@@ -6,5 +6,10 @@ export default {
         mobile() {
             return this.$vuetify.breakpoint.smAndDown;
         }
+    },
+    methods: {
+        isNewModel({ id }) {
+            return id === -1;
+        }
     }
 };

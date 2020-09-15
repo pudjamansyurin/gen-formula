@@ -101,9 +101,9 @@
                 </template>
 
                 <template>
-                    <v-toolbar-title v-if="selected.length"
-                        >{{ selected.length }} selected</v-toolbar-title
-                    >
+                    <v-toolbar-title v-if="selected.length">
+                        {{ selected.length }} selected
+                    </v-toolbar-title>
                     <v-tabs v-else align-with-title>
                         <v-tabs-slider color="white"></v-tabs-slider>
                         <v-tab>{{ theTitle }}</v-tab>
@@ -171,9 +171,9 @@
         <!-- fullscreen confirmation -->
         <v-dialog v-if="mobile && !webview" v-model="dialog" max-width="290">
             <v-card>
-                <v-card-title class="headline"
-                    >Use fullscreen mode ?</v-card-title
-                >
+                <v-card-title class="headline">
+                    Use fullscreen mode ?
+                </v-card-title>
                 <v-card-text>
                     You are using small device screen, we can help you navigate
                     easier using fullscreen mode.

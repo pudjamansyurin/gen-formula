@@ -30,8 +30,9 @@
                     right
                     small
                     tile
-                    >{{ item.price_total | currency }}</v-btn
                 >
+                    {{ item.price_total | currency }}
+                </v-btn>
                 <v-card-text>
                     <div class="overline">
                         {{ item.updated_at | moment("from") }}
@@ -50,8 +51,9 @@
                     :color="item.portion_total == 100 ? 'green' : 'red'"
                     :small="dense"
                     dark
-                    >{{ item.name }}</v-chip
                 >
+                    {{ item.name }}
+                </v-chip>
             </template>
             <template v-slot:[`item.price_total`]="{ item }">
                 {{ item.price_total | currency }}
@@ -120,14 +122,14 @@
 
         <the-dialog-form
             v-model="dialogPortion"
-            :title="formPortionTitle"
+            :title="portionFormTitle"
             :readonly="!form.authorized"
             @close="closePortion"
             @submit="savePortion"
             width="1000"
         >
             <v-form @submit.prevent="savePortion">
-                <validation-observer ref="form_portion">
+                <validation-observer ref="portion_form">
                     <v-row>
                         <v-col cols="12" sm="6">
                             <validation-provider
@@ -268,7 +270,7 @@ export default {
     },
     computed: {
         ...mapState("model", ["formulas"]),
-        formPortionTitle() {
+        portionFormTitle() {
             return this.form.name || "Related materials";
         },
         portionTotal() {
@@ -315,13 +317,13 @@ export default {
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            if (this.form.id > 0) {
+                            if (this.isNewModel(this.form)) {
+                                await this.fetch();
+                            } else {
                                 this.UPDATE_MODEL({
                                     model: this.model,
                                     data,
                                 });
-                            } else {
-                                await this.fetch();
                             }
                             this.selected = [];
                             this.close();
@@ -344,7 +346,7 @@ export default {
 
         closePortion() {
             this.dialogPortion = false;
-            this.$nextTick(() => this.$refs.form_portion.reset());
+            this.$nextTick(() => this.$refs.portion_form.reset());
         },
         editPortion(id) {
             this.form = this.$_.cloneDeep(
@@ -354,7 +356,7 @@ export default {
             this.$nextTick(() => (this.dialogPortion = true));
         },
         savePortion() {
-            this.$refs.form_portion.validate().then((valid) => {
+            this.$refs.portion_form.validate().then((valid) => {
                 if (valid) {
                     this.SAVE_MODEL({
                         url: `formula/${this.form.id}/portion`,
@@ -376,7 +378,7 @@ export default {
                             this.closePortion();
                         })
                         .catch((e) =>
-                            this.$refs.form_portion.setErrors(eHandler(e))
+                            this.$refs.portion_form.setErrors(eHandler(e))
                         );
                 }
             });
