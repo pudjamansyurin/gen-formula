@@ -1,7 +1,7 @@
 <template>
     <fragment>
         <v-app-bar
-            :color="selected.length ? 'black' : 'primary'"
+            :color="appBarColor"
             :collapse-on-scroll="!(selected.length || searchBox || !mobile)"
             dark
             app
@@ -21,9 +21,7 @@
                     v-if="searchBox || !mobile"
                     :value="value"
                     @input="$emit('input', $event)"
-                    :append-icon="
-                        mobile || value ? 'mdi-magnify-close' : 'mdi-magnify'
-                    "
+                    :append-icon="searchBoxIcon"
                     @click:append="setSearch(false)"
                     label="Search"
                     dense
@@ -44,9 +42,7 @@
                 </v-btn>
             </template>
             <v-btn v-if="!webview" @click="toggleFullscreen" icon>
-                <v-icon>{{
-                    fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen"
-                }}</v-icon>
+                <v-icon>{{ fullscreenIcon }}</v-icon>
             </v-btn>
             <!-- <v-btn icon>
             <v-icon>mdi-apps</v-icon>
@@ -128,9 +124,7 @@
                         small
                         dark
                     >
-                        <v-icon>{{
-                            dense ? "mdi-table" : "mdi-table-large"
-                        }}</v-icon>
+                        <v-icon>{{ denseIcon }}</v-icon>
                         <template v-if="!mobile">Dense</template>
                     </v-btn>
                     <v-btn
@@ -246,6 +240,20 @@ export default {
         theTitle() {
             return `${pluralize(this.$_.startCase(this.page))}`;
         },
+        appBarColor() {
+            return this.selected.length ? "black" : "primary";
+        },
+        searchBoxIcon() {
+            return this.mobile || this.value
+                ? "mdi-magnify-close"
+                : "mdi-magnify";
+        },
+        fullscreenIcon() {
+            return this.fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen";
+        },
+        denseIcon() {
+            return this.dense ? "mdi-table" : "mdi-table-large";
+        },
     },
     methods: {
         ...mapMutations("app", [
@@ -269,8 +277,9 @@ export default {
             if (state) {
                 this.toggleFullscreen();
             }
-            this.dialog = false;
             ls.set("confirmedFullscreen", true);
+
+            this.$nextTick(() => (this.dialog = false));
         },
         logout() {
             this.LOGOUT()

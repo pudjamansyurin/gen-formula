@@ -71,11 +71,11 @@ class FormulaPolicy
      */
     public function delete(User $user, $formulasId)
     {
-        $belonging = Formula::whereIn('id', $formulasId)
-            ->where('user_id', $user->id)
+        $others = Formula::whereIn('id', $formulasId)
+            ->where('user_id', '!=', $user->id)
             ->count();
         // only owner can delete
-        if ($belonging == count($formulasId)) {
+        if ($others == 0) {
             return true;
         }
         // above role can delete all

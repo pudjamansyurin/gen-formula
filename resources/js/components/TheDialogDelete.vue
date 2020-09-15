@@ -13,10 +13,7 @@
             >
             <v-divider></v-divider>
 
-            <v-card-text
-                class="pt-2"
-                :style="!mobile ? 'max-height: 300px;' : ''"
-            >
+            <v-card-text class="pt-2" :style="cardTextHeight">
                 Are you sure to delete {{ question }}
                 <v-chip-group column small active-class="primary--text">
                     <v-chip v-for="item in selected" :key="item.id">
@@ -72,6 +69,9 @@ export default {
                 return `this ${this.model} ?`;
             }
             return `these ${length} ${pluralize(this.model)}?`;
+        },
+        cardTextHeight() {
+            return !this.mobile ? "max-height: 300px;" : "";
         },
     },
 };

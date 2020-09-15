@@ -3,19 +3,17 @@
         <v-container class="fill-height blue-grey lighten-5" fluid>
             <v-row align="center" justify="center">
                 <v-col cols="12" sm="8" md="4">
-                    <p class="display-2 font-weight-thin">{{ error_code }}</p>
-                    <p class="display-1 font-weight-thin">{{ error_text }}</p>
+                    <p class="display-2 font-weight-thin">{{ errorCode }}</p>
+                    <p class="display-1 font-weight-thin">{{ errorText }}</p>
                     <div>
                         <v-btn v-if="!direct" @click="handleBack" elevation="1"
                             >Back</v-btn
                         >
                         <v-btn
-                            :to="{ path: profile.id > -1 ? '/app' : '/' }"
+                            :to="{ path: redirectPath }"
                             elevation="1"
                             color="primary"
-                            >{{
-                                profile.id > -1 ? "Dashboard" : "Login"
-                            }}</v-btn
+                            >{{ redirectText }}</v-btn
                         >
                     </div>
                 </v-col>
@@ -48,13 +46,12 @@ export default {
     },
     computed: {
         ...mapState("app", ["error", "profile"]),
-        error_code: function () {
-            if (this.error.code) {
-                return this.error.code;
-            }
-            return this.errors[this.code] ? this.code : null;
+        errorCode: function () {
+            return (
+                this.error.code || (this.errors[this.code] ? this.code : null)
+            );
         },
-        error_text: function () {
+        errorText: function () {
             return (
                 this.error.text ||
                 this.text ||
@@ -64,6 +61,12 @@ export default {
         },
         direct: function () {
             return window.history.length <= 2;
+        },
+        redirectPath() {
+            return this.profile.id > -1 ? "/app" : "/";
+        },
+        redirectText() {
+            return this.profile.id > -1 ? "Dashboard" : "Login";
         },
     },
     methods: {

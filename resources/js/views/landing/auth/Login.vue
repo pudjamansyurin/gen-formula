@@ -30,13 +30,11 @@
                     >
                         <v-text-field
                             v-model="form.password"
-                            :type="show_password ? 'text' : 'password'"
-                            :append-icon="
-                                show_password ? 'mdi-eye' : 'mdi-eye-off'
-                            "
+                            :type="passwordType"
+                            :append-icon="passwordIcon"
                             :error-messages="errors"
                             :success="valid"
-                            @click:append="show_password = !show_password"
+                            @click:append="showPassword = !showPassword"
                             label="Password"
                             hint="Your account's password"
                             prepend-icon="mdi-lock"
@@ -76,7 +74,7 @@ export default {
         return {
             title: "LOGIN",
             subtitle: "Enter your credentials to going further",
-            show_password: false,
+            showPassword: false,
             form: {
                 email: "",
                 password: "",
@@ -86,6 +84,12 @@ export default {
     },
     computed: {
         ...mapState("app", ["remember"]),
+        passwordIcon() {
+            return this.showPassword ? "mdi-eye" : "mdi-eye-off";
+        },
+        passwordType() {
+            return this.showPassword ? "text" : "password";
+        },
     },
     methods: {
         ...mapActions("app", [LOGIN]),

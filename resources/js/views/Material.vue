@@ -30,8 +30,8 @@
                     right
                     small
                     tile
-                    >{{ item.price | currency }}</v-btn
-                >
+                    >{{ item.price | currency }}
+                </v-btn>
                 <v-card-text>
                     <div class="overline">
                         {{ item.updated_at | moment("from") }}
@@ -75,15 +75,29 @@
             <template v-slot="{ item }">{{ item.name }}</template>
         </the-dialog-delete>
 
+        <the-dialog-delete
+            v-model="dialogDeleteStory"
+            :selected="selectedStory"
+            model="material-story"
+            @delete="removeStory"
+            @close="dialogDeleteStory = false"
+        >
+            <template v-slot="{ item }">
+                {{ item.price | currency }} |
+                {{ item.updated_at | moment("from") }}
+            </template>
+        </the-dialog-delete>
+
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :tabs="formTabs"
+            :tab.sync="formTab"
             @close="close"
             @submit="save"
-            :width="form.id > 0 ? '1000' : '500'"
         >
-            <v-row>
-                <v-col cols="12" :sm="form.id > 0 ? '6' : '12'">
+            <template v-slot:data>
+                <v-form @submit.prevent="save">
                     <validation-observer ref="form">
                         <validation-provider
                             name="matter_id"
@@ -186,42 +200,48 @@
                     </v-date-picker>
                 </v-menu> -->
                     </validation-observer>
-                </v-col>
-                <v-col
-                    v-if="form.id > 0"
-                    cols="12"
-                    :sm="form.id > 0 ? '6' : '12'"
-                >
-                    <h5>Price Histories</h5>
-                    <v-list :max-height="300" class="overflow-y-auto" dense>
-                        <template v-for="(story, index) in form.stories">
-                            <v-list-item
-                                :key="story.id"
-                                :class="{ primary: index == 0 }"
-                                :dark="index == 0"
-                                two-line
-                                dense
-                            >
-                                <v-list-item-content>
-                                    <v-list-item-title
-                                        >{{ story.price | currency }}
-                                    </v-list-item-title>
-                                    <v-list-item-subtitle>
-                                        {{ story.user.name }}
-                                    </v-list-item-subtitle>
-                                </v-list-item-content>
+                    <v-btn v-show="false" type="submit"></v-btn>
+                </v-form>
+            </template>
 
-                                <v-list-item-action>
-                                    <v-list-item-action-text>
-                                        {{ story.updated_at | moment("from") }}
-                                    </v-list-item-action-text>
-                                </v-list-item-action>
-                            </v-list-item>
-                            <v-divider :key="story.updated_at"></v-divider>
-                        </template>
-                    </v-list>
-                </v-col>
-            </v-row>
+            <template v-slot:stories>
+                <v-list dense>
+                    <template v-for="(story, index) in form.stories">
+                        <v-list-item
+                            :key="story.id"
+                            :class="{ primary: index == 0 }"
+                            :dark="index == 0"
+                            two-line
+                            dense
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title
+                                    >{{ story.price | currency }}
+                                </v-list-item-title>
+                                <v-list-item-subtitle>
+                                    {{ story.user.name }}
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+
+                            <v-list-item-action>
+                                <v-list-item-action-text>
+                                    {{ story.updated_at | moment("from") }}
+                                </v-list-item-action-text>
+                                <v-btn
+                                    v-if="index > 0 && story.authorized"
+                                    @click="deleteStory(story)"
+                                    color="red"
+                                    dark
+                                    text
+                                    x-small
+                                    >Delete
+                                </v-btn>
+                            </v-list-item-action>
+                        </v-list-item>
+                        <v-divider :key="story.updated_at"></v-divider>
+                    </template>
+                </v-list>
+            </template>
         </the-dialog-form>
     </fragment>
 </template>
@@ -283,29 +303,43 @@ export default {
             selected: [],
             dialog: false,
             dialogDelete: false,
+            selectedStory: [],
+            dialogDeleteStory: false,
             // menuUpdatedAt: false,
             form: this.$_.cloneDeep(Material),
             matters: [],
+            formTabs: ["data", "stories"],
+            formTab: 0,
         };
     },
     computed: {
         ...mapState("model", ["materials"]),
+        dialogWidth() {
+            return this.form.id > 0 ? "1000" : "500";
+        },
+        dialogColSm() {
+            return this.form.id > 0 ? "6" : "12";
+        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         close() {
-            this.$refs.form.reset();
             this.dialog = false;
+            this.$nextTick(() => this.$refs.form.reset());
         },
         create() {
             this.form = this.$_.cloneDeep(Material);
             // this.form.updated_at = this.$moment().format("YYYY-MM-DD");
-            this.dialog = true;
+            this.formTab = 0;
+
+            this.$nextTick(() => (this.dialog = true));
         },
         edit(item) {
             this.form = this.$_.cloneDeep(item || this.selected[0]);
-            this.dialog = true;
+            this.formTab = 0;
+
+            this.$nextTick(() => (this.dialog = true));
         },
         remove: async function () {
             await this.DELETE_MODELS({
@@ -314,8 +348,9 @@ export default {
             })
                 .then(async () => {
                     await this.fetch();
-                    this.selected = [];
+
                     this.dialogDelete = false;
+                    this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
         },
@@ -368,6 +403,32 @@ export default {
                             name,
                         })))
                 )
+                .catch((e) => eHandler(e));
+        },
+        deleteStory(story) {
+            this.selectedStory = [story];
+            this.$nextTick(() => (this.dialogDeleteStory = true));
+        },
+        removeStory: async function () {
+            let ids = this.$_.map(this.selectedStory, "id");
+
+            await this.DELETE_MODELS({
+                model: "material-story",
+                ids,
+            })
+                .then(async () => {
+                    this.form.stories = this.form.stories.filter(
+                        ({ id }) => !ids.includes(id)
+                    );
+
+                    this.UPDATE_MODEL({
+                        model: this.model,
+                        data: this.$_.cloneDeep(this.form),
+                    });
+
+                    this.dialogDeleteStory = false;
+                    this.$nextTick(() => (this.selectedStory = []));
+                })
                 .catch((e) => eHandler(e));
         },
     },

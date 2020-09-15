@@ -87,102 +87,107 @@
             @close="close"
             @submit="save"
         >
-            <validation-observer ref="form">
-                <validation-provider name="name" v-slot="{ errors, valid }">
-                    <v-text-field
-                        v-model="form.name"
-                        :error-messages="errors"
-                        :success="valid"
-                        label="Name"
-                        type="text"
-                        hint="This is to identify the user"
-                        counter
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
-
-                <validation-provider name="email" v-slot="{ errors, valid }">
-                    <v-text-field
-                        v-model="form.email"
-                        :error-messages="errors"
-                        :success="valid"
-                        label="E-mail"
-                        type="email"
-                        hint="This email is for recovery"
-                        counter
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
-
-                <validation-provider name="role.id" v-slot="{ errors, valid }">
-                    <v-select
-                        v-model="form.role"
-                        :items="roles"
-                        :error-messages="errors"
-                        :success="valid"
-                        :loading="!!loading"
-                        item-text="name"
-                        item-value="id"
-                        label="Role"
-                        hint="Role for this user"
-                        chips
-                        persistent-hint
-                        return-object
-                    ></v-select>
-                </validation-provider>
-
-                <v-btn
-                    v-if="form.id > 0"
-                    color="red"
-                    @click="changePassword = !changePassword"
-                    dark
-                    small
-                    >{{ changePassword ? "Keep" : "Change" }} Password</v-btn
-                >
-                <template v-if="changePassword">
-                    <validation-provider
-                        name="password"
-                        v-slot="{ errors, valid }"
-                    >
+            <v-form @submit.prevent="save">
+                <validation-observer ref="form">
+                    <validation-provider name="name" v-slot="{ errors, valid }">
                         <v-text-field
-                            v-model="form.password"
-                            :type="showPassword ? 'text' : 'password'"
-                            :append-icon="
-                                showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                            "
+                            v-model="form.name"
                             :error-messages="errors"
                             :success="valid"
-                            @click:append="showPassword = !showPassword"
-                            label="Password"
-                            hint="Password for this user"
-                            autocomplete="off"
-                            persistent-hint
+                            label="Name"
+                            type="text"
+                            hint="This is to identify the user"
                             counter
+                            persistent-hint
                         ></v-text-field>
                     </validation-provider>
 
                     <validation-provider
-                        name="password_confirmation"
+                        name="email"
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            v-model="form.password_confirmation"
-                            :type="showPassword ? 'text' : 'password'"
-                            :append-icon="
-                                showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                            "
+                            v-model="form.email"
                             :error-messages="errors"
                             :success="valid"
-                            @click:append="showPassword = !showPassword"
-                            label="Password Confirmation"
-                            hint="Fill again the password"
-                            autocomplete="off"
-                            persistent-hint
+                            label="E-mail"
+                            type="email"
+                            hint="This email is for recovery"
                             counter
+                            persistent-hint
                         ></v-text-field>
                     </validation-provider>
-                </template>
-            </validation-observer>
+
+                    <validation-provider
+                        name="role.id"
+                        v-slot="{ errors, valid }"
+                    >
+                        <v-select
+                            v-model="form.role"
+                            :items="roles"
+                            :error-messages="errors"
+                            :success="valid"
+                            :loading="!!loading"
+                            item-text="name"
+                            item-value="id"
+                            label="Role"
+                            hint="Role for this user"
+                            chips
+                            persistent-hint
+                            return-object
+                        ></v-select>
+                    </validation-provider>
+
+                    <v-btn
+                        v-if="form.id > 0"
+                        color="red"
+                        @click="changePassword = !changePassword"
+                        dark
+                        small
+                        >{{ passwordText }} Password</v-btn
+                    >
+                    <template v-if="changePassword">
+                        <validation-provider
+                            name="password"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.password"
+                                :type="passwordType"
+                                :append-icon="passwordIcon"
+                                :error-messages="errors"
+                                :success="valid"
+                                @click:append="showPassword = !showPassword"
+                                label="Password"
+                                hint="Password for this user"
+                                autocomplete="off"
+                                persistent-hint
+                                counter
+                            ></v-text-field>
+                        </validation-provider>
+
+                        <validation-provider
+                            name="password_confirmation"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.password_confirmation"
+                                :type="passwordType"
+                                :append-icon="passwordIcon"
+                                :error-messages="errors"
+                                :success="valid"
+                                @click:append="showPassword = !showPassword"
+                                label="Password Confirmation"
+                                hint="Fill again the password"
+                                autocomplete="off"
+                                persistent-hint
+                                counter
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                </validation-observer>
+                <v-btn v-show="false" type="submit"></v-btn>
+            </v-form>
         </the-dialog-form>
     </fragment>
 </template>
@@ -241,13 +246,22 @@ export default {
     computed: {
         ...mapState("app", ["profile"]),
         ...mapState("model", ["users"]),
+        passwordIcon() {
+            return this.showPassword ? "mdi-eye" : "mdi-eye-off";
+        },
+        passwordType() {
+            return this.showPassword ? "text" : "password";
+        },
+        passwordText() {
+            return this.changePassword ? "Keep" : "Change";
+        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         close() {
-            this.$refs.form.reset();
             this.dialog = false;
+            this.$nextTick(() => this.$refs.form.reset());
         },
         create() {
             this.form = {
@@ -257,7 +271,7 @@ export default {
             };
 
             this.changePassword = true;
-            this.dialog = true;
+            this.$nextTick(() => (this.dialog = true));
         },
         edit() {
             this.form = {
@@ -267,7 +281,7 @@ export default {
             };
 
             this.changePassword = false;
-            this.dialog = true;
+            this.$nextTick(() => (this.dialog = true));
         },
         remove: async function () {
             await this.DELETE_MODELS({
@@ -276,8 +290,9 @@ export default {
             })
                 .then(async () => {
                     await this.fetch();
-                    this.selected = [];
+
                     this.dialogDelete = false;
+                    this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
         },

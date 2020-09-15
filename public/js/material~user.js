@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["formula~material~user"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["material~user"],{
 
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TheData.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************!*\

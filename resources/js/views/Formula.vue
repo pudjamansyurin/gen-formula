@@ -83,115 +83,121 @@
             @close="close"
             @submit="save"
         >
-            <validation-observer ref="form">
-                <validation-provider name="name" v-slot="{ errors, valid }">
-                    <v-text-field
-                        v-model="form.name"
-                        :error-messages="errors"
-                        :success="valid"
-                        label="Formula name"
-                        type="text"
-                        hint="This is to identify the formula"
-                        counter
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
+            <v-form @submit.prevent="save">
+                <validation-observer ref="form">
+                    <validation-provider name="name" v-slot="{ errors, valid }">
+                        <v-text-field
+                            v-model="form.name"
+                            :error-messages="errors"
+                            :success="valid"
+                            label="Formula name"
+                            type="text"
+                            hint="This is to identify the formula"
+                            counter
+                            persistent-hint
+                        ></v-text-field>
+                    </validation-provider>
 
-                <validation-provider
-                    name="description"
-                    v-slot="{ errors, valid }"
-                >
-                    <v-text-field
-                        v-model="form.description"
-                        :error-messages="errors"
-                        :success="valid"
-                        label="Formula description"
-                        type="text"
-                        hint="Short description about the formula"
-                        counter
-                        persistent-hint
-                    ></v-text-field>
-                </validation-provider>
-            </validation-observer>
+                    <validation-provider
+                        name="description"
+                        v-slot="{ errors, valid }"
+                    >
+                        <v-text-field
+                            v-model="form.description"
+                            :error-messages="errors"
+                            :success="valid"
+                            label="Formula description"
+                            type="text"
+                            hint="Short description about the formula"
+                            counter
+                            persistent-hint
+                        ></v-text-field>
+                    </validation-provider>
+                </validation-observer>
+                <v-btn v-show="false" type="submit"></v-btn>
+            </v-form>
         </the-dialog-form>
 
         <the-dialog-form
             v-model="dialogPortion"
             :title="formPortionTitle"
+            :readonly="!form.authorized"
             @close="closePortion"
             @submit="savePortion"
             width="1000"
-            :readonly="!form.authorized"
         >
-            <validation-observer ref="form_portion">
-                <v-row>
-                    <v-col cols="12" sm="6">
-                        <validation-provider
-                            name="formula"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-autocomplete
-                                v-model="form.portions"
-                                :items="materials"
-                                :error-messages="errors"
-                                :success="valid"
-                                :loading="!!loading"
-                                :readonly="!form.authorized"
-                                :clearable="form.authorized"
-                                item-text="material.name"
-                                item-value="material.id"
-                                label="Related materials"
-                                hint="The related materials"
-                                chips
-                                multiple
-                                auto-select-first
-                                deletable-chips
-                                persistent-hint
-                                return-object
-                            ></v-autocomplete>
-                        </validation-provider>
+            <v-form @submit.prevent="savePortion">
+                <validation-observer ref="form_portion">
+                    <v-row>
+                        <v-col cols="12" sm="6">
+                            <validation-provider
+                                name="formula"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-autocomplete
+                                    v-model="form.portions"
+                                    :items="materials"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    :loading="!!loading"
+                                    :readonly="!form.authorized"
+                                    :clearable="form.authorized"
+                                    item-text="material.name"
+                                    item-value="material.id"
+                                    label="Related materials"
+                                    hint="The related materials"
+                                    chips
+                                    multiple
+                                    auto-select-first
+                                    deletable-chips
+                                    persistent-hint
+                                    return-object
+                                ></v-autocomplete>
+                            </validation-provider>
 
-                        <validation-provider
-                            name="portion_total"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                class="mt-3"
-                                label="Total Portion"
-                                type="number"
-                                :value="portionTotal"
-                                :error-messages="errors"
-                                :success="valid"
-                                suffix="%"
-                                hint="This should be 100%"
-                                readonly
-                                filled
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-                    </v-col>
-                    <v-col cols="12" sm="6">
-                        <validation-provider
-                            v-for="(el, key) in form.portions"
-                            :key="el.material.id"
-                            :name="`formula.${key}.portion`"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model.number="el.portion"
-                                :label="el.material.name"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="!form.authorized"
-                                type="number"
-                                suffix="%"
-                                hint="This material's portion"
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-                    </v-col>
-                </v-row>
-            </validation-observer>
+                            <validation-provider
+                                name="portion_total"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-text-field
+                                    class="mt-3"
+                                    label="Total Portion"
+                                    type="number"
+                                    :value="portionTotal"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    suffix="%"
+                                    hint="This should be 100%"
+                                    readonly
+                                    filled
+                                    persistent-hint
+                                ></v-text-field>
+                            </validation-provider>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <validation-provider
+                                v-for="(el, key) in form.portions"
+                                :key="el.material.id"
+                                :name="`formula.${key}.portion`"
+                                v-slot="{ errors, valid }"
+                            >
+                                <v-text-field
+                                    v-model.number="el.portion"
+                                    :label="el.material.name"
+                                    :error-messages="errors"
+                                    :success="valid"
+                                    :readonly="!form.authorized"
+                                    type="number"
+                                    suffix="%"
+                                    hint="This material's portion"
+                                    persistent-hint
+                                ></v-text-field>
+                            </validation-provider>
+                        </v-col>
+                    </v-row>
+                </validation-observer>
+                <v-btn v-show="false" type="submit"></v-btn>
+            </v-form>
         </the-dialog-form>
     </fragment>
 </template>
@@ -277,16 +283,16 @@ export default {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
         close() {
-            this.$refs.form.reset();
             this.dialog = false;
+            this.$nextTick(() => this.$refs.form.reset());
         },
         create() {
             this.form = this.$_.cloneDeep(Formula);
-            this.dialog = true;
+            this.$nextTick(() => (this.dialog = true));
         },
         edit() {
             this.form = this.$_.cloneDeep(this.selected[0]);
-            this.dialog = true;
+            this.$nextTick(() => (this.dialog = true));
         },
         remove: async function () {
             await this.DELETE_MODELS({
@@ -295,8 +301,9 @@ export default {
             })
                 .then(async () => {
                     await this.fetch();
-                    this.selected = [];
+
                     this.dialogDelete = false;
+                    this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
         },
@@ -336,14 +343,15 @@ export default {
         },
 
         closePortion() {
-            this.$refs.form_portion.reset();
             this.dialogPortion = false;
+            this.$nextTick(() => this.$refs.form_portion.reset());
         },
         editPortion(id) {
             this.form = this.$_.cloneDeep(
                 this.$_.find(this.formulas, { id: id })
             );
-            this.dialogPortion = true;
+
+            this.$nextTick(() => (this.dialogPortion = true));
         },
         savePortion() {
             this.$refs.form_portion.validate().then((valid) => {

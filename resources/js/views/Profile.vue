@@ -40,21 +40,11 @@
                             class="ma-2"
                             small
                             rounded
-                            :color="
-                                profile.email_verified_at ? 'teal' : 'orange'
-                            "
+                            :color="verifyBtnColor"
                             dark
                         >
-                            <v-icon small left>{{
-                                profile.email_verified_at
-                                    ? "mdi-checkbox-marked-circle"
-                                    : "mdi-help-circle-outline"
-                            }}</v-icon>
-                            {{
-                                profile.email_verified_at
-                                    ? "Verified"
-                                    : "Verify"
-                            }}
+                            <v-icon small left>{{ verifyIcon }}</v-icon>
+                            {{ verifyText }}
                         </v-btn>
                     </v-list-item-title>
                     <v-list-item-subtitle>Email</v-list-item-subtitle>
@@ -184,10 +174,7 @@
                             color="blue darken-1"
                             @click="changePassword = !changePassword"
                             text
-                            >{{
-                                changePassword ? "Keep" : "Change"
-                            }}
-                            Password</v-btn
+                            >{{ passwordText }} Password</v-btn
                         >
 
                         <template v-if="changePassword">
@@ -197,10 +184,8 @@
                             >
                                 <v-text-field
                                     v-model="form.password"
-                                    :type="showPassword ? 'text' : 'password'"
-                                    :append-icon="
-                                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                                    "
+                                    :type="passwordType"
+                                    :append-icon="passwordIcon"
                                     :error-messages="errors"
                                     :success="valid"
                                     @click:append="showPassword = !showPassword"
@@ -218,10 +203,8 @@
                             >
                                 <v-text-field
                                     v-model="form.password_confirmation"
-                                    :type="showPassword ? 'text' : 'password'"
-                                    :append-icon="
-                                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                                    "
+                                    :type="passwordType"
+                                    :append-icon="passwordIcon"
                                     :error-messages="errors"
                                     :success="valid"
                                     @click:append="showPassword = !showPassword"
@@ -276,6 +259,26 @@ export default {
     },
     computed: {
         ...mapState("app", ["profile"]),
+        verifyBtnColor() {
+            return this.profile.email_verified_at ? "teal" : "orange";
+        },
+        verifyIcon() {
+            return this.profile.email_verified_at
+                ? "mdi-checkbox-marked-circle"
+                : "mdi-help-circle-outline";
+        },
+        verifyText() {
+            return this.profile.email_verified_at ? "Verified" : "Verify";
+        },
+        passwordIcon() {
+            return this.showPassword ? "mdi-eye" : "mdi-eye-off";
+        },
+        passwordType() {
+            return this.showPassword ? "text" : "password";
+        },
+        passwordText() {
+            return this.changePassword ? "Keep" : "Change";
+        },
     },
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),

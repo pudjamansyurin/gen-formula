@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["dashboard~formula~material~profile~user"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["dashboard~material~profile~user"],{
 
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/app/AppTopBar.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************!*\

@@ -55,7 +55,7 @@ class MaterialController extends Controller
             'user_id' => auth()->id()
         ]);
 
-        // add price histories
+        // add price stories
         $material->stories()->create([
             'price' => $request->price,
             'user_id' => auth()->id()
@@ -83,7 +83,7 @@ class MaterialController extends Controller
             'matter_id' => $request->matter_id,
         ]);
 
-        // update price histories
+        // update price stories
         $story = $material->stories();
         if ($story->first()->price != $request->price) {
             $story->create([

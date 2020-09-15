@@ -9,18 +9,38 @@
     >
         <v-card :loading="!!loading">
             <v-card-title class="headline grey lighten-2" primary-title>
-                <span class="headline">{{ formTitle }}</span>
+                <v-row no-gutters>
+                    <v-col cols="12" sm="6">
+                        <span class="headline">{{ formTitle }}</span>
+                    </v-col>
+                    <v-col v-if="tabs.length" cols="12" sm="6">
+                        <v-tabs
+                            :value="tab"
+                            @change="$emit('update:tab', $event)"
+                            background-color="transparent"
+                            height="30"
+                            right
+                        >
+                            <v-tab v-for="item in tabs" :key="item">{{
+                                item
+                            }}</v-tab>
+                        </v-tabs>
+                    </v-col>
+                </v-row>
             </v-card-title>
             <v-divider></v-divider>
 
-            <v-card-text
-                class="pt-2"
-                :style="!mobile ? 'max-height: 500px;' : ''"
-            >
-                <v-form @submit.prevent="$emit('submit')">
-                    <slot></slot>
-                    <v-btn v-show="false" type="submit"></v-btn>
-                </v-form>
+            <v-card-text class="pt-2" :style="cardTextHeight">
+                <v-tabs-items
+                    v-if="tabs.length"
+                    :value="tab"
+                    @input="$emit('update:tab', $event)"
+                >
+                    <v-tab-item v-for="item in tabs" :key="item">
+                        <slot :name="item"></slot>
+                    </v-tab-item>
+                </v-tabs-items>
+                <slot v-else></slot>
             </v-card-text>
 
             <v-divider></v-divider>
@@ -67,14 +87,21 @@ export default {
             type: String,
             default: "500",
         },
+        tabs: {
+            type: Array,
+            default: () => [],
+        },
+        tab: {
+            type: Number,
+            default: 0,
+        },
     },
     computed: {
         formTitle() {
-            if (this.title) {
-                return this.title;
-            }
-
-            return this.form.id === -1 ? "New Item" : "Edit Item";
+            return this.title || `${this.form.id === -1 ? "New" : "Edit"} Item`;
+        },
+        cardTextHeight() {
+            return !this.mobile ? "max-height: 500px;" : "";
         },
     },
 };
