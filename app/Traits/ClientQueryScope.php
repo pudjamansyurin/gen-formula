@@ -13,6 +13,7 @@ trait ClientQueryScope
     {
         // filtering
         $search = $request->input('search', '');
+        $mine = $request->boolean('mine');
 
         if ($search) {
             // handle select options request
@@ -36,6 +37,11 @@ trait ClientQueryScope
                     });
                 });
             };
+        }
+
+        // retrive current user data
+        if ($mine) {
+            $q->where('user_id', auth()->id());
         }
 
         return $q;

@@ -1,22 +1,18 @@
 {
-    "/js/app.js": "/js/app.js?id=7b7058306d4cc57b8c3d",
+    "/js/app.js": "/js/app.js?id=c5e386890a30713f1ccf",
     "/css/app.css": "/css/app.css?id=3462204912f6bda7044e",
     "/js/auth-forget.js": "/js/auth-forget.js?id=7b689069f4491fc8c4f9",
     "/js/auth-login.js": "/js/auth-login.js?id=ae4edb9749c4a01ac4ba",
     "/js/auth-reset.js": "/js/auth-reset.js?id=d0b9df7665c672a59046",
     "/js/auth-verify.js": "/js/auth-verify.js?id=cce6f077e931f09f2c61",
     "/js/dashboard.js": "/js/dashboard.js?id=63f52077b8173c2ef497",
-    "/js/dashboard~formula~material~profile~user.js": "/js/dashboard~formula~material~profile~user.js?id=1ebd957fc308b214988c",
+    "/js/dashboard~formula~material~profile~user.js": "/js/dashboard~formula~material~profile~user.js?id=3d7db9feaac21d0679b7",
     "/js/error.js": "/js/error.js?id=5263f23ad7e197ac91dd",
     "/js/formula.js": "/js/formula.js?id=77586ccb5a8f5edda4d8",
     "/js/formula~material~user.js": "/js/formula~material~user.js?id=04919bf4b8637111ec7c",
     "/js/home.js": "/js/home.js?id=2d6510ad26b183247435",
-    "/js/material.js": "/js/material.js?id=f2ae9ca6a60774c93904",
+    "/js/material.js": "/js/material.js?id=757be1182bf98cd66808",
     "/js/policy.js": "/js/policy.js?id=9d3a32bdd6038c7ebf7b",
     "/js/profile.js": "/js/profile.js?id=a374b926d7e1b826c584",
-    "/js/user.js": "/js/user.js?id=f39e2d2eb34ef1d5706e",
-    "/js/dashboard~material~profile~user.js": "/js/dashboard~material~profile~user.js?id=af4900edfe5eca718668",
-    "/js/material~user.js": "/js/material~user.js?id=89be7df4ec48b74887fb",
-    "/js/dashboard~formula~profile~user.js": "/js/dashboard~formula~profile~user.js?id=859c805bbddb767f1dd5",
-    "/js/formula~user.js": "/js/formula~user.js?id=cf15aeb02ca32d5a257d"
+    "/js/user.js": "/js/user.js?id=f39e2d2eb34ef1d5706e"
 }

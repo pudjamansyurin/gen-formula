@@ -4,6 +4,7 @@
             v-model="search"
             :page="model"
             :selected="selected"
+            :tab.sync="mineTab"
             @unselect="selected = []"
             @fetch="fetch"
             @edit="edit"
@@ -215,8 +216,8 @@
                     <template v-for="(story, index) in form.stories">
                         <v-list-item
                             :key="story.id"
-                            :class="{ primary: index == 0 }"
-                            :dark="index == 0"
+                            :class="{ primary: index === 0 }"
+                            :dark="index === 0"
                             two-line
                             dense
                         >
@@ -318,6 +319,7 @@ export default {
             form: this.$_.cloneDeep(Material),
             matters: [],
             formTab: 0,
+            mineTab: 0,
         };
     },
     computed: {
@@ -370,6 +372,7 @@ export default {
                 params: {
                     ...this.options,
                     search: this.search,
+                    mine: this.mineTab,
                 },
             })
                 .then(({ meta }) => (this.total = meta.total))
@@ -444,6 +447,9 @@ export default {
         },
     },
     watch: {
+        mineTab: function (mine) {
+            this.fetch();
+        },
         dialog: function (val) {
             if (val && this.matters.length == 0) {
                 this.fetchMatters();

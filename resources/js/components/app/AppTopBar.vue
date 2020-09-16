@@ -104,8 +104,12 @@
                     <v-toolbar-title v-if="selected.length">
                         {{ selected.length }} selected
                     </v-toolbar-title>
-                    <v-tabs v-else align-with-title>
-                        <v-tabs-slider color="white"></v-tabs-slider>
+                    <v-tabs
+                        v-else
+                        :value="tab"
+                        @change="$emit('update:tab', $event)"
+                        align-with-title
+                    >
                         <v-tab>{{ theTitle }}</v-tab>
                         <v-tab>Mine</v-tab>
                     </v-tabs>
@@ -224,6 +228,10 @@ export default {
         crud: {
             type: Boolean,
             default: false,
+        },
+        tab: {
+            type: Number,
+            default: 0,
         },
     },
     data() {
