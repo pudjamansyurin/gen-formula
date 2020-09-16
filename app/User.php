@@ -68,6 +68,11 @@ class User extends Authenticatable
         return $this->hasMany(Package::class);
     }
 
+    public function matters()
+    {
+        return $this->hasMany(Matter::class);
+    }
+
     public function materials()
     {
         return $this->hasMany(Material::class);

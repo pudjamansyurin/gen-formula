@@ -4,6 +4,7 @@
             v-model="search"
             :page="model"
             :selected="selected"
+            :tab.sync="mineTab"
             @unselect="selected = []"
             @fetch="fetch"
             @edit="edit"
@@ -266,6 +267,7 @@ export default {
             dialogPortion: false,
             materials: [],
             form: this.$_.cloneDeep(Formula),
+            mineTab: 0,
         };
     },
     computed: {
@@ -338,6 +340,7 @@ export default {
                 params: {
                     ...this.options,
                     search: this.search,
+                    mine: this.mineTab,
                 },
             })
                 .then(({ meta }) => (this.total = meta.total))
@@ -405,6 +408,9 @@ export default {
         },
     },
     watch: {
+        mineTab: function (mine) {
+            this.fetch();
+        },
         dialogPortion: function (val) {
             if (val && this.materials.length == 0) {
                 this.fetchMaterials();

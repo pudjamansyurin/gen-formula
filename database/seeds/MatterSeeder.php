@@ -21,7 +21,7 @@ class MatterSeeder extends Seeder
         ];
 
         foreach ($matters as $matter) {
-            App\Matter::create([
+            factory(App\Matter::class)->create([
                 'name' => $matter
             ]);
         };

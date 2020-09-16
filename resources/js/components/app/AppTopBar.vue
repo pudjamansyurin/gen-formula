@@ -111,7 +111,7 @@
                         align-with-title
                     >
                         <v-tab>{{ theTitle }}</v-tab>
-                        <v-tab>Mine</v-tab>
+                        <v-tab v-if="tab > -1">Mine</v-tab>
                     </v-tabs>
                 </template>
 
@@ -231,7 +231,7 @@ export default {
         },
         tab: {
             type: Number,
-            default: 0,
+            default: -1,
         },
     },
     data() {

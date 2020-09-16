@@ -18,6 +18,7 @@ class Matter extends Model
      */
     protected $fillable = [
         'name',
+        'user_id'
     ];
 
     /**
@@ -40,5 +41,10 @@ class Matter extends Model
     public function materials()
     {
         return $this->hasMany(Material::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

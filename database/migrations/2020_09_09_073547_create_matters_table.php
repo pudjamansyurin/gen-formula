@@ -16,7 +16,15 @@ class CreateMattersTable extends Migration
         Schema::create('matters', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->foreignId('user_id');
             $table->timestamps();
+        });
+
+        Schema::table('matters', function (Blueprint $table) {
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 
