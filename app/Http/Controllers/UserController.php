@@ -83,30 +83,20 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        // prepare the data
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-        ];
+        // on email changes
+        $user->unVerifyChangedEmail($request);
 
-        if ($request->password) {
-            $data['password'] = $request->password;
-        };
-
-        if ($user->email != $request->email) {
-            $user->markEmailAsUnVerified();
-        }
         // update user
-        $user->update($data);
-
-        // send email verification
-        if (!$user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
-        }
+        $user->update($request->only(['name', 'email', 'password']));
 
         // change role
         if ($role = Role::find($request->role['id'])) {
             $user->syncRoles($role);
+        }
+
+        // send email verification
+        if (!$user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
         }
 
         return response(
@@ -135,7 +125,7 @@ class UserController extends Controller
      */
     public function role()
     {
-        $this->authorize('viewRoles', User::class);
+        $this->authorize('viewRole', User::class);
 
         return response([
             'data' => Role::all()

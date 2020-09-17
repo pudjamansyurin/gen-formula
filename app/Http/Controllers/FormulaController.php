@@ -50,11 +50,11 @@ class FormulaController extends Controller
     {
         $this->authorize('create', Formula::class);
 
-        $formula = Formula::create([
-            'name' => $request->name,
-            'description' => $request->description,
+        $formula = Formula::create($request->merge([
             'user_id' => auth()->id()
-        ]);
+        ])->only(
+            ['name', 'description', 'user_id']
+        ));
 
         return response(
             new FormulaItem($formula->loadMissing($this->modelRelations)),
@@ -73,10 +73,7 @@ class FormulaController extends Controller
     {
         $this->authorize('update', $formula);
 
-        $formula->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        $formula->update($request->only(['name', 'description']));
 
         return response(
             new FormulaItem($formula->loadMissing($this->modelRelations)),

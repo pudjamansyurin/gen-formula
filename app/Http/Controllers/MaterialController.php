@@ -50,17 +50,18 @@ class MaterialController extends Controller
     {
         $this->authorize('create', Material::class);
 
-        $material = Material::create([
-            'name' => $request->name,
-            'matter_id' => $request->matter_id,
+        $material = Material::create($request->merge([
             'user_id' => auth()->id()
-        ]);
+        ])->only(
+            ['name', 'matter_id', 'user_id']
+        ));
 
         // add price stories
-        $material->stories()->create([
-            'price' => $request->price,
+        $material->stories()->create($request->merge([
             'user_id' => auth()->id()
-        ]);
+        ])->only(
+            ['price', 'user_id']
+        ));
 
         return response(
             new MaterialItem($material->loadMissing($this->modelRelations)),
@@ -85,21 +86,18 @@ class MaterialController extends Controller
         )) {
             $this->authorize('update', $material);
 
-            $material->update([
-                'name' => $request->name,
-                'matter_id' => $request->matter_id,
-            ]);
+            $material->update($request->only(['name', 'matter_id']));
         }
 
         // update price stories
-        $stories = $material->stories();
-        if ($stories->first()->price != $request->price) {
+        if ($material->stories()->first()->price != $request->price) {
             $this->authorize('create', MaterialStory::class);
 
-            $stories->create([
-                'price' => $request->price,
-                'user_id' => auth()->id(),
-            ]);
+            $material->stories()->create($request->merge([
+                'user_id' => auth()->id()
+            ])->only(
+                ['price', 'user_id']
+            ));
         }
 
         return response(

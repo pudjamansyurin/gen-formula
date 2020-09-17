@@ -49,10 +49,11 @@ class MatterController extends Controller
     {
         $this->authorize('create', Matter::class);
 
-        $matter = Matter::create([
-            'name' => $request->name,
+        $matter = Matter::create($request->merge([
             'user_id' => auth()->id()
-        ]);
+        ])->only(
+            ['name', 'user_id']
+        ));
 
         return response(
             new MatterItem($matter->loadMissing($this->modelRelations)),
@@ -71,9 +72,7 @@ class MatterController extends Controller
     {
         $this->authorize('update', $matter);
 
-        $matter->update([
-            'name' => $request->name
-        ]);
+        $matter->update($request->only(['name']));
 
         return response(
             new MatterItem($matter->loadMissing($this->modelRelations)),

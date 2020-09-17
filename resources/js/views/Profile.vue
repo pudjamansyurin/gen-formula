@@ -119,7 +119,7 @@
 
             <v-divider></v-divider>
             <v-card-text>
-                <v-form>
+                <v-form @submit.prevent="save">
                     <validation-observer ref="form">
                         <validation-provider
                             name="name"
@@ -217,6 +217,7 @@
                             </validation-provider>
                         </template>
                     </validation-observer>
+                    <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
             </v-card-text>
 
