@@ -10,15 +10,20 @@ export const User = {
     role: Role
 };
 
-export const Matter = {
+export const Pack = {
+    id: -1,
+    name: "",
+    packer_id: -1
+};
+
+export const Packer = {
     id: -1,
     name: ""
 };
 
-export const MaterialStory = {
+export const Matter = {
     id: -1,
-    price: 0,
-    updated_at: null
+    name: ""
 };
 
 export const Material = {
@@ -26,6 +31,12 @@ export const Material = {
     name: "",
     matter_id: -1,
     price: 0
+};
+
+export const MaterialStory = {
+    id: -1,
+    price: 0,
+    updated_at: null
 };
 
 export const Formula = {

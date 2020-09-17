@@ -14,22 +14,22 @@ class PackerAndPackSeeder extends Seeder
         $packers = [
             [
                 'name' => 'KALENG',
-                'parts' => ['KALENG', 'STIKER KALENG']
+                'packs' => ['KALENG', 'STIKER KALENG']
             ],
             [
                 'name' => 'KARTON',
-                'parts' => ['KARTON BOX', 'STIKER KARTON', 'ISOLASI KARTON']
+                'packs' => ['KARTON BOX', 'STIKER KARTON', 'ISOLASI KARTON']
             ]
         ];
 
         foreach ($packers as $packer) {
-            $thePacker = App\Packer::create([
+            $thePacker = factory(App\Packer::class)->create([
                 'name' => $packer['name'],
             ]);
 
-            foreach ($packer['parts'] as $part) {
-                App\Pack::create([
-                    'name' => $part,
+            foreach ($packer['packs'] as $pack) {
+                factory(App\Pack::class)->create([
+                    'name' => $pack,
                     'packer_id' => $thePacker->id
                 ]);
             }

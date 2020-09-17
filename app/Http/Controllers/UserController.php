@@ -14,7 +14,7 @@ use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    private $modelRelations = ['roles:id,name'];
+    private $relations = ['roles:id,name'];
 
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         // Model instance
-        $q = User::with($this->modelRelations);
+        $q = User::with($this->relations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -64,7 +64,7 @@ class UserController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response(
-            new UserItem($user->loadMissing($this->modelRelations)),
+            new UserItem($user->loadMissing($this->relations)),
             Response::HTTP_CREATED
         );
     }
@@ -97,7 +97,7 @@ class UserController extends Controller
         }
 
         return response(
-            new UserItem($user->loadMissing($this->modelRelations)),
+            new UserItem($user->loadMissing($this->relations)),
             Response::HTTP_OK
         );
     }
@@ -139,7 +139,7 @@ class UserController extends Controller
         $user = User::find(auth()->id());
 
         return response([
-            'user' => new UserItem($user->loadMissing($this->modelRelations)),
+            'user' => new UserItem($user->loadMissing($this->relations)),
         ], Response::HTTP_OK);
     }
 }

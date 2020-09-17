@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Packer extends Model
 {
+    use ClientQueryScope;
+
     protected $table = 'packers';
 
     /**
@@ -15,6 +18,20 @@ class Packer extends Model
      */
     protected $fillable = [
         'name',
+        'user_id'
+    ];
+
+    /**
+     * Client query scope
+     */
+    protected $aRelatedQuery = [
+        'filter' => [
+            'user.name',
+            'pack.name'
+        ],
+        'sorter' =>  [
+            'user.name' => 'user_id',
+        ]
     ];
 
     /**
@@ -24,5 +41,10 @@ class Packer extends Model
     public function packs()
     {
         return $this->hasMany(Pack::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

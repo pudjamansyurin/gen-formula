@@ -8,7 +8,7 @@ use Illuminate\Http\Response;
 
 class MaterialStoryController extends Controller
 {
-    private $modelRelations = ['material', 'material.stories'];
+    private $relations = ['material', 'material.stories'];
 
     /**
      * Remove the specified resource from storage.
@@ -22,7 +22,7 @@ class MaterialStoryController extends Controller
         $this->authorize('delete', [MaterialStory::class, $storiesId]);
 
         // delete (if not the last one)
-        $story = MaterialStory::with($this->modelRelations)->find($storiesId[0]);
+        $story = MaterialStory::with($this->relations)->find($storiesId[0]);
         if ($story->material->stories->count() > 1) {
             MaterialStory::destroy($storiesId);
 

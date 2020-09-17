@@ -35,11 +35,6 @@
                 </v-card-text>
             </template>
 
-            <!-- <template v-slot:[`item.name`]="{ item }">
-                <template>
-                    {{ item.name }}
-                </template>
-            </template> -->
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
             </template>
@@ -72,7 +67,7 @@
                             :success="valid"
                             label="Name"
                             type="text"
-                            hint="The material's category"
+                            hint="The matter's name"
                             counter
                             persistent-hint
                         ></v-text-field>

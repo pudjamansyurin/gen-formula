@@ -17,6 +17,7 @@ class CreatePacksTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->foreignId('packer_id');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
 
@@ -24,6 +25,10 @@ class CreatePacksTable extends Migration
             $table->foreign('packer_id')
                 ->references('id')
                 ->on('packers')
+                ->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
                 ->onDelete('cascade');
         });
     }

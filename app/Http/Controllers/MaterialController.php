@@ -13,7 +13,7 @@ use Illuminate\Http\Response;
 
 class MaterialController extends Controller
 {
-    private $modelRelations = ['user:id,name', 'matter:id,name', 'stories', 'stories.user:id,name'];
+    private $relations = ['user:id,name', 'matter:id,name', 'stories', 'stories.user:id,name'];
 
     /**
      * Display a listing of the resource.
@@ -25,7 +25,7 @@ class MaterialController extends Controller
         $this->authorize('viewAny', Material::class);
 
         // Model instance
-        $q = Material::with($this->modelRelations);
+        $q = Material::with($this->relations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -67,7 +67,7 @@ class MaterialController extends Controller
         );
 
         return response(
-            new MaterialItem($material->loadMissing($this->modelRelations)),
+            new MaterialItem($material->loadMissing($this->relations)),
             Response::HTTP_CREATED
         );
     }
@@ -105,7 +105,7 @@ class MaterialController extends Controller
         }
 
         return response(
-            new MaterialItem($material->loadMissing($this->modelRelations)),
+            new MaterialItem($material->loadMissing($this->relations)),
             Response::HTTP_OK
         );
     }

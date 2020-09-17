@@ -15,12 +15,29 @@ export const navigations = [
     {
         text: "Materials",
         model: false,
-        icon: "mdi-package-variant-closed",
+        icon: "mdi-palette",
         children: [
-            { text: "Material", to: "material", icon: "mdi-package" },
+            { text: "Material", to: "material", icon: "mdi-format-color-fill" },
             {
                 text: "Matter",
                 to: "matter",
+                icon: "mdi-spray"
+            }
+        ]
+    },
+    {
+        text: "Packages",
+        model: false,
+        icon: "mdi-package",
+        children: [
+            {
+                text: "Package",
+                to: "package",
+                icon: "mdi-package-variant-closed"
+            },
+            {
+                text: "Packer",
+                to: "packer",
                 icon: "mdi-package-variant"
             }
         ]

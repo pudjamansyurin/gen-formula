@@ -63,6 +63,16 @@ class User extends Authenticatable
      * Set relation tables.
      */
 
+    public function packs()
+    {
+        return $this->hasMany(Pack::class);
+    }
+
+    public function packers()
+    {
+        return $this->hasMany(Packer::class);
+    }
+
     public function packages()
     {
         return $this->hasMany(Package::class);

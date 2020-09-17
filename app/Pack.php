@@ -16,6 +16,7 @@ class Pack extends Model
     protected $fillable = [
         'name',
         'packer_id',
+        'user_id'
     ];
 
     /**
@@ -25,5 +26,10 @@ class Pack extends Model
     public function packer()
     {
         return $this->belongsTo(Packer::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

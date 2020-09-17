@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 
 class FormulaController extends Controller
 {
-    private $modelRelations = ['user:id,name', 'portions.material.stories'];
+    private $relations = ['user:id,name', 'portions.material.stories'];
 
     /**
      * Display a listing of the resource.
@@ -24,7 +24,7 @@ class FormulaController extends Controller
         $this->authorize('viewAny', Formula::class);
 
         // Model instance
-        $q = Formula::with($this->modelRelations);
+        $q = Formula::with($this->relations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -59,7 +59,7 @@ class FormulaController extends Controller
         );
 
         return response(
-            new FormulaItem($formula->loadMissing($this->modelRelations)),
+            new FormulaItem($formula->loadMissing($this->relations)),
             Response::HTTP_CREATED
         );
     }
@@ -79,7 +79,7 @@ class FormulaController extends Controller
         $formula->update($request->only(['name', 'description']));
 
         return response(
-            new FormulaItem($formula->loadMissing($this->modelRelations)),
+            new FormulaItem($formula->loadMissing($this->relations)),
             Response::HTTP_OK
         );
     }

@@ -16,7 +16,15 @@ class CreatePackersTable extends Migration
         Schema::create('packers', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->foreignId('user_id');
             $table->timestamps();
+        });
+
+        Schema::table('packers', function (Blueprint $table) {
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 
 class MatterController extends Controller
 {
-    private $modelRelations = ['user:id,name', 'materials'];
+    private $relations = ['user:id,name', 'materials'];
 
     /**
      * Display a listing of the resource.
@@ -24,7 +24,7 @@ class MatterController extends Controller
         $this->authorize('viewAny', Matter::class);
 
         // Model instance
-        $q = Matter::with($this->modelRelations);
+        $q = Matter::with($this->relations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -59,7 +59,7 @@ class MatterController extends Controller
         );
 
         return response(
-            new MatterItem($matter->loadMissing($this->modelRelations)),
+            new MatterItem($matter->loadMissing($this->relations)),
             Response::HTTP_CREATED
         );
     }
@@ -79,7 +79,7 @@ class MatterController extends Controller
         $matter->update($request->only(['name']));
 
         return response(
-            new MatterItem($matter->loadMissing($this->modelRelations)),
+            new MatterItem($matter->loadMissing($this->relations)),
             Response::HTTP_CREATED
         );
     }

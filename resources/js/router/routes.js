@@ -1,32 +1,34 @@
 const Landing = () =>
-    import(/* webpackChunkName: "home" */ "../layouts/Landing");
-const Login = () =>
-    import(/* webpackChunkName: "auth-login" */ "../views/landing/auth/Login");
-const Forget = () =>
-    import(
-        /* webpackChunkName: "auth-forget" */ "../views/landing/auth/Forget"
-    );
-const Reset = () =>
-    import(/* webpackChunkName: "auth-reset" */ "../views/landing/auth/Reset");
-const Verify = () =>
-    import(
-        /* webpackChunkName: "auth-verify" */ "../views/landing/auth/Verify"
-    );
+    import(/* webpackChunkName: "landing" */ "../layouts/Landing");
 const Error = () =>
     import(/* webpackChunkName: "error" */ "../views/landing/Error");
 const Policy = () =>
     import(/* webpackChunkName: "policy" */ "../views/landing/Policy");
 
+const Login = () =>
+    import(/* webpackChunkName: "auth.login" */ "../views/landing/auth/Login");
+const Forget = () =>
+    import(
+        /* webpackChunkName: "auth.forget" */ "../views/landing/auth/Forget"
+    );
+const Reset = () =>
+    import(/* webpackChunkName: "auth.reset" */ "../views/landing/auth/Reset");
+const Verify = () =>
+    import(
+        /* webpackChunkName: "auth.verify" */ "../views/landing/auth/Verify"
+    );
+
+const Profile = () =>
+    import(/* webpackChunkName: "profile" */ "../views/Profile");
 const Dashboard = () =>
     import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
+const Packer = () => import(/* webpackChunkName: "packer" */ "../views/Packer");
 const Material = () =>
     import(/* webpackChunkName: "material" */ "../views/Material");
 const Matter = () => import(/* webpackChunkName: "matter" */ "../views/Matter");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
 const User = () => import(/* webpackChunkName: "user" */ "../views/User");
-const Profile = () =>
-    import(/* webpackChunkName: "profile" */ "../views/Profile");
 // const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
 // const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
 // const Setting = () =>
@@ -85,10 +87,15 @@ export default [
             //     name: "report",
             //     component: Report
             // },
+            // {
+            //     path: "package",
+            //     name: "package",
+            //     component: Package
+            // },
             {
-                path: "formula",
-                name: "formula",
-                component: Formula,
+                path: "packer",
+                name: "packer",
+                component: Packer,
                 meta: {
                     roles: ["admin", "manager"]
                 }
@@ -98,11 +105,18 @@ export default [
                 name: "material",
                 component: Material
             },
-
             {
                 path: "matter",
                 name: "matter",
                 component: Matter,
+                meta: {
+                    roles: ["admin", "manager"]
+                }
+            },
+            {
+                path: "formula",
+                name: "formula",
+                component: Formula,
                 meta: {
                     roles: ["admin", "manager"]
                 }

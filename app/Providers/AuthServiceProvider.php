@@ -14,10 +14,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\User' => 'App\Policies\UserPolicy',
-        'App\Formula' => 'App\Policies\FormulaPolicy',
+        'App\Packer' => 'App\Policies\PackerPolicy',
         'App\Matter' => 'App\Policies\MatterPolicy',
         'App\Material' => 'App\Policies\MaterialPolicy',
         'App\MaterialStory' => 'App\Policies\MaterialStoryPolicy',
+        'App\Formula' => 'App\Policies\FormulaPolicy',
     ];
 
     /**

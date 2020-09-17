@@ -18,6 +18,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('material', 'MaterialController', ['except' => ['show']]);
     Route::apiResource('material-story', 'MaterialStoryController', ['only' => ['destroy']]);
 
+    // Route::apiResource('pack', 'FormulaController', ['except' => ['show']]);
+    Route::apiResource('packer', 'PackerController', ['except' => ['show']]);
+    // Route::apiResource('package', 'FormulaController', ['except' => ['show']]);
+
     Route::apiResource('formula', 'FormulaController', ['except' => ['show']]);
     Route::apiResource('formula.portion', 'PortionController', ['only' => ['store']]);
 

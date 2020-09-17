@@ -35,11 +35,6 @@
                 </v-card-text>
             </template>
 
-            <!-- <template v-slot:[`item.name`]="{ item }">
-                <template>
-                    {{ item.name }}
-                </template>
-            </template> -->
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
             </template>
@@ -53,7 +48,7 @@
             @close="dialogDelete = false"
         >
             <template v-slot="{ item }">
-                {{ item.name }} | {{ item.material_count }} Material
+                {{ item.name }}
             </template>
         </the-dialog-delete>
 
@@ -72,7 +67,7 @@
                             :success="valid"
                             label="Name"
                             type="text"
-                            hint="The material's category"
+                            hint="The packer's name"
                             counter
                             persistent-hint
                         ></v-text-field>
@@ -92,7 +87,7 @@ import {
 } from "../store/model/action-types";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
-import { Matter } from "../models";
+import { Packer } from "../models";
 import { eHandler } from "../utils/helper";
 import { TABLE_OPTIONS } from "../utils/config";
 import AppTopBar from "../components/app/AppTopBar";
@@ -111,12 +106,12 @@ export default {
     },
     data() {
         return {
-            model: "matter",
+            model: "packer",
             headers: [
                 { text: "Name", value: "name" },
                 {
-                    text: "Material",
-                    value: "material_count",
+                    text: "Pack",
+                    value: "pack_count",
                     align: "center",
                     sortable: false,
                 },
@@ -132,12 +127,12 @@ export default {
             selected: [],
             dialog: false,
             dialogDelete: false,
-            form: this.$_.cloneDeep(Matter),
+            form: this.$_.cloneDeep(Packer),
             mineTab: 0,
         };
     },
     computed: {
-        ...mapState("model", ["matters"]),
+        ...mapState("model", ["packers"]),
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
