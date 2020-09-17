@@ -110,9 +110,8 @@
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
-                                :readonly="
-                                    !isNewModel(form) && !form.authorized
-                                "
+                                :readonly="disableField"
+                                :filled="disableField"
                                 item-text="name"
                                 item-value="id"
                                 label="Material's category"
@@ -129,9 +128,8 @@
                                 v-model="form.name"
                                 :error-messages="errors"
                                 :success="valid"
-                                :readonly="
-                                    !isNewModel(form) && !form.authorized
-                                "
+                                :readonly="disableField"
+                                :filled="disableField"
                                 label="Material name"
                                 type="text"
                                 hint="This is to identify the material"
@@ -331,6 +329,9 @@ export default {
                 return [tabs[0]];
             }
             return tabs;
+        },
+        disableField() {
+            return !this.isNewModel(this.form) && !this.form.authorized;
         },
     },
     methods: {
