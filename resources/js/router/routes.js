@@ -21,6 +21,7 @@ const Dashboard = () =>
     import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
 const Material = () =>
     import(/* webpackChunkName: "material" */ "../views/Material");
+const Matter = () => import(/* webpackChunkName: "matter" */ "../views/Matter");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
 const User = () => import(/* webpackChunkName: "user" */ "../views/User");
@@ -96,6 +97,15 @@ export default [
                 path: "material",
                 name: "material",
                 component: Material
+            },
+
+            {
+                path: "matter",
+                name: "matter",
+                component: Matter,
+                meta: {
+                    roles: ["admin", "manager"]
+                }
             },
             // {
             //     path: "price/:id?",

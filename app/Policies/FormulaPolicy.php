@@ -18,20 +18,8 @@ class FormulaPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('formulas.view');
+        return $user->can('formula.view');
     }
-
-    // /**
-    //  * Determine whether the user can view the model.
-    //  *
-    //  * @param  \App\User  $user
-    //  * @param  \App\Formula  $formula
-    //  * @return mixed
-    //  */
-    // public function view(User $user, Formula $formula)
-    // {
-    //     //
-    // }
 
     /**
      * Determine whether the user can create models.
@@ -41,7 +29,7 @@ class FormulaPolicy
      */
     public function create(User $user)
     {
-        return $user->can('formulas.create');
+        return $user->can('formula.create');
     }
 
     /**
@@ -59,7 +47,6 @@ class FormulaPolicy
         }
         // above role can update all
         return $user->hasRole('admin');
-        // return $user->can('formulas.update');
     }
 
     /**

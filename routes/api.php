@@ -17,9 +17,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('matter', 'MatterController', ['except' => ['show']]);
     Route::apiResource('material', 'MaterialController', ['except' => ['show']]);
     Route::apiResource('material-story', 'MaterialStoryController', ['only' => ['destroy']]);
-    // Route::apiResource('material.price', 'PriceController', ['except' => ['show']]);
+
     Route::apiResource('formula', 'FormulaController', ['except' => ['show']]);
     Route::apiResource('formula.portion', 'PortionController', ['only' => ['store']]);
+
     Route::apiResource('user', 'UserController', ['except' => ['show']]);
 
     Route::get('/profile', 'UserController@profile');

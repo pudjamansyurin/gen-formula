@@ -20,12 +20,12 @@ class RolesAndPermissionSeeder extends Seeder
 
         $models = [
             'packer',
-            'packages',
-            'matters',
-            'materials',
-            'material-stories',
-            'formulas',
-            'users'
+            'package',
+            'matter',
+            'material',
+            'material-story',
+            'formula',
+            'user'
         ];
         $actions = [
             'view',
@@ -36,27 +36,27 @@ class RolesAndPermissionSeeder extends Seeder
         $roles = [
             'inputor' => [
                 'packer' => ['view'],
-                'packages' => '*',
-                'matters' => ['view'],
-                'materials' => '*',
-                'material-stories' => '*'
+                'package' => '*',
+                'matter' => ['view'],
+                'material' => '*',
+                'material-story' => '*'
             ],
             'manager' => [
                 'packer' => '*',
-                'packages' => '*',
-                'matters' => '*',
-                'materials' => '*',
-                'material-stories' => '*',
-                'formulas' => '*',
+                'package' => '*',
+                'matter' => '*',
+                'material' => '*',
+                'material-story' => '*',
+                'formula' => '*',
             ],
             'admin' => [
                 'packer' => '*',
-                'packages' => '*',
-                'matters' => '*',
-                'materials' => '*',
-                'material-stories' => '*',
-                'formulas' => '*',
-                'users' => '*',
+                'package' => '*',
+                'matter' => '*',
+                'material' => '*',
+                'material-story' => '*',
+                'formula' => '*',
+                'user' => '*',
             ],
         ];
 

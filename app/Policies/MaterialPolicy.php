@@ -18,7 +18,7 @@ class MaterialPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('materials.view');
+        return $user->can('material.view');
     }
 
     /**
@@ -29,7 +29,7 @@ class MaterialPolicy
      */
     public function create(User $user)
     {
-        return $user->can('materials.create');
+        return $user->can('material.create');
     }
 
     /**
@@ -47,7 +47,6 @@ class MaterialPolicy
         }
         // above role can update all
         return $user->hasRole(['admin', 'manager']);
-        // return $user->can('formulas.update');
     }
 
     /**

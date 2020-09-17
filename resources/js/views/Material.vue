@@ -58,7 +58,7 @@
             <template v-slot:[`item.price`]="{ item }">
                 {{ item.price | currency }}
             </template>
-            <template v-slot:[`item.count_stories`]="{ item }">
+            <template v-slot:[`item.stories_count`]="{ item }">
                 {{ item.stories.length }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
@@ -110,8 +110,8 @@
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
-                                :readonly="disableField"
-                                :filled="disableField"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
                                 item-text="name"
                                 item-value="id"
                                 label="Material's category"
@@ -128,8 +128,8 @@
                                 v-model="form.name"
                                 :error-messages="errors"
                                 :success="valid"
-                                :readonly="disableField"
-                                :filled="disableField"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
                                 label="Material name"
                                 type="text"
                                 hint="This is to identify the material"
@@ -237,7 +237,7 @@
                                         form.stories.length > 1 &&
                                         story.authorized
                                     "
-                                    @click="deleteStory(story)"
+                                    @click="confirmRemoveStory(story)"
                                     color="red"
                                     dark
                                     text
@@ -295,7 +295,7 @@ export default {
                 },
                 {
                     text: "Revision",
-                    value: "count_stories",
+                    value: "stories_count",
                     align: "center",
                     sortable: false,
                 },
@@ -330,7 +330,7 @@ export default {
             }
             return tabs;
         },
-        disableField() {
+        fieldDisabled() {
             return !this.isNewModel(this.form) && !this.form.authorized;
         },
     },
@@ -419,7 +419,7 @@ export default {
                 )
                 .catch((e) => eHandler(e));
         },
-        deleteStory(story) {
+        confirmRemoveStory(story) {
             this.selectedStory = [story];
             this.$nextTick(() => (this.dialogDeleteStory = true));
         },

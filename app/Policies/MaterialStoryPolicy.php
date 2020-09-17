@@ -19,7 +19,7 @@ class MaterialStoryPolicy
      */
     public function create(User $user)
     {
-        return $user->can('material-stories.create');
+        return $user->can('material-story.create');
     }
 
     /**

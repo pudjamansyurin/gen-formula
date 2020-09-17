@@ -19,20 +19,8 @@ class UserPolicy
     public function viewAny(User $user)
     {
         // only admin can view all users
-        return $user->hasRole('admin');
+        return $user->can('user.view');
     }
-
-    // /**
-    //  * Determine whether the user can view the model.
-    //  *
-    //  * @param  \App\User  $user
-    //  * @param  \App\User  $model
-    //  * @return mixed
-    //  */
-    // public function view(User $user, User $model)
-    // {
-    //     return $user->can('users.view');
-    // }
 
     /**
      * Determine whether the user can create models.
@@ -43,7 +31,7 @@ class UserPolicy
     public function create(User $user)
     {
         // only admin can create user
-        return $user->hasRole('admin');
+        return $user->can('user.create');
     }
 
     /**
@@ -61,7 +49,6 @@ class UserPolicy
         }
         // admin can update all
         return $user->hasRole('admin');
-        // return $user->can('users.update');
     }
 
     /**

@@ -18,7 +18,7 @@ class MatterPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('matters.view');
+        return $user->can('matter.view');
     }
 
     /**
@@ -29,7 +29,7 @@ class MatterPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('matter.create');
     }
 
     /**
@@ -41,7 +41,12 @@ class MatterPolicy
      */
     public function update(User $user, Matter $matter)
     {
-        //
+        // only owner can update
+        if ($user->id === $matter->user_id) {
+            return true;
+        }
+        // above role can update all
+        return $user->hasRole('admin');
     }
 
     /**
@@ -51,32 +56,16 @@ class MatterPolicy
      * @param  \App\Matter  $matter
      * @return mixed
      */
-    public function delete(User $user, Matter $matter)
+    public function delete(User $user, $mattersId)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Matter  $matter
-     * @return mixed
-     */
-    public function restore(User $user, Matter $matter)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Matter  $matter
-     * @return mixed
-     */
-    public function forceDelete(User $user, Matter $matter)
-    {
-        //
+        $others = Matter::whereIn('id', $mattersId)
+            ->where('user_id', '!=', $user->id)
+            ->count();
+        // only owner can delete
+        if ($others == 0) {
+            return true;
+        }
+        // above role can delete all
+        return $user->hasRole('admin');
     }
 }

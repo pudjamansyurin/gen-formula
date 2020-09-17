@@ -13,9 +13,15 @@ export const navs = [
         bottomNav: true
     },
     {
-        icon: "mdi-package-variant-closed",
+        icon: "mdi-package",
         text: "Material",
         to: "material",
+        bottomNav: true
+    },
+    {
+        icon: "mdi-package-variant",
+        text: "Matter",
+        to: "matter",
         bottomNav: true
     },
     { icon: "mdi-account-group", text: "User", to: "user" }

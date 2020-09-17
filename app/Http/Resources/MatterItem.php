@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class MatterItem extends JsonResource
 {
@@ -19,8 +20,13 @@ class MatterItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'user_id' => $this->user_id,
-            'updated_at' => $this->updated_at
+            'material_count' => $this->whenLoaded('materials', function () {
+                return $this->materials->count();
+            }),
+
+            'updated_at' => $this->updated_at,
+            'user' => new UserItem($this->whenLoaded('user')),
+            'authorized' => Gate::allows('update', $this->resource)
         ];
     }
 }

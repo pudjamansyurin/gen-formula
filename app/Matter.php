@@ -24,7 +24,14 @@ class Matter extends Model
     /**
      * Client query scope
      */
-    protected $aRelatedQuery = [];
+    protected $aRelatedQuery = [
+        'filter' => [
+            'user.name',
+        ],
+        'sorter' =>  [
+            'user.name' => 'user_id',
+        ]
+    ];
 
     /**
      * Accessors

@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MassDeleteRequest;
+use App\Http\Requests\MatterRequest;
 use App\Http\Resources\MatterCollection;
+use App\Http\Resources\MatterItem;
 use App\Matter;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class MatterController extends Controller
 {
+    private $modelRelations = ['user:id,name', 'materials'];
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +24,7 @@ class MatterController extends Controller
         $this->authorize('viewAny', Matter::class);
 
         // Model instance
-        $q = Matter::query();
+        $q = Matter::with($this->modelRelations);
         // Client Query
         $q = $q->clientFilter($request);
         $total = $q->count();
@@ -39,9 +45,19 @@ class MatterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MatterRequest $request)
     {
-        //
+        $this->authorize('create', Matter::class);
+
+        $matter = Matter::create([
+            'name' => $request->name,
+            'user_id' => auth()->id()
+        ]);
+
+        return response(
+            new MatterItem($matter->loadMissing($this->modelRelations)),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -51,9 +67,18 @@ class MatterController extends Controller
      * @param  \App\Matter  $matter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Matter $matter)
+    public function update(MatterRequest $request, Matter $matter)
     {
-        //
+        $this->authorize('update', $matter);
+
+        $matter->update([
+            'name' => $request->name
+        ]);
+
+        return response(
+            new MatterItem($matter->loadMissing($this->modelRelations)),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -62,8 +87,12 @@ class MatterController extends Controller
      * @param  \App\Matter  $matter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Matter $matter)
+    public function destroy(MassDeleteRequest $request)
     {
-        //
+        $mattersId = $request->ids;
+        $this->authorize('delete', [Matter::class, $mattersId]);
+
+        Matter::destroy($mattersId);
+        return response($mattersId, Response::HTTP_OK);
     }
 }
