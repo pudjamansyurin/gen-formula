@@ -124,7 +124,7 @@
                     >
                         <v-select
                             v-model="form.role"
-                            :items="roles"
+                            :items="rolesOption"
                             :error-messages="errors"
                             :success="valid"
                             :loading="!!loading"
@@ -235,7 +235,6 @@ export default {
             dialogDelete: false,
             changePassword: false,
             showPassword: false,
-            roles: [],
             form: {
                 ...this.$_.cloneDeep(User),
                 password: null,
@@ -245,7 +244,7 @@ export default {
     },
     computed: {
         ...mapState("app", ["profile"]),
-        ...mapState("model", ["users"]),
+        ...mapState("model", ["users", "roles"]),
         passwordIcon() {
             return this.showPassword ? "mdi-eye" : "mdi-eye-off";
         },
@@ -254,6 +253,12 @@ export default {
         },
         passwordText() {
             return this.changePassword ? "Keep" : "Change";
+        },
+        rolesOption() {
+            return this.$_.map(this.roles, ({ id, name }) => ({
+                id,
+                name: name.toUpperCase(),
+            }));
         },
     },
     methods: {
@@ -338,23 +343,19 @@ export default {
         fetchRoles: async function () {
             await this.GET_MODELS({
                 model: "role",
-                temporary: true,
                 params: {
                     itemsPerPage: -1,
                 },
             })
-                .then(
-                    ({ data }) =>
-                        (this.roles = this.$_.map(data, (el) =>
-                            this.$_.pick(el, ["id", "name"])
-                        ))
-                )
+                .then(({ data }) => {
+                    /* nothing */
+                })
                 .catch((e) => eHandler(e));
         },
     },
     watch: {
         dialog: function (open) {
-            if (open && this.roles.length) {
+            if (open && this.roles.length === 0) {
                 this.fetchRoles();
             }
         },

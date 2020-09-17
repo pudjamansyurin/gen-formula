@@ -33,46 +33,45 @@
                     <v-icon>mdi-menu-down</v-icon>
                 </v-list-item-action>
             </v-list-item>
-
             <v-divider></v-divider>
-            <template v-for="(item, index) in items">
+
+            <template v-for="(item, index) in navs">
                 <template v-if="item.heading">
                     <v-subheader v-if="drawer" :key="index">
                         {{ item.heading }}
                     </v-subheader>
                 </template>
+
                 <v-divider v-else-if="item.divider" :key="index"></v-divider>
-                <!-- <v-list-group
+
+                <v-list-group
                     v-else-if="item.children"
                     :key="index"
                     v-model="item.model"
-                    :prepend-icon="item.model ? item.icon : item['icon-alt']"
-                    append-icon
+                    :prepend-icon="item.icon"
                 >
                     <template v-slot:activator>
-                        <v-list-item-content>
-                            <v-list-item-title>{{
-                                item.text
-                            }}</v-list-item-title>
-                        </v-list-item-content>
+                        <v-list-item-title>
+                            {{ item.text }}
+                        </v-list-item-title>
                     </template>
+
                     <v-list-item
                         v-for="(child, i) in item.children"
                         :key="i"
-                        color="primary"
-                        exact
+                        :to="{ name: child.to }"
                         link
                     >
+                        <v-list-item-action> </v-list-item-action>
+                        <v-list-item-title>
+                            {{ child.text }}
+                        </v-list-item-title>
                         <v-list-item-action v-if="child.icon">
                             <v-icon>{{ child.icon }}</v-icon>
                         </v-list-item-action>
-                        <v-list-item-content>
-                            <v-list-item-title>{{
-                                child.text
-                            }}</v-list-item-title>
-                        </v-list-item-content>
                     </v-list-item>
-                </v-list-group> -->
+                </v-list-group>
+
                 <v-list-item
                     v-else-if="checkPageRoles(item.to)"
                     :key="index"
@@ -95,13 +94,23 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import { SET_DRAWER } from "../../store/app/mutation-types";
-import { navs } from "../../utils/navigation";
+import { navigations } from "../../utils/navigation";
 
 export default {
     computed: {
         ...mapState("app", ["drawer", "profile"]),
-        items() {
-            return this.$_.cloneDeep(navs);
+        navs() {
+            let route = this.$route.name;
+            let navs = this.$_.cloneDeep(navigations);
+
+            // group menu
+            navs.forEach((nav) => {
+                if (nav.children) {
+                    nav.model = nav.children.some(({ to }) => to === route);
+                }
+            });
+
+            return navs;
         },
     },
     methods: {

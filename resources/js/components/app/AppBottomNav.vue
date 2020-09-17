@@ -13,13 +13,13 @@
 </template>
 
 <script>
-import { navs } from "../../utils/navigation";
+import { navigations } from "../../utils/navigation";
 
 export default {
     computed: {
         items() {
             return this.$_.cloneDeep(
-                navs.filter((el) => el.icon && el.bottomNav)
+                navigations.filter((el) => el.icon && el.bottomNav)
             );
         },
     },

@@ -5,7 +5,9 @@
             dark
             app
         >
-            <v-app-bar-nav-icon v-if="!selection.length"></v-app-bar-nav-icon>
+            <v-app-bar-nav-icon
+                v-if="selection.length === 0"
+            ></v-app-bar-nav-icon>
             <v-btn v-else icon @click="selection = []">
                 <v-icon>mdi-close</v-icon>
             </v-btn>

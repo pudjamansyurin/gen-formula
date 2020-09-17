@@ -66,7 +66,7 @@ export default {
         },
         value: {
             handler(selected) {
-                if (!selected.length) {
+                if (selected.length === 0) {
                     this.datas.forEach((el) => (el.selected = false));
                 }
             },

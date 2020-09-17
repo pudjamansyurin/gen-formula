@@ -1,19 +1,21 @@
 {
-    "/js/app.js": "/js/app.js?id=a9b439611a1bd7f051ab",
+    "/js/app.js": "/js/app.js?id=07cd3ae17d76a3aab9f8",
     "/css/app.css": "/css/app.css?id=3462204912f6bda7044e",
     "/js/auth-forget.js": "/js/auth-forget.js?id=7b689069f4491fc8c4f9",
     "/js/auth-login.js": "/js/auth-login.js?id=ae4edb9749c4a01ac4ba",
     "/js/auth-reset.js": "/js/auth-reset.js?id=d0b9df7665c672a59046",
     "/js/auth-verify.js": "/js/auth-verify.js?id=cce6f077e931f09f2c61",
-    "/js/dashboard.js": "/js/dashboard.js?id=181c7b43bd070525c2d8",
+    "/js/dashboard.js": "/js/dashboard.js?id=2eb4caa90ca42afa7464",
     "/js/dashboard~formula~material~matter~profile~user.js": "/js/dashboard~formula~material~matter~profile~user.js?id=79c9e57e260abbad6330",
     "/js/error.js": "/js/error.js?id=5263f23ad7e197ac91dd",
     "/js/formula.js": "/js/formula.js?id=2d3b77a251581b7c581f",
-    "/js/formula~material~matter~user.js": "/js/formula~material~matter~user.js?id=95a4d1d6f6b13677ee58",
+    "/js/formula~material~matter~user.js": "/js/formula~material~matter~user.js?id=8d2097ed9efa1c4222ed",
     "/js/home.js": "/js/home.js?id=2d6510ad26b183247435",
     "/js/material.js": "/js/material.js?id=3be7370ac4ad2466f5d5",
     "/js/matter.js": "/js/matter.js?id=e624b4b6b0ea1461a504",
     "/js/policy.js": "/js/policy.js?id=9d3a32bdd6038c7ebf7b",
     "/js/profile.js": "/js/profile.js?id=aa4908fa442095746fcb",
-    "/js/user.js": "/js/user.js?id=e2ac322aa1fa7ad77692"
+    "/js/user.js": "/js/user.js?id=a86d5a447824a26de3b8",
+    "/js/dashboard~formula~material~matter~profile.js": "/js/dashboard~formula~material~matter~profile.js?id=dd1b168ba631a59ff934",
+    "/js/formula~material~matter.js": "/js/formula~material~matter.js?id=aab12ecb481faa0f33c2"
 }

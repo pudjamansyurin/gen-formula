@@ -3,10 +3,11 @@ import actions from "./actions";
 import mutations from "./mutations";
 
 const state = {
-    users: [],
-    materials: [],
     matters: [],
-    formulas: []
+    materials: [],
+    formulas: [],
+    roles: [],
+    users: []
 };
 
 export default {

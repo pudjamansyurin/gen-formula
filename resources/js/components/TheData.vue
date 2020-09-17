@@ -1,6 +1,11 @@
 <template>
     <fragment>
-        <v-alert v-show="!items.length" :type="alertType" border="top" outlined>
+        <v-alert
+            v-show="items.length === 0"
+            :type="alertType"
+            border="top"
+            outlined
+        >
             <span v-if="!!loading">Fetching {{ model }} data...</span>
             <span v-else>Oops, no {{ model }} data yet.</span>
         </v-alert>

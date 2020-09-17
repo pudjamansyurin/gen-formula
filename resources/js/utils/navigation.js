@@ -1,4 +1,4 @@
-export const navs = [
+export const navigations = [
     { heading: "DASHBOARD" },
     // {
     //     icon: "mdi-chart-areaspline",
@@ -7,24 +7,37 @@ export const navs = [
     //     bottomNav: true
     // },
     {
-        icon: "mdi-microsoft-excel",
         text: "Formula",
         to: "formula",
+        icon: "mdi-microsoft-excel",
         bottomNav: true
     },
     {
-        icon: "mdi-package",
-        text: "Material",
-        to: "material",
-        bottomNav: true
+        text: "Materials",
+        model: false,
+        icon: "mdi-package-variant-closed",
+        children: [
+            { text: "Material", to: "material", icon: "mdi-package" },
+            {
+                text: "Matter",
+                to: "matter",
+                icon: "mdi-package-variant"
+            }
+        ]
     },
-    {
-        icon: "mdi-package-variant",
-        text: "Matter",
-        to: "matter",
-        bottomNav: true
-    },
-    { icon: "mdi-account-group", text: "User", to: "user" }
+    // {
+    //     text: "Material",
+    //     to: "material",
+    //     icon: "mdi-package",
+    //     bottomNav: true
+    // },
+    // {
+    //     text: "Matter",
+    //     to: "matter",
+    //     icon: "mdi-package-variant",
+    //     bottomNav: true
+    // },
+    { text: "User", to: "user", icon: "mdi-account-group" }
     // { icon: "mdi-currency-usd", text: "Price", to: "price", bottomNav: true },
     // { icon: "mdi-account-cog", text: "Profile", to: "profile" }
     // { icon: "mdi-cogs", text: "Setting", to: "setting" }
@@ -36,17 +49,4 @@ export const navs = [
     //     model: true,
     //     children: [{ icon: "mdi-plus", text: "Create label" }]
     // },
-    // {
-    //     icon: "mdi-chevron-up",
-    //     "icon-alt": "mdi-chevron-down",
-    //     text: "More",
-    //     model: false,
-    //     children: [
-    //         { text: "Import" },
-    //         { text: "Export" },
-    //         { text: "Print" },
-    //         { text: "Undo changes" },
-    //         { text: "Other contacts" }
-    //     ]
-    // }
 ];
