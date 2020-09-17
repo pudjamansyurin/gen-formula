@@ -3,9 +3,9 @@ import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 
 export default {
-    [actions.GET_MODELS]({ commit }, { model, params, url }) {
+    [actions.GET_MODELS]({ commit }, { model, params, url, temporary }) {
         return api.viewAny(url || model, params).then(res => {
-            if (!params.temporary) {
+            if (!temporary) {
                 commit(mutations.SET_MODELS, {
                     model,
                     data: res.data

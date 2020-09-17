@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MassDeleteRequest;
+use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\MaterialRequest;
 use App\Http\Resources\MaterialCollection;
 use App\Http\Resources\MaterialItem;
@@ -31,6 +31,7 @@ class MaterialController extends Controller
         $total = $q->count();
         $q = $q->clientSorter($request);
         $q = $q->clientLimiter($request);
+
         // Response
         return (new MaterialCollection($q->get()))
             ->additional([
@@ -50,18 +51,20 @@ class MaterialController extends Controller
     {
         $this->authorize('create', Material::class);
 
-        $material = Material::create($request->merge([
-            'user_id' => auth()->id()
-        ])->only(
-            ['name', 'matter_id', 'user_id']
-        ));
+        $material = Material::create(
+            array_merge(
+                $request->only(['name', 'matter_id']),
+                ['user_id' => auth()->id()]
+            )
+        );
 
         // add price stories
-        $material->stories()->create($request->merge([
-            'user_id' => auth()->id()
-        ])->only(
-            ['price', 'user_id']
-        ));
+        $material->stories()->create(
+            array_merge(
+                $request->only(['price']),
+                ['user_id' => auth()->id()]
+            )
+        );
 
         return response(
             new MaterialItem($material->loadMissing($this->modelRelations)),
@@ -93,11 +96,12 @@ class MaterialController extends Controller
         if ($material->stories()->first()->price != $request->price) {
             $this->authorize('create', MaterialStory::class);
 
-            $material->stories()->create($request->merge([
-                'user_id' => auth()->id()
-            ])->only(
-                ['price', 'user_id']
-            ));
+            $material->stories()->create(
+                array_merge(
+                    $request->only(['price',]),
+                    ['user_id' => auth()->id()]
+                )
+            );
         }
 
         return response(
@@ -112,7 +116,7 @@ class MaterialController extends Controller
      * @param  \App\Material $material
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MassDeleteRequest $request)
+    public function destroy(DeleteSomeRequest $request)
     {
         $materialsId = $request->ids;
         $this->authorize('delete', [Material::class, $materialsId]);

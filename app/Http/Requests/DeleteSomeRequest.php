@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MassDeleteRequest extends FormRequest
+class DeleteSomeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,8 @@ class MassDeleteRequest extends FormRequest
             'ids' => [
                 'required',
                 'array'
-            ]
+            ],
+            'ids.*' => 'integer',
         ];
     }
 }

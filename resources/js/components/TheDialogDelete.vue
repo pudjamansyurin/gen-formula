@@ -63,8 +63,7 @@ export default {
     },
     computed: {
         question() {
-            const { length } = this.selected;
-            const single = length === 1;
+            const { length: single } = this.selected;
 
             if (single) {
                 return `this ${this.model} ?`;

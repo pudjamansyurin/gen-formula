@@ -223,7 +223,7 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Email", value: "email" },
-                { text: "Role", value: "role.name" },
+                { text: "Role", value: "role.name", sortable: false },
                 { text: "LastAt", value: "last_at" },
                 { text: "LastIp", value: "last_ip" },
             ],
@@ -338,8 +338,9 @@ export default {
         fetchRoles: async function () {
             await this.GET_MODELS({
                 model: "role",
+                temporary: true,
                 params: {
-                    temporary: true,
+                    itemsPerPage: -1,
                 },
             })
                 .then(
@@ -352,8 +353,8 @@ export default {
         },
     },
     watch: {
-        dialog: function (val) {
-            if (val && this.roles.length == 0) {
+        dialog: function (open) {
+            if (open && this.roles.length) {
                 this.fetchRoles();
             }
         },

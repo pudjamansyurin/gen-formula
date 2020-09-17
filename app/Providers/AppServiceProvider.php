@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /* Production condition */
         if (App::environment('production')) {
             Debugbar::disable();
 
@@ -40,7 +41,9 @@ class AppServiceProvider extends ServiceProvider
 
         /* Fix reset password api endpoint */
         ResetPassword::createUrlUsing(function ($notifiable, $token) {
-            return env('VUE_URL') . "/reset/{$token}/{$notifiable->getEmailForPasswordReset()}";
+            $email = $notifiable->getEmailForPasswordReset();
+
+            return env('VUE_URL') . "/reset/{$token}/{$email}";
         });
 
         /* Fix cpanel mysql issue */

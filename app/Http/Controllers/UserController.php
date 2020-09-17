@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MassDeleteRequest;
+use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserCollection;
@@ -52,11 +52,8 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password
-        ]);
+        // create
+        $user = User::create($request->only(['name', 'email', 'password']));
 
         // add role
         if ($role = Role::find($request->role['id'])) {
@@ -86,10 +83,10 @@ class UserController extends Controller
         // on email changes
         $user->unVerifyChangedEmail($request);
 
-        // update user
+        // update
         $user->update($request->only(['name', 'email', 'password']));
 
-        // change role
+        // update role
         if ($role = Role::find($request->role['id'])) {
             $user->syncRoles($role);
         }
@@ -111,12 +108,14 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MassDeleteRequest $request)
+    public function destroy(DeleteSomeRequest $request)
     {
         $usersId = $request->ids;
         $this->authorize('delete', [User::class, $usersId]);
 
+        // delete
         User::destroy($usersId);
+
         return response($usersId, Response::HTTP_OK);
     }
 

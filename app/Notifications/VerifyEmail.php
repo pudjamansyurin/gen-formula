@@ -25,44 +25,6 @@ class VerifyEmail extends VerifyEmailNotification
         //
     }
 
-    // /**
-    //  * Get the notification's delivery channels.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return array
-    //  */
-    // public function via($notifiable)
-    // {
-    //     return ['mail'];
-    // }
-
-    // /**
-    //  * Get the mail representation of the notification.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return \Illuminate\Notifications\Messages\MailMessage
-    //  */
-    // public function toMail($notifiable)
-    // {
-    //     return (new MailMessage)
-    //         ->line('The introduction to the notification.')
-    //         ->action('Notification Action', url('/'))
-    //         ->line('Thank you for using our application!');
-    // }
-
-    // /**
-    //  * Get the array representation of the notification.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return array
-    //  */
-    // public function toArray($notifiable)
-    // {
-    //     return [
-    //         //
-    //     ];
-    // }
-
     /**
      * Get the verification URL for the given notifiable.
      *
@@ -71,11 +33,13 @@ class VerifyEmail extends VerifyEmailNotification
      */
     protected function verificationUrl($notifiable)
     {
+        $expiration = Config::get('auth.verification.expire', 60);
+
         return env('APP_URL') . '/app/verify?' . http_build_query(
             [
                 'url' => URL::temporarySignedRoute(
                     'verification.address',
-                    Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+                    Carbon::now()->addMinutes($expiration),
                     [
                         'id' => $notifiable->getKey(),
                         'hash' => sha1($notifiable->getEmailForVerification()),

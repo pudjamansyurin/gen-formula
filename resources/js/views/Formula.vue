@@ -391,7 +391,6 @@ export default {
                 model: "material",
                 params: {
                     itemsPerPage: -1,
-                    temporary: true,
                 },
             })
                 .then(
@@ -411,8 +410,8 @@ export default {
         mineTab: function (mine) {
             this.fetch();
         },
-        dialogPortion: function (val) {
-            if (val && this.materials.length == 0) {
+        dialogPortion: function (open) {
+            if (open && this.materials.length) {
                 this.fetchMaterials();
             }
         },

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Formula;
 use App\Http\Requests\FormulaRequest;
-use App\Http\Requests\MassDeleteRequest;
+use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Resources\FormulaCollection;
 use App\Http\Resources\FormulaItem;
 use Illuminate\Http\Request;
@@ -50,11 +50,13 @@ class FormulaController extends Controller
     {
         $this->authorize('create', Formula::class);
 
-        $formula = Formula::create($request->merge([
-            'user_id' => auth()->id()
-        ])->only(
-            ['name', 'description', 'user_id']
-        ));
+        // create
+        $formula = Formula::create(
+            array_merge(
+                $request->only(['name', 'description']),
+                ['user_id' => auth()->id()]
+            )
+        );
 
         return response(
             new FormulaItem($formula->loadMissing($this->modelRelations)),
@@ -73,6 +75,7 @@ class FormulaController extends Controller
     {
         $this->authorize('update', $formula);
 
+        // update
         $formula->update($request->only(['name', 'description']));
 
         return response(
@@ -87,12 +90,14 @@ class FormulaController extends Controller
      * @param  \App\Formula  $formula
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MassDeleteRequest $request)
+    public function destroy(DeleteSomeRequest $request)
     {
         $formulasId = $request->ids;
         $this->authorize('delete', [Formula::class, $formulasId]);
 
+        // delete
         Formula::destroy($formulasId);
+
         return response($formulasId, Response::HTTP_OK);
     }
 }

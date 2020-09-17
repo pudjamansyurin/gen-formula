@@ -145,7 +145,7 @@
                 </template>
                 <template v-else>
                     <v-btn
-                        v-if="selected.length == 1"
+                        v-if="selected.length"
                         @click="$emit('edit')"
                         :fab="mobile"
                         class="mr-2"

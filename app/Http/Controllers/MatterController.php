@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MassDeleteRequest;
+use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\MatterRequest;
 use App\Http\Resources\MatterCollection;
 use App\Http\Resources\MatterItem;
@@ -30,6 +30,7 @@ class MatterController extends Controller
         $total = $q->count();
         $q = $q->clientSorter($request);
         $q = $q->clientLimiter($request);
+
         // Response
         return (new MatterCollection($q->get()))
             ->additional([
@@ -49,11 +50,13 @@ class MatterController extends Controller
     {
         $this->authorize('create', Matter::class);
 
-        $matter = Matter::create($request->merge([
-            'user_id' => auth()->id()
-        ])->only(
-            ['name', 'user_id']
-        ));
+        // create
+        $matter = Matter::create(
+            array_merge(
+                $request->only(['name']),
+                ['user_id' => auth()->id()]
+            )
+        );
 
         return response(
             new MatterItem($matter->loadMissing($this->modelRelations)),
@@ -72,6 +75,7 @@ class MatterController extends Controller
     {
         $this->authorize('update', $matter);
 
+        // update
         $matter->update($request->only(['name']));
 
         return response(
@@ -86,12 +90,14 @@ class MatterController extends Controller
      * @param  \App\Matter  $matter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MassDeleteRequest $request)
+    public function destroy(DeleteSomeRequest $request)
     {
         $mattersId = $request->ids;
         $this->authorize('delete', [Matter::class, $mattersId]);
 
+        // delete
         Matter::destroy($mattersId);
+
         return response($mattersId, Response::HTTP_OK);
     }
 }

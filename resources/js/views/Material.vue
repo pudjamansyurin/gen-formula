@@ -407,7 +407,6 @@ export default {
                 model: "matter",
                 params: {
                     itemsPerPage: -1,
-                    temporary: true,
                 },
             })
                 .then(
@@ -451,8 +450,8 @@ export default {
         mineTab: function (mine) {
             this.fetch();
         },
-        dialog: function (val) {
-            if (val && this.matters.length == 0) {
+        dialog: function (open) {
+            if (open && this.matters.length) {
                 this.fetchMatters();
             }
         },
