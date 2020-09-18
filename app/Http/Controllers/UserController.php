@@ -26,12 +26,15 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         // retrieve
-        $q = User::with($this->relations)->filtered()->sortered();
+        $q = User::with($this->relations)
+            ->filtered()
+            ->sortered();
+        $total = $q->count();
 
         // Response
         return (new UserCollection($q->limited()->get()))
             ->additional([
-                'total' => $q->count()
+                'total' => $total
             ]);
     }
 
@@ -57,7 +60,9 @@ class UserController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response(
-            new UserItem($user->loadMissing($this->relations)),
+            new UserItem(
+                $user->loadMissing($this->relations)
+            ),
             Response::HTTP_CREATED
         );
     }
@@ -90,7 +95,9 @@ class UserController extends Controller
         }
 
         return response(
-            new UserItem($user->loadMissing($this->relations)),
+            new UserItem(
+                $user->loadMissing($this->relations)
+            ),
             Response::HTTP_OK
         );
     }
@@ -113,26 +120,28 @@ class UserController extends Controller
     }
 
     /**
-     * Get list of roles as options
-     */
-    public function role()
-    {
-        $this->authorize('viewRole', User::class);
-
-        return response([
-            'data' => Role::all()
-        ], Response::HTTP_OK);
-    }
-
-    /**
-     * Get current logged-in user
+     * Get profile
      */
     public function profile(Request $request)
     {
         $user = User::find(auth()->id());
 
         return response([
-            'user' => new UserItem($user->loadMissing($this->relations)),
+            'user' => new UserItem(
+                $user->loadMissing($this->relations)
+            ),
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get roles
+     */
+    public function role()
+    {
+        $this->authorize('role', User::class);
+
+        return response([
+            'data' => Role::all()
         ], Response::HTTP_OK);
     }
 }

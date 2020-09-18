@@ -21,9 +21,11 @@ class MaterialItem extends JsonResource
             'matter_id' => $this->matter_id,
             'matter' => new MatterItem($this->whenLoaded('matter')),
             'stories' => MaterialStoryItem::collection($this->whenLoaded('stories')),
-            'price' => $this->whenLoaded('stories', function () {
-                return $this->stories->first()->price;
-            }),
+            'stories_count' => $this->stories_count,
+            'stories_price' => $this->whenLoaded(
+                'stories',
+                $this->stories->first()->price
+            ),
 
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),

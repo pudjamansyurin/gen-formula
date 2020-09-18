@@ -17,7 +17,7 @@ class PackageCollection extends ResourceCollection
         // return parent::toArray($request);
 
         return [
-            'data' =>  PackerItem::collection($this->collection),
+            'data' =>  PackageItem::collection($this->collection),
         ];
     }
 }

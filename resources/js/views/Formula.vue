@@ -139,7 +139,7 @@
                             >
                                 <v-autocomplete
                                     v-model="form.portions"
-                                    :items="materials"
+                                    :items="materialsOptions"
                                     :error-messages="errors"
                                     :success="valid"
                                     :loading="!!loading"
@@ -265,13 +265,21 @@ export default {
             dialog: false,
             dialogDelete: false,
             dialogPortion: false,
-            materials: [],
             form: this.$_.cloneDeep(Formula),
             mineTab: 0,
         };
     },
     computed: {
-        ...mapState("model", ["formulas"]),
+        ...mapState("model", ["formulas", "materials"]),
+        materialsOptions() {
+            return this.materials.map(({ id, name }) => ({
+                material: {
+                    id,
+                    name,
+                },
+                portion: 0,
+            }));
+        },
         portionFormTitle() {
             return this.form.name || "Related materials";
         },
@@ -393,16 +401,9 @@ export default {
                     itemsPerPage: -1,
                 },
             })
-                .then(
-                    ({ data }) =>
-                        (this.materials = this.$_.map(data, ({ id, name }) => ({
-                            material: {
-                                id,
-                                name,
-                            },
-                            portion: 0,
-                        })))
-                )
+                .then(({ data }) => {
+                    /* nothing todo */
+                })
                 .catch((e) => eHandler(e));
         },
     },
@@ -411,7 +412,7 @@ export default {
             this.fetch();
         },
         dialogPortion: function (open) {
-            if (open && this.materials.length === 0) {
+            if (open) {
                 this.fetchMaterials();
             }
         },

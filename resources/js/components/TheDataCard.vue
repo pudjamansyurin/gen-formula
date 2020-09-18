@@ -55,8 +55,8 @@ export default {
     },
     watch: {
         items: {
-            handler(val) {
-                this.datas = this.$_.map(val, (el) => ({
+            handler(items) {
+                this.datas = items.map((el) => ({
                     ...el,
                     selected: false,
                 }));

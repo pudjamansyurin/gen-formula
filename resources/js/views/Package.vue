@@ -22,6 +22,19 @@
             :model="model"
         >
             <template v-slot:card="{ item }">
+                <v-btn
+                    @click="edit(item)"
+                    :color="item.stories_count ? 'green' : 'red'"
+                    :outlined="!item.selected"
+                    absolute
+                    top
+                    right
+                    small
+                    tile
+                >
+                    {{ item.stories_price | currency }}
+                </v-btn>
+
                 <v-card-text>
                     <div class="overline">
                         {{ item.updated_at | moment("from") }}
@@ -35,6 +48,19 @@
                 </v-card-text>
             </template>
 
+            <template v-slot:[`item.name`]="{ item }">
+                <v-chip
+                    @click="edit(item)"
+                    :color="item.stories_count ? 'green' : 'red'"
+                    :small="dense"
+                    dark
+                >
+                    {{ item.name }}
+                </v-chip>
+            </template>
+            <template v-slot:[`item.stories_price`]="{ item }">
+                {{ item.stories_price | currency }}
+            </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
             </template>
@@ -55,26 +81,98 @@
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :tabs="formTabs"
+            :tab.sync="formTab"
             @close="close"
             @submit="save"
         >
-            <v-form @submit.prevent="save">
-                <validation-observer ref="form">
-                    <validation-provider name="name" v-slot="{ errors, valid }">
-                        <v-text-field
-                            v-model="form.name"
-                            :error-messages="errors"
-                            :success="valid"
-                            label="Name"
-                            type="text"
-                            hint="The package's name"
-                            counter
-                            persistent-hint
-                        ></v-text-field>
-                    </validation-provider>
-                </validation-observer>
-                <v-btn v-show="false" type="submit"></v-btn>
-            </v-form>
+            <template v-slot:data>
+                <v-form @submit.prevent="save">
+                    <validation-observer ref="form">
+                        <validation-provider
+                            name="name"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                label="Name"
+                                type="text"
+                                hint="The package name"
+                                counter
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
+
+                        <v-row>
+                            <v-col>
+                                <validation-provider
+                                    name="capacity"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        label="Capacity"
+                                        type="number"
+                                        v-model.number="form.capacity"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        hint="The package capacity"
+                                        persistent-hint
+                                    ></v-text-field>
+                                </validation-provider>
+                            </v-col>
+                            <v-col>
+                                <validation-provider
+                                    name="unit_id"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-autocomplete
+                                        v-model="form.unit_id"
+                                        :items="units"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        :loading="!!loading"
+                                        item-text="name"
+                                        item-value="id"
+                                        label="Unit"
+                                        hint="The package unit"
+                                        persistent-hint
+                                    ></v-autocomplete>
+                                </validation-provider>
+                            </v-col>
+                        </v-row>
+                    </validation-observer>
+                    <v-btn v-show="false" type="submit"></v-btn>
+                </v-form>
+            </template>
+
+            <template v-slot:stories>
+                <v-list dense>
+                    <template v-for="(story, index) in form.stories">
+                        <v-list-item
+                            :key="story.id"
+                            :class="{ primary: index === 0 }"
+                            :dark="index === 0"
+                            two-line
+                            dense
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title
+                                    >{{ story.price | currency }}
+                                </v-list-item-title>
+                            </v-list-item-content>
+
+                            <v-list-item-action>
+                                <v-list-item-action-text>
+                                    {{ story.updated_at | moment("from") }}
+                                </v-list-item-action-text>
+                            </v-list-item-action>
+                        </v-list-item>
+                        <v-divider :key="story.updated_at"></v-divider>
+                    </template>
+                </v-list>
+            </template>
         </the-dialog-form>
     </fragment>
 </template>
@@ -109,12 +207,25 @@ export default {
             model: "package",
             headers: [
                 { text: "Name", value: "name" },
-                // {
-                //     text: "Packer",
-                //     value: "packer_count",
-                //     align: "center",
-                //     sortable: false,
-                // },
+                { text: "Capacity", value: "capacity", align: "center" },
+                { text: "Unit", value: "unit.symbol", align: "center" },
+                {
+                    text: "Packer",
+                    value: "packagers_count",
+                    align: "center",
+                },
+                {
+                    text: "Price",
+                    value: "stories_price",
+                    align: "right",
+                    sortable: false,
+                    width: 150,
+                },
+                {
+                    text: "Revision",
+                    value: "stories_count",
+                    align: "center",
+                },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",
@@ -128,11 +239,20 @@ export default {
             dialog: false,
             dialogDelete: false,
             form: this.$_.cloneDeep(Package),
+            formTab: 0,
             mineTab: 0,
         };
     },
     computed: {
-        ...mapState("model", ["packages"]),
+        ...mapState("model", ["packages", "units"]),
+        formTabs() {
+            let tabs = ["data", "stories"];
+
+            if (this.isNewModel(this.form)) {
+                return [tabs[0]];
+            }
+            return tabs;
+        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -143,10 +263,14 @@ export default {
         },
         create() {
             this.form = this.$_.cloneDeep(Package);
+            this.formTab = 0;
+
             this.$nextTick(() => (this.dialog = true));
         },
         edit(item) {
             this.form = this.$_.cloneDeep(item || this.selected[0]);
+            this.formTab = 0;
+
             this.$nextTick(() => (this.dialog = true));
         },
         remove: async function () {
@@ -197,10 +321,27 @@ export default {
                 }
             });
         },
+        fetchUnits: async function () {
+            await this.GET_MODELS({
+                model: "unit",
+                params: {
+                    itemsPerPage: -1,
+                },
+            })
+                .then(({ data }) => {
+                    /* nothing todo */
+                })
+                .catch((e) => eHandler(e));
+        },
     },
     watch: {
         mineTab: function (mine) {
             this.fetch();
+        },
+        dialog: function (open) {
+            if (open) {
+                this.fetchUnits();
+            }
         },
         options: {
             handler() {

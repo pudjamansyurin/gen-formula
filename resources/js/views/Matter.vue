@@ -111,9 +111,8 @@ export default {
                 { text: "Name", value: "name" },
                 {
                     text: "Material",
-                    value: "material_count",
+                    value: "materials_count",
                     align: "center",
-                    sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
                 {

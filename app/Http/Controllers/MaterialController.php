@@ -14,6 +14,7 @@ use Illuminate\Http\Response;
 class MaterialController extends Controller
 {
     private $relations = ['user:id,name', 'matter:id,name', 'stories', 'stories.user:id,name'];
+    private $counts = ['stories'];
 
     /**
      * Display a listing of the resource.
@@ -25,12 +26,16 @@ class MaterialController extends Controller
         $this->authorize('viewAny', Material::class);
 
         // retrieve
-        $q = Material::with($this->relations)->filtered()->sortered();
+        $q = Material::with($this->relations)
+            ->withCount($this->counts)
+            ->filtered()
+            ->sortered();
+        $total = $q->count();
 
         // Response
         return (new MaterialCollection($q->limited()->get()))
             ->additional([
-                'total' => $q->count()
+                'total' => $total
             ]);
     }
 
@@ -60,7 +65,10 @@ class MaterialController extends Controller
         );
 
         return response(
-            new MaterialItem($material->loadMissing($this->relations)),
+            new MaterialItem(
+                $material->loadMissing($this->relations)
+                    ->loadCount($this->counts)
+            ),
             Response::HTTP_CREATED
         );
     }
@@ -86,7 +94,7 @@ class MaterialController extends Controller
         }
 
         // update price stories
-        if ($material->stories()->first()->price != $request->price) {
+        if ($material->stories()->first()->price != $request->stories_price) {
             $this->authorize('create', MaterialStory::class);
 
             $material->stories()->create(
@@ -98,7 +106,10 @@ class MaterialController extends Controller
         }
 
         return response(
-            new MaterialItem($material->loadMissing($this->relations)),
+            new MaterialItem(
+                $material->loadMissing($this->relations)
+                    ->loadCount($this->counts)
+            ),
             Response::HTTP_OK
         );
     }

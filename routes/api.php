@@ -21,12 +21,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::apiResource('pack', 'FormulaController', ['except' => ['show']]);
     Route::apiResource('packer', 'PackerController', ['except' => ['show']]);
     Route::apiResource('package', 'PackageController', ['except' => ['show']]);
+    Route::get('/unit', 'PackageController@unit');
 
     Route::apiResource('formula', 'FormulaController', ['except' => ['show']]);
     Route::apiResource('formula.portion', 'PortionController', ['only' => ['store']]);
 
     Route::apiResource('user', 'UserController', ['except' => ['show']]);
-
     Route::get('/profile', 'UserController@profile');
     Route::get('/role', 'UserController@role');
 });

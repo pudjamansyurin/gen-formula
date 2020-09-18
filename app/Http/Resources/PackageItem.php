@@ -20,9 +20,19 @@ class PackageItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // 'packer_count' => $this->whenLoaded('packs', function () {
-            //     return $this->packs->count();
-            // }),
+            'capacity' => $this->capacity,
+            'unit_id' => $this->unit_id,
+            'unit' => $this->whenLoaded(
+                'unit',
+                $this->unit->toArray()
+            ),
+            'packagers_count' => $this->packagers_count,
+            'stories' => $this->whenLoaded('stories'),
+            'stories_count' => $this->stories_count,
+            'stories_price' => $this->whenLoaded(
+                'stories',
+                $this->stories->first()->price
+            ),
 
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),

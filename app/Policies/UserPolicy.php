@@ -71,7 +71,7 @@ class UserPolicy
     /**
      * Determine whether the user can view roles.
      */
-    public function viewRole(User $user)
+    public function role(User $user)
     {
         // only admin can view all roles
         return $user->hasRole('admin');

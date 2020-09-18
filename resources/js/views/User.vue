@@ -245,6 +245,12 @@ export default {
     computed: {
         ...mapState("app", ["profile"]),
         ...mapState("model", ["users", "roles"]),
+        rolesOption() {
+            return this.roles.map(({ id, name }) => ({
+                id,
+                name: name.toUpperCase(),
+            }));
+        },
         passwordIcon() {
             return this.showPassword ? "mdi-eye" : "mdi-eye-off";
         },
@@ -253,12 +259,6 @@ export default {
         },
         passwordText() {
             return this.changePassword ? "Keep" : "Change";
-        },
-        rolesOption() {
-            return this.$_.map(this.roles, ({ id, name }) => ({
-                id,
-                name: name.toUpperCase(),
-            }));
         },
     },
     methods: {
@@ -355,7 +355,7 @@ export default {
     },
     watch: {
         dialog: function (open) {
-            if (open && this.roles.length === 0) {
+            if (open) {
                 this.fetchRoles();
             }
         },

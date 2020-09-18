@@ -29,16 +29,18 @@ class Package extends Model
     protected $aRelatedQuery = [
         'filter' => [
             'user.name',
+            'unit.name'
         ],
         'sorter' =>  [
             'user.name' => 'user_id',
+            'unit.symbol' => 'unit_id'
         ]
     ];
 
     /**
      * Set relation tables.
      */
-    public function units()
+    public function unit()
     {
         return $this->belongsTo(Unit::class);
     }

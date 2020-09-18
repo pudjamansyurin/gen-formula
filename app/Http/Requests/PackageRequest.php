@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class MaterialRequest extends FormRequest
+class PackageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,23 +28,20 @@ class MaterialRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
-                Rule::unique('materials', 'name')->ignore($this->material)
+                Rule::unique('packages', 'name')->ignore($this->package)
             ],
-            'matter_id' => [
+            'unit_id' => [
                 'required',
                 'integer',
                 'min:1',
-                'exists:matters,id'
+                'exists:units,id'
             ],
-            'stories_price' => [
+            'capacity' => [
                 'required',
-                'integer',
-                'min:1',
+                'numeric',
+                'min:0',
+                'not_in:0',
             ],
-            // 'updated_at' => [
-            //     'required',
-            //     'date_format:"Y-m-d"'
-            // ]
         ];
     }
 }

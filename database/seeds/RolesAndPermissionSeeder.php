@@ -19,6 +19,7 @@ class RolesAndPermissionSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $models = [
+            'unit',
             'packer',
             'package',
             'matter',
@@ -35,6 +36,7 @@ class RolesAndPermissionSeeder extends Seeder
         ];
         $roles = [
             'inputor' => [
+                'unit' => ['view'],
                 'packer' => ['view'],
                 'package' => '*',
                 'matter' => ['view'],
@@ -42,6 +44,7 @@ class RolesAndPermissionSeeder extends Seeder
                 'material-story' => '*'
             ],
             'manager' => [
+                'unit' => ['view'],
                 'packer' => '*',
                 'package' => '*',
                 'matter' => '*',
@@ -50,6 +53,7 @@ class RolesAndPermissionSeeder extends Seeder
                 'formula' => '*',
             ],
             'admin' => [
+                'unit' => ['view'],
                 'packer' => '*',
                 'package' => '*',
                 'matter' => '*',

@@ -41,7 +41,12 @@ class PackagePolicy
      */
     public function update(User $user, Package $package)
     {
-        //
+        // only owner can update
+        if ($user->id === $package->user_id) {
+            return true;
+        }
+        // above role can update all
+        return $user->hasRole(['manager', 'admin']);
     }
 
     /**
@@ -51,8 +56,24 @@ class PackagePolicy
      * @param  \App\Package  $package
      * @return mixed
      */
-    public function delete(User $user, Package $package)
+    public function delete(User $user, $packagesId)
     {
-        //
+        $others = Package::whereIn('id', $packagesId)
+            ->where('user_id', '!=', $user->id)
+            ->count();
+        // only owner can delete
+        if ($others == 0) {
+            return true;
+        }
+        // above role can delete all
+        return $user->hasRole(['admin', 'manager']);
+    }
+
+    /**
+     * Determine whether the user can view roles.
+     */
+    public function unit(User $user)
+    {
+        return $user->can('unit.view');
     }
 }

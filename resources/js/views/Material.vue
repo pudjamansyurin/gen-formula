@@ -24,14 +24,15 @@
             <template v-slot:card="{ item }">
                 <v-btn
                     @click="edit(item)"
-                    :color="item.stories.length ? 'green' : 'red'"
+                    :color="item.stories_count ? 'green' : 'red'"
                     :outlined="!item.selected"
                     absolute
                     top
                     right
                     small
                     tile
-                    >{{ item.price | currency }}
+                >
+                    {{ item.stories_price | currency }}
                 </v-btn>
                 <v-card-text>
                     <div class="overline">
@@ -49,17 +50,15 @@
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
                     @click="edit(item)"
-                    :color="item.stories.length ? 'green' : 'red'"
+                    :color="item.stories_count ? 'green' : 'red'"
                     :small="dense"
                     dark
-                    >{{ item.name }}</v-chip
                 >
+                    {{ item.name }}
+                </v-chip>
             </template>
-            <template v-slot:[`item.price`]="{ item }">
-                {{ item.price | currency }}
-            </template>
-            <template v-slot:[`item.stories_count`]="{ item }">
-                {{ item.stories.length }}
+            <template v-slot:[`item.stories_price`]="{ item }">
+                {{ item.stories_price | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -84,7 +83,7 @@
             @close="dialogDeleteStory = false"
         >
             <template v-slot="{ item }">
-                {{ item.price | currency }} |
+                {{ item.stories_price | currency }} |
                 {{ item.updated_at | moment("from") }}
             </template>
         </the-dialog-delete>
@@ -106,7 +105,7 @@
                         >
                             <v-autocomplete
                                 v-model="form.matter_id"
-                                :items="matters"
+                                :items="mattersOptions"
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
@@ -114,7 +113,7 @@
                                 :filled="fieldDisabled"
                                 item-text="name"
                                 item-value="id"
-                                label="Material's category"
+                                label="Matter"
                                 hint="The material's category"
                                 persistent-hint
                             ></v-autocomplete>
@@ -139,13 +138,13 @@
                         </validation-provider>
 
                         <validation-provider
-                            name="price"
+                            name="stories_price"
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
                                 label="Material price"
                                 type="number"
-                                v-model.number="form.price"
+                                v-model.number="form.stories_price"
                                 :error-messages="errors"
                                 :success="valid"
                                 prefix="Rp"
@@ -242,7 +241,8 @@
                                     dark
                                     text
                                     x-small
-                                    >Delete
+                                >
+                                    Delete
                                 </v-btn>
                             </v-list-item-action>
                         </v-list-item>
@@ -285,10 +285,10 @@ export default {
             model: "material",
             headers: [
                 { text: "Name", value: "name" },
-                { text: "Category", value: "matter.name" },
+                { text: "Matter", value: "matter.name" },
                 {
                     text: "Price",
-                    value: "price",
+                    value: "stories_price",
                     align: "right",
                     sortable: false,
                     width: 150,
@@ -297,7 +297,6 @@ export default {
                     text: "Revision",
                     value: "stories_count",
                     align: "center",
-                    sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
                 {
@@ -315,13 +314,18 @@ export default {
             dialogDeleteStory: false,
             // menuUpdatedAt: false,
             form: this.$_.cloneDeep(Material),
-            matters: [],
             formTab: 0,
             mineTab: 0,
         };
     },
     computed: {
-        ...mapState("model", ["materials"]),
+        ...mapState("model", ["materials", "matters"]),
+        mattersOptions() {
+            return this.matters.map(({ id, name }) => ({
+                id,
+                name,
+            }));
+        },
         formTabs() {
             let tabs = ["data", "stories"];
 
@@ -409,13 +413,9 @@ export default {
                     itemsPerPage: -1,
                 },
             })
-                .then(
-                    ({ data }) =>
-                        (this.matters = this.$_.map(data, ({ id, name }) => ({
-                            id,
-                            name,
-                        })))
-                )
+                .then(({ data }) => {
+                    /* nothing todo */
+                })
                 .catch((e) => eHandler(e));
         },
         confirmRemoveStory(story) {
@@ -433,7 +433,7 @@ export default {
                     this.form.stories = this.form.stories.filter(
                         ({ id }) => !ids.includes(id)
                     );
-                    this.form.price = this.form.stories[0].price;
+                    this.form.stories_price = this.form.stories[0].price;
 
                     this.UPDATE_MODEL({
                         model: this.model,
@@ -451,7 +451,7 @@ export default {
             this.fetch();
         },
         dialog: function (open) {
-            if (open && this.matters.length === 0) {
+            if (open) {
                 this.fetchMatters();
             }
         },

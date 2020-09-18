@@ -20,13 +20,15 @@ class FormulaItem extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'portions' => PortionItem::collection($this->whenLoaded('portions')),
-            'portion_total' => $this->whenLoaded('portions', function () {
-                return $this->portions->reduce(function ($carry, $item) {
+            'portion_total' => $this->whenLoaded(
+                'portions',
+                $this->portions->reduce(function ($carry, $item) {
                     return $carry + $item->portion;
-                });
-            }),
-            'price_total' => $this->whenLoaded('portions', function () {
-                return $this->portions->reduce(function ($carry, $item) {
+                })
+            ),
+            'price_total' => $this->whenLoaded(
+                'portions',
+                $this->portions->reduce(function ($carry, $item) {
                     $value = 0;
                     if ($material = $item->material) {
                         if ($story = $material->stories->first()) {
@@ -34,8 +36,8 @@ class FormulaItem extends JsonResource
                         }
                     }
                     return $carry + $value;
-                });
-            }),
+                })
+            ),
 
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),

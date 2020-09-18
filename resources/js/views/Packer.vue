@@ -111,9 +111,8 @@ export default {
                 { text: "Name", value: "name" },
                 {
                     text: "Pack",
-                    value: "pack_count",
+                    value: "packs_count",
                     align: "center",
-                    sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
                 {

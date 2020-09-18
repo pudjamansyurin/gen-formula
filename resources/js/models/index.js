@@ -37,7 +37,7 @@ export const Material = {
     id: -1,
     name: "",
     matter_id: -1,
-    price: 0
+    stories_price: 0
 };
 
 export const MaterialStory = {

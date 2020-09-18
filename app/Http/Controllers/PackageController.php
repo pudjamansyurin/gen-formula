@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PackageRequest;
 use App\Http\Resources\PackageCollection;
+use App\Http\Resources\PackageItem;
 use App\Package;
+use App\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PackageController extends Controller
 {
-    private $relations = ['user:id,name', 'packagers'];
+    private $relations = ['user:id,name', 'unit', 'packagers', 'stories'];
+    private $counts = ['packagers', 'stories'];
 
     /**
      * Display a listing of the resource.
@@ -20,12 +25,16 @@ class PackageController extends Controller
         $this->authorize('viewAny', Package::class);
 
         // retrieve
-        $q = Package::with($this->relations)->filtered()->sortered();
+        $q = Package::with($this->relations)
+            ->withCount($this->counts)
+            ->filtered()
+            ->sortered();
+        $total = $q->count();
 
         // Response
         return (new PackageCollection($q->limited()->get()))
             ->additional([
-                'total' => $q->count()
+                'total' => $total
             ]);
     }
 
@@ -35,9 +44,25 @@ class PackageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PackageRequest $request)
     {
-        //
+        $this->authorize('create', Package::class);
+
+        // create
+        $package = Package::create(
+            array_merge(
+                $request->validated(),
+                ['user_id' => auth()->id()]
+            )
+        );
+
+        return response(
+            new PackageItem(
+                $package->loadMissing($this->relations)
+                    ->loadCount($this->counts)
+            ),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -47,9 +72,20 @@ class PackageController extends Controller
      * @param  \App\Package  $package
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Package $package)
+    public function update(PackageRequest $request, Package $package)
     {
-        //
+        $this->authorize('update', $package);
+
+        // create
+        $package->update($request->validated());
+
+        return response(
+            new PackageItem(
+                $package->loadMissing($this->relations)
+                    ->loadCount($this->counts)
+            ),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -61,5 +97,17 @@ class PackageController extends Controller
     public function destroy(Package $package)
     {
         //
+    }
+
+    /**
+     * Get units
+     */
+    public function unit()
+    {
+        $this->authorize('unit', Package::class);
+
+        return response([
+            'data' => Unit::all()
+        ], Response::HTTP_OK);
     }
 }

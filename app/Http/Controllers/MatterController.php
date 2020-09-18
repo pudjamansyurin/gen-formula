@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 class MatterController extends Controller
 {
     private $relations = ['user:id,name', 'materials'];
+    private $counts = ['materials'];
 
     /**
      * Display a listing of the resource.
@@ -24,12 +25,16 @@ class MatterController extends Controller
         $this->authorize('viewAny', Matter::class);
 
         // retrieve
-        $q = Matter::with($this->relations)->filtered()->sortered();
+        $q = Matter::with($this->relations)
+            ->withCount($this->counts)
+            ->filtered()
+            ->sortered();
+        $total = $q->count();
 
         // Response
         return (new MatterCollection($q->limited()->get()))
             ->additional([
-                'total' => $q->count()
+                'total' => $total
             ]);
     }
 
@@ -52,7 +57,10 @@ class MatterController extends Controller
         );
 
         return response(
-            new MatterItem($matter->loadMissing($this->relations)),
+            new MatterItem(
+                $matter->loadMissing($this->relations)
+                    ->loadCount($this->counts)
+            ),
             Response::HTTP_CREATED
         );
     }
@@ -72,7 +80,10 @@ class MatterController extends Controller
         $matter->update($request->validated());
 
         return response(
-            new MatterItem($matter->loadMissing($this->relations)),
+            new MatterItem(
+                $matter->loadMissing($this->relations)
+                    ->loadCount($this->counts)
+            ),
             Response::HTTP_CREATED
         );
     }

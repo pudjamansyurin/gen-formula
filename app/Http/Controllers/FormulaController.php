@@ -24,12 +24,15 @@ class FormulaController extends Controller
         $this->authorize('viewAny', Formula::class);
 
         // retrieve
-        $q = Formula::with($this->relations)->filtered()->sortered();
+        $q = Formula::with($this->relations)
+            ->filtered()
+            ->sortered();
+        $total = $q->count();
 
         // Response
         return (new FormulaCollection($q->limited()->get()))
             ->additional([
-                'total' => $q->count()
+                'total' => $total
             ]);
     }
 
@@ -52,7 +55,9 @@ class FormulaController extends Controller
         );
 
         return response(
-            new FormulaItem($formula->loadMissing($this->relations)),
+            new FormulaItem(
+                $formula->loadMissing($this->relations)
+            ),
             Response::HTTP_CREATED
         );
     }
@@ -72,7 +77,9 @@ class FormulaController extends Controller
         $formula->update($request->validated());
 
         return response(
-            new FormulaItem($formula->loadMissing($this->relations)),
+            new FormulaItem(
+                $formula->loadMissing($this->relations)
+            ),
             Response::HTTP_OK
         );
     }
