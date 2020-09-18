@@ -30,7 +30,7 @@ class Packager extends Model
 
     public function packets()
     {
-        return $this->belongsToMany(Pack::class, 'packets')
+        return $this->belongsToMany(Pack::class, 'packager_pack')
             ->withPivot(['price'])
             ->withTimestamps();
     }

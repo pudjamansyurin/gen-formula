@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePacketsTable extends Migration
+class CreatePackagerPackTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePacketsTable extends Migration
      */
     public function up()
     {
-        Schema::create('packets', function (Blueprint $table) {
+        Schema::create('packager_pack', function (Blueprint $table) {
             $table->id();
             $table->foreignId('packager_id');
             $table->foreignId('pack_id');
@@ -21,7 +21,7 @@ class CreatePacketsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('packets', function (Blueprint $table) {
+        Schema::table('packager_pack', function (Blueprint $table) {
             $table->foreign('packager_id')
                 ->references('id')
                 ->on('packagers')
@@ -40,6 +40,6 @@ class CreatePacketsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('packets');
+        Schema::dropIfExists('packager_pack');
     }
 }

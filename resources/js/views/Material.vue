@@ -208,7 +208,7 @@
                 </v-form>
             </template>
 
-            <template v-slot:stories>
+            <template v-slot:rev>
                 <v-list dense>
                     <template v-for="(story, index) in form.stories">
                         <v-list-item
@@ -294,7 +294,7 @@ export default {
                     width: 150,
                 },
                 {
-                    text: "Revision",
+                    text: "Rev.",
                     value: "stories_count",
                     align: "center",
                 },
@@ -327,7 +327,7 @@ export default {
             }));
         },
         formTabs() {
-            let tabs = ["data", "stories"];
+            let tabs = ["data", "rev"];
 
             if (this.isNewModel(this.form)) {
                 return [tabs[0]];

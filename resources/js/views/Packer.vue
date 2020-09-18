@@ -35,6 +35,16 @@
                 </v-card-text>
             </template>
 
+            <template v-slot:[`item.name`]="{ item }">
+                <v-chip
+                    @click="edit(item)"
+                    :color="item.packs_count ? 'green' : 'red'"
+                    :small="dense"
+                    dark
+                >
+                    {{ item.name }}
+                </v-chip>
+            </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
             </template>
