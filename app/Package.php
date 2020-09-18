@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
+    use ClientQueryScope;
+
     protected $table = 'packages';
 
     /**
@@ -18,6 +21,18 @@ class Package extends Model
         'unit_id',
         'capacity',
         'user_id'
+    ];
+
+    /**
+     * Client query scope
+     */
+    protected $aRelatedQuery = [
+        'filter' => [
+            'user.name',
+        ],
+        'sorter' =>  [
+            'user.name' => 'user_id',
+        ]
     ];
 
     /**

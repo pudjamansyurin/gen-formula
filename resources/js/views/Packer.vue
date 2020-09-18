@@ -142,7 +142,7 @@ export default {
             this.$nextTick(() => this.$refs.form.reset());
         },
         create() {
-            this.form = this.$_.cloneDeep(Matter);
+            this.form = this.$_.cloneDeep(Packer);
             this.$nextTick(() => (this.dialog = true));
         },
         edit(item) {

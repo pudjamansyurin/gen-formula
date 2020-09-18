@@ -23,16 +23,16 @@ const Profile = () =>
 const Dashboard = () =>
     import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
 const Packer = () => import(/* webpackChunkName: "packer" */ "../views/Packer");
+const Package = () =>
+    import(/* webpackChunkName: "package" */ "../views/Package");
+const Matter = () => import(/* webpackChunkName: "matter" */ "../views/Matter");
 const Material = () =>
     import(/* webpackChunkName: "material" */ "../views/Material");
-const Matter = () => import(/* webpackChunkName: "matter" */ "../views/Matter");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
 const User = () => import(/* webpackChunkName: "user" */ "../views/User");
-// const Price = () => import(/* webpackChunkName: "price" */ "../views/Price");
 // const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
-// const Setting = () =>
-//     import(/* webpackChunkName: "setting" */ "../views/Setting");
+// const Setting = () => import(/* webpackChunkName: "setting" */ "../views/Setting");
 
 import store from "../store";
 
@@ -82,16 +82,6 @@ export default [
                     return { name: "material" };
                 }
             },
-            // {
-            //     path: "report",
-            //     name: "report",
-            //     component: Report
-            // },
-            // {
-            //     path: "package",
-            //     name: "package",
-            //     component: Package
-            // },
             {
                 path: "packer",
                 name: "packer",
@@ -102,9 +92,9 @@ export default [
                 }
             },
             {
-                path: "material",
-                name: "material",
-                component: Material,
+                path: "package",
+                name: "package",
+                component: Package,
                 meta: {
                     nav: true
                 }
@@ -116,6 +106,14 @@ export default [
                 meta: {
                     nav: true,
                     roles: ["admin", "manager"]
+                }
+            },
+            {
+                path: "material",
+                name: "material",
+                component: Material,
+                meta: {
+                    nav: true
                 }
             },
             {
@@ -133,6 +131,16 @@ export default [
             //     component: Price,
             //     props: true
             // },
+            // {
+            //     path: "report",
+            //     name: "report",
+            //     component: Report
+            // },
+            // {
+            //     path: "setting",
+            //     name: "setting",
+            //     component: Setting
+            // },
             {
                 path: "user",
                 name: "user",
@@ -142,11 +150,6 @@ export default [
                     roles: ["admin"]
                 }
             },
-            // {
-            //     path: "setting",
-            //     name: "setting",
-            //     component: Setting
-            // },
             {
                 path: "profile",
                 name: "profile",

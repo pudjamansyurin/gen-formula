@@ -7,7 +7,7 @@
             outlined
         >
             <span v-if="!!loading">Fetching {{ model }} data...</span>
-            <span v-else>Oops, no {{ model }} data yet.</span>
+            <span v-else>Oops, no {{ model }} data.</span>
         </v-alert>
         <div v-show="items.length">
             <the-data-card

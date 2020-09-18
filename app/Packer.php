@@ -35,6 +35,14 @@ class Packer extends Model
     ];
 
     /**
+     * Accessors
+     */
+    public function getNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+    /**
      * Set relation tables.
      */
 

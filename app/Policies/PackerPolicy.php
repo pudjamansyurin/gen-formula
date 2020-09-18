@@ -56,32 +56,16 @@ class PackerPolicy
      * @param  \App\Packer  $packer
      * @return mixed
      */
-    public function delete(User $user, Packer $packer)
+    public function delete(User $user, $packersId)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Packer  $packer
-     * @return mixed
-     */
-    public function restore(User $user, Packer $packer)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Packer  $packer
-     * @return mixed
-     */
-    public function forceDelete(User $user, Packer $packer)
-    {
-        //
+        $others = Packer::whereIn('id', $packersId)
+            ->where('user_id', '!=', $user->id)
+            ->count();
+        // only owner can delete
+        if ($others == 0) {
+            return true;
+        }
+        // above role can delete all
+        return $user->hasRole('admin');
     }
 }

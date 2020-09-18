@@ -21,6 +21,13 @@ export const Packer = {
     name: ""
 };
 
+export const Package = {
+    id: -1,
+    name: "",
+    unit_id: -1,
+    capacity: 0
+};
+
 export const Matter = {
     id: -1,
     name: ""

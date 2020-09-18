@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteSomeRequest;
+use App\Http\Requests\PackerRequest;
 use App\Http\Resources\PackerCollection;
+use App\Http\Resources\PackerItem;
 use App\Packer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PackerController extends Controller
 {
@@ -35,9 +39,22 @@ class PackerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PackerRequest $request)
     {
-        //
+        $this->authorize('create', Packer::class);
+
+        // create
+        $packer = Packer::create(
+            array_merge(
+                $request->validated(),
+                ['user_id' => auth()->id()]
+            )
+        );
+
+        return response(
+            new PackerItem($packer->loadMissing($this->relations)),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -47,9 +64,17 @@ class PackerController extends Controller
      * @param  \App\Packer  $packer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Packer $packer)
+    public function update(PackerRequest $request, Packer $packer)
     {
-        //
+        $this->authorize('update', $packer);
+
+        // update
+        $packer->update($request->validated());
+
+        return response(
+            new PackerItem($packer->loadMissing($this->relations)),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -58,8 +83,14 @@ class PackerController extends Controller
      * @param  \App\Packer  $packer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Packer $packer)
+    public function destroy(DeleteSomeRequest $request)
     {
-        //
+        $packersId = $request->ids;
+        $this->authorize('delete', [Packer::class, $packersId]);
+
+        // delete
+        Packer::destroy($packersId);
+
+        return response($packersId, Response::HTTP_OK);
     }
 }
