@@ -343,7 +343,7 @@ export default {
                     mine: this.mineTab,
                 },
             })
-                .then(({ meta }) => (this.total = meta.total))
+                .then(({ total }) => (this.total = total))
                 .catch((e) => eHandler(e));
         },
 
@@ -411,7 +411,7 @@ export default {
             this.fetch();
         },
         dialogPortion: function (open) {
-            if (open && this.materials.length) {
+            if (open && this.materials.length === 0) {
                 this.fetchMaterials();
             }
         },

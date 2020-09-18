@@ -25,20 +25,13 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        // Model instance
-        $q = User::with($this->relations);
-        // Client Query
-        $q = $q->clientFilter($request);
-        $total = $q->count();
-        $q = $q->clientSorter($request);
-        $q = $q->clientLimiter($request);
+        // retrieve
+        $q = User::with($this->relations)->filtered()->sortered();
 
         // Response
-        return (new UserCollection($q->get()))
+        return (new UserCollection($q->limited()->get()))
             ->additional([
-                'meta' => [
-                    'total' => $total
-                ]
+                'total' => $q->count()
             ]);
     }
 
@@ -53,7 +46,7 @@ class UserController extends Controller
         $this->authorize('create', User::class);
 
         // create
-        $user = User::create($request->only(['name', 'email', 'password']));
+        $user = User::create($request->validated());
 
         // add role
         if ($role = Role::find($request->role['id'])) {
@@ -84,7 +77,7 @@ class UserController extends Controller
         $user->unVerifyChangedEmail($request);
 
         // update
-        $user->update($request->only(['name', 'email', 'password']));
+        $user->update($request->validated());
 
         // update role
         if ($role = Role::find($request->role['id'])) {

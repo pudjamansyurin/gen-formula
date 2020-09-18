@@ -73,7 +73,7 @@
                 </v-list-group>
 
                 <v-list-item
-                    v-else-if="checkPageRoles(item.to)"
+                    v-else-if="authPage(item.to)"
                     :key="index"
                     :to="{ name: item.to }"
                     color="primary"
@@ -104,9 +104,21 @@ export default {
             let navs = this.$_.cloneDeep(navigations);
 
             // group menu
-            navs.forEach((nav) => {
+            navs.forEach((nav, index) => {
                 if (nav.children) {
                     nav.model = nav.children.some(({ to }) => to === route);
+
+                    // check pages role (at least 1 for group)
+                    if (nav.model) {
+                        let authNavs = nav.children.filter(({ to }) =>
+                            this.authPage(to)
+                        );
+
+                        // force replace group as single nav
+                        if (authNavs.length == 1) {
+                            navs[index] = authNavs[0];
+                        }
+                    }
                 }
             });
 
@@ -115,7 +127,7 @@ export default {
     },
     methods: {
         ...mapMutations("app", [SET_DRAWER]),
-        checkPageRoles(name) {
+        authPage(name) {
             let page = this.$router.resolve({ name });
             let role = this.$_.get(this.profile, "role.name");
 

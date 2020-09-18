@@ -23,20 +23,13 @@ class MatterController extends Controller
     {
         $this->authorize('viewAny', Matter::class);
 
-        // Model instance
-        $q = Matter::with($this->relations);
-        // Client Query
-        $q = $q->clientFilter($request);
-        $total = $q->count();
-        $q = $q->clientSorter($request);
-        $q = $q->clientLimiter($request);
+        // retrieve
+        $q = Matter::with($this->relations)->filtered()->sortered();
 
         // Response
-        return (new MatterCollection($q->get()))
+        return (new MatterCollection($q->limited()->get()))
             ->additional([
-                'meta' => [
-                    'total' => $total
-                ]
+                'total' => $q->count()
             ]);
     }
 
@@ -53,7 +46,7 @@ class MatterController extends Controller
         // create
         $matter = Matter::create(
             array_merge(
-                $request->only(['name']),
+                $request->validated(),
                 ['user_id' => auth()->id()]
             )
         );
@@ -76,7 +69,7 @@ class MatterController extends Controller
         $this->authorize('update', $matter);
 
         // update
-        $matter->update($request->only(['name']));
+        $matter->update($request->validated());
 
         return response(
             new MatterItem($matter->loadMissing($this->relations)),

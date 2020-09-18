@@ -171,7 +171,7 @@ export default {
                     mine: this.mineTab,
                 },
             })
-                .then(({ meta }) => (this.total = meta.total))
+                .then(({ total }) => (this.total = total))
                 .catch((e) => eHandler(e));
         },
         save() {

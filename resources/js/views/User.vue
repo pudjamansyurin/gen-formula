@@ -309,7 +309,7 @@ export default {
                     search: this.search,
                 },
             })
-                .then(({ meta }) => (this.total = meta.total))
+                .then(({ total }) => (this.total = total))
                 .catch((e) => eHandler(e));
         },
         save() {

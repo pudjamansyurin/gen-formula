@@ -24,20 +24,13 @@ class MaterialController extends Controller
     {
         $this->authorize('viewAny', Material::class);
 
-        // Model instance
-        $q = Material::with($this->relations);
-        // Client Query
-        $q = $q->clientFilter($request);
-        $total = $q->count();
-        $q = $q->clientSorter($request);
-        $q = $q->clientLimiter($request);
+        // retrieve
+        $q = Material::with($this->relations)->filtered()->sortered();
 
         // Response
-        return (new MaterialCollection($q->get()))
+        return (new MaterialCollection($q->limited()->get()))
             ->additional([
-                'meta' => [
-                    'total' => $total
-                ]
+                'total' => $q->count()
             ]);
     }
 
@@ -53,7 +46,7 @@ class MaterialController extends Controller
 
         $material = Material::create(
             array_merge(
-                $request->only(['name', 'matter_id']),
+                $request->validated(),
                 ['user_id' => auth()->id()]
             )
         );
@@ -61,7 +54,7 @@ class MaterialController extends Controller
         // add price stories
         $material->stories()->create(
             array_merge(
-                $request->only(['price']),
+                $request->validated(),
                 ['user_id' => auth()->id()]
             )
         );
@@ -89,7 +82,7 @@ class MaterialController extends Controller
         )) {
             $this->authorize('update', $material);
 
-            $material->update($request->only(['name', 'matter_id']));
+            $material->update($request->validated());
         }
 
         // update price stories
@@ -98,7 +91,7 @@ class MaterialController extends Controller
 
             $material->stories()->create(
                 array_merge(
-                    $request->only(['price',]),
+                    $request->validated(),
                     ['user_id' => auth()->id()]
                 )
             );
@@ -121,7 +114,9 @@ class MaterialController extends Controller
         $materialsId = $request->ids;
         $this->authorize('delete', [Material::class, $materialsId]);
 
+        // delete
         Material::destroy($materialsId);
+
         return response($materialsId, Response::HTTP_OK);
     }
 }

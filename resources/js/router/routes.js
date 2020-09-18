@@ -97,19 +97,24 @@ export default [
                 name: "packer",
                 component: Packer,
                 meta: {
+                    nav: true,
                     roles: ["admin", "manager"]
                 }
             },
             {
                 path: "material",
                 name: "material",
-                component: Material
+                component: Material,
+                meta: {
+                    nav: true
+                }
             },
             {
                 path: "matter",
                 name: "matter",
                 component: Matter,
                 meta: {
+                    nav: true,
                     roles: ["admin", "manager"]
                 }
             },
@@ -118,6 +123,7 @@ export default [
                 name: "formula",
                 component: Formula,
                 meta: {
+                    nav: true,
                     roles: ["admin", "manager"]
                 }
             },
@@ -132,6 +138,7 @@ export default [
                 name: "user",
                 component: User,
                 meta: {
+                    nav: true,
                     roles: ["admin"]
                 }
             },

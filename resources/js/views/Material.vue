@@ -376,7 +376,7 @@ export default {
                     mine: this.mineTab,
                 },
             })
-                .then(({ meta }) => (this.total = meta.total))
+                .then(({ total }) => (this.total = total))
                 .catch((e) => eHandler(e));
         },
         save() {
@@ -451,7 +451,7 @@ export default {
             this.fetch();
         },
         dialog: function (open) {
-            if (open && this.matters.length) {
+            if (open && this.matters.length === 0) {
                 this.fetchMatters();
             }
         },

@@ -44,10 +44,6 @@ class UserStoreRequest extends FormRequest
                 'min:8',
                 'confirmed'
             ],
-            // 'password_confirmation' => [
-            //     'required_with:password',
-            //     'same:password'
-            // ]
         ];
     }
 }

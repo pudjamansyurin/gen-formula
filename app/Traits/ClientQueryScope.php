@@ -9,11 +9,11 @@ trait ClientQueryScope
     /**
      * Local scopes
      */
-    public function scopeClientFilter($q, $request)
+    public function scopeFiltered($q)
     {
         // filtering
-        $search = $request->input('search', '');
-        $mine = $request->boolean('mine');
+        $search = request('search', '');
+        $mine = request()->boolean('mine');
 
         if ($search) {
             // handle select options request
@@ -47,11 +47,11 @@ trait ClientQueryScope
         return $q;
     }
 
-    public function scopeClientSorter($q, $request)
+    public function scopeSortered($q)
     {
         // get parameters
-        $sortBy = $request->input('sortBy.0', 'updated_at');
-        $sortDesc = $request->boolean('sortDesc.0', true);
+        $sortBy = request('sortBy.0', 'updated_at');
+        $sortDesc = request()->boolean('sortDesc.0', true);
         // sorting
         $aSorter = $this->aSorter();
         if (array_key_exists($sortBy, $aSorter)) {
@@ -62,11 +62,11 @@ trait ClientQueryScope
         return $q;
     }
 
-    public function scopeClientLimiter($q, $request)
+    public function scopeLimited($q)
     {
         // get parameters
-        $page = $request->input('page', 1);
-        $itemsPerPage = $request->input('itemsPerPage', 10);
+        $page = request('page', 1);
+        $itemsPerPage = request('itemsPerPage', 10);
         // limiting
         if ($itemsPerPage > 0) {
             $q = $q->take($itemsPerPage)->skip(($page - 1) * $itemsPerPage);

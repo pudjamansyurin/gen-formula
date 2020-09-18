@@ -23,20 +23,13 @@ class FormulaController extends Controller
     {
         $this->authorize('viewAny', Formula::class);
 
-        // Model instance
-        $q = Formula::with($this->relations);
-        // Client Query
-        $q = $q->clientFilter($request);
-        $total = $q->count();
-        $q = $q->clientSorter($request);
-        $q = $q->clientLimiter($request);
+        // retrieve
+        $q = Formula::with($this->relations)->filtered()->sortered();
 
         // Response
-        return (new FormulaCollection($q->get()))
+        return (new FormulaCollection($q->limited()->get()))
             ->additional([
-                'meta' => [
-                    'total' => $total
-                ]
+                'total' => $q->count()
             ]);
     }
 
@@ -53,7 +46,7 @@ class FormulaController extends Controller
         // create
         $formula = Formula::create(
             array_merge(
-                $request->only(['name', 'description']),
+                $request->validated(),
                 ['user_id' => auth()->id()]
             )
         );
@@ -76,7 +69,7 @@ class FormulaController extends Controller
         $this->authorize('update', $formula);
 
         // update
-        $formula->update($request->only(['name', 'description']));
+        $formula->update($request->validated());
 
         return response(
             new FormulaItem($formula->loadMissing($this->relations)),

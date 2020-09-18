@@ -19,20 +19,13 @@ class PackerController extends Controller
     {
         $this->authorize('viewAny', Packer::class);
 
-        // Model instance
-        $q = Packer::with($this->relations);
-        // Client Query
-        $q = $q->clientFilter($request);
-        $total = $q->count();
-        $q = $q->clientSorter($request);
-        $q = $q->clientLimiter($request);
+        // retrieve
+        $q = Packer::with($this->relations)->filtered()->sortered();
 
         // Response
-        return (new PackerCollection($q->get()))
+        return (new PackerCollection($q->limited()->get()))
             ->additional([
-                'meta' => [
-                    'total' => $total
-                ]
+                'total' => $q->count()
             ]);
     }
 
