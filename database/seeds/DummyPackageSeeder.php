@@ -91,8 +91,8 @@ class DummyPackageSeeder extends Seeder
                 return $carry + ($pricePackets / $packager->content);
             });
 
-            // create stories
-            $thePackage->stories()->create([
+            // create revs
+            $thePackage->revs()->create([
                 'price' => $total
             ]);
         }

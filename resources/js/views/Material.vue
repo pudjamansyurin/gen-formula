@@ -24,7 +24,7 @@
             <template v-slot:card="{ item }">
                 <v-btn
                     @click="edit(item)"
-                    :color="item.stories_count ? 'green' : 'red'"
+                    :color="item.revs_count ? 'green' : 'red'"
                     :outlined="!item.selected"
                     absolute
                     top
@@ -32,7 +32,7 @@
                     small
                     tile
                 >
-                    {{ item.stories_price | currency }}
+                    {{ item.revs_price | currency }}
                 </v-btn>
                 <v-card-text>
                     <div class="overline">
@@ -50,15 +50,15 @@
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
                     @click="edit(item)"
-                    :color="item.stories_count ? 'green' : 'red'"
+                    :color="item.revs_count ? 'green' : 'red'"
                     :small="dense"
                     dark
                 >
                     {{ item.name }}
                 </v-chip>
             </template>
-            <template v-slot:[`item.stories_price`]="{ item }">
-                {{ item.stories_price | currency }}
+            <template v-slot:[`item.revs_price`]="{ item }">
+                {{ item.revs_price | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -76,11 +76,11 @@
         </the-dialog-delete>
 
         <the-dialog-delete
-            v-model="dialogDeleteStory"
-            :selected="selectedStory"
-            model="material-story"
-            @delete="removeStory"
-            @close="dialogDeleteStory = false"
+            v-model="dialogDeleteRev"
+            :selected="selectedRev"
+            model="material-rev"
+            @delete="removeRev"
+            @close="dialogDeleteRev = false"
         >
             <template v-slot="{ item }">
                 {{ item.price | currency }} |
@@ -138,13 +138,13 @@
                         </validation-provider>
 
                         <validation-provider
-                            name="stories_price"
+                            name="revs_price"
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
                                 label="Material price"
                                 type="number"
-                                v-model.number="form.stories_price"
+                                v-model.number="form.revs_price"
                                 :error-messages="errors"
                                 :success="valid"
                                 prefix="Rp"
@@ -210,9 +210,9 @@
 
             <template v-slot:rev>
                 <v-list dense>
-                    <template v-for="(story, index) in form.stories">
+                    <template v-for="(rev, index) in form.revs">
                         <v-list-item
-                            :key="story.id"
+                            :key="rev.id"
                             :class="{ primary: index === 0 }"
                             :dark="index === 0"
                             two-line
@@ -220,23 +220,22 @@
                         >
                             <v-list-item-content>
                                 <v-list-item-title
-                                    >{{ story.price | currency }}
+                                    >{{ rev.price | currency }}
                                 </v-list-item-title>
                                 <v-list-item-subtitle>
-                                    {{ story.user.name }}
+                                    {{ rev.user.name }}
                                 </v-list-item-subtitle>
                             </v-list-item-content>
 
                             <v-list-item-action>
                                 <v-list-item-action-text>
-                                    {{ story.updated_at | moment("from") }}
+                                    {{ rev.updated_at | moment("from") }}
                                 </v-list-item-action-text>
                                 <v-btn
                                     v-if="
-                                        form.stories.length > 1 &&
-                                        story.authorized
+                                        form.revs.length > 1 && rev.authorized
                                     "
-                                    @click="confirmRemoveStory(story)"
+                                    @click="confirmRemoveRev(rev)"
                                     color="red"
                                     dark
                                     text
@@ -246,7 +245,7 @@
                                 </v-btn>
                             </v-list-item-action>
                         </v-list-item>
-                        <v-divider :key="story.updated_at"></v-divider>
+                        <v-divider :key="rev.updated_at"></v-divider>
                     </template>
                 </v-list>
             </template>
@@ -288,14 +287,14 @@ export default {
                 { text: "Matter", value: "matter.name" },
                 {
                     text: "Price",
-                    value: "stories_price",
+                    value: "revs_price",
                     align: "right",
                     sortable: false,
                     width: 150,
                 },
                 {
                     text: "Rev.",
-                    value: "stories_count",
+                    value: "revs_count",
                     align: "center",
                 },
                 { text: "Creator", value: "user.name" },
@@ -310,8 +309,8 @@ export default {
             selected: [],
             dialog: false,
             dialogDelete: false,
-            selectedStory: [],
-            dialogDeleteStory: false,
+            selectedRev: [],
+            dialogDeleteRev: false,
             // menuUpdatedAt: false,
             form: this.$_.cloneDeep(Material),
             tabList: ["data", "rev"],
@@ -419,30 +418,30 @@ export default {
                 .then(() => {})
                 .catch((e) => eHandler(e));
         },
-        confirmRemoveStory(story) {
-            this.selectedStory = [story];
-            this.$nextTick(() => (this.dialogDeleteStory = true));
+        confirmRemoveRev(rev) {
+            this.selectedRev = [rev];
+            this.$nextTick(() => (this.dialogDeleteRev = true));
         },
-        removeStory: async function () {
-            let ids = this.$_.map(this.selectedStory, "id");
+        removeRev: async function () {
+            let ids = this.$_.map(this.selectedRev, "id");
 
             await this.DELETE_MODELS({
-                model: "material-story",
+                model: "material-rev",
                 ids,
             })
                 .then(async () => {
-                    this.form.stories = this.form.stories.filter(
+                    this.form.revs = this.form.revs.filter(
                         ({ id }) => !ids.includes(id)
                     );
-                    this.form.stories_price = this.form.stories[0].price;
+                    this.form.revs_price = this.form.revs[0].price;
 
                     this.UPDATE_MODEL({
                         model: this.model,
                         data: this.$_.cloneDeep(this.form),
                     });
 
-                    this.dialogDeleteStory = false;
-                    this.$nextTick(() => (this.selectedStory = []));
+                    this.dialogDeleteRev = false;
+                    this.$nextTick(() => (this.selectedRev = []));
                 })
                 .catch((e) => eHandler(e));
         },

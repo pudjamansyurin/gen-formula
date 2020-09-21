@@ -15,8 +15,8 @@ class DummyMaterialSeeder extends Seeder
         factory(App\Material::class, 50)->create()
             ->each(function ($material) {
                 for ($i = 0; $i < rand(1, 10); $i++) {
-                    // Create stories
-                    factory(App\MaterialStory::class)->create([
+                    // Create revs
+                    factory(App\MaterialRev::class)->create([
                         'material_id' => $material->id,
                         'user_id' => $material->user_id,
                     ]);

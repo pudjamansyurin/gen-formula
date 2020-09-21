@@ -12,8 +12,8 @@ use Illuminate\Http\Response;
 
 class PackageController extends Controller
 {
-    private $relations = ['user:id,name', 'unit', 'packagers', 'stories'];
-    private $counts = ['packagers', 'stories'];
+    private $relations = ['user:id,name', 'unit', 'packagers', 'revs'];
+    private $counts = ['packagers', 'revs'];
 
     /**
      * Display a listing of the resource.

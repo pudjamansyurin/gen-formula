@@ -36,7 +36,7 @@ class MaterialRequest extends FormRequest
                 'min:1',
                 'exists:matters,id'
             ],
-            'stories_price' => [
+            'revs_price' => [
                 'required',
                 'integer',
                 'min:1',

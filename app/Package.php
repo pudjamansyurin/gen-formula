@@ -45,9 +45,9 @@ class Package extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    public function stories()
+    public function revs()
     {
-        return $this->hasMany(PackageStory::class);
+        return $this->hasMany(PackageRev::class);
     }
 
     public function packagers()

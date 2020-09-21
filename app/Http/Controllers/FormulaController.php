@@ -12,7 +12,7 @@ use Illuminate\Http\Response;
 
 class FormulaController extends Controller
 {
-    private $relations = ['user:id,name', 'portions.material.stories'];
+    private $relations = ['user:id,name', 'portions.material.revs'];
 
     /**
      * Display a listing of the resource.

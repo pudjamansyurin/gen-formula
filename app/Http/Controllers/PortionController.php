@@ -14,7 +14,7 @@ use Illuminate\Validation\ValidationException;
 
 class PortionController extends Controller
 {
-    private $relations = ['user:id,name', 'portions.material.stories'];
+    private $relations = ['user:id,name', 'portions.material.revs'];
 
     /**
      * Store a newly created resource in storage.

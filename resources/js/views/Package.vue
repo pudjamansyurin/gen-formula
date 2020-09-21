@@ -24,7 +24,7 @@
             <template v-slot:card="{ item }">
                 <v-btn
                     @click="edit(item)"
-                    :color="item.stories_count ? 'green' : 'red'"
+                    :color="item.revs_count ? 'green' : 'red'"
                     :outlined="!item.selected"
                     absolute
                     top
@@ -32,7 +32,7 @@
                     small
                     tile
                 >
-                    {{ item.stories_price | currency }}
+                    {{ item.revs_price | currency }}
                 </v-btn>
 
                 <v-card-text>
@@ -51,15 +51,15 @@
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
                     @click="edit(item)"
-                    :color="item.stories_count ? 'green' : 'red'"
+                    :color="item.revs_count ? 'green' : 'red'"
                     :small="dense"
                     dark
                 >
                     {{ item.name }}
                 </v-chip>
             </template>
-            <template v-slot:[`item.stories_price`]="{ item }">
-                {{ item.stories_price | currency }}
+            <template v-slot:[`item.revs_price`]="{ item }">
+                {{ item.revs_price | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -149,9 +149,9 @@
 
             <template v-slot:rev>
                 <v-list dense>
-                    <template v-for="(story, index) in form.stories">
+                    <template v-for="(rev, index) in form.revs">
                         <v-list-item
-                            :key="story.id"
+                            :key="rev.id"
                             :class="{ primary: index === 0 }"
                             :dark="index === 0"
                             two-line
@@ -159,17 +159,17 @@
                         >
                             <v-list-item-content>
                                 <v-list-item-title
-                                    >{{ story.price | currency }}
+                                    >{{ rev.price | currency }}
                                 </v-list-item-title>
                             </v-list-item-content>
 
                             <v-list-item-action>
                                 <v-list-item-action-text>
-                                    {{ story.updated_at | moment("from") }}
+                                    {{ rev.updated_at | moment("from") }}
                                 </v-list-item-action-text>
                             </v-list-item-action>
                         </v-list-item>
-                        <v-divider :key="story.updated_at"></v-divider>
+                        <v-divider :key="rev.updated_at"></v-divider>
                     </template>
                 </v-list>
             </template>
@@ -216,14 +216,14 @@ export default {
                 },
                 {
                     text: "Price",
-                    value: "stories_price",
+                    value: "revs_price",
                     align: "right",
                     sortable: false,
                     width: 150,
                 },
                 {
                     text: "Rev.",
-                    value: "stories_count",
+                    value: "revs_count",
                     align: "center",
                 },
                 { text: "Creator", value: "user.name" },

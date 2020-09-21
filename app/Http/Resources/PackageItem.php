@@ -27,11 +27,11 @@ class PackageItem extends JsonResource
                 $this->unit->toArray()
             ),
             'packagers_count' => $this->packagers_count,
-            'stories' => $this->whenLoaded('stories'),
-            'stories_count' => $this->stories_count,
-            'stories_price' => $this->whenLoaded(
-                'stories',
-                $this->stories->first()->price
+            'revs' => $this->whenLoaded('revs'),
+            'revs_count' => $this->revs_count,
+            'revs_price' => $this->whenLoaded(
+                'revs',
+                $this->revs->first()->price
             ),
 
             'updated_at' => $this->updated_at,

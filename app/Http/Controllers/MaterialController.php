@@ -7,14 +7,14 @@ use App\Http\Requests\MaterialRequest;
 use App\Http\Resources\MaterialCollection;
 use App\Http\Resources\MaterialItem;
 use App\Material;
-use App\MaterialStory;
+use App\MaterialRev;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class MaterialController extends Controller
 {
-    private $relations = ['user:id,name', 'matter:id,name', 'stories', 'stories.user:id,name'];
-    private $counts = ['stories'];
+    private $relations = ['user:id,name', 'matter:id,name', 'revs', 'revs.user:id,name'];
+    private $counts = ['revs'];
 
     /**
      * Display a listing of the resource.
@@ -56,9 +56,9 @@ class MaterialController extends Controller
             )
         );
 
-        // add price stories
-        $material->stories()->create([
-            'price' => $request->stories_price,
+        // add price revs
+        $material->revs()->create([
+            'price' => $request->revs_price,
             'user_id' => auth()->id()
         ]);
 
@@ -91,12 +91,12 @@ class MaterialController extends Controller
             $material->update($request->validated());
         }
 
-        // update price stories
-        if ($material->stories()->first()->price != $request->stories_price) {
-            $this->authorize('create', MaterialStory::class);
+        // update price revs
+        if ($material->revs()->first()->price != $request->revs_price) {
+            $this->authorize('create', MaterialRev::class);
 
-            $material->stories()->create([
-                'price' => $request->stories_price,
+            $material->revs()->create([
+                'price' => $request->revs_price,
                 'user_id' => auth()->id()
             ]);
         }

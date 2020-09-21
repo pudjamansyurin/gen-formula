@@ -31,8 +31,8 @@ class FormulaItem extends JsonResource
                 $this->portions->reduce(function ($carry, $item) {
                     $value = 0;
                     if ($material = $item->material) {
-                        if ($story = $material->stories->first()) {
-                            $value = ($story->price * $item->portion / 100);
+                        if ($rev = $material->revs->first()) {
+                            $value = ($rev->price * $item->portion / 100);
                         }
                     }
                     return $carry + $value;

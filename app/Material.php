@@ -53,9 +53,9 @@ class Material extends Model
         return $this->belongsTo(Matter::class);
     }
 
-    public function stories()
+    public function revs()
     {
-        return $this->hasMany(MaterialStory::class)->latest('updated_at');
+        return $this->hasMany(MaterialRev::class)->latest('updated_at');
     }
 
     public function user()
