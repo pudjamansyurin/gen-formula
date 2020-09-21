@@ -11,6 +11,9 @@ class Material extends Model
 
     protected $table = 'materials';
 
+    protected $relations = ['user:id,name', 'matter:id,name', 'revs', 'revs.user:id,name'];
+    protected $counts = ['revs'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +28,7 @@ class Material extends Model
     /**
      * Client query scope
      */
-    protected $aRelatedQuery = [
+    protected $clientQuery = [
         'filter' => [
             'user.name',
             'matter.name'
@@ -47,7 +50,6 @@ class Material extends Model
     /**
      * Set relation tables.
      */
-
     public function matter()
     {
         return $this->belongsTo(Matter::class);
@@ -62,7 +64,6 @@ class Material extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     // public function portions()
     // {

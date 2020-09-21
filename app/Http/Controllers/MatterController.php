@@ -12,9 +12,6 @@ use Illuminate\Http\Response;
 
 class MatterController extends Controller
 {
-    private $relations = ['user:id,name', 'materials'];
-    private $counts = ['materials'];
-
     /**
      * Get lists of this model
      */
@@ -23,7 +20,7 @@ class MatterController extends Controller
         $this->authorize('viewAny', Matter::class);
 
         return response([
-            'data' => Matter::all(['id', 'name'])
+            'data' => Matter::getAsList()
         ], Response::HTTP_OK);
     }
 
@@ -37,17 +34,11 @@ class MatterController extends Controller
         $this->authorize('viewAny', Matter::class);
 
         // retrieve
-        $q = Matter::with($this->relations)
-            ->withCount($this->counts)
-            ->filtered()
-            ->sortered();
-        $total = $q->count();
+        [$matters, $total] = Matter::queried();
 
         // Response
-        return (new MatterCollection($q->limited()->get()))
-            ->additional([
-                'total' => $total
-            ]);
+        return (new MatterCollection($matters))
+            ->additional(['total' => $total]);
     }
 
     /**
@@ -69,10 +60,7 @@ class MatterController extends Controller
         );
 
         return response(
-            new MatterItem(
-                $matter->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new MatterItem($matter->loadRelation()),
             Response::HTTP_CREATED
         );
     }
@@ -92,10 +80,7 @@ class MatterController extends Controller
         $matter->update($request->validated());
 
         return response(
-            new MatterItem(
-                $matter->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new MatterItem($matter->loadRelation()),
             Response::HTTP_CREATED
         );
     }

@@ -11,6 +11,9 @@ class Packer extends Model
 
     protected $table = 'packers';
 
+    protected $relations = ['user:id,name', 'packs'];
+    protected $counts = ['packs'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,10 +27,9 @@ class Packer extends Model
     /**
      * Client query scope
      */
-    protected $aRelatedQuery = [
+    protected $clientQuery = [
         'filter' => [
-            'user.name',
-            'pack.name'
+            'user.name'
         ],
         'sorter' =>  [
             'user.name' => 'user_id',
@@ -45,7 +47,6 @@ class Packer extends Model
     /**
      * Set relation tables.
      */
-
     public function packs()
     {
         return $this->hasMany(Pack::class);

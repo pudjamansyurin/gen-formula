@@ -11,6 +11,9 @@ class Matter extends Model
 
     protected $table = 'matters';
 
+    protected $relations = ['user:id,name', 'materials'];
+    protected $counts = ['materials'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,7 +27,7 @@ class Matter extends Model
     /**
      * Client query scope
      */
-    protected $aRelatedQuery = [
+    protected $clientQuery = [
         'filter' => [
             'user.name',
         ],

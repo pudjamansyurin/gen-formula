@@ -13,9 +13,6 @@ use Illuminate\Http\Response;
 
 class MaterialController extends Controller
 {
-    private $relations = ['user:id,name', 'matter:id,name', 'revs', 'revs.user:id,name'];
-    private $counts = ['revs'];
-
     /**
      * Get lists of this model
      */
@@ -24,7 +21,7 @@ class MaterialController extends Controller
         $this->authorize('viewAny', Material::class);
 
         return response([
-            'data' => Material::all(['id', 'name'])
+            'data' => Material::getAsList()
         ], Response::HTTP_OK);
     }
 
@@ -38,17 +35,11 @@ class MaterialController extends Controller
         $this->authorize('viewAny', Material::class);
 
         // retrieve
-        $q = Material::with($this->relations)
-            ->withCount($this->counts)
-            ->filtered()
-            ->sortered();
-        $total = $q->count();
+        [$materials, $total] = Material::queried();
 
         // Response
-        return (new MaterialCollection($q->limited()->get()))
-            ->additional([
-                'total' => $total
-            ]);
+        return (new MaterialCollection($materials))
+            ->additional(['total' => $total]);
     }
 
     /**
@@ -75,10 +66,7 @@ class MaterialController extends Controller
         ]);
 
         return response(
-            new MaterialItem(
-                $material->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new MaterialItem($material->loadRelation()),
             Response::HTTP_CREATED
         );
     }
@@ -114,10 +102,7 @@ class MaterialController extends Controller
         }
 
         return response(
-            new MaterialItem(
-                $material->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new MaterialItem($material->loadRelation()),
             Response::HTTP_OK
         );
     }

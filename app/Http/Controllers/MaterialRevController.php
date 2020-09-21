@@ -8,8 +8,6 @@ use Illuminate\Http\Response;
 
 class MaterialRevController extends Controller
 {
-    private $relations = ['material', 'material.revs'];
-
     /**
      * Remove the specified resource from storage.
      *
@@ -22,7 +20,7 @@ class MaterialRevController extends Controller
         $this->authorize('delete', [MaterialRev::class, $revsId]);
 
         // delete (if not the last one)
-        $rev = MaterialRev::with($this->relations)->find($revsId[0]);
+        $rev = MaterialRev::getById($revsId[0]);
         if ($rev->material->revs->count() > 1) {
             MaterialRev::destroy($revsId);
 

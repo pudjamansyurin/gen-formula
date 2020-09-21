@@ -9,6 +9,11 @@ class Formula extends Model
 {
     use ClientQueryScope;
 
+    protected $table = 'formulas';
+
+    protected $relations = ['user:id,name', 'portions.material.revs'];
+    protected $counts = [];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +28,7 @@ class Formula extends Model
     /**
      * Client query scope
      */
-    protected $aRelatedQuery = [
+    protected $clientQuery = [
         'filter' => [
             'user.name'
         ],

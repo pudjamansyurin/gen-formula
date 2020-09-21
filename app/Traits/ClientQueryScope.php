@@ -9,6 +9,48 @@ trait ClientQueryScope
     /**
      * Local scopes
      */
+    public function scopeGetAsList()
+    {
+        return $this->all(['id', 'name']);
+    }
+
+    public function scopeQueried()
+    {
+        return [
+            $this->getQueried(),
+            $this->countQueried()
+        ];
+    }
+
+    public function scopeCountQueried()
+    {
+        return $this->withRelation()
+            ->filtered()
+            ->sortered()
+            ->count();
+    }
+
+    public function scopeGetQueried()
+    {
+        return $this->withRelation()
+            ->filtered()
+            ->sortered()
+            ->limited()
+            ->get();
+    }
+
+    public function scopeWithRelation()
+    {
+        return $this->with($this->relations)
+            ->withCount($this->counts);
+    }
+
+    public function scopeLoadRelation()
+    {
+        return $this->loadMissing($this->relations)
+            ->loadCount($this->counts);
+    }
+
     public function scopeFiltered($q)
     {
         // filtering
@@ -27,8 +69,8 @@ trait ClientQueryScope
             });
 
             // handle relations model
-            $aRelatedFilter = $this->aRelatedFilter();
-            foreach ($aRelatedFilter as $key => $relationFields) {
+            $filter = $this->filter();
+            foreach ($filter as $key => $relationFields) {
                 [$relation, $field] = explode(".", $relationFields);
 
                 $q = $q->orWhereHas($relation, function ($q) use ($field, $search) {
@@ -53,9 +95,9 @@ trait ClientQueryScope
         $sortBy = request('sortBy.0', 'updated_at');
         $sortDesc = request()->boolean('sortDesc.0', true);
         // sorting
-        $aSorter = $this->aSorter();
-        if (array_key_exists($sortBy, $aSorter)) {
-            $sortBy = $aSorter[$sortBy];
+        $sorter = $this->sorter();
+        if (array_key_exists($sortBy, $sorter)) {
+            $sortBy = $sorter[$sortBy];
         }
         $q = $q->orderBy($sortBy, $sortDesc ? 'desc' : 'asc');
 
@@ -75,6 +117,9 @@ trait ClientQueryScope
         return $q;
     }
 
+    /**
+     * Get parameters from request queries
+     */
     private function fields()
     {
         if (property_exists($this, 'fillable')) {
@@ -85,21 +130,21 @@ trait ClientQueryScope
         return [];
     }
 
-    private function aRelatedFilter()
+    private function filter()
     {
-        if (property_exists($this, 'aRelatedQuery')) {
-            if (array_key_exists('filter', $this->aRelatedQuery)) {
-                return $this->aRelatedQuery['filter'];
+        if (property_exists($this, 'clientQuery')) {
+            if (array_key_exists('filter', $this->clientQuery)) {
+                return $this->clientQuery['filter'];
             }
         }
         return [];
     }
 
-    private function aSorter()
+    private function sorter()
     {
-        if (property_exists($this, 'aRelatedQuery')) {
-            if (array_key_exists('sorter', $this->aRelatedQuery)) {
-                return $this->aRelatedQuery['sorter'];
+        if (property_exists($this, 'clientQuery')) {
+            if (array_key_exists('sorter', $this->clientQuery)) {
+                return $this->clientQuery['sorter'];
             }
         }
         return [];

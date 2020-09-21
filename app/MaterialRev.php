@@ -8,6 +8,8 @@ class MaterialRev extends Model
 {
     protected $table = 'material_revs';
 
+    protected $relations = ['material', 'material.revs'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +25,7 @@ class MaterialRev extends Model
     // /**
     //  * Client query scope
     //  */
-    // protected $aRelatedQuery = [
+    // protected $clientQuery = [
     //     'filter' => [
     //         'material.name',
     //         'user.name'
@@ -45,5 +47,14 @@ class MaterialRev extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Custom query scopes
+     */
+    public function scopeGetById($q, $id)
+    {
+        return $this->with($this->relations)
+            ->find($id);
     }
 }

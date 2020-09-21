@@ -12,9 +12,6 @@ use Illuminate\Http\Response;
 
 class PackerController extends Controller
 {
-    private $relations = ['user:id,name', 'packs'];
-    private $counts = ['packs'];
-
     /**
      * Get lists of this model
      */
@@ -23,7 +20,7 @@ class PackerController extends Controller
         $this->authorize('viewAny', Packer::class);
 
         return response([
-            'data' => Packer::all(['id', 'name'])
+            'data' => Packer::getAsList()
         ], Response::HTTP_OK);
     }
 
@@ -37,17 +34,11 @@ class PackerController extends Controller
         $this->authorize('viewAny', Packer::class);
 
         // retrieve
-        $q = Packer::with($this->relations)
-            ->withCount($this->counts)
-            ->filtered()
-            ->sortered();
-        $total = $q->count();
+        [$packers, $total] = Packer::queried();
 
         // Response
-        return (new PackerCollection($q->limited()->get()))
-            ->additional([
-                'total' => $total
-            ]);
+        return (new PackerCollection($packers))
+            ->additional(['total' => $total]);
     }
 
     /**
@@ -69,10 +60,7 @@ class PackerController extends Controller
         );
 
         return response(
-            new PackerItem(
-                $packer->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new PackerItem($packer->loadRelation()),
             Response::HTTP_CREATED
         );
     }
@@ -92,10 +80,7 @@ class PackerController extends Controller
         $packer->update($request->validated());
 
         return response(
-            new PackerItem(
-                $packer->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new PackerItem($packer->loadRelation()),
             Response::HTTP_CREATED
         );
     }

@@ -11,6 +11,9 @@ class Pack extends Model
 
     protected $table = 'packs';
 
+    protected $relations = ['user:id,name', 'packer:id,name'];
+    protected $counts = [];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +28,7 @@ class Pack extends Model
     /**
      * Client query scope
      */
-    protected $aRelatedQuery = [
+    protected $clientQuery = [
         'filter' => [
             'user.name',
             'packer.name'

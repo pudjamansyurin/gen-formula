@@ -12,8 +12,6 @@ use Illuminate\Http\Response;
 
 class FormulaController extends Controller
 {
-    private $relations = ['user:id,name', 'portions.material.revs'];
-
     /**
      * Display a listing of the resource.
      *
@@ -24,16 +22,11 @@ class FormulaController extends Controller
         $this->authorize('viewAny', Formula::class);
 
         // retrieve
-        $q = Formula::with($this->relations)
-            ->filtered()
-            ->sortered();
-        $total = $q->count();
+        [$formulas, $total] = Formula::queried();
 
         // Response
-        return (new FormulaCollection($q->limited()->get()))
-            ->additional([
-                'total' => $total
-            ]);
+        return (new FormulaCollection($formulas))
+            ->additional(['total' => $total]);
     }
 
     /**
@@ -55,9 +48,7 @@ class FormulaController extends Controller
         );
 
         return response(
-            new FormulaItem(
-                $formula->loadMissing($this->relations)
-            ),
+            new FormulaItem($formula->loadRelation()),
             Response::HTTP_CREATED
         );
     }
@@ -77,9 +68,7 @@ class FormulaController extends Controller
         $formula->update($request->validated());
 
         return response(
-            new FormulaItem(
-                $formula->loadMissing($this->relations)
-            ),
+            new FormulaItem($formula->loadRelation()),
             Response::HTTP_OK
         );
     }

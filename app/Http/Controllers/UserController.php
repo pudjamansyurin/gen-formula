@@ -14,8 +14,6 @@ use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    private $relations = ['roles:id,name'];
-
     /**
      * Display a listing of the resource.
      *
@@ -26,16 +24,11 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         // retrieve
-        $q = User::with($this->relations)
-            ->filtered()
-            ->sortered();
-        $total = $q->count();
+        [$users, $total] = User::queried();
 
         // Response
-        return (new UserCollection($q->limited()->get()))
-            ->additional([
-                'total' => $total
-            ]);
+        return (new UserCollection($users))
+            ->additional(['total' => $total]);
     }
 
     /**
@@ -60,9 +53,7 @@ class UserController extends Controller
         $user->sendEmailVerificationNotification();
 
         return response(
-            new UserItem(
-                $user->loadMissing($this->relations)
-            ),
+            new UserItem($user->loadRelation()),
             Response::HTTP_CREATED
         );
     }
@@ -95,9 +86,7 @@ class UserController extends Controller
         }
 
         return response(
-            new UserItem(
-                $user->loadMissing($this->relations)
-            ),
+            new UserItem($user->loadRelation()),
             Response::HTTP_OK
         );
     }
@@ -125,9 +114,7 @@ class UserController extends Controller
     public function profile(Request $request)
     {
         return response([
-            'user' => new UserItem(
-                $request->user()->loadMissing($this->relations)
-            ),
+            'user' => new UserItem($request->user()->loadRelation()),
         ], Response::HTTP_OK);
     }
 

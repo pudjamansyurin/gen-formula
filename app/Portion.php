@@ -2,10 +2,17 @@
 
 namespace App;
 
+use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Portion extends Model
 {
+    use ClientQueryScope;
+
+    protected $table = 'portions';
+
+    protected $relations = ['user:id,name', 'portions.material.revs'];
+
     /**
      * The attributes that are mass assignable.
      *

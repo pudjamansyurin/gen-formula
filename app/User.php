@@ -16,6 +16,10 @@ class User extends Authenticatable
     use HasRoles, Notifiable;
     use ClientQueryScope;
 
+    protected $table = 'users';
+
+    protected $relations = ['roles:id,name'];
+
     /**
      * The attributes that are mass assignable.
      *

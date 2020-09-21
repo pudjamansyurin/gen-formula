@@ -12,9 +12,6 @@ use Illuminate\Http\Response;
 
 class PackController extends Controller
 {
-    private $relations = ['user:id,name', 'packer:id,name'];
-    private $counts = [];
-
     /**
      * Display a listing of the resource.
      *
@@ -25,17 +22,11 @@ class PackController extends Controller
         $this->authorize('viewAny', Pack::class);
 
         // retrieve
-        $q = Pack::with($this->relations)
-            ->withCount($this->counts)
-            ->filtered()
-            ->sortered();
-        $total = $q->count();
+        [$packs, $total] = Pack::queried();
 
         // Response
-        return (new PackCollection($q->limited()->get()))
-            ->additional([
-                'total' => $total
-            ]);
+        return (new PackCollection($packs))
+            ->additional(['total' => $total]);
     }
 
     /**
@@ -57,10 +48,7 @@ class PackController extends Controller
         );
 
         return response(
-            new PackItem(
-                $pack->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new PackItem($pack->loadRelation()),
             Response::HTTP_CREATED
         );
     }
@@ -80,10 +68,7 @@ class PackController extends Controller
         $pack->update($request->validated());
 
         return response(
-            new PackItem(
-                $pack->loadMissing($this->relations)
-                    ->loadCount($this->counts)
-            ),
+            new PackItem($pack->loadRelation()),
             Response::HTTP_CREATED
         );
     }
