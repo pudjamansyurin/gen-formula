@@ -109,7 +109,7 @@ export default {
                     nav.model = nav.children.some(({ to }) => to === route);
 
                     // check pages role (at least 1 for group)
-                    if (nav.model) {
+                    if (nav.children) {
                         let authNavs = nav.children.filter(({ to }) =>
                             this.authPage(to)
                         );
