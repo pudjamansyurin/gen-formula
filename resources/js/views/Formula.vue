@@ -1,15 +1,14 @@
 <template>
     <fragment>
         <app-top-bar
-            v-model="search"
+            v-model="options"
             :page="model"
             :selected="selected"
-            :tab.sync="mineTab"
             @unselect="selected = []"
-            @fetch="fetch"
             @edit="edit"
             @create="create"
             @delete="dialogDelete = true"
+            mine-tab
             crud
         ></app-top-bar>
 
@@ -260,14 +259,12 @@ export default {
                 { text: "UpdatedAt", value: "updated_at" },
             ],
             options: this.$_.cloneDeep(TABLE_OPTIONS),
-            search: "",
             total: 0,
             selected: [],
             dialog: false,
             dialogDelete: false,
             dialogPortion: false,
             form: this.$_.cloneDeep(Formula),
-            mineTab: 0,
             listMaterial: [],
         };
     },
@@ -346,11 +343,7 @@ export default {
         fetch: async function () {
             await this.GET_MODELS({
                 model: this.model,
-                params: {
-                    ...this.options,
-                    search: this.search,
-                    mine: this.mineTab,
-                },
+                params: this.options,
             })
                 .then(({ total }) => (this.total = total))
                 .catch((e) => eHandler(e));
@@ -410,9 +403,6 @@ export default {
         },
     },
     watch: {
-        mineTab: function (mine) {
-            this.fetch();
-        },
         dialogPortion: function (open) {
             if (open) {
                 this.fetchListMaterial();

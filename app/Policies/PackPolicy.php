@@ -22,18 +22,6 @@ class PackPolicy
     }
 
     /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Pack  $pack
-     * @return mixed
-     */
-    public function view(User $user, Pack $pack)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can create models.
      *
      * @param  \App\User  $user

@@ -17,5 +17,7 @@ export const TABLE_OPTIONS = {
     groupBy: [],
     groupDesc: [],
     sortBy: ["updated_at"],
-    sortDesc: [true]
+    sortDesc: [true],
+    search: "",
+    mine: false
 };

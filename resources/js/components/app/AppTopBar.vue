@@ -19,8 +19,7 @@
             <template v-if="crud">
                 <v-text-field
                     v-if="searchBox || !mobile"
-                    :value="value"
-                    @input="$emit('input', $event)"
+                    v-model="search"
                     :append-icon="searchBoxIcon"
                     @click:append="setSearch(false)"
                     label="Search"
@@ -104,14 +103,9 @@
                     <v-toolbar-title v-if="selected.length">
                         {{ selected.length }} selected
                     </v-toolbar-title>
-                    <v-tabs
-                        v-else
-                        :value="tab"
-                        @change="$emit('update:tab', $event)"
-                        align-with-title
-                    >
+                    <v-tabs v-else v-model="tab" align-with-title>
                         <v-tab>{{ theTitle }}</v-tab>
-                        <v-tab v-if="tab > -1">Mine</v-tab>
+                        <v-tab v-if="mineTab">Mine</v-tab>
                     </v-tabs>
                 </template>
 
@@ -214,8 +208,8 @@ export default {
     mixins: [mixins],
     props: {
         value: {
-            type: String,
-            default: "",
+            type: Object,
+            default: () => {},
         },
         page: {
             type: String,
@@ -225,19 +219,25 @@ export default {
             type: Array,
             default: () => [],
         },
+        options: {
+            type: Object,
+            default: () => {},
+        },
         crud: {
             type: Boolean,
             default: false,
         },
-        tab: {
-            type: Number,
-            default: -1,
+        mineTab: {
+            type: Boolean,
+            default: false,
         },
     },
     data() {
         return {
             dialog: !ls.get("confirmedFullscreen"),
             searchBox: false,
+            search: "",
+            tab: 0,
         };
     },
     computed: {
@@ -252,7 +252,7 @@ export default {
             return this.selected.length ? "black" : "primary";
         },
         searchBoxIcon() {
-            return this.mobile || this.value
+            return this.mobile || this.search
                 ? "mdi-magnify-close"
                 : "mdi-magnify";
         },
@@ -272,7 +272,7 @@ export default {
         ...mapActions("app", [LOGOUT]),
         setSearch(state) {
             if (!state) {
-                this.$emit("input", "");
+                this.search = "";
             }
             this.searchBox = state;
         },
@@ -296,9 +296,20 @@ export default {
         },
     },
     watch: {
-        value: debounce(function () {
-            this.$emit("fetch");
+        search: debounce(function (term) {
+            this.$emit("input", {
+                ...this.value,
+                page: 1,
+                search: term,
+            });
         }, 500),
+        tab: function (mine) {
+            this.$emit("input", {
+                ...this.value,
+                page: 1,
+                mine,
+            });
+        },
     },
 };
 </script>

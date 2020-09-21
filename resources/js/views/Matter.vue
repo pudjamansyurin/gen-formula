@@ -1,15 +1,14 @@
 <template>
     <fragment>
         <app-top-bar
-            v-model="search"
+            v-model="options"
             :page="model"
             :selected="selected"
-            :tab.sync="mineTab"
             @unselect="selected = []"
-            @fetch="fetch"
             @edit="edit"
             @create="create"
             @delete="dialogDelete = true"
+            mine-tab
             crud
         ></app-top-bar>
 
@@ -121,13 +120,11 @@ export default {
                 },
             ],
             options: this.$_.cloneDeep(TABLE_OPTIONS),
-            search: "",
             total: 0,
             selected: [],
             dialog: false,
             dialogDelete: false,
             form: this.$_.cloneDeep(Matter),
-            mineTab: 0,
         };
     },
     computed: {
@@ -167,11 +164,7 @@ export default {
         fetch: async function () {
             await this.GET_MODELS({
                 model: this.model,
-                params: {
-                    ...this.options,
-                    search: this.search,
-                    mine: this.mineTab,
-                },
+                params: this.options,
             })
                 .then(({ total }) => (this.total = total))
                 .catch((e) => eHandler(e));
@@ -202,9 +195,6 @@ export default {
         },
     },
     watch: {
-        mineTab: function (mine) {
-            this.fetch();
-        },
         options: {
             handler() {
                 this.fetch();
