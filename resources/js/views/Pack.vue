@@ -89,7 +89,7 @@
                     >
                         <v-autocomplete
                             v-model="form.packer_id"
-                            :items="packers"
+                            :items="listPacker"
                             :error-messages="errors"
                             :success="valid"
                             :loading="!!loading"
@@ -112,6 +112,7 @@ import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
+    GET_LIST,
 } from "../store/model/action-types";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
@@ -156,10 +157,11 @@ export default {
             dialogDelete: false,
             form: this.$_.cloneDeep(Pack),
             mineTab: 0,
+            listPacker: [],
         };
     },
     computed: {
-        ...mapState("model", ["packs", "packers"]),
+        ...mapState("model", ["packs"]),
         creating() {
             return this.isNewModel(this.form);
         },
@@ -169,7 +171,12 @@ export default {
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        ...mapActions("model", [
+            GET_MODELS,
+            SAVE_MODEL,
+            DELETE_MODELS,
+            GET_LIST,
+        ]),
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -231,14 +238,11 @@ export default {
                 }
             });
         },
-        fetchPackers: async function () {
-            await this.GET_MODELS({
+        fetchListPacker: async function () {
+            await this.GET_LIST({
                 model: "packer",
-                params: {
-                    itemsPerPage: -1,
-                },
             })
-                .then(() => {})
+                .then((data) => (this.listPacker = data))
                 .catch((e) => eHandler(e));
         },
     },
@@ -248,7 +252,7 @@ export default {
         },
         dialog: function (open) {
             if (open) {
-                this.fetchPackers();
+                this.fetchListPacker();
             }
         },
         options: {

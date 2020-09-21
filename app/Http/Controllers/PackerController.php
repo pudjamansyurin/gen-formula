@@ -16,6 +16,18 @@ class PackerController extends Controller
     private $counts = ['packs'];
 
     /**
+     * Get lists of this model
+     */
+    public function list()
+    {
+        $this->authorize('viewAny', Packer::class);
+
+        return response([
+            'data' => Packer::all(['id', 'name'])
+        ], Response::HTTP_OK);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

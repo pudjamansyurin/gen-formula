@@ -124,11 +124,9 @@ class UserController extends Controller
      */
     public function profile(Request $request)
     {
-        $user = User::find(auth()->id());
-
         return response([
             'user' => new UserItem(
-                $user->loadMissing($this->relations)
+                $request->user()->loadMissing($this->relations)
             ),
         ], Response::HTTP_OK);
     }
@@ -141,7 +139,7 @@ class UserController extends Controller
         $this->authorize('role', User::class);
 
         return response([
-            'data' => Role::all()
+            'data' => Role::all(['id', 'name'])
         ], Response::HTTP_OK);
     }
 }

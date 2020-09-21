@@ -105,7 +105,7 @@
                         >
                             <v-autocomplete
                                 v-model="form.matter_id"
-                                :items="matters"
+                                :items="listMatter"
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
@@ -258,6 +258,7 @@ import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
+    GET_LIST,
 } from "../store/model/action-types";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
@@ -316,19 +317,14 @@ export default {
             tabList: ["data", "rev"],
             formTab: 0,
             mineTab: 0,
+            listMatter: [],
         };
     },
     computed: {
-        ...mapState("model", ["materials", "matters"]),
+        ...mapState("model", ["materials"]),
         creating() {
             return this.isNewModel(this.form);
         },
-        // mattersOptions() {
-        //     return this.matters.map(({ id, name }) => ({
-        //         id,
-        //         name,
-        //     }));
-        // },
         formTabs() {
             if (this.creating) {
                 return [this.tabList[0]];
@@ -341,7 +337,12 @@ export default {
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        ...mapActions("model", [
+            GET_MODELS,
+            SAVE_MODEL,
+            DELETE_MODELS,
+            GET_LIST,
+        ]),
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -408,14 +409,11 @@ export default {
                 }
             });
         },
-        fetchMatters: async function () {
-            await this.GET_MODELS({
+        fetchListMatter: async function () {
+            await this.GET_LIST({
                 model: "matter",
-                params: {
-                    itemsPerPage: -1,
-                },
             })
-                .then(() => {})
+                .then((data) => (this.listMatter = data))
                 .catch((e) => eHandler(e));
         },
         confirmRemoveRev(rev) {
@@ -452,7 +450,7 @@ export default {
         },
         dialog: function (open) {
             if (open) {
-                this.fetchMatters();
+                this.fetchListMatter();
             }
         },
         options: {

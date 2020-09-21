@@ -124,7 +124,7 @@
                     >
                         <v-select
                             v-model="form.role"
-                            :items="rolesOption"
+                            :items="listRole"
                             :error-messages="errors"
                             :success="valid"
                             :loading="!!loading"
@@ -197,6 +197,7 @@ import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
+    GET_LIST,
 } from "../store/model/action-types";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
@@ -240,19 +241,14 @@ export default {
                 password: null,
                 password_confirmation: null,
             },
+            listRole: [],
         };
     },
     computed: {
         ...mapState("app", ["profile"]),
-        ...mapState("model", ["users", "roles"]),
+        ...mapState("model", ["users"]),
         creating() {
             return this.isNewModel(this.form);
-        },
-        rolesOption() {
-            return this.roles.map(({ id, name }) => ({
-                id,
-                name: name.toUpperCase(),
-            }));
         },
         pwd() {
             return {
@@ -266,7 +262,12 @@ export default {
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        ...mapActions("model", [
+            GET_MODELS,
+            SAVE_MODEL,
+            DELETE_MODELS,
+            GET_LIST,
+        ]),
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -344,21 +345,23 @@ export default {
                 }
             });
         },
-        fetchRoles: async function () {
-            await this.GET_MODELS({
+        fetchListRole: async function () {
+            await this.GET_LIST({
                 model: "role",
-                params: {
-                    itemsPerPage: -1,
-                },
             })
-                .then(() => {})
+                .then((data) => {
+                    this.listRole = data.map(({ id, name }) => ({
+                        id,
+                        name: name.toUpperCase(),
+                    }));
+                })
                 .catch((e) => eHandler(e));
         },
     },
     watch: {
         dialog: function (open) {
             if (open) {
-                this.fetchRoles();
+                this.fetchListRole();
             }
         },
         options: {

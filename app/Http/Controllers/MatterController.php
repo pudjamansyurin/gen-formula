@@ -16,6 +16,18 @@ class MatterController extends Controller
     private $counts = ['materials'];
 
     /**
+     * Get lists of this model
+     */
+    public function list()
+    {
+        $this->authorize('viewAny', Matter::class);
+
+        return response([
+            'data' => Matter::all(['id', 'name'])
+        ], Response::HTTP_OK);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

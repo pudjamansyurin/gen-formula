@@ -129,7 +129,7 @@
                                 >
                                     <v-autocomplete
                                         v-model="form.unit_id"
-                                        :items="units"
+                                        :items="listUnit"
                                         :error-messages="errors"
                                         :success="valid"
                                         :loading="!!loading"
@@ -182,6 +182,7 @@ import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
+    GET_LIST,
 } from "../store/model/action-types";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
@@ -242,10 +243,11 @@ export default {
             tabList: ["data", "rev"],
             formTab: 0,
             mineTab: 0,
+            listUnit: [],
         };
     },
     computed: {
-        ...mapState("model", ["packages", "units"]),
+        ...mapState("model", ["packages"]),
         creating() {
             return this.isNewModel(this.form);
         },
@@ -258,7 +260,12 @@ export default {
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        ...mapActions("model", [
+            GET_MODELS,
+            SAVE_MODEL,
+            DELETE_MODELS,
+            GET_LIST,
+        ]),
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -324,14 +331,11 @@ export default {
                 }
             });
         },
-        fetchUnits: async function () {
-            await this.GET_MODELS({
+        fetchListUnit: async function () {
+            await this.GET_LIST({
                 model: "unit",
-                params: {
-                    itemsPerPage: -1,
-                },
             })
-                .then(() => {})
+                .then((data) => (this.listUnit = data))
                 .catch((e) => eHandler(e));
         },
     },
@@ -341,7 +345,7 @@ export default {
         },
         dialog: function (open) {
             if (open) {
-                this.fetchUnits();
+                this.fetchListUnit();
             }
         },
         options: {

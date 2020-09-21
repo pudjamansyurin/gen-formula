@@ -139,7 +139,7 @@
                             >
                                 <v-autocomplete
                                     v-model="form.portions"
-                                    :items="materialsOptions"
+                                    :items="listMaterial"
                                     :error-messages="errors"
                                     :success="valid"
                                     :loading="!!loading"
@@ -210,6 +210,7 @@ import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
+    GET_LIST,
 } from "../store/model/action-types";
 import { mapState, mapActions, mapMutations } from "vuex";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
@@ -267,21 +268,13 @@ export default {
             dialogPortion: false,
             form: this.$_.cloneDeep(Formula),
             mineTab: 0,
+            listMaterial: [],
         };
     },
     computed: {
-        ...mapState("model", ["formulas", "materials"]),
+        ...mapState("model", ["formulas"]),
         creating() {
             return this.isNewModel(this.form);
-        },
-        materialsOptions() {
-            return this.materials.map(({ id, name }) => ({
-                material: {
-                    id,
-                    name,
-                },
-                portion: 0,
-            }));
         },
         portionFormTitle() {
             return this.form.name || "Related materials";
@@ -296,7 +289,12 @@ export default {
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        ...mapActions("model", [
+            GET_MODELS,
+            SAVE_MODEL,
+            DELETE_MODELS,
+            GET_LIST,
+        ]),
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -363,9 +361,7 @@ export default {
             this.$nextTick(() => this.$refs.portion_form.reset());
         },
         editPortion(id) {
-            this.form = this.$_.cloneDeep(
-                this.$_.find(this.formulas, { id: id })
-            );
+            this.form = this.$_.cloneDeep(this.$_.find(this.formulas, { id }));
 
             this.$nextTick(() => (this.dialogPortion = true));
         },
@@ -397,14 +393,19 @@ export default {
                 }
             });
         },
-        fetchMaterials: async function () {
-            await this.GET_MODELS({
+        fetchListMaterial: async function () {
+            await this.GET_LIST({
                 model: "material",
-                params: {
-                    itemsPerPage: -1,
-                },
             })
-                .then(() => {})
+                .then((data) => {
+                    this.listMaterial = data.map(({ id, name }) => ({
+                        portion: 0,
+                        material: {
+                            id,
+                            name,
+                        },
+                    }));
+                })
                 .catch((e) => eHandler(e));
         },
     },
@@ -414,7 +415,7 @@ export default {
         },
         dialogPortion: function (open) {
             if (open) {
-                this.fetchMaterials();
+                this.fetchListMaterial();
             }
         },
         options: {

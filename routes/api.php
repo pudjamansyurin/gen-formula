@@ -21,12 +21,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('pack', 'PackController', ['except' => ['show']]);
     Route::apiResource('packer', 'PackerController', ['except' => ['show']]);
     Route::apiResource('package', 'PackageController', ['except' => ['show']]);
-    Route::get('/unit', 'PackageController@unit');
 
     Route::apiResource('formula', 'FormulaController', ['except' => ['show']]);
     Route::apiResource('formula.portion', 'PortionController', ['only' => ['store']]);
 
     Route::apiResource('user', 'UserController', ['except' => ['show']]);
     Route::get('/profile', 'UserController@profile');
-    Route::get('/role', 'UserController@role');
+
+    Route::group(['prefix' => 'list'], function () {
+        Route::get('packer', 'PackerController@list');
+        Route::get('matter', 'MatterController@list');
+        Route::get('material', 'MaterialController@list');
+        Route::get('unit', 'PackageController@unit');
+        Route::get('role', 'UserController@role');
+    });
 });

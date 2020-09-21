@@ -1,5 +1,5 @@
 {
-    "/js/app.js": "/js/app.js?id=c4752f42214f54ac883b",
+    "/js/app.js": "/js/app.js?id=ac382d20dedc71eca396",
     "/css/app.css": "/css/app.css?id=3462204912f6bda7044e",
     "/js/auth.forget.js": "/js/auth.forget.js?id=8cebf758990be7f4b5d8",
     "/js/auth.login.js": "/js/auth.login.js?id=e50bd5cbc295c2bf4a25",
@@ -8,15 +8,15 @@
     "/js/dashboard.js": "/js/dashboard.js?id=cfc98499172680c3172a",
     "/js/dashboard~formula~material~matter~pack~package~packer~profile~user.js": "/js/dashboard~formula~material~matter~pack~package~packer~profile~user.js?id=8333ac8869fa6ba67dda",
     "/js/error.js": "/js/error.js?id=5263f23ad7e197ac91dd",
-    "/js/formula.js": "/js/formula.js?id=6057f2061b6c970d2532",
+    "/js/formula.js": "/js/formula.js?id=f435830647f36fd4f758",
     "/js/formula~material~matter~pack~package~packer~user.js": "/js/formula~material~matter~pack~package~packer~user.js?id=ec142185ce306e98aa97",
     "/js/landing.js": "/js/landing.js?id=fc723af382a7469ba5f6",
-    "/js/material.js": "/js/material.js?id=ef958b0d0394e7f9ff19",
+    "/js/material.js": "/js/material.js?id=d326d9532682338de8e6",
     "/js/matter.js": "/js/matter.js?id=46f8ade724f03ccf905b",
-    "/js/pack.js": "/js/pack.js?id=4dd8277524d579764996",
-    "/js/package.js": "/js/package.js?id=406eadabadf7d7102b50",
+    "/js/pack.js": "/js/pack.js?id=56dce92526b99988a668",
+    "/js/package.js": "/js/package.js?id=204e643b773187ca936c",
     "/js/packer.js": "/js/packer.js?id=73661ca151f007895a3e",
     "/js/policy.js": "/js/policy.js?id=9d3a32bdd6038c7ebf7b",
     "/js/profile.js": "/js/profile.js?id=9a2e6e033f6c0fe985b4",
-    "/js/user.js": "/js/user.js?id=0756e91c8d447d4e14b5"
+    "/js/user.js": "/js/user.js?id=a7aba3af376c437795f2"
 }

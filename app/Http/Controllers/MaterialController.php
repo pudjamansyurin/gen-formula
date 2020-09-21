@@ -17,6 +17,18 @@ class MaterialController extends Controller
     private $counts = ['revs'];
 
     /**
+     * Get lists of this model
+     */
+    public function list()
+    {
+        $this->authorize('viewAny', Material::class);
+
+        return response([
+            'data' => Material::all(['id', 'name'])
+        ], Response::HTTP_OK);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
