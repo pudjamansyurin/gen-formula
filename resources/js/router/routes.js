@@ -22,6 +22,7 @@ const Profile = () =>
     import(/* webpackChunkName: "profile" */ "../views/Profile");
 const Dashboard = () =>
     import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
+const Pack = () => import(/* webpackChunkName: "pack" */ "../views/Pack");
 const Packer = () => import(/* webpackChunkName: "packer" */ "../views/Packer");
 const Package = () =>
     import(/* webpackChunkName: "package" */ "../views/Package");
@@ -80,6 +81,16 @@ export default [
                         return { name: "formula" };
                     }
                     return { name: "material" };
+                }
+            },
+            {
+                path: "pack/:id?",
+                name: "pack",
+                component: Pack,
+                props: true,
+                meta: {
+                    nav: true,
+                    roles: ["admin", "manager"]
                 }
             },
             {

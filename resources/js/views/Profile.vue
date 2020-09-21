@@ -40,11 +40,11 @@
                             class="ma-2"
                             small
                             rounded
-                            :color="verifyBtnColor"
+                            :color="verifier.color"
                             dark
                         >
-                            <v-icon small left>{{ verifyIcon }}</v-icon>
-                            {{ verifyText }}
+                            <v-icon small left>{{ verifier.icon }}</v-icon>
+                            {{ verifier.text }}
                         </v-btn>
                     </v-list-item-title>
                     <v-list-item-subtitle>Email</v-list-item-subtitle>
@@ -174,7 +174,7 @@
                             color="blue darken-1"
                             @click="changePassword = !changePassword"
                             text
-                            >{{ passwordText }} Password</v-btn
+                            >{{ pwdButton }} Password</v-btn
                         >
 
                         <template v-if="changePassword">
@@ -184,8 +184,8 @@
                             >
                                 <v-text-field
                                     v-model="form.password"
-                                    :type="passwordType"
-                                    :append-icon="passwordIcon"
+                                    :type="pwd.type"
+                                    :append-icon="pwd.icon"
                                     :error-messages="errors"
                                     :success="valid"
                                     @click:append="showPassword = !showPassword"
@@ -203,8 +203,8 @@
                             >
                                 <v-text-field
                                     v-model="form.password_confirmation"
-                                    :type="passwordType"
-                                    :append-icon="passwordIcon"
+                                    :type="pwd.type"
+                                    :append-icon="pwd.icon"
                                     :error-messages="errors"
                                     :success="valid"
                                     @click:append="showPassword = !showPassword"
@@ -260,24 +260,22 @@ export default {
     },
     computed: {
         ...mapState("app", ["profile"]),
-        verifyBtnColor() {
-            return this.profile.email_verified_at ? "teal" : "orange";
+        verifier() {
+            return {
+                text: this.profile.email_verified_at ? "Verified" : "Verify",
+                color: this.profile.email_verified_at ? "teal" : "orange",
+                icon: this.profile.email_verified_at
+                    ? "mdi-checkbox-marked-circle"
+                    : "mdi-help-circle-outline",
+            };
         },
-        verifyIcon() {
-            return this.profile.email_verified_at
-                ? "mdi-checkbox-marked-circle"
-                : "mdi-help-circle-outline";
+        pwd() {
+            return {
+                icon: this.showPassword ? "mdi-eye" : "mdi-eye-off",
+                type: this.showPassword ? "text" : "password",
+            };
         },
-        verifyText() {
-            return this.profile.email_verified_at ? "Verified" : "Verify";
-        },
-        passwordIcon() {
-            return this.showPassword ? "mdi-eye" : "mdi-eye-off";
-        },
-        passwordType() {
-            return this.showPassword ? "text" : "password";
-        },
-        passwordText() {
+        pwdButton() {
             return this.changePassword ? "Keep" : "Change";
         },
     },
@@ -323,7 +321,9 @@ export default {
             });
         },
         resend() {
-            if (!this.profile.email_verified_at) {
+            let { email_verified_at } = this.profile;
+
+            if (!email_verified_at) {
                 this.RESEND().catch((e) => eHandler(e));
             }
         },

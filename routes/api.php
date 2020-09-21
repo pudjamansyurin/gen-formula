@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('material', 'MaterialController', ['except' => ['show']]);
     Route::apiResource('material-story', 'MaterialStoryController', ['only' => ['destroy']]);
 
-    // Route::apiResource('pack', 'FormulaController', ['except' => ['show']]);
+    Route::apiResource('pack', 'PackController', ['except' => ['show']]);
     Route::apiResource('packer', 'PackerController', ['except' => ['show']]);
     Route::apiResource('package', 'PackageController', ['except' => ['show']]);
     Route::get('/unit', 'PackageController@unit');

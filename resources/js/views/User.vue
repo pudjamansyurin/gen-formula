@@ -139,12 +139,12 @@
                     </validation-provider>
 
                     <v-btn
-                        v-if="!isNewModel(form)"
+                        v-if="!creating"
                         color="red"
                         @click="changePassword = !changePassword"
                         dark
                         small
-                        >{{ passwordText }} Password</v-btn
+                        >{{ pwdButton }} Password</v-btn
                     >
                     <template v-if="changePassword">
                         <validation-provider
@@ -153,8 +153,8 @@
                         >
                             <v-text-field
                                 v-model="form.password"
-                                :type="passwordType"
-                                :append-icon="passwordIcon"
+                                :type="pwd.type"
+                                :append-icon="pwd.icon"
                                 :error-messages="errors"
                                 :success="valid"
                                 @click:append="showPassword = !showPassword"
@@ -172,8 +172,8 @@
                         >
                             <v-text-field
                                 v-model="form.password_confirmation"
-                                :type="passwordType"
-                                :append-icon="passwordIcon"
+                                :type="pwd.type"
+                                :append-icon="pwd.icon"
                                 :error-messages="errors"
                                 :success="valid"
                                 @click:append="showPassword = !showPassword"
@@ -245,19 +245,22 @@ export default {
     computed: {
         ...mapState("app", ["profile"]),
         ...mapState("model", ["users", "roles"]),
+        creating() {
+            return this.isNewModel(this.form);
+        },
         rolesOption() {
             return this.roles.map(({ id, name }) => ({
                 id,
                 name: name.toUpperCase(),
             }));
         },
-        passwordIcon() {
-            return this.showPassword ? "mdi-eye" : "mdi-eye-off";
+        pwd() {
+            return {
+                icon: this.showPassword ? "mdi-eye" : "mdi-eye-off",
+                type: this.showPassword ? "text" : "password",
+            };
         },
-        passwordType() {
-            return this.showPassword ? "text" : "password";
-        },
-        passwordText() {
+        pwdButton() {
             return this.changePassword ? "Keep" : "Change";
         },
     },
@@ -325,14 +328,15 @@ export default {
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            if (this.isNewModel(this.form)) {
-                                await this.fetch();
-                            } else {
-                                this.UPDATE_MODEL({
-                                    model: this.model,
-                                    data,
-                                });
-                            }
+                            // if (this.creating) {
+                            await this.fetch();
+                            // } else {
+                            //     this.UPDATE_MODEL({
+                            //         model: this.model,
+                            //         data,
+                            //     });
+                            // }
+
                             this.selected = [];
                             this.close();
                         })
@@ -347,9 +351,7 @@ export default {
                     itemsPerPage: -1,
                 },
             })
-                .then(({ data }) => {
-                    /* nothing */
-                })
+                .then(() => {})
                 .catch((e) => eHandler(e));
         },
     },

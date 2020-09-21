@@ -83,7 +83,7 @@
             @close="dialogDeleteStory = false"
         >
             <template v-slot="{ item }">
-                {{ item.stories_price | currency }} |
+                {{ item.price | currency }} |
                 {{ item.updated_at | moment("from") }}
             </template>
         </the-dialog-delete>
@@ -105,7 +105,7 @@
                         >
                             <v-autocomplete
                                 v-model="form.matter_id"
-                                :items="mattersOptions"
+                                :items="matters"
                                 :error-messages="errors"
                                 :success="valid"
                                 :loading="!!loading"
@@ -314,28 +314,30 @@ export default {
             dialogDeleteStory: false,
             // menuUpdatedAt: false,
             form: this.$_.cloneDeep(Material),
+            tabList: ["data", "rev"],
             formTab: 0,
             mineTab: 0,
         };
     },
     computed: {
         ...mapState("model", ["materials", "matters"]),
-        mattersOptions() {
-            return this.matters.map(({ id, name }) => ({
-                id,
-                name,
-            }));
+        creating() {
+            return this.isNewModel(this.form);
         },
+        // mattersOptions() {
+        //     return this.matters.map(({ id, name }) => ({
+        //         id,
+        //         name,
+        //     }));
+        // },
         formTabs() {
-            let tabs = ["data", "rev"];
-
-            if (this.isNewModel(this.form)) {
-                return [tabs[0]];
+            if (this.creating) {
+                return [this.tabList[0]];
             }
-            return tabs;
+            return this.tabList;
         },
         fieldDisabled() {
-            return !this.isNewModel(this.form) && !this.form.authorized;
+            return !this.creating && !this.form.authorized;
         },
     },
     methods: {
@@ -391,14 +393,15 @@ export default {
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            if (this.isNewModel(this.form)) {
-                                await this.fetch();
-                            } else {
-                                this.UPDATE_MODEL({
-                                    model: this.model,
-                                    data,
-                                });
-                            }
+                            // if (this.creating) {
+                            await this.fetch();
+                            // } else {
+                            //     this.UPDATE_MODEL({
+                            //         model: this.model,
+                            //         data,
+                            //     });
+                            // }
+
                             this.selected = [];
                             this.close();
                         })
@@ -413,9 +416,7 @@ export default {
                     itemsPerPage: -1,
                 },
             })
-                .then(({ data }) => {
-                    /* nothing todo */
-                })
+                .then(() => {})
                 .catch((e) => eHandler(e));
         },
         confirmRemoveStory(story) {

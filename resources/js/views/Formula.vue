@@ -271,6 +271,9 @@ export default {
     },
     computed: {
         ...mapState("model", ["formulas", "materials"]),
+        creating() {
+            return this.isNewModel(this.form);
+        },
         materialsOptions() {
             return this.materials.map(({ id, name }) => ({
                 material: {
@@ -327,14 +330,14 @@ export default {
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            if (this.isNewModel(this.form)) {
-                                await this.fetch();
-                            } else {
-                                this.UPDATE_MODEL({
-                                    model: this.model,
-                                    data,
-                                });
-                            }
+                            // if (this.creating) {
+                            await this.fetch();
+                            // } else {
+                            //     this.UPDATE_MODEL({
+                            //         model: this.model,
+                            //         data,
+                            //     });
+                            // }
                             this.selected = [];
                             this.close();
                         })
@@ -401,9 +404,7 @@ export default {
                     itemsPerPage: -1,
                 },
             })
-                .then(({ data }) => {
-                    /* nothing todo */
-                })
+                .then(() => {})
                 .catch((e) => eHandler(e));
         },
     },

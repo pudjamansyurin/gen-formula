@@ -39,6 +39,11 @@ export const navigations = [
                 text: "Packer",
                 to: "packer",
                 icon: "mdi-package-variant"
+            },
+            {
+                text: "Pack",
+                to: "pack",
+                icon: "mdi-paper-cut-vertical"
             }
         ]
     },

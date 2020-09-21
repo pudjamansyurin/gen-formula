@@ -57,12 +57,10 @@ class MaterialController extends Controller
         );
 
         // add price stories
-        $material->stories()->create(
-            array_merge(
-                $request->validated(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        $material->stories()->create([
+            'price' => $request->stories_price,
+            'user_id' => auth()->id()
+        ]);
 
         return response(
             new MaterialItem(
@@ -97,12 +95,10 @@ class MaterialController extends Controller
         if ($material->stories()->first()->price != $request->stories_price) {
             $this->authorize('create', MaterialStory::class);
 
-            $material->stories()->create(
-                array_merge(
-                    $request->validated(),
-                    ['user_id' => auth()->id()]
-                )
-            );
+            $material->stories()->create([
+                'price' => $request->stories_price,
+                'user_id' => auth()->id()
+            ]);
         }
 
         return response(

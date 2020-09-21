@@ -4,6 +4,7 @@ import mutations from "./mutations";
 
 const state = {
     units: [],
+    packs: [],
     packers: [],
     packages: [],
     matters: [],

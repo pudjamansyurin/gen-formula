@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\ClientQueryScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Pack extends Model
 {
+    use ClientQueryScope;
+
     protected $table = 'packs';
 
     /**
@@ -18,6 +21,29 @@ class Pack extends Model
         'packer_id',
         'user_id'
     ];
+
+    /**
+     * Client query scope
+     */
+    protected $aRelatedQuery = [
+        'filter' => [
+            'user.name',
+            'packer.name'
+        ],
+        'sorter' =>  [
+            'user.name' => 'user_id',
+            'packer.name' => 'packer_id'
+        ]
+    ];
+
+    /**
+     * Accessors
+     */
+    public function getNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
 
     /**
      * Set relation tables.

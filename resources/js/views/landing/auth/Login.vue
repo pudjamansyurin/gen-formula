@@ -30,8 +30,8 @@
                     >
                         <v-text-field
                             v-model="form.password"
-                            :type="passwordType"
-                            :append-icon="passwordIcon"
+                            :type="pwd.type"
+                            :append-icon="pwd.icon"
                             :error-messages="errors"
                             :success="valid"
                             @click:append="showPassword = !showPassword"
@@ -84,11 +84,11 @@ export default {
     },
     computed: {
         ...mapState("app", ["remember"]),
-        passwordIcon() {
-            return this.showPassword ? "mdi-eye" : "mdi-eye-off";
-        },
-        passwordType() {
-            return this.showPassword ? "text" : "password";
+        pwd() {
+            return {
+                icon: this.showPassword ? "mdi-eye" : "mdi-eye-off",
+                type: this.showPassword ? "text" : "password",
+            };
         },
     },
     methods: {

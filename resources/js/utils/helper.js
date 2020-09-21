@@ -17,7 +17,7 @@ export const ls = {
     remove: item => window.localStorage.removeItem(item)
 };
 
-export const castParamsId = value => {
+export const castId = value => {
     let id = Number(value);
 
     return Number.isInteger(id) ? id : -1;

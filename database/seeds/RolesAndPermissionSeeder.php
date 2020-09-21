@@ -20,6 +20,7 @@ class RolesAndPermissionSeeder extends Seeder
 
         $models = [
             'unit',
+            'pack',
             'packer',
             'package',
             'matter',
@@ -37,6 +38,7 @@ class RolesAndPermissionSeeder extends Seeder
         $roles = [
             'inputor' => [
                 'unit' => ['view'],
+                'pack' => ['view'],
                 'packer' => ['view'],
                 'package' => '*',
                 'matter' => ['view'],
@@ -45,6 +47,7 @@ class RolesAndPermissionSeeder extends Seeder
             ],
             'manager' => [
                 'unit' => ['view'],
+                'pack' => '*',
                 'packer' => '*',
                 'package' => '*',
                 'matter' => '*',
@@ -54,6 +57,7 @@ class RolesAndPermissionSeeder extends Seeder
             ],
             'admin' => [
                 'unit' => ['view'],
+                'pack' => '*',
                 'packer' => '*',
                 'package' => '*',
                 'matter' => '*',

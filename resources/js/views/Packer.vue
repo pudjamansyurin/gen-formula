@@ -142,6 +142,9 @@ export default {
     },
     computed: {
         ...mapState("model", ["packers"]),
+        creating() {
+            return this.isNewModel(this.form);
+        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -191,14 +194,15 @@ export default {
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            if (this.isNewModel(this.form)) {
-                                await this.fetch();
-                            } else {
-                                this.UPDATE_MODEL({
-                                    model: this.model,
-                                    data,
-                                });
-                            }
+                            // if (this.creating) {
+                            await this.fetch();
+                            // } else {
+                            //     this.UPDATE_MODEL({
+                            //         model: this.model,
+                            //         data,
+                            //     });
+                            // }
+
                             this.selected = [];
                             this.close();
                         })
