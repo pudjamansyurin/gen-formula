@@ -2,9 +2,8 @@
     <fragment>
         <app-top-bar
             v-model="options"
+            :selected.sync="selected"
             :page="model"
-            :selected="selected"
-            @unselect="selected = []"
             @edit="edit"
             @create="create"
             @delete="dialogDelete = true"
@@ -34,16 +33,16 @@
                 </v-card-text>
             </template>
 
-            <!-- <template v-slot:[`item.name`]="{ item }">
+            <template v-slot:[`item.name`]="{ item }">
                 <v-chip
                     @click="edit(item)"
-                    :color="item.packs_count ? 'green' : 'red'"
+                    :color="chipColor(item)"
                     :small="dense"
                     dark
                 >
                     {{ item.name }}
                 </v-chip>
-            </template> -->
+            </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
             </template>
@@ -64,6 +63,7 @@
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :readonly="fieldDisabled"
             @close="close"
             @submit="save"
         >
@@ -74,6 +74,8 @@
                             v-model="form.name"
                             :error-messages="errors"
                             :success="valid"
+                            :readonly="fieldDisabled"
+                            :filled="fieldDisabled"
                             label="Name"
                             type="text"
                             hint="The pack's name"
@@ -91,7 +93,8 @@
                             :items="listPacker"
                             :error-messages="errors"
                             :success="valid"
-                            :loading="!!loading"
+                            :readonly="fieldDisabled"
+                            :filled="fieldDisabled"
                             item-text="name"
                             item-value="id"
                             label="Packer"
@@ -162,6 +165,9 @@ export default {
         creating() {
             return this.isNewModel(this.form);
         },
+        fieldDisabled() {
+            return !this.creating && !this.form.authorized;
+        },
         packerId() {
             return castId(this.id);
         },
@@ -174,6 +180,10 @@ export default {
             DELETE_MODELS,
             GET_LIST,
         ]),
+        chipColor(item) {
+            if (!item.authorized) return "grey";
+            return "green";
+        },
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -186,7 +196,16 @@ export default {
             this.form = this.$_.cloneDeep(item || this.selected[0]);
             this.$nextTick(() => (this.dialog = true));
         },
+        fetch: async function () {
+            await this.GET_MODELS({
+                model: this.model,
+                params: this.options,
+            })
+                .then(({ total }) => (this.total = total))
+                .catch((e) => eHandler(e));
+        },
         remove: async function () {
+            this.START_LOADING();
             await this.DELETE_MODELS({
                 model: this.model,
                 ids: this.$_.map(this.selected, "id"),
@@ -198,18 +217,12 @@ export default {
                     this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
-        },
-        fetch: async function () {
-            await this.GET_MODELS({
-                model: this.model,
-                params: this.options,
-            })
-                .then(({ total }) => (this.total = total))
-                .catch((e) => eHandler(e));
+            this.STOP_LOADING();
         },
         save() {
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
+                    this.START_LOADING();
                     this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
@@ -228,6 +241,7 @@ export default {
                             this.close();
                         })
                         .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                    this.STOP_LOADING();
                 }
             });
         },

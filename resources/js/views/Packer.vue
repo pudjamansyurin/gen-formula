@@ -2,9 +2,8 @@
     <fragment>
         <app-top-bar
             v-model="options"
+            :selected.sync="selected"
             :page="model"
-            :selected="selected"
-            @unselect="selected = []"
             @edit="edit"
             @create="create"
             @delete="dialogDelete = true"
@@ -37,7 +36,7 @@
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
                     @click="edit(item)"
-                    :color="item.packs_count ? 'green' : 'red'"
+                    :color="chipColor(item)"
                     :small="dense"
                     dark
                 >
@@ -64,6 +63,7 @@
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :readonly="fieldDisabled"
             @close="close"
             @submit="save"
         >
@@ -74,6 +74,8 @@
                             v-model="form.name"
                             :error-messages="errors"
                             :success="valid"
+                            :readonly="fieldDisabled"
+                            :filled="fieldDisabled"
                             label="Name"
                             type="text"
                             hint="The packer's name"
@@ -142,10 +144,18 @@ export default {
         creating() {
             return this.isNewModel(this.form);
         },
+        fieldDisabled() {
+            return !this.creating && !this.form.authorized;
+        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        chipColor(item) {
+            if (!item.authorized) return "grey";
+            return "green";
+            // return item.packs_count ? "green" : "red";
+        },
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -158,7 +168,16 @@ export default {
             this.form = this.$_.cloneDeep(item || this.selected[0]);
             this.$nextTick(() => (this.dialog = true));
         },
+        fetch: async function () {
+            await this.GET_MODELS({
+                model: this.model,
+                params: this.options,
+            })
+                .then(({ total }) => (this.total = total))
+                .catch((e) => eHandler(e));
+        },
         remove: async function () {
+            this.START_LOADING();
             await this.DELETE_MODELS({
                 model: this.model,
                 ids: this.$_.map(this.selected, "id"),
@@ -170,19 +189,13 @@ export default {
                     this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
-        },
-        fetch: async function () {
-            await this.GET_MODELS({
-                model: this.model,
-                params: this.options,
-            })
-                .then(({ total }) => (this.total = total))
-                .catch((e) => eHandler(e));
+            this.STOP_LOADING();
         },
         save() {
-            this.$refs.form.validate().then((valid) => {
+            this.$refs.form.validate().then(async (valid) => {
                 if (valid) {
-                    this.SAVE_MODEL({
+                    this.START_LOADING();
+                    await this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
                     })
@@ -200,6 +213,7 @@ export default {
                             this.close();
                         })
                         .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                    this.STOP_LOADING();
                 }
             });
         },

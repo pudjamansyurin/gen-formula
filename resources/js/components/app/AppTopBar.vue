@@ -82,7 +82,7 @@
             <template v-slot:extension v-if="crud">
                 <template v-if="selected.length">
                     <v-btn
-                        @click="$emit('unselect')"
+                        @click="$emit('update:selected', [])"
                         fab
                         text
                         outlined

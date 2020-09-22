@@ -2,9 +2,8 @@
     <fragment>
         <app-top-bar
             v-model="options"
+            :selected.sync="selected"
             :page="model"
-            :selected="selected"
-            @unselect="selected = []"
             @edit="edit"
             @create="create"
             @delete="dialogDelete = true"
@@ -23,7 +22,7 @@
             <template v-slot:card="{ item }">
                 <v-btn
                     @click.stop="editPortion(item.id)"
-                    :color="item.portion_total == 100 ? 'green' : 'red'"
+                    :color="chipColor(item)"
                     :outlined="!item.selected"
                     absolute
                     top
@@ -48,7 +47,7 @@
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
                     @click="editPortion(item.id)"
-                    :color="item.portion_total == 100 ? 'green' : 'red'"
+                    :color="chipColor(item)"
                     :small="dense"
                     dark
                 >
@@ -123,7 +122,7 @@
         <the-dialog-form
             v-model="dialogPortion"
             :title="portionFormTitle"
-            :readonly="!form.authorized"
+            :readonly="fieldDisabled"
             @close="closePortion"
             @submit="savePortion"
             width="1000"
@@ -141,9 +140,9 @@
                                     :items="listMaterial"
                                     :error-messages="errors"
                                     :success="valid"
-                                    :loading="!!loading"
-                                    :readonly="!form.authorized"
                                     :clearable="form.authorized"
+                                    :readonly="fieldDisabled"
+                                    :filled="fieldDisabled"
                                     item-text="material.name"
                                     item-value="material.id"
                                     label="Related materials"
@@ -188,7 +187,8 @@
                                     :label="el.material.name"
                                     :error-messages="errors"
                                     :success="valid"
-                                    :readonly="!form.authorized"
+                                    :readonly="fieldDisabled"
+                                    :filled="fieldDisabled"
                                     type="number"
                                     suffix="%"
                                     hint="This material's portion"
@@ -273,6 +273,9 @@ export default {
         creating() {
             return this.isNewModel(this.form);
         },
+        fieldDisabled() {
+            return !this.creating && !this.form.authorized;
+        },
         portionFormTitle() {
             return this.form.name || "Related materials";
         },
@@ -292,6 +295,10 @@ export default {
             DELETE_MODELS,
             GET_LIST,
         ]),
+        chipColor(item) {
+            if (!item.authorized) return "grey";
+            return item.portion_total == 100 ? "green" : "red";
+        },
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -304,7 +311,16 @@ export default {
             this.form = this.$_.cloneDeep(this.selected[0]);
             this.$nextTick(() => (this.dialog = true));
         },
+        fetch: async function () {
+            await this.GET_MODELS({
+                model: this.model,
+                params: this.options,
+            })
+                .then(({ total }) => (this.total = total))
+                .catch((e) => eHandler(e));
+        },
         remove: async function () {
+            this.START_LOADING();
             await this.DELETE_MODELS({
                 model: this.model,
                 ids: this.$_.map(this.selected, "id"),
@@ -316,10 +332,12 @@ export default {
                     this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
+            this.STOP_LOADING();
         },
         save() {
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
+                    this.START_LOADING();
                     this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
@@ -337,25 +355,33 @@ export default {
                             this.close();
                         })
                         .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                    this.STOP_LOADING();
                 }
             });
         },
-        fetch: async function () {
-            await this.GET_MODELS({
-                model: this.model,
-                params: this.options,
+        fetchListMaterial: async function () {
+            await this.GET_LIST({
+                model: "material",
             })
-                .then(({ total }) => (this.total = total))
+                .then((data) => {
+                    this.listMaterial = data.map(({ id, name }) => ({
+                        portion: 0,
+                        material: {
+                            id,
+                            name,
+                        },
+                    }));
+                })
                 .catch((e) => eHandler(e));
         },
-
+        // portion related routines
         closePortion() {
             this.dialogPortion = false;
             this.$nextTick(() => this.$refs.portion_form.reset());
         },
         editPortion(id) {
-            this.form = this.$_.cloneDeep(this.$_.find(this.formulas, { id }));
-
+            let formula = this.$_.find(this.formulas, { id });
+            this.form = this.$_.cloneDeep(formula);
             this.$nextTick(() => (this.dialogPortion = true));
         },
         savePortion() {
@@ -378,6 +404,7 @@ export default {
                                 model: this.model,
                                 data,
                             });
+
                             this.closePortion();
                         })
                         .catch((e) =>
@@ -385,21 +412,6 @@ export default {
                         );
                 }
             });
-        },
-        fetchListMaterial: async function () {
-            await this.GET_LIST({
-                model: "material",
-            })
-                .then((data) => {
-                    this.listMaterial = data.map(({ id, name }) => ({
-                        portion: 0,
-                        material: {
-                            id,
-                            name,
-                        },
-                    }));
-                })
-                .catch((e) => eHandler(e));
         },
     },
     watch: {

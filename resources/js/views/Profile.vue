@@ -314,6 +314,7 @@ export default {
                                 text: "Profile udpated successfully",
                                 type: "success",
                             });
+
                             this.close();
                         })
                         .catch((e) => this.$refs.form.setErrors(eHandler(e)));

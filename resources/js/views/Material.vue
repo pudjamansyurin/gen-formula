@@ -2,9 +2,8 @@
     <fragment>
         <app-top-bar
             v-model="options"
+            :selected.sync="selected"
             :page="model"
-            :selected="selected"
-            @unselect="selected = []"
             @edit="edit"
             @create="create"
             @delete="dialogDelete = true"
@@ -23,7 +22,7 @@
             <template v-slot:card="{ item }">
                 <v-btn
                     @click="edit(item)"
-                    :color="item.revs_count ? 'green' : 'red'"
+                    :color="chipColor(item)"
                     :outlined="!item.selected"
                     absolute
                     top
@@ -49,7 +48,7 @@
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
                     @click="edit(item)"
-                    :color="item.revs_count ? 'green' : 'red'"
+                    :color="chipColor(item)"
                     :small="dense"
                     dark
                 >
@@ -107,7 +106,6 @@
                                 :items="listMatter"
                                 :error-messages="errors"
                                 :success="valid"
-                                :loading="!!loading"
                                 :readonly="fieldDisabled"
                                 :filled="fieldDisabled"
                                 item-text="name"
@@ -322,14 +320,14 @@ export default {
         creating() {
             return this.isNewModel(this.form);
         },
+        fieldDisabled() {
+            return !this.creating && !this.form.authorized;
+        },
         formTabs() {
             if (this.creating) {
                 return [this.tabList[0]];
             }
             return this.tabList;
-        },
-        fieldDisabled() {
-            return !this.creating && !this.form.authorized;
         },
     },
     methods: {
@@ -340,6 +338,11 @@ export default {
             DELETE_MODELS,
             GET_LIST,
         ]),
+        chipColor(item) {
+            if (!item.authorized) return "grey";
+            return "green";
+            // return item.revs_count ? "green" : "red";
+        },
         close() {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
@@ -357,7 +360,16 @@ export default {
 
             this.$nextTick(() => (this.dialog = true));
         },
+        fetch: async function () {
+            await this.GET_MODELS({
+                model: this.model,
+                params: this.options,
+            })
+                .then(({ total }) => (this.total = total))
+                .catch((e) => eHandler(e));
+        },
         remove: async function () {
+            this.START_LOADING();
             await this.DELETE_MODELS({
                 model: this.model,
                 ids: this.$_.map(this.selected, "id"),
@@ -369,18 +381,12 @@ export default {
                     this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
-        },
-        fetch: async function () {
-            await this.GET_MODELS({
-                model: this.model,
-                params: this.options,
-            })
-                .then(({ total }) => (this.total = total))
-                .catch((e) => eHandler(e));
+            this.STOP_LOADING();
         },
         save() {
             this.$refs.form.validate().then((valid) => {
                 if (valid) {
+                    this.START_LOADING();
                     this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
@@ -399,6 +405,7 @@ export default {
                             this.close();
                         })
                         .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                    this.STOP_LOADING();
                 }
             });
         },
@@ -409,6 +416,7 @@ export default {
                 .then((data) => (this.listMatter = data))
                 .catch((e) => eHandler(e));
         },
+        // revision related routines
         confirmRemoveRev(rev) {
             this.selectedRev = [rev];
             this.$nextTick(() => (this.dialogDeleteRev = true));

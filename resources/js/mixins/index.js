@@ -1,4 +1,5 @@
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
+import { START_LOADING, STOP_LOADING } from "../store/app/mutation-types";
 
 export default {
     computed: {
@@ -8,6 +9,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations("app", [START_LOADING, STOP_LOADING]),
         isNewModel({ id }) {
             return id === -1;
         }

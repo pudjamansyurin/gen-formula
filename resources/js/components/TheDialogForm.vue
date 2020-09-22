@@ -99,10 +99,9 @@ export default {
     },
     computed: {
         formTitle() {
-            return (
-                this.title ||
-                `${this.isNewModel(this.form) ? "New" : "Edit"} Item`
-            );
+            if (this.title) return this.title;
+            if (this.readonly) return "Detail Item";
+            return `${this.isNewModel(this.form) ? "New" : "Edit"} Item`;
         },
         cardTextHeight() {
             return !this.mobile ? "max-height: 500px;" : "";

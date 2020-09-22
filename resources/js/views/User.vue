@@ -2,9 +2,8 @@
     <fragment>
         <app-top-bar
             v-model="options"
+            :selected.sync="selected"
             :page="model"
-            :selected="selected"
-            @unselect="selected = []"
             @edit="edit"
             @create="create"
             @delete="dialogDelete = true"
@@ -126,7 +125,6 @@
                             :items="listRole"
                             :error-messages="errors"
                             :success="valid"
-                            :loading="!!loading"
                             item-text="name"
                             item-value="id"
                             label="Role"
@@ -290,7 +288,16 @@ export default {
             this.changePassword = false;
             this.$nextTick(() => (this.dialog = true));
         },
+        fetch: async function () {
+            await this.GET_MODELS({
+                model: this.model,
+                params: this.options,
+            })
+                .then(({ total }) => (this.total = total))
+                .catch((e) => eHandler(e));
+        },
         remove: async function () {
+            this.START_LOADING();
             await this.DELETE_MODELS({
                 model: this.model,
                 ids: this.$_.map(this.selected, "id"),
@@ -302,14 +309,7 @@ export default {
                     this.$nextTick(() => (this.selected = []));
                 })
                 .catch((e) => eHandler(e));
-        },
-        fetch: async function () {
-            await this.GET_MODELS({
-                model: this.model,
-                params: this.options,
-            })
-                .then(({ total }) => (this.total = total))
-                .catch((e) => eHandler(e));
+            this.STOP_LOADING();
         },
         save() {
             this.$refs.form.validate().then((valid) => {
@@ -319,6 +319,7 @@ export default {
                         this.$delete(this.form, "password_confirmation");
                     }
 
+                    this.START_LOADING();
                     this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
@@ -337,6 +338,7 @@ export default {
                             this.close();
                         })
                         .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                    this.STOP_LOADING();
                 }
             });
         },
