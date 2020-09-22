@@ -29,8 +29,9 @@
                     right
                     small
                     tile
-                    >Profile</v-btn
                 >
+                    Profile
+                </v-btn>
                 <v-card-text>
                     <div class="overline">
                         {{ item.last_at | moment("from") }}
@@ -44,18 +45,18 @@
                     {{ item.email }}
                 </v-card-text>
             </template>
+
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
-                    v-if="profile.id == item.id"
-                    :to="{ name: 'profile' }"
-                    color="primary"
+                    @click="edit(item)"
+                    :color="chipColor(item)"
                     :small="dense"
-                    >{{ item.name }}</v-chip
+                    dark
                 >
-                <template v-else>
                     {{ item.name }}
-                </template>
+                </v-chip>
             </template>
+
             <template v-slot:[`item.last_at`]="{ item }">
                 <template v-if="item.last_at">
                     {{ item.last_at | moment("from") }}
@@ -141,8 +142,9 @@
                         @click="changePassword = !changePassword"
                         dark
                         small
-                        >{{ pwdButton }} Password</v-btn
                     >
+                        {{ passwordChangeText }} Password
+                    </v-btn>
                     <template v-if="changePassword">
                         <validation-provider
                             name="password"
@@ -150,8 +152,8 @@
                         >
                             <v-text-field
                                 v-model="form.password"
-                                :type="pwd.type"
-                                :append-icon="pwd.icon"
+                                :type="passwordState.type"
+                                :append-icon="passwordState.icon"
                                 :error-messages="errors"
                                 :success="valid"
                                 @click:append="showPassword = !showPassword"
@@ -169,8 +171,8 @@
                         >
                             <v-text-field
                                 v-model="form.password_confirmation"
-                                :type="pwd.type"
-                                :append-icon="pwd.icon"
+                                :type="passwordState.type"
+                                :append-icon="passwordState.icon"
                                 :error-messages="errors"
                                 :success="valid"
                                 @click:append="showPassword = !showPassword"
@@ -190,30 +192,25 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
+
+import { User } from "../models";
+import { eHandler } from "../utils/helper";
+import { CommonMixin, ModelMixin, PasswordMixin } from "../mixins";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
     GET_LIST,
 } from "../store/model/action-types";
-import { mapState, mapMutations, mapActions } from "vuex";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
-import { User } from "../models";
-import { eHandler } from "../utils/helper";
-import { TABLE_OPTIONS } from "../utils/config";
+
 import AppTopBar from "../components/app/AppTopBar";
-import TheData from "../components/TheData";
-import TheDialogForm from "../components/TheDialogForm";
-import TheDialogDelete from "../components/TheDialogDelete";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, ModelMixin, PasswordMixin],
     components: {
         AppTopBar,
-        TheData,
-        TheDialogForm,
-        TheDialogDelete,
     },
     data() {
         return {
@@ -225,13 +222,7 @@ export default {
                 { text: "LastAt", value: "last_at" },
                 { text: "LastIp", value: "last_ip" },
             ],
-            options: this.$_.cloneDeep(TABLE_OPTIONS),
-            total: 0,
-            selected: [],
-            dialog: false,
-            dialogDelete: false,
-            changePassword: false,
-            showPassword: false,
+
             form: {
                 ...this.$_.cloneDeep(User),
                 password: null,
@@ -243,18 +234,6 @@ export default {
     computed: {
         ...mapState("app", ["profile"]),
         ...mapState("model", ["users"]),
-        creating() {
-            return this.isNewModel(this.form);
-        },
-        pwd() {
-            return {
-                icon: this.showPassword ? "mdi-eye" : "mdi-eye-off",
-                type: this.showPassword ? "text" : "password",
-            };
-        },
-        pwdButton() {
-            return this.changePassword ? "Keep" : "Change";
-        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -264,29 +243,27 @@ export default {
             DELETE_MODELS,
             GET_LIST,
         ]),
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
+        chipColor(item) {
+            if (this.profile.id == item.id) return "primary";
+            return "green";
         },
-        create() {
-            this.form = {
-                ...this.$_.cloneDeep(User),
+        fillForm(item) {
+            let data = this.modelProp;
+            if (item) {
+                if (this.profile.id === item.id) {
+                    this.$router.push({ name: "profile" });
+                    return;
+                }
+
+                data = item || this.selected[0];
+            }
+
+            this.changePassword = !item;
+            this.form = this.$_.cloneDeep({
+                ...data,
                 password: null,
                 password_confirmation: null,
-            };
-
-            this.changePassword = true;
-            this.$nextTick(() => (this.dialog = true));
-        },
-        edit() {
-            this.form = {
-                ...this.$_.cloneDeep(this.selected[0]),
-                password: null,
-                password_confirmation: null,
-            };
-
-            this.changePassword = false;
-            this.$nextTick(() => (this.dialog = true));
+            });
         },
         fetch: async function () {
             await this.GET_MODELS({
@@ -308,39 +285,42 @@ export default {
                     this.dialogDelete = false;
                     this.$nextTick(() => (this.selected = []));
                 })
-                .catch((e) => eHandler(e));
-            this.STOP_LOADING();
+                .catch((e) => eHandler(e))
+                .then(() => this.STOP_LOADING());
         },
         save() {
-            this.$refs.form.validate().then((valid) => {
-                if (valid) {
-                    if (!this.changePassword) {
-                        this.$delete(this.form, "password");
-                        this.$delete(this.form, "password_confirmation");
-                    }
+            if (!this.changePassword) {
+                this.$delete(this.form, "password");
+                this.$delete(this.form, "password_confirmation");
+            }
 
+            this.$refs.form.validate().then(async (valid) => {
+                if (valid) {
                     this.START_LOADING();
-                    this.SAVE_MODEL({
+                    await this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            // if (this.creating) {
-                            await this.fetch();
-                            // } else {
-                            //     this.UPDATE_MODEL({
-                            //         model: this.model,
-                            //         data,
-                            //     });
-                            // }
+                            this.updateOrFetch(data);
 
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
-                    this.STOP_LOADING();
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
+                        .then(() => this.STOP_LOADING());
                 }
             });
+        },
+        updateOrFetch: async function (data) {
+            if (this.creating) {
+                await this.fetch();
+            } else {
+                this.UPDATE_MODEL({
+                    model: this.model,
+                    data,
+                });
+            }
         },
         fetchListRole: async function () {
             await this.GET_LIST({

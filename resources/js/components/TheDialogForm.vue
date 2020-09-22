@@ -63,10 +63,10 @@
 </template>
 
 <script>
-import mixins from "../mixins";
+import { CommonMixin } from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin],
     props: {
         value: {
             type: Boolean,
@@ -101,7 +101,7 @@ export default {
         formTitle() {
             if (this.title) return this.title;
             if (this.readonly) return "Detail Item";
-            return `${this.isNewModel(this.form) ? "New" : "Edit"} Item`;
+            return `${this.form.id === -1 ? "New" : "Edit"} Item`;
         },
         cardTextHeight() {
             return !this.mobile ? "max-height: 500px;" : "";

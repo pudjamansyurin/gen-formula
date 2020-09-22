@@ -4,21 +4,18 @@
             <slot></slot>
             <!-- loading overlay -->
             <v-overlay :value="loading" absolute>
-                <v-progress-circular
-                    indeterminate
-                    size="64"
-                    color="white"
-                ></v-progress-circular>
+                <v-progress-circular indeterminate size="64" color="white">
+                </v-progress-circular>
             </v-overlay>
         </v-container>
     </v-content>
 </template>
 
 <script>
-import mixins from "../../mixins";
+import { CommonMixin } from "../../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin],
 };
 </script>
 

@@ -34,10 +34,11 @@
 
 <script>
 import { mapMutations } from "vuex";
-import mixins from "../mixins";
+
+import { CommonMixin } from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin],
     props: {
         value: {
             type: Array,

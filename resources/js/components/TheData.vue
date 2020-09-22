@@ -45,12 +45,13 @@
 </template>
 
 <script>
+import { CommonMixin } from "../mixins";
+
 import TheDataCard from "../components/TheDataCard";
 import TheDataTable from "../components/TheDataTable";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin],
     props: {
         value: {
             type: Array,

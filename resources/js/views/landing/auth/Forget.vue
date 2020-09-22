@@ -37,12 +37,13 @@
 
 <script>
 import { mapActions } from "vuex";
+
 import { FORGET } from "../../../store/app/action-types";
 import { eHandler } from "../../../utils/helper";
-import mixins from "../../../mixins";
+import { CommonMixin } from "../../../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin],
     data() {
         return {
             title: "FORGET PASSWORD",

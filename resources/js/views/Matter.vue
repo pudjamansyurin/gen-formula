@@ -91,33 +91,30 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
+
+import { Matter } from "../models";
+import { eHandler } from "../utils/helper";
+import { CommonMixin, ModelMixin } from "../mixins";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
 } from "../store/model/action-types";
-import { mapState, mapMutations, mapActions } from "vuex";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
-import { Matter } from "../models";
-import { eHandler } from "../utils/helper";
-import { TABLE_OPTIONS } from "../utils/config";
+
 import AppTopBar from "../components/app/AppTopBar";
-import TheData from "../components/TheData";
-import TheDialogForm from "../components/TheDialogForm";
-import TheDialogDelete from "../components/TheDialogDelete";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, ModelMixin],
     components: {
         AppTopBar,
-        TheData,
-        TheDialogForm,
-        TheDialogDelete,
     },
     data() {
         return {
             model: "matter",
+            modelProp: Matter,
+            form: this.$_.cloneDeep(Matter),
             headers: [
                 { text: "Name", value: "name" },
                 {
@@ -131,22 +128,10 @@ export default {
                     value: "updated_at",
                 },
             ],
-            options: this.$_.cloneDeep(TABLE_OPTIONS),
-            total: 0,
-            selected: [],
-            dialog: false,
-            dialogDelete: false,
-            form: this.$_.cloneDeep(Matter),
         };
     },
     computed: {
         ...mapState("model", ["matters"]),
-        creating() {
-            return this.isNewModel(this.form);
-        },
-        fieldDisabled() {
-            return !this.creating && !this.form.authorized;
-        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -155,18 +140,6 @@ export default {
             if (!item.authorized) return "grey";
             return "green";
             // return item.materials_count ? "green" : "red";
-        },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
-        },
-        create() {
-            this.form = this.$_.cloneDeep(Matter);
-            this.$nextTick(() => (this.dialog = true));
-        },
-        edit(item) {
-            this.form = this.$_.cloneDeep(item || this.selected[0]);
-            this.$nextTick(() => (this.dialog = true));
         },
         fetch: async function () {
             await this.GET_MODELS({
@@ -188,34 +161,37 @@ export default {
                     this.dialogDelete = false;
                     this.$nextTick(() => (this.selected = []));
                 })
-                .catch((e) => eHandler(e));
-            this.STOP_LOADING();
+                .catch((e) => eHandler(e))
+                .then(() => this.STOP_LOADING());
         },
         save() {
-            this.$refs.form.validate().then((valid) => {
+            this.$refs.form.validate().then(async (valid) => {
                 if (valid) {
                     this.START_LOADING();
-                    this.SAVE_MODEL({
+                    await this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            // if (this.creating) {
-                            await this.fetch();
-                            // } else {
-                            //     this.UPDATE_MODEL({
-                            //         model: this.model,
-                            //         data,
-                            //     });
-                            // }
+                            this.updateOrFetch(data);
 
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
-                    this.STOP_LOADING();
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
+                        .then(() => this.STOP_LOADING());
                 }
             });
+        },
+        updateOrFetch: async function (data) {
+            if (this.creating) {
+                await this.fetch();
+            } else {
+                this.UPDATE_MODEL({
+                    model: this.model,
+                    data,
+                });
+            }
         },
     },
     watch: {

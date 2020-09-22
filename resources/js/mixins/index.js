@@ -1,17 +1,6 @@
-import { mapState, mapMutations } from "vuex";
-import { START_LOADING, STOP_LOADING } from "../store/app/mutation-types";
+import CommonMixin from "./CommonMixin";
+import PasswordMixin from "./PasswordMixin";
+import ModelMixin from "./ModelMixin";
+import FormTabMixin from "./FormTabMixin";
 
-export default {
-    computed: {
-        ...mapState("app", ["loading", "dense"]),
-        mobile() {
-            return this.$vuetify.breakpoint.smAndDown;
-        }
-    },
-    methods: {
-        ...mapMutations("app", [START_LOADING, STOP_LOADING]),
-        isNewModel({ id }) {
-            return id === -1;
-        }
-    }
-};
+export { CommonMixin, PasswordMixin, ModelMixin, FormTabMixin };

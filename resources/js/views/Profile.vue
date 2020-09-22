@@ -2,26 +2,27 @@
     <fragment>
         <app-top-bar page="Profile"></app-top-bar>
 
-        <v-card v-if="!editProfile" :loading="!!loading" class="mx-auto">
+        <v-card v-if="!dialog" :loading="!!loading" class="mx-auto">
             <v-list-item>
                 <v-list-item-avatar color="grey">
                     <v-img src="/img/unknown.png" alt="Profile"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                    <v-list-item-title class="headline">{{
-                        profile.name
-                    }}</v-list-item-title>
-                    <v-list-item-subtitle
-                        >Profile
+                    <v-list-item-title class="headline">
+                        {{ profile.name }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                        Profile
                         <v-btn
                             @click="edit"
+                            color="primary"
                             class="ma-2"
                             small
                             rounded
-                            color="primary"
                             dark
                         >
-                            <v-icon small left>mdi-pencil</v-icon> Edit
+                            <v-icon small left>mdi-pencil</v-icon>
+                            Edit
                         </v-btn>
                     </v-list-item-subtitle>
                 </v-list-item-content>
@@ -33,14 +34,14 @@
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                    <v-list-item-title
-                        >{{ profile.email }}
+                    <v-list-item-title>
+                        {{ profile.email }}
                         <v-btn
                             @click="resend"
+                            :color="verifier.color"
                             class="ma-2"
                             small
                             rounded
-                            :color="verifier.color"
                             dark
                         >
                             <v-icon small left>{{ verifier.icon }}</v-icon>
@@ -53,16 +54,16 @@
             <v-divider inset></v-divider>
             <v-list-item>
                 <v-list-item-icon>
-                    <v-icon color="indigo"
-                        >mdi-account-supervisor-circle</v-icon
-                    >
+                    <v-icon color="indigo">
+                        mdi-account-supervisor-circle
+                    </v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                    <v-list-item-title>{{
-                        profile.role.name
-                    }}</v-list-item-title>
-                    <v-list-item-subtitle>Role</v-list-item-subtitle>
+                    <v-list-item-title>
+                        {{ profile.role.name }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle> Role </v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
             <v-divider inset></v-divider>
@@ -72,18 +73,18 @@
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                    <v-list-item-title>{{
-                        profile.created_at | moment("from")
-                    }}</v-list-item-title>
+                    <v-list-item-title>
+                        {{ profile.created_at | moment("from") }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>Created at</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
             <v-list-item v-if="profile.updated_at">
                 <v-list-item-action></v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title>{{
-                        profile.updated_at | moment("from")
-                    }}</v-list-item-title>
+                    <v-list-item-title>
+                        {{ profile.updated_at | moment("from") }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>Updated at</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -94,9 +95,9 @@
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                    <v-list-item-title v-if="profile.last_at">{{
-                        profile.last_at | moment("from")
-                    }}</v-list-item-title>
+                    <v-list-item-title v-if="profile.last_at">
+                        {{ profile.last_at | moment("from") }}
+                    </v-list-item-title>
                     <v-list-item-title v-else>Never</v-list-item-title>
                     <v-list-item-subtitle>Last login</v-list-item-subtitle>
                 </v-list-item-content>
@@ -104,9 +105,9 @@
             <v-list-item>
                 <v-list-item-action></v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title>{{
-                        profile.last_ip || "None"
-                    }}</v-list-item-title>
+                    <v-list-item-title>
+                        {{ profile.last_ip || "None" }}
+                    </v-list-item-title>
                     <v-list-item-subtitle>Last Ip Address</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -114,7 +115,7 @@
 
         <v-card v-else :loading="!!loading">
             <v-card-title class="headline grey lighten-2" primary-title>
-                <span class="headline">Edit Profile</span>
+                <span class="headline"> Edit Profile</span>
             </v-card-title>
 
             <v-divider></v-divider>
@@ -174,8 +175,9 @@
                             color="blue darken-1"
                             @click="changePassword = !changePassword"
                             text
-                            >{{ pwdButton }} Password</v-btn
                         >
+                            {{ passwordChangeText }} Password
+                        </v-btn>
 
                         <template v-if="changePassword">
                             <validation-provider
@@ -184,8 +186,8 @@
                             >
                                 <v-text-field
                                     v-model="form.password"
-                                    :type="pwd.type"
-                                    :append-icon="pwd.icon"
+                                    :type="passwordState.type"
+                                    :append-icon="passwordState.icon"
                                     :error-messages="errors"
                                     :success="valid"
                                     @click:append="showPassword = !showPassword"
@@ -203,8 +205,8 @@
                             >
                                 <v-text-field
                                     v-model="form.password_confirmation"
-                                    :type="pwd.type"
-                                    :append-icon="pwd.icon"
+                                    :type="passwordState.type"
+                                    :append-icon="passwordState.icon"
                                     :error-messages="errors"
                                     :success="valid"
                                     @click:append="showPassword = !showPassword"
@@ -223,13 +225,13 @@
 
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn @click="editProfile = false" color="indigo" text
-                    >Cancel</v-btn
-                >
+                <v-btn @click="dialog = false" color="indigo" text>
+                    Cancel
+                </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn :disabled="!!loading" @click="save" color="primary"
-                    >Save</v-btn
-                >
+                <v-btn :disabled="!!loading" @click="save" color="primary">
+                    Save
+                </v-btn>
             </v-card-actions>
         </v-card>
     </fragment>
@@ -237,74 +239,67 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import { SAVE_MODEL } from "../store/model/action-types";
-import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
-import { RESEND, PROFILE } from "../store/app/action-types";
+
 import { eHandler } from "../utils/helper";
+import { SAVE_MODEL } from "../store/model/action-types";
+import { CommonMixin, PasswordMixin, ModelMixin } from "../mixins";
+import { RESEND, PROFILE } from "../store/app/action-types";
+import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
+
 import AppTopBar from "../components/app/AppTopBar";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, PasswordMixin, ModelMixin],
     components: {
         AppTopBar,
     },
     data() {
         return {
             model: "user",
-            editProfile: false,
-            changePassword: false,
-            showPassword: false,
+            dialog: false,
             form: {},
         };
     },
     computed: {
         ...mapState("app", ["profile"]),
         verifier() {
+            let { email_verified_at } = this.profile;
+
             return {
-                text: this.profile.email_verified_at ? "Verified" : "Verify",
-                color: this.profile.email_verified_at ? "teal" : "orange",
-                icon: this.profile.email_verified_at
+                text: email_verified_at ? "Verified" : "Verify",
+                color: email_verified_at ? "teal" : "orange",
+                icon: email_verified_at
                     ? "mdi-checkbox-marked-circle"
                     : "mdi-help-circle-outline",
             };
-        },
-        pwd() {
-            return {
-                icon: this.showPassword ? "mdi-eye" : "mdi-eye-off",
-                type: this.showPassword ? "text" : "password",
-            };
-        },
-        pwdButton() {
-            return this.changePassword ? "Keep" : "Change";
         },
     },
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
         ...mapActions("app", [RESEND, PROFILE]),
         ...mapActions("model", [SAVE_MODEL]),
-        close() {
-            this.editProfile = false;
-        },
-        edit() {
+        fillForm(item) {
+            if (!item) return;
+
+            let data = this.profile;
+
+            this.changePassword = false;
             this.form = this.$_.cloneDeep({
-                ...this.profile,
+                ...data,
                 password: null,
                 password_confirmation: null,
             });
-
-            this.changePassword = false;
-            this.editProfile = true;
         },
         save() {
-            this.$refs.form.validate().then((valid) => {
+            this.$refs.form.validate().then(async (valid) => {
                 if (valid) {
                     if (!this.changePassword) {
                         this.$delete(this.form, "password");
                         this.$delete(this.form, "password_confirmation");
                     }
 
-                    this.SAVE_MODEL({
+                    this.START_LOADING();
+                    await this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
                     })
@@ -317,7 +312,8 @@ export default {
 
                             this.close();
                         })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
+                        .then(() => this.STOP_LOADING());
                 }
             });
         },

@@ -80,7 +80,7 @@
             v-model="dialog"
             :form="form"
             :tabs="formTabs"
-            :tab.sync="formTab"
+            :tab.sync="formTabIndex"
             :readonly="fieldDisabled"
             @close="close"
             @submit="save"
@@ -182,34 +182,31 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
+
+import { Package } from "../models";
+import { eHandler } from "../utils/helper";
+import { CommonMixin, ModelMixin, FormTabMixin } from "../mixins";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
     GET_LIST,
 } from "../store/model/action-types";
-import { mapState, mapMutations, mapActions } from "vuex";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
-import { Package } from "../models";
-import { eHandler } from "../utils/helper";
-import { TABLE_OPTIONS } from "../utils/config";
+
 import AppTopBar from "../components/app/AppTopBar";
-import TheData from "../components/TheData";
-import TheDialogForm from "../components/TheDialogForm";
-import TheDialogDelete from "../components/TheDialogDelete";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, ModelMixin, FormTabMixin],
     components: {
         AppTopBar,
-        TheData,
-        TheDialogForm,
-        TheDialogDelete,
     },
     data() {
         return {
             model: "package",
+            modelProp: Package,
+            form: this.$_.cloneDeep(Package),
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Capacity", value: "capacity", align: "center" },
@@ -237,31 +234,12 @@ export default {
                     value: "updated_at",
                 },
             ],
-            options: this.$_.cloneDeep(TABLE_OPTIONS),
-            total: 0,
-            selected: [],
-            dialog: false,
-            dialogDelete: false,
-            form: this.$_.cloneDeep(Package),
-            tabList: ["data", "rev"],
-            formTab: 0,
+
             listUnit: [],
         };
     },
     computed: {
         ...mapState("model", ["packages"]),
-        creating() {
-            return this.isNewModel(this.form);
-        },
-        fieldDisabled() {
-            return !this.creating && !this.form.authorized;
-        },
-        formTabs() {
-            if (this.creating) {
-                return [this.tabList[0]];
-            }
-            return this.tabList;
-        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -275,22 +253,6 @@ export default {
             if (!item.authorized) return "grey";
             return "green";
             // return item.revs_count ? "green" : "red";
-        },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
-        },
-        create() {
-            this.form = this.$_.cloneDeep(Package);
-            this.formTab = 0;
-
-            this.$nextTick(() => (this.dialog = true));
-        },
-        edit(item) {
-            this.form = this.$_.cloneDeep(item || this.selected[0]);
-            this.formTab = 0;
-
-            this.$nextTick(() => (this.dialog = true));
         },
         fetch: async function () {
             await this.GET_MODELS({
@@ -312,34 +274,37 @@ export default {
                     this.dialogDelete = false;
                     this.$nextTick(() => (this.selected = []));
                 })
-                .catch((e) => eHandler(e));
-            this.STOP_LOADING();
+                .catch((e) => eHandler(e))
+                .then(() => this.STOP_LOADING());
         },
         save() {
-            this.$refs.form.validate().then((valid) => {
+            this.$refs.form.validate().then(async (valid) => {
                 if (valid) {
                     this.START_LOADING();
-                    this.SAVE_MODEL({
+                    await this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            // if (this.creating) {
-                            await this.fetch();
-                            // } else {
-                            //     this.UPDATE_MODEL({
-                            //         model: this.model,
-                            //         data,
-                            //     });
-                            // }
+                            this.updateOrFetch(data);
 
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
-                    this.STOP_LOADING();
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
+                        .then(() => this.STOP_LOADING());
                 }
             });
+        },
+        updateOrFetch: async function (data) {
+            if (this.creating) {
+                await this.fetch();
+            } else {
+                this.UPDATE_MODEL({
+                    model: this.model,
+                    data,
+                });
+            }
         },
         fetchListUnit: async function () {
             await this.GET_LIST({

@@ -9,19 +9,20 @@
 </template>
 
 <script>
+import { CommonMixin } from "../mixins";
+
+import AppTopBar from "../components/app/AppTopBar";
+import AppContainer from "../components/app/AppContainer";
 import AppBottomNav from "../components/app/AppBottomNav";
 import AppLeftDrawer from "../components/app/AppLeftDrawer";
-import AppContainer from "../components/app/AppContainer";
-import AppTopBar from "../components/app/AppTopBar";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin],
     components: {
+        AppTopBar,
+        AppContainer,
         AppBottomNav,
         AppLeftDrawer,
-        AppContainer,
-        AppTopBar,
     },
     mounted() {
         console.log("Session credebility should be checked!");

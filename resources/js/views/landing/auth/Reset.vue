@@ -5,6 +5,7 @@
                 <v-card-title>{{ title }}</v-card-title>
                 <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
                 <v-divider></v-divider>
+
                 <v-card-text>
                     <validation-provider
                         name="email"
@@ -30,8 +31,8 @@
                     >
                         <v-text-field
                             v-model="form.password"
-                            :type="pwd.type"
-                            :append-icon="pwd.icon"
+                            :type="passwordState.type"
+                            :append-icon="passwordState.icon"
                             :error-messages="errors"
                             :success="valid"
                             @click:append="showPassword = !showPassword"
@@ -50,8 +51,8 @@
                     >
                         <v-text-field
                             v-model="form.password_confirmation"
-                            :type="pwd.type"
-                            :append-icon="pwd.icon"
+                            :type="passwordState.type"
+                            :append-icon="passwordState.icon"
                             :error-messages="errors"
                             :success="valid"
                             @click:append="showPassword = !showPassword"
@@ -66,12 +67,12 @@
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-btn :to="{ name: 'login' }" exact text>Login</v-btn>
+                    <v-btn :to="{ name: 'login' }" exact text> Login </v-btn>
 
                     <v-spacer></v-spacer>
-                    <v-btn :disabled="!!loading" type="submit" color="primary"
-                        >Reset Password</v-btn
-                    >
+                    <v-btn :disabled="!!loading" type="submit" color="primary">
+                        Reset Password
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -80,12 +81,13 @@
 
 <script>
 import { mapActions } from "vuex";
+
 import { RESET } from "../../../store/app/action-types";
 import { eHandler } from "../../../utils/helper";
-import mixins from "../../../mixins";
+import { CommonMixin, PasswordMixin } from "../../../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, PasswordMixin],
     props: {
         token: String,
         email: String,
@@ -94,20 +96,11 @@ export default {
         return {
             title: "RESET PASSWORD",
             subtitle: "Type your new password to live again",
-            showPassword: false,
             form: {
                 password: null,
                 password_confirmation: null,
             },
         };
-    },
-    computed: {
-        pwd() {
-            return {
-                icon: this.showPassword ? "mdi-eye" : "mdi-eye-off",
-                type: this.showPassword ? "text" : "password",
-            };
-        },
     },
     methods: {
         ...mapActions("app", [RESET]),

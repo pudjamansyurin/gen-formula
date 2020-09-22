@@ -30,8 +30,8 @@
                     >
                         <v-text-field
                             v-model="form.password"
-                            :type="pwd.type"
-                            :append-icon="pwd.icon"
+                            :type="passwordState.type"
+                            :append-icon="passwordState.icon"
                             :error-messages="errors"
                             :success="valid"
                             @click:append="showPassword = !showPassword"
@@ -46,16 +46,19 @@
                     <v-checkbox
                         v-model="form.remember"
                         label="Keep me logged in"
-                    ></v-checkbox>
+                    >
+                    </v-checkbox>
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-btn :to="{ name: 'forget' }" text>Forget Password</v-btn>
+                    <v-btn :to="{ name: 'forget' }" text>
+                        Forget Password
+                    </v-btn>
 
                     <v-spacer></v-spacer>
-                    <v-btn :disabled="!!loading" type="submit" color="primary"
-                        >Login</v-btn
-                    >
+                    <v-btn :disabled="!!loading" type="submit" color="primary">
+                        Login
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -64,17 +67,17 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+
 import { LOGIN } from "../../../store/app/action-types";
+import { CommonMixin, PasswordMixin } from "../../../mixins";
 import { ls, eHandler } from "../../../utils/helper";
-import mixins from "../../../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, PasswordMixin],
     data() {
         return {
             title: "LOGIN",
             subtitle: "Enter your credentials to going further",
-            showPassword: false,
             form: {
                 email: "",
                 password: "",
@@ -84,12 +87,6 @@ export default {
     },
     computed: {
         ...mapState("app", ["remember"]),
-        pwd() {
-            return {
-                icon: this.showPassword ? "mdi-eye" : "mdi-eye-off",
-                type: this.showPassword ? "text" : "password",
-            };
-        },
     },
     methods: {
         ...mapActions("app", [LOGIN]),

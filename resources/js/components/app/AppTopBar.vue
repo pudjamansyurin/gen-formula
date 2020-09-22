@@ -192,20 +192,21 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import { debounce } from "lodash";
+import pluralize from "pluralize";
+import isWebview from "is-ua-webview";
+
+import { LOGOUT } from "../../store/app/action-types";
+import { ls, eHandler } from "../../utils/helper";
+import { CommonMixin } from "../../mixins";
 import {
     TOGGLE_DRAWER,
     TOGGLE_FULLSCREEN,
     TOGGLE_DENSE,
 } from "../../store/app/mutation-types";
-import { LOGOUT } from "../../store/app/action-types";
-import { debounce } from "lodash";
-import { ls, eHandler } from "../../utils/helper";
-import mixins from "../../mixins";
-import pluralize from "pluralize";
-import isWebview from "is-ua-webview";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin],
     props: {
         value: {
             type: Object,

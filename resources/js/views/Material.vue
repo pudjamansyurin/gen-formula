@@ -90,7 +90,7 @@
             v-model="dialog"
             :form="form"
             :tabs="formTabs"
-            :tab.sync="formTab"
+            :tab.sync="formTabIndex"
             @close="close"
             @submit="save"
         >
@@ -150,56 +150,6 @@
                                 persistent-hint
                             ></v-text-field>
                         </validation-provider>
-
-                        <!-- <v-menu
-                    ref="menuUpdatedAt"
-                    v-model="menuUpdatedAt"
-                    :return-value.sync="form.updated_at"
-                    :close-on-content-click="false"
-                    min-width="290px"
-                    offset-y
-                >
-                    <template v-slot:activator="{ on, attrs }">
-                        <validation-provider
-                            name="updated_at"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model="form.updated_at"
-                                v-bind="attrs"
-                                v-on="on"
-                                :error-messages="errors"
-                                :success="valid"
-                                label="Updated At"
-                                hint="When the price updated"
-                                persistent-hint
-                                readonly
-                            ></v-text-field>
-                        </validation-provider>
-                    </template>
-                    <v-date-picker
-                        v-model="form.updated_at"
-                        :max="$moment().format('YYYY-MM-DD')"
-                        no-title
-                        scrollable
-                    >
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            text
-                            color="primary"
-                            @click="menuUpdatedAt = false"
-                            >Cancel</v-btn
-                        >
-                        <v-btn
-                            text
-                            color="primary"
-                            @click="
-                                $refs.menuUpdatedAt.save(form.updated_at)
-                            "
-                            >OK</v-btn
-                        >
-                    </v-date-picker>
-                </v-menu> -->
                     </validation-observer>
                     <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
@@ -251,35 +201,32 @@
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions } from "vuex";
+import pluralize from "pluralize";
+
+import { Material } from "../models";
+import { eHandler } from "../utils/helper";
+import { CommonMixin, ModelMixin, FormTabMixin } from "../mixins";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
     GET_LIST,
 } from "../store/model/action-types";
-import { mapState, mapMutations, mapActions } from "vuex";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
-import { Material } from "../models";
-import { eHandler } from "../utils/helper";
-import { TABLE_OPTIONS } from "../utils/config";
-import pluralize from "pluralize";
+
 import AppTopBar from "../components/app/AppTopBar";
-import TheData from "../components/TheData";
-import TheDialogForm from "../components/TheDialogForm";
-import TheDialogDelete from "../components/TheDialogDelete";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, ModelMixin, FormTabMixin],
     components: {
         AppTopBar,
-        TheData,
-        TheDialogForm,
-        TheDialogDelete,
     },
     data() {
         return {
             model: "material",
+            modelProp: Material,
+            form: this.$_.cloneDeep(Material),
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Matter", value: "matter.name" },
@@ -301,34 +248,14 @@ export default {
                     value: "updated_at",
                 },
             ],
-            options: this.$_.cloneDeep(TABLE_OPTIONS),
-            total: 0,
-            selected: [],
-            dialog: false,
-            dialogDelete: false,
-            selectedRev: [],
+
             dialogDeleteRev: false,
-            // menuUpdatedAt: false,
-            form: this.$_.cloneDeep(Material),
-            tabList: ["data", "rev"],
-            formTab: 0,
+            selectedRev: [],
             listMatter: [],
         };
     },
     computed: {
         ...mapState("model", ["materials"]),
-        creating() {
-            return this.isNewModel(this.form);
-        },
-        fieldDisabled() {
-            return !this.creating && !this.form.authorized;
-        },
-        formTabs() {
-            if (this.creating) {
-                return [this.tabList[0]];
-            }
-            return this.tabList;
-        },
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
@@ -342,23 +269,6 @@ export default {
             if (!item.authorized) return "grey";
             return "green";
             // return item.revs_count ? "green" : "red";
-        },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
-        },
-        create() {
-            this.form = this.$_.cloneDeep(Material);
-            // this.form.updated_at = this.$moment().format("YYYY-MM-DD");
-            this.formTab = 0;
-
-            this.$nextTick(() => (this.dialog = true));
-        },
-        edit(item) {
-            this.form = this.$_.cloneDeep(item || this.selected[0]);
-            this.formTab = 0;
-
-            this.$nextTick(() => (this.dialog = true));
         },
         fetch: async function () {
             await this.GET_MODELS({
@@ -380,34 +290,37 @@ export default {
                     this.dialogDelete = false;
                     this.$nextTick(() => (this.selected = []));
                 })
-                .catch((e) => eHandler(e));
-            this.STOP_LOADING();
+                .catch((e) => eHandler(e))
+                .then(() => this.STOP_LOADING());
         },
         save() {
-            this.$refs.form.validate().then((valid) => {
+            this.$refs.form.validate().then(async (valid) => {
                 if (valid) {
                     this.START_LOADING();
-                    this.SAVE_MODEL({
+                    await this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            // if (this.creating) {
-                            await this.fetch();
-                            // } else {
-                            //     this.UPDATE_MODEL({
-                            //         model: this.model,
-                            //         data,
-                            //     });
-                            // }
+                            this.updateOrFetch(data);
 
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
-                    this.STOP_LOADING();
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
+                        .then(() => this.STOP_LOADING());
                 }
             });
+        },
+        updateOrFetch: async function (data) {
+            if (this.creating) {
+                await this.fetch();
+            } else {
+                this.UPDATE_MODEL({
+                    model: this.model,
+                    data,
+                });
+            }
         },
         fetchListMatter: async function () {
             await this.GET_LIST({

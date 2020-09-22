@@ -205,30 +205,25 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapMutations } from "vuex";
+
+import { Formula } from "../models";
+import { eHandler } from "../utils/helper";
+import { CommonMixin, ModelMixin } from "../mixins";
+import { UPDATE_MODEL } from "../store/model/mutation-types";
 import {
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS,
     GET_LIST,
 } from "../store/model/action-types";
-import { mapState, mapActions, mapMutations } from "vuex";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
-import { Formula } from "../models";
-import { eHandler } from "../utils/helper";
-import { TABLE_OPTIONS } from "../utils/config";
+
 import AppTopBar from "../components/app/AppTopBar";
-import TheData from "../components/TheData";
-import TheDialogForm from "../components/TheDialogForm";
-import TheDialogDelete from "../components/TheDialogDelete";
-import mixins from "../mixins";
 
 export default {
-    mixins: [mixins],
+    mixins: [CommonMixin, ModelMixin],
     components: {
         AppTopBar,
-        TheData,
-        TheDialogForm,
-        TheDialogDelete,
     },
     data() {
         return {
@@ -258,24 +253,14 @@ export default {
                 { text: "Creator", value: "user.name" },
                 { text: "UpdatedAt", value: "updated_at" },
             ],
-            options: this.$_.cloneDeep(TABLE_OPTIONS),
-            total: 0,
-            selected: [],
-            dialog: false,
-            dialogDelete: false,
-            dialogPortion: false,
+
             form: this.$_.cloneDeep(Formula),
+            dialogPortion: false,
             listMaterial: [],
         };
     },
     computed: {
         ...mapState("model", ["formulas"]),
-        creating() {
-            return this.isNewModel(this.form);
-        },
-        fieldDisabled() {
-            return !this.creating && !this.form.authorized;
-        },
         portionFormTitle() {
             return this.form.name || "Related materials";
         },
@@ -331,33 +316,37 @@ export default {
                     this.dialogDelete = false;
                     this.$nextTick(() => (this.selected = []));
                 })
-                .catch((e) => eHandler(e));
-            this.STOP_LOADING();
+                .catch((e) => eHandler(e))
+                .then(() => this.STOP_LOADING());
         },
         save() {
-            this.$refs.form.validate().then((valid) => {
+            this.$refs.form.validate().then(async (valid) => {
                 if (valid) {
                     this.START_LOADING();
-                    this.SAVE_MODEL({
+                    await this.SAVE_MODEL({
                         model: this.model,
                         payload: this.form,
                     })
                         .then(async (data) => {
-                            // if (this.creating) {
-                            await this.fetch();
-                            // } else {
-                            //     this.UPDATE_MODEL({
-                            //         model: this.model,
-                            //         data,
-                            //     });
-                            // }
+                            this.updateOrFetch(data);
+
                             this.selected = [];
                             this.close();
                         })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
-                    this.STOP_LOADING();
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
+                        .then(() => this.STOP_LOADING());
                 }
             });
+        },
+        updateOrFetch: async function (data) {
+            if (this.creating) {
+                await this.fetch();
+            } else {
+                this.UPDATE_MODEL({
+                    model: this.model,
+                    data,
+                });
+            }
         },
         fetchListMaterial: async function () {
             await this.GET_LIST({
