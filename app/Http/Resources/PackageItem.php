@@ -26,6 +26,7 @@ class PackageItem extends JsonResource
                 'unit',
                 $this->unit->toArray()
             ),
+            'packagers' => $this->whenLoaded('packagers'),
             'packagers_count' => $this->packagers_count,
             'revs' => $this->whenLoaded('revs'),
             'revs_count' => $this->revs_count,

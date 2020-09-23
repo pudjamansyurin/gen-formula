@@ -28,6 +28,11 @@ class Packager extends Model
         return $this->belongsTo(Package::class);
     }
 
+    public function packer()
+    {
+        return $this->belongsTo(Packer::class);
+    }
+
     public function packets()
     {
         return $this->belongsToMany(Pack::class, 'packager_pack')

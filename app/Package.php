@@ -11,8 +11,8 @@ class Package extends Model
 
     protected $table = 'packages';
 
-    protected $relations = ['user:id,name', 'unit', 'packagers', 'revs'];
-    protected $counts = ['packagers', 'revs'];
+    protected $relations = ['user:id,name', 'unit', 'revs'];
+    protected $counts = ['revs', 'packagers'];
 
     /**
      * The attributes that are mass assignable.

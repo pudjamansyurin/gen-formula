@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('pack', 'PackController', ['except' => ['show']]);
     Route::apiResource('packer', 'PackerController', ['except' => ['show']]);
-    Route::apiResource('package', 'PackageController', ['except' => ['show']]);
+    Route::apiResource('package', 'PackageController');
 
     Route::apiResource('formula', 'FormulaController', ['except' => ['show']]);
     Route::apiResource('formula.portion', 'PortionController', ['only' => ['store']]);

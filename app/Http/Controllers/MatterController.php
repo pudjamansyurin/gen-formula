@@ -13,18 +13,6 @@ use Illuminate\Http\Response;
 class MatterController extends Controller
 {
     /**
-     * Get lists of this model
-     */
-    public function list()
-    {
-        $this->authorize('viewAny', Matter::class);
-
-        return response([
-            'data' => Matter::getAsList()
-        ], Response::HTTP_OK);
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -100,5 +88,17 @@ class MatterController extends Controller
         Matter::destroy($mattersId);
 
         return response($mattersId, Response::HTTP_OK);
+    }
+
+    /**
+     * Get lists of this model
+     */
+    public function list()
+    {
+        $this->authorize('viewAny', Matter::class);
+
+        return response([
+            'data' => Matter::getAsList()
+        ], Response::HTTP_OK);
     }
 }

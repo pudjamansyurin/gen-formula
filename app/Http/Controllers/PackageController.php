@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\PackageRequest;
 use App\Http\Resources\PackageCollection;
 use App\Http\Resources\PackageItem;
@@ -27,6 +28,23 @@ class PackageController extends Controller
         // Response
         return (new PackageCollection($packages))
             ->additional(['total' => $total]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Package  $package
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Package $package)
+    {
+        $this->authorize('viewAny', Package::class);
+
+        return response(
+            new PackageItem($package->loadRelation()
+                ->load(['packagers', 'packagers.packets', 'packagers.packer:id,name'])),
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -79,9 +97,15 @@ class PackageController extends Controller
      * @param  \App\Package  $package
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Package $package)
+    public function destroy(DeleteSomeRequest $request)
     {
-        //
+        $packagesId = $request->ids;
+        $this->authorize('delete', [Package::class, $packagesId]);
+
+        // delete
+        Package::destroy($packagesId);
+
+        return response($packagesId, Response::HTTP_OK);
     }
 
     /**

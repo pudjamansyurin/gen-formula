@@ -13,18 +13,6 @@ use Illuminate\Http\Response;
 class PackerController extends Controller
 {
     /**
-     * Get lists of this model
-     */
-    public function list()
-    {
-        $this->authorize('viewAny', Packer::class);
-
-        return response([
-            'data' => Packer::getAsList()
-        ], Response::HTTP_OK);
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -100,5 +88,17 @@ class PackerController extends Controller
         Packer::destroy($packersId);
 
         return response($packersId, Response::HTTP_OK);
+    }
+
+    /**
+     * Get lists of this model
+     */
+    public function list()
+    {
+        $this->authorize('viewAny', Packer::class);
+
+        return response([
+            'data' => Packer::getAsList()
+        ], Response::HTTP_OK);
     }
 }

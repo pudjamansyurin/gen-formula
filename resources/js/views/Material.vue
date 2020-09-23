@@ -94,7 +94,7 @@
             @close="close"
             @submit="save"
         >
-            <template v-slot:data>
+            <template v-slot:DATA>
                 <v-form @submit.prevent="save">
                     <validation-observer ref="form">
                         <validation-provider
@@ -155,7 +155,7 @@
                 </v-form>
             </template>
 
-            <template v-slot:rev>
+            <template v-slot:REV>
                 <v-list dense>
                     <template v-for="(rev, index) in form.revs">
                         <v-list-item

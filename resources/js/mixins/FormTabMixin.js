@@ -2,7 +2,7 @@ export default {
     data() {
         return {
             formTabIndex: 0,
-            formTabList: ["data", "rev"]
+            formTabList: ["DATA", "REV"]
         };
     },
     computed: {

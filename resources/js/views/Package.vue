@@ -85,7 +85,7 @@
             @close="close"
             @submit="save"
         >
-            <template v-slot:data>
+            <template v-slot:DATA>
                 <v-form @submit.prevent="save">
                     <validation-observer ref="form">
                         <validation-provider
@@ -113,13 +113,13 @@
                                     v-slot="{ errors, valid }"
                                 >
                                     <v-text-field
-                                        label="Capacity"
-                                        type="number"
                                         v-model.number="form.capacity"
                                         :error-messages="errors"
                                         :success="valid"
                                         :readonly="fieldDisabled"
                                         :filled="fieldDisabled"
+                                        label="Capacity"
+                                        type="number"
                                         hint="The package capacity"
                                         persistent-hint
                                     ></v-text-field>
@@ -151,9 +151,99 @@
                 </v-form>
             </template>
 
-            <template v-slot:pack> halo </template>
+            <template v-slot:PACK>
+                <v-form @submit.prevent="savePacker">
+                    <validation-observer ref="form_packer">
+                        <validation-provider
+                            name="packers"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-autocomplete
+                                v-model="form.packers"
+                                :items="listPacker"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                item-text="name"
+                                item-value="id"
+                                label="Packer"
+                                hint="The packer"
+                                filled
+                                multiple
+                                chips
+                                persistent-hint
+                            ></v-autocomplete>
+                        </validation-provider>
 
-            <template v-slot:rev>
+                        <template v-if="form.packagers">
+                            <v-list-group
+                                v-for="packager in form.packagers"
+                                :key="packager.id"
+                                :value="true"
+                            >
+                                <template v-slot:activator>
+                                    <v-list-item-title>
+                                        <validation-provider
+                                            name="packer.content"
+                                            v-slot="{ errors, valid }"
+                                        >
+                                            <v-text-field
+                                                v-model.number="
+                                                    packager.content
+                                                "
+                                                :error-messages="errors"
+                                                :success="valid"
+                                                :readonly="fieldDisabled"
+                                                :filled="fieldDisabled"
+                                                :label="packager.packer.name"
+                                                type="number"
+                                                hint="The packer content"
+                                                persistent-hint
+                                            ></v-text-field>
+                                        </validation-provider>
+                                    </v-list-item-title>
+                                </template>
+
+                                <v-list-item
+                                    v-for="packet in packager.packets"
+                                    :key="packet.id"
+                                >
+                                    <v-list-item-action>
+                                        <v-icon>
+                                            mdi-subdirectory-arrow-right
+                                        </v-icon>
+                                    </v-list-item-action>
+                                    <v-list-item-title>
+                                        <validation-provider
+                                            name="pack.price"
+                                            v-slot="{ errors, valid }"
+                                        >
+                                            <v-text-field
+                                                v-model.number="
+                                                    packet.pivot.price
+                                                "
+                                                :error-messages="errors"
+                                                :success="valid"
+                                                :readonly="fieldDisabled"
+                                                :filled="fieldDisabled"
+                                                :label="packet.name"
+                                                prefix="Rp"
+                                                type="number"
+                                                hint="The pack price"
+                                                counter
+                                                persistent-hint
+                                            ></v-text-field>
+                                        </validation-provider>
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list-group>
+                        </template>
+                    </validation-observer>
+                    <v-btn v-show="false" type="submit"></v-btn>
+                </v-form>
+            </template>
+
+            <template v-slot:REV>
                 <v-list dense>
                     <template v-for="(rev, index) in form.revs">
                         <v-list-item
@@ -164,8 +254,8 @@
                             dense
                         >
                             <v-list-item-content>
-                                <v-list-item-title
-                                    >{{ rev.price | currency }}
+                                <v-list-item-title>
+                                    {{ rev.price | currency }}
                                 </v-list-item-title>
                             </v-list-item-content>
 
@@ -236,7 +326,8 @@ export default {
             ],
 
             listUnit: [],
-            formTabList: ["data", "pack", "rev"],
+            listPacker: [],
+            formTabList: ["DATA", "PACK", "REV"],
         };
     },
     computed: {
@@ -255,11 +346,39 @@ export default {
         },
     },
     watch: {
-        dialog: function (open) {
+        dialog: async function (open) {
             if (open) {
-                this.fetchList("unit")
+                this.START_LOADING();
+                await this.fetchList("unit")
                     .then((data) => (this.listUnit = data))
                     .catch((e) => eHandler(e));
+                await this.fetchList("packer")
+                    .then((data) => (this.listPacker = data))
+                    .catch((e) => eHandler(e));
+                this.STOP_LOADING();
+            }
+        },
+        formTabIndex: function (index) {
+            if (this.formTabList[index] === "PACK") {
+                this.GET_MODEL({
+                    model: this.model,
+                    id: this.form.id,
+                }).then((data) => {
+                    let x = data.packagers.map((el) => {
+                        return {
+                            ...el,
+                            packets: el.packets.map((el) => {
+                                return {
+                                    ...el,
+                                };
+                            }),
+                        };
+                    });
+                    console.warn(x);
+                    console.log(data);
+
+                    this.form = this.$_.cloneDeep(data);
+                });
             }
         },
     },

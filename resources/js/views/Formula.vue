@@ -128,7 +128,7 @@
             width="1000"
         >
             <v-form @submit.prevent="savePortion">
-                <validation-observer ref="portion_form">
+                <validation-observer ref="form_portion">
                     <v-row>
                         <v-col cols="12" sm="6">
                             <validation-provider
@@ -286,7 +286,7 @@ export default {
         // portion related routines
         closePortion() {
             this.dialogPortion = false;
-            this.$nextTick(() => this.$refs.portion_form.reset());
+            this.$nextTick(() => this.$refs.form_portion.reset());
         },
         editPortion(id) {
             let formula = this.$_.find(this.formulas, { id });
@@ -294,7 +294,7 @@ export default {
             this.$nextTick(() => (this.dialogPortion = true));
         },
         savePortion() {
-            this.$refs.portion_form.validate().then((valid) => {
+            this.$refs.form_portion.validate().then((valid) => {
                 if (valid) {
                     this.SAVE_MODEL({
                         url: `formula/${this.form.id}/portion`,
@@ -317,7 +317,7 @@ export default {
                             this.closePortion();
                         })
                         .catch((e) =>
-                            this.$refs.portion_form.setErrors(eHandler(e))
+                            this.$refs.form_portion.setErrors(eHandler(e))
                         );
                 }
             });
