@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('matter', 'MatterController', ['except' => ['show']]);
-    Route::apiResource('material', 'MaterialController', ['except' => ['show']]);
+    Route::apiResource('material', 'MaterialController');
     Route::apiResource('material-rev', 'MaterialRevController', ['only' => ['destroy']]);
 
     Route::apiResource('pack', 'PackController', ['except' => ['show']]);

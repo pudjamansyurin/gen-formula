@@ -9,22 +9,27 @@ export default {
             .then(({ data }) => data);
     },
     [actions.GET_MODELS]({ commit }, { model, params, url }) {
-        return api.viewAny(url || model, params).then(res => {
+        return api.viewAny(url || model, params).then(({ data, total }) => {
+            // create new models
             commit(mutations.SET_MODELS, {
                 model,
-                data: res.data
+                data
             });
 
-            return res;
+            return { total };
         });
     },
-    // [actions.GET_MODEL]({ commit }, { model, id, url }) {
-    //     return api
-    //         .view(url || model, id)
-    //         .then(data => {
-    //             return data;
-    //         });
-    // },
+    [actions.GET_MODEL]({ commit }, { model, id, url }) {
+        return api.view(url || model, id).then(data => {
+            // update existing on models
+            commit(mutations.UPDATE_MODEL, {
+                model,
+                data
+            });
+
+            return data;
+        });
+    },
     [actions.SAVE_MODEL]({ commit }, { model, payload, url }) {
         const action = payload.id > 0 ? "update" : "create";
 

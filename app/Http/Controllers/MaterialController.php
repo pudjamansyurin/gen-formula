@@ -43,6 +43,22 @@ class MaterialController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Material  $material
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Material $material)
+    {
+        $this->authorize('viewAny', Material::class);
+
+        return response(
+            new MaterialItem($material->loadRelation()),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

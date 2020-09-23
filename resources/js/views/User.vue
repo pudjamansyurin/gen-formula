@@ -235,22 +235,25 @@ export default {
     },
     methods: {
         chipColor(item) {
-            if (this.profile.id == item.id) return "primary";
-            return "green";
+            return this.profile.id == item.id ? "primary" : "green";
+        },
+        change(item) {
+            this.changePassword = item.id === -1;
+            this.form = this.copyWithPassword(item);
         },
         onCreate() {
-            this.changePassword = true;
-            this.form = this.copyWithPassword(this.modelProp);
+            this.change(this.modelProp);
         },
         onEdit(item) {
-            // redirect if me
+            this.change(item || this.selected[0]);
+        },
+        onEdit(item) {
+            // redirect to profile for current logged-in user
             if (this.profile.id == item.id) {
                 this.$router.push({ name: "profile" });
                 return;
             }
-
-            this.changePassword = false;
-            this.form = this.copyWithPassword(item || this.selected[0]);
+            this.change(item || this.selected[0]);
         },
         onSave() {
             this.ignorePasswordWhenUnchanged();

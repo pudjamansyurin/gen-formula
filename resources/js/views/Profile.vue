@@ -321,9 +321,7 @@ export default {
             });
         },
         resend() {
-            let { email_verified_at } = this.profile;
-
-            if (!email_verified_at) {
+            if (!this.profile.email_verified_at) {
                 this.RESEND().catch((e) => eHandler(e));
             }
         },

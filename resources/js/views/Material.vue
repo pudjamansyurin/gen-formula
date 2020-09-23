@@ -182,7 +182,7 @@
                                     v-if="
                                         form.revs.length > 1 && rev.authorized
                                     "
-                                    @click="confirmRemoveRev(rev)"
+                                    @click="confirmRev(rev)"
                                     color="red"
                                     dark
                                     text
@@ -256,41 +256,40 @@ export default {
         ...mapState("model", ["materials"]),
     },
     methods: {
-        onCreate() {
+        change(item) {
             this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(this.modelProp);
+            this.form = this.$_.cloneDeep(item);
+        },
+        onCreate() {
+            this.change(this.modelProp);
         },
         onEdit(item) {
-            this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(item || this.selected[0]);
+            this.change(item || this.selected[0]);
         },
         // revision related routines
-        confirmRemoveRev(rev) {
+        confirmRev(rev) {
             this.selectedRev = [rev];
             this.$nextTick(() => (this.dialogDeleteRev = true));
         },
         removeRev: async function () {
-            let ids = this.$_.map(this.selectedRev, "id");
-
+            this.START_LOADING();
             await this.DELETE_MODELS({
                 model: "material-rev",
-                ids,
+                ids: this.$_.map(this.selectedRev, "id"),
             })
-                .then(async () => {
-                    this.form.revs = this.form.revs.filter(
-                        ({ id }) => !ids.includes(id)
-                    );
-                    this.form.revs_price = this.form.revs[0].price;
-
-                    this.UPDATE_MODEL({
+                .then(async (ids) => {
+                    await this.GET_MODEL({
                         model: this.model,
-                        data: this.$_.cloneDeep(this.form),
+                        id: this.form.id,
+                    }).then((data) => {
+                        this.form = this.$_.cloneDeep(data);
                     });
 
                     this.dialogDeleteRev = false;
                     this.$nextTick(() => (this.selectedRev = []));
                 })
-                .catch((e) => eHandler(e));
+                .catch((e) => eHandler(e))
+                .then(() => this.STOP_LOADING());
         },
     },
     watch: {

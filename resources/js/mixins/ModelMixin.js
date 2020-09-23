@@ -5,6 +5,7 @@ import { eHandler } from "../utils/helper";
 import { TABLE_OPTIONS } from "../utils/config";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import {
+    GET_MODEL,
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
@@ -39,7 +40,12 @@ export default {
     },
     methods: {
         ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [GET_MODELS, SAVE_MODEL, DELETE_MODELS]),
+        ...mapActions("model", [
+            GET_MODEL,
+            GET_MODELS,
+            SAVE_MODEL,
+            DELETE_MODELS
+        ]),
         chipColor(item) {
             return item.authorized ? "green" : "grey";
         },
@@ -61,7 +67,7 @@ export default {
             this.onEdit(item);
             this.$nextTick(() => (this.dialog = true));
         },
-        fetch: async function() {
+        fetchAll: async function() {
             await this.GET_MODELS({
                 model: this.model,
                 params: this.options
@@ -76,7 +82,7 @@ export default {
                 ids: map(this.selected, "id")
             })
                 .then(async () => {
-                    await this.fetch();
+                    await this.fetchAll();
 
                     this.dialogDelete = false;
                     this.$nextTick(() => (this.selected = []));
@@ -96,7 +102,7 @@ export default {
                         payload: this.form
                     })
                         .then(async data => {
-                            this.updateOrFetch(data);
+                            this.updateOrFetchAll(data);
 
                             this.selected = [];
                             this.close();
@@ -106,9 +112,9 @@ export default {
                 }
             });
         },
-        updateOrFetch: async function(data) {
+        updateOrFetchAll: async function(data) {
             if (this.creating) {
-                await this.fetch();
+                await this.fetchAll();
             } else {
                 this.UPDATE_MODEL({
                     model: this.model,
@@ -120,7 +126,7 @@ export default {
     watch: {
         options: {
             handler() {
-                this.fetch();
+                this.fetchAll();
             },
             immediate: true,
             deep: true

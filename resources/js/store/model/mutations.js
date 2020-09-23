@@ -9,8 +9,11 @@ export default {
         let index = state[pluralize(model)].findIndex(
             ({ id }) => id === data.id
         );
+
         if (index > -1) {
             state[pluralize(model)].splice(index, 1, data);
+        } else {
+            state[pluralize(model)].push(data);
         }
     }
     // [mutations.ADD_MODEL](state, {model, data}) {
