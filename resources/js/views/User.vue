@@ -195,13 +195,17 @@ import { mapState, mapMutations, mapActions } from "vuex";
 
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
-import { CommonMixin, ModelMixin, PasswordMixin } from "../mixins";
-import { GET_LIST } from "../store/model/action-types";
+import {
+    CommonMixin,
+    ModelMixin,
+    PasswordMixin,
+    FetchListMixin,
+} from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
 
 export default {
-    mixins: [CommonMixin, ModelMixin, PasswordMixin],
+    mixins: [CommonMixin, ModelMixin, PasswordMixin, FetchListMixin],
     components: {
         AppTopBar,
     },
@@ -230,7 +234,6 @@ export default {
         ...mapState("model", ["users"]),
     },
     methods: {
-        ...mapActions("model", [GET_LIST]),
         chipColor(item) {
             if (this.profile.id == item.id) return "primary";
             return "green";
@@ -252,23 +255,19 @@ export default {
         onSave() {
             this.ignorePasswordWhenUnchanged();
         },
-        fetchListRole: async function () {
-            await this.GET_LIST({
-                model: "role",
-            })
-                .then((data) => {
-                    this.listRole = data.map(({ id, name }) => ({
-                        id,
-                        name: name.toUpperCase(),
-                    }));
-                })
-                .catch((e) => eHandler(e));
-        },
     },
     watch: {
         dialog: function (open) {
             if (open) {
-                this.fetchListRole();
+                this.fetchList("role")
+                    .then(
+                        (data) =>
+                            (this.listRole = data.map(({ id, name }) => ({
+                                id,
+                                name: name.toUpperCase(),
+                            })))
+                    )
+                    .catch((e) => eHandler(e));
             }
         },
     },

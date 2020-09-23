@@ -1,17 +1,16 @@
 export default {
     data() {
         return {
-            formTabIndex: 0
+            formTabIndex: 0,
+            formTabList: ["data", "rev"]
         };
     },
     computed: {
         formTabs() {
-            let tabs = ["data", "rev"];
-
             if (this.creating) {
-                return [tabs[0]];
+                return this.formTabList.slice(-1, 1);
             }
-            return tabs;
+            return this.formTabList;
         }
     }
 };

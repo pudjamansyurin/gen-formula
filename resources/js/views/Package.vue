@@ -151,6 +151,8 @@
                 </v-form>
             </template>
 
+            <template v-slot:pack> halo </template>
+
             <template v-slot:rev>
                 <v-list dense>
                     <template v-for="(rev, index) in form.revs">
@@ -186,13 +188,17 @@ import { mapState, mapMutations, mapActions } from "vuex";
 
 import { Package } from "../models";
 import { eHandler } from "../utils/helper";
-import { CommonMixin, ModelMixin, FormTabMixin } from "../mixins";
-import { GET_LIST } from "../store/model/action-types";
+import {
+    CommonMixin,
+    ModelMixin,
+    FormTabMixin,
+    FetchListMixin,
+} from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
 
 export default {
-    mixins: [CommonMixin, ModelMixin, FormTabMixin],
+    mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
     components: {
         AppTopBar,
     },
@@ -230,33 +236,30 @@ export default {
             ],
 
             listUnit: [],
+            formTabList: ["data", "pack", "rev"],
         };
     },
     computed: {
         ...mapState("model", ["packages"]),
     },
     methods: {
-        ...mapActions("model", [GET_LIST]),
-        onCreate() {
+        change(item) {
             this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(this.modelProp);
+            this.form = this.$_.cloneDeep(item);
+        },
+        onCreate() {
+            this.change(this.modelProp);
         },
         onEdit(item) {
-            this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(item || this.selected[0]);
-        },
-        fetchListUnit: async function () {
-            await this.GET_LIST({
-                model: "unit",
-            })
-                .then((data) => (this.listUnit = data))
-                .catch((e) => eHandler(e));
+            this.change(item || this.selected[0]);
         },
     },
     watch: {
         dialog: function (open) {
             if (open) {
-                this.fetchListUnit();
+                this.fetchList("unit")
+                    .then((data) => (this.listUnit = data))
+                    .catch((e) => eHandler(e));
             }
         },
     },

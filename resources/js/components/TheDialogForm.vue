@@ -10,10 +10,10 @@
         <v-card :loading="!!loading">
             <v-card-title class="headline grey lighten-2" primary-title>
                 <v-row no-gutters>
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="5">
                         <span class="headline">{{ formTitle }}</span>
                     </v-col>
-                    <v-col v-if="tabs.length" cols="12" sm="6">
+                    <v-col v-if="tabs.length" cols="12" sm="7">
                         <v-tabs
                             :value="tab"
                             @change="$emit('update:tab', $event)"
@@ -86,7 +86,7 @@ export default {
         },
         width: {
             type: String,
-            default: "500",
+            default: "700",
         },
         tabs: {
             type: Array,

@@ -209,13 +209,12 @@ import { mapState, mapActions, mapMutations } from "vuex";
 
 import { Formula } from "../models";
 import { eHandler } from "../utils/helper";
-import { CommonMixin, ModelMixin } from "../mixins";
-import { GET_LIST } from "../store/model/action-types";
+import { CommonMixin, ModelMixin, FetchListMixin } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
 
 export default {
-    mixins: [CommonMixin, ModelMixin],
+    mixins: [CommonMixin, ModelMixin, FetchListMixin],
     components: {
         AppTopBar,
     },
@@ -268,7 +267,6 @@ export default {
         },
     },
     methods: {
-        ...mapActions("model", [GET_LIST]),
         chipColor(item) {
             if (!item.authorized) return "grey";
             return item.portion_total == 100 ? "green" : "red";
@@ -284,21 +282,6 @@ export default {
         edit() {
             this.form = this.$_.cloneDeep(this.selected[0]);
             this.$nextTick(() => (this.dialog = true));
-        },
-        fetchListMaterial: async function () {
-            await this.GET_LIST({
-                model: "material",
-            })
-                .then((data) => {
-                    this.listMaterial = data.map(({ id, name }) => ({
-                        portion: 0,
-                        material: {
-                            id,
-                            name,
-                        },
-                    }));
-                })
-                .catch((e) => eHandler(e));
         },
         // portion related routines
         closePortion() {
@@ -343,7 +326,15 @@ export default {
     watch: {
         dialogPortion: function (open) {
             if (open) {
-                this.fetchListMaterial();
+                this.fetchList("material")
+                    .then(
+                        (data) =>
+                            (this.listMaterial = data.map((material) => ({
+                                material,
+                                portion: 0,
+                            })))
+                    )
+                    .catch((e) => eHandler(e));
             }
         },
     },

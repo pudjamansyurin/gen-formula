@@ -113,14 +113,13 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 
 import { Pack } from "../models";
-import { CommonMixin, ModelMixin } from "../mixins";
+import { CommonMixin, ModelMixin, FetchListMixin } from "../mixins";
 import { eHandler, castId } from "../utils/helper";
-import { GET_LIST } from "../store/model/action-types";
 
 import AppTopBar from "../components/app/AppTopBar";
 
 export default {
-    mixins: [CommonMixin, ModelMixin],
+    mixins: [CommonMixin, ModelMixin, FetchListMixin],
     props: ["id"],
     components: {
         AppTopBar,
@@ -152,20 +151,12 @@ export default {
             return castId(this.id);
         },
     },
-    methods: {
-        ...mapActions("model", [GET_LIST]),
-        fetchListPacker: async function () {
-            await this.GET_LIST({
-                model: "packer",
-            })
-                .then((data) => (this.listPacker = data))
-                .catch((e) => eHandler(e));
-        },
-    },
     watch: {
         dialog: function (open) {
             if (open) {
-                this.fetchListPacker();
+                this.fetchList("packer")
+                    .then((data) => (this.listPacker = data))
+                    .catch((e) => eHandler(e));
             }
         },
     },

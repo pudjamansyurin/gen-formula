@@ -40,7 +40,7 @@
                     <v-icon>mdi-magnify</v-icon>
                 </v-btn>
             </template>
-            <v-btn v-if="!webview" @click="toggleFullscreen" icon>
+            <v-btn v-if="!webview" @click="toggleFs" icon>
                 <v-icon>{{ fullscreenIcon }}</v-icon>
             </v-btn>
             <!-- <v-btn icon>
@@ -178,10 +178,14 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="confirm(false)">
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="confirmFs(false)"
+                    >
                         No
                     </v-btn>
-                    <v-btn color="green" dark @click="confirm(true)">
+                    <v-btn color="green" dark @click="confirmFs(true)">
                         Yes
                     </v-btn>
                 </v-card-actions>
@@ -277,14 +281,14 @@ export default {
             }
             this.searchBox = state;
         },
-        toggleFullscreen() {
+        toggleFs() {
             this.$fullscreen.toggle(document.body, {
                 callback: this.TOGGLE_FULLSCREEN(),
             });
         },
-        confirm(state) {
+        confirmFs(state) {
             if (state) {
-                this.toggleFullscreen();
+                this.toggleFs();
             }
             ls.set("confirmedFullscreen", true);
 

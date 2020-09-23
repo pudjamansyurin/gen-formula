@@ -206,13 +206,17 @@ import pluralize from "pluralize";
 
 import { Material } from "../models";
 import { eHandler } from "../utils/helper";
-import { CommonMixin, ModelMixin, FormTabMixin } from "../mixins";
-import { GET_LIST } from "../store/model/action-types";
+import {
+    CommonMixin,
+    ModelMixin,
+    FormTabMixin,
+    FetchListMixin,
+} from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
 
 export default {
-    mixins: [CommonMixin, ModelMixin, FormTabMixin],
+    mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
     components: {
         AppTopBar,
     },
@@ -252,7 +256,6 @@ export default {
         ...mapState("model", ["materials"]),
     },
     methods: {
-        ...mapActions("model", [GET_LIST]),
         onCreate() {
             this.formTabIndex = 0;
             this.form = this.$_.cloneDeep(this.modelProp);
@@ -260,13 +263,6 @@ export default {
         onEdit(item) {
             this.formTabIndex = 0;
             this.form = this.$_.cloneDeep(item || this.selected[0]);
-        },
-        fetchListMatter: async function () {
-            await this.GET_LIST({
-                model: "matter",
-            })
-                .then((data) => (this.listMatter = data))
-                .catch((e) => eHandler(e));
         },
         // revision related routines
         confirmRemoveRev(rev) {
@@ -300,7 +296,9 @@ export default {
     watch: {
         dialog: function (open) {
             if (open) {
-                this.fetchListMatter();
+                this.fetchList("matter")
+                    .then((data) => (this.listMatter = data))
+                    .catch((e) => eHandler(e));
             }
         },
     },
