@@ -270,6 +270,14 @@ export default {
             return "green";
             // return item.revs_count ? "green" : "red";
         },
+        onCreate() {
+            this.formTabIndex = 0;
+            this.form = this.$_.cloneDeep(this.modelProp);
+        },
+        onEdit(item) {
+            this.formTabIndex = 0;
+            this.form = this.$_.cloneDeep(item || this.selected[0]);
+        },
         fetch: async function () {
             await this.GET_MODELS({
                 model: this.model,

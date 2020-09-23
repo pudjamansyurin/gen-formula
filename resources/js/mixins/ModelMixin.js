@@ -1,4 +1,4 @@
-import { isUndefined, cloneDeep } from "lodash";
+import { cloneDeep } from "lodash";
 
 import { TABLE_OPTIONS } from "../utils/config";
 
@@ -34,31 +34,19 @@ export default {
             this.dialog = false;
             this.$nextTick(() => this.$refs.form.reset());
         },
+        onCreate() {
+            this.form = cloneDeep(this.modelProp);
+        },
         create() {
-            // Handle 'FormTabMixin'
-            if (!isUndefined(this.formTabIndex)) {
-                this.formTabIndex = 0;
-            }
-
-            this.fillForm();
+            this.onCreate();
             this.$nextTick(() => (this.dialog = true));
+        },
+        onEdit(item) {
+            this.form = cloneDeep(item || this.selected[0]);
         },
         edit(item) {
-            // Handle 'FormTabMixin'
-            if (!isUndefined(this.formTabIndex)) {
-                this.formTabIndex = 0;
-            }
-
-            this.fillForm(item);
+            this.onEdit(item);
             this.$nextTick(() => (this.dialog = true));
-        },
-        fillForm(item) {
-            let data = this.modelProp;
-            if (item) {
-                data = item || this.selected[0];
-            }
-
-            this.form = cloneDeep(data);
         }
     }
 };

@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\User;
 use App\Helpers\Helper;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Http\Request;
 
 class UserPolicy
 {
@@ -75,5 +76,13 @@ class UserPolicy
     {
         // only admin can view all roles
         return $user->hasRole('admin');
+    }
+
+    /**
+     * Determine whether the user update profile.
+     */
+    public function profile(User $user)
+    {
+        return $user->id === request('id');
     }
 }

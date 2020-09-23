@@ -112,9 +112,9 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public function unVerifyChangedEmail($request)
+    public function unVerifyChangedEmail()
     {
-        if ($this->email != $request->email) {
+        if ($this->email != request('email')) {
             return $this->forceFill([
                 'email_verified_at' => null,
             ])->save();

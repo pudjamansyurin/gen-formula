@@ -45,7 +45,7 @@ class UserController extends Controller
         $user = User::create($request->validated());
 
         // add role
-        if ($role = Role::find($request->role['id'])) {
+        if ($role = Role::find($request->role_id)) {
             $user->syncRoles($role);
         }
 
@@ -70,13 +70,13 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         // on email changes
-        $user->unVerifyChangedEmail($request);
+        $user->unVerifyChangedEmail();
 
         // update
         $user->update($request->validated());
 
         // update role
-        if ($role = Role::find($request->role['id'])) {
+        if ($role = Role::find($request->role_id)) {
             $user->syncRoles($role);
         }
 
@@ -106,16 +106,6 @@ class UserController extends Controller
         User::destroy($usersId);
 
         return response($usersId, Response::HTTP_OK);
-    }
-
-    /**
-     * Get profile
-     */
-    public function profile(Request $request)
-    {
-        return response([
-            'user' => new UserItem($request->user()->loadRelation()),
-        ], Response::HTTP_OK);
     }
 
     /**

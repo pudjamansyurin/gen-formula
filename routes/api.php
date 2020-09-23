@@ -26,7 +26,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('formula.portion', 'PortionController', ['only' => ['store']]);
 
     Route::apiResource('user', 'UserController', ['except' => ['show']]);
-    Route::get('/profile', 'UserController@profile');
+
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('', 'ProfileController@show');
+        Route::put('update', 'ProfileController@update');
+    });
 
     Route::group(['prefix' => 'list'], function () {
         Route::get('packer', 'PackerController@list');

@@ -1,3 +1,5 @@
+import { cloneDeep } from "lodash";
+
 export default {
     data() {
         return {
@@ -14,6 +16,15 @@ export default {
         },
         passwordChangeText() {
             return this.changePassword ? "Keep" : "Change";
+        }
+    },
+    methods: {
+        copyWithPassword(item) {
+            return {
+                ...cloneDeep(item),
+                password: null,
+                password_confirmation: null
+            };
         }
     }
 };

@@ -7,6 +7,7 @@ export const User = {
     id: -1,
     name: "",
     email: "",
+    role_id: -1,
     role: Role
 };
 

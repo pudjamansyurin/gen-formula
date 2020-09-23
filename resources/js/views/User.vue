@@ -118,11 +118,11 @@
                     </validation-provider>
 
                     <validation-provider
-                        name="role.id"
+                        name="role_id"
                         v-slot="{ errors, valid }"
                     >
-                        <v-select
-                            v-model="form.role"
+                        <v-autocomplete
+                            v-model="form.role_id"
                             :items="listRole"
                             :error-messages="errors"
                             :success="valid"
@@ -132,8 +132,7 @@
                             hint="Role for this user"
                             chips
                             persistent-hint
-                            return-object
-                        ></v-select>
+                        ></v-autocomplete>
                     </validation-provider>
 
                     <v-btn
@@ -215,6 +214,12 @@ export default {
     data() {
         return {
             model: "user",
+            modelProp: User,
+            form: {
+                ...this.$_.cloneDeep(User),
+                password: null,
+                password_confirmation: null,
+            },
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Email", value: "email" },
@@ -223,11 +228,6 @@ export default {
                 { text: "LastIp", value: "last_ip" },
             ],
 
-            form: {
-                ...this.$_.cloneDeep(User),
-                password: null,
-                password_confirmation: null,
-            },
             listRole: [],
         };
     },
@@ -247,23 +247,19 @@ export default {
             if (this.profile.id == item.id) return "primary";
             return "green";
         },
-        fillForm(item) {
-            let data = this.modelProp;
-            if (item) {
-                if (this.profile.id === item.id) {
-                    this.$router.push({ name: "profile" });
-                    return;
-                }
-
-                data = item || this.selected[0];
+        onCreate() {
+            this.changePassword = true;
+            this.form = this.copyWithPassword(this.modelProp);
+        },
+        onEdit(item) {
+            // redirect if me
+            if (this.profile.id == item.id) {
+                this.$router.push({ name: "profile" });
+                return;
             }
 
-            this.changePassword = !item;
-            this.form = this.$_.cloneDeep({
-                ...data,
-                password: null,
-                password_confirmation: null,
-            });
+            this.changePassword = false;
+            this.form = this.copyWithPassword(item || this.selected[0]);
         },
         fetch: async function () {
             await this.GET_MODELS({

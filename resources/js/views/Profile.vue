@@ -2,7 +2,7 @@
     <fragment>
         <app-top-bar page="Profile"></app-top-bar>
 
-        <v-card v-if="!dialog" :loading="!!loading" class="mx-auto">
+        <v-card v-show="!dialog" :loading="!!loading" class="mx-auto">
             <v-list-item>
                 <v-list-item-avatar color="grey">
                     <v-img src="/img/unknown.png" alt="Profile"></v-img>
@@ -113,7 +113,7 @@
             </v-list-item>
         </v-card>
 
-        <v-card v-else :loading="!!loading">
+        <v-card v-show="dialog" :loading="!!loading">
             <v-card-title class="headline grey lighten-2" primary-title>
                 <span class="headline"> Edit Profile</span>
             </v-card-title>
@@ -152,24 +152,14 @@
                             ></v-text-field>
                         </validation-provider>
 
-                        <validation-provider
-                            name="role.id"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-select
-                                v-model="form.role"
-                                :items="[form.role]"
-                                :error-messages="errors"
-                                :success="valid"
-                                item-text="name"
-                                item-value="id"
-                                label="Role"
-                                hint="Role for this user"
-                                chips
-                                persistent-hint
-                                return-object
-                            ></v-select>
-                        </validation-provider>
+                        <v-text-field
+                            v-model="form.role.name"
+                            type="text"
+                            label="Role"
+                            hint="Role for this user"
+                            persistent-hint
+                            readonly
+                        ></v-text-field>
 
                         <v-btn
                             color="blue darken-1"
@@ -240,10 +230,10 @@
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 
+import { User } from "../models";
 import { eHandler } from "../utils/helper";
-import { SAVE_MODEL } from "../store/model/action-types";
 import { CommonMixin, PasswordMixin, ModelMixin } from "../mixins";
-import { RESEND, PROFILE } from "../store/app/action-types";
+import { RESEND, GET_PROFILE, UPDATE_PROFILE } from "../store/app/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
 
 import AppTopBar from "../components/app/AppTopBar";
@@ -255,11 +245,20 @@ export default {
     },
     data() {
         return {
-            model: "user",
+            model: "profile",
+            modelProp: User,
+            form: {
+                ...this.$_.cloneDeep(User),
+                password: null,
+                password_confirmation: null,
+            },
             dialog: false,
-            form: {},
         };
     },
+    mounted() {
+        this.GET_PROFILE().catch((e) => eHandler(e));
+    },
+    created() {},
     computed: {
         ...mapState("app", ["profile"]),
         verifier() {
@@ -276,19 +275,10 @@ export default {
     },
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
-        ...mapActions("app", [RESEND, PROFILE]),
-        ...mapActions("model", [SAVE_MODEL]),
-        fillForm(item) {
-            if (!item) return;
-
-            let data = this.profile;
-
+        ...mapActions("app", [RESEND, GET_PROFILE, UPDATE_PROFILE]),
+        onEdit(item) {
             this.changePassword = false;
-            this.form = this.$_.cloneDeep({
-                ...data,
-                password: null,
-                password_confirmation: null,
-            });
+            this.form = this.copyWithPassword(this.profile);
         },
         save() {
             this.$refs.form.validate().then(async (valid) => {
@@ -298,22 +288,9 @@ export default {
                         this.$delete(this.form, "password_confirmation");
                     }
 
-                    this.START_LOADING();
-                    await this.SAVE_MODEL({
-                        model: this.model,
-                        payload: this.form,
-                    })
-                        .then(async (data) => {
-                            this.SET_PROFILE(data);
-                            this.SET_MESSAGE({
-                                text: "Profile udpated successfully",
-                                type: "success",
-                            });
-
-                            this.close();
-                        })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
-                        .then(() => this.STOP_LOADING());
+                    await this.UPDATE_PROFILE({ payload: this.form })
+                        .then(() => this.close())
+                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
                 }
             });
         },
@@ -324,9 +301,6 @@ export default {
                 this.RESEND().catch((e) => eHandler(e));
             }
         },
-    },
-    mounted() {
-        this.PROFILE().catch((e) => eHandler(e));
     },
 };
 </script>

@@ -228,6 +228,8 @@ export default {
     data() {
         return {
             model: "formula",
+            modelProp: Formula,
+            form: this.$_.cloneDeep(Formula),
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Description", value: "description" },
@@ -254,7 +256,6 @@ export default {
                 { text: "UpdatedAt", value: "updated_at" },
             ],
 
-            form: this.$_.cloneDeep(Formula),
             dialogPortion: false,
             listMaterial: [],
         };

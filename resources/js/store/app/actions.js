@@ -38,9 +38,20 @@ export default {
     [actions.VERIFY]({ commit }, url) {
         return auth.verify(url);
     },
-    [actions.PROFILE]({ commit }) {
-        return auth
-            .profile()
-            .then(({ user }) => commit(mutations.SET_PROFILE, user));
+    [actions.GET_PROFILE]({ commit }) {
+        return auth.getProfile().then(data => {
+            commit(mutations.SET_PROFILE, data);
+        });
+    },
+    [actions.UPDATE_PROFILE]({ commit }, { payload }) {
+        return auth.updateProfile(payload).then(data => {
+            commit(mutations.SET_PROFILE, data);
+            commit(mutations.SET_MESSAGE, {
+                text: "Profile udpated successfully",
+                type: "success"
+            });
+
+            return data;
+        });
     }
 };

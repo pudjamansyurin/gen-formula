@@ -3,6 +3,11 @@ import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 
 export default {
+    [actions.GET_LIST]({ commit }, { model, params }) {
+        return api
+            .viewAny(`list/${model}`, params || { itemsPerPage: -1 })
+            .then(({ data }) => data);
+    },
     [actions.GET_MODELS]({ commit }, { model, params, url }) {
         return api.viewAny(url || model, params).then(res => {
             commit(mutations.SET_MODELS, {
@@ -12,11 +17,6 @@ export default {
 
             return res;
         });
-    },
-    [actions.GET_LIST]({ commit }, { model, params }) {
-        return api
-            .viewAny(`list/${model}`, params || { itemsPerPage: -1 })
-            .then(({ data }) => data);
     },
     // [actions.GET_MODEL]({ commit }, { model, id, url }) {
     //     return api
