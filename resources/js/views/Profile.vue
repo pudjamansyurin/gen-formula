@@ -2,7 +2,7 @@
     <fragment>
         <app-top-bar page="Profile"></app-top-bar>
 
-        <v-card v-show="!dialog" :loading="!!loading" class="mx-auto">
+        <v-card v-show="!update" :loading="!!loading" class="mx-auto">
             <v-list-item>
                 <v-list-item-avatar color="grey">
                     <v-img src="/img/unknown.png" alt="Profile"></v-img>
@@ -14,7 +14,7 @@
                     <v-list-item-subtitle>
                         Profile
                         <v-btn
-                            @click="edit"
+                            @click="editProfile"
                             color="primary"
                             class="ma-2"
                             small
@@ -113,14 +113,14 @@
             </v-list-item>
         </v-card>
 
-        <v-card v-show="dialog" :loading="!!loading">
+        <v-card v-show="update" :loading="!!loading">
             <v-card-title class="headline grey lighten-2" primary-title>
                 <span class="headline"> Edit Profile</span>
             </v-card-title>
 
             <v-divider></v-divider>
             <v-card-text>
-                <v-form @submit.prevent="save">
+                <v-form @submit.prevent="saveProfile">
                     <validation-observer ref="form">
                         <validation-provider
                             name="name"
@@ -215,11 +215,15 @@
 
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn @click="dialog = false" color="indigo" text>
+                <v-btn @click="update = false" color="indigo" text>
                     Cancel
                 </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn :disabled="!!loading" @click="save" color="primary">
+                <v-btn
+                    :disabled="!!loading"
+                    @click="saveProfile"
+                    color="primary"
+                >
                     Save
                 </v-btn>
             </v-card-actions>
@@ -232,14 +236,14 @@ import { mapState, mapActions, mapMutations } from "vuex";
 
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
-import { CommonMixin, PasswordMixin, ModelMixin } from "../mixins";
+import { CommonMixin, PasswordMixin } from "../mixins";
 import { RESEND, GET_PROFILE, UPDATE_PROFILE } from "../store/app/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
 
 import AppTopBar from "../components/app/AppTopBar";
 
 export default {
-    mixins: [CommonMixin, PasswordMixin, ModelMixin],
+    mixins: [CommonMixin, PasswordMixin],
     components: {
         AppTopBar,
     },
@@ -252,7 +256,7 @@ export default {
                 password: null,
                 password_confirmation: null,
             },
-            dialog: false,
+            update: false,
         };
     },
     mounted() {
@@ -276,18 +280,20 @@ export default {
     methods: {
         ...mapMutations("app", [SET_PROFILE, SET_MESSAGE]),
         ...mapActions("app", [RESEND, GET_PROFILE, UPDATE_PROFILE]),
-        onEdit(item) {
+        close() {
+            this.update = false;
+            this.$nextTick(() => this.$refs.form.reset());
+        },
+        editProfile(item) {
             this.changePassword = false;
             this.form = this.copyWithPassword(this.profile);
+            this.$nextTick(() => (this.update = true));
         },
-        save() {
+        saveProfile() {
+            this.ignorePasswordWhenUnchanged();
+
             this.$refs.form.validate().then(async (valid) => {
                 if (valid) {
-                    if (!this.changePassword) {
-                        this.$delete(this.form, "password");
-                        this.$delete(this.form, "password_confirmation");
-                    }
-
                     await this.UPDATE_PROFILE({ payload: this.form })
                         .then(() => this.close())
                         .catch((e) => this.$refs.form.setErrors(eHandler(e)));

@@ -114,14 +114,8 @@ import { mapState, mapMutations, mapActions } from "vuex";
 
 import { Pack } from "../models";
 import { CommonMixin, ModelMixin } from "../mixins";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
 import { eHandler, castId } from "../utils/helper";
-import {
-    GET_MODELS,
-    SAVE_MODEL,
-    DELETE_MODELS,
-    GET_LIST,
-} from "../store/model/action-types";
+import { GET_LIST } from "../store/model/action-types";
 
 import AppTopBar from "../components/app/AppTopBar";
 
@@ -159,69 +153,7 @@ export default {
         },
     },
     methods: {
-        ...mapMutations("model", [UPDATE_MODEL]),
-        ...mapActions("model", [
-            GET_MODELS,
-            SAVE_MODEL,
-            DELETE_MODELS,
-            GET_LIST,
-        ]),
-        chipColor(item) {
-            if (!item.authorized) return "grey";
-            return "green";
-        },
-        fetch: async function () {
-            await this.GET_MODELS({
-                model: this.model,
-                params: this.options,
-            })
-                .then(({ total }) => (this.total = total))
-                .catch((e) => eHandler(e));
-        },
-        remove: async function () {
-            this.START_LOADING();
-            await this.DELETE_MODELS({
-                model: this.model,
-                ids: this.$_.map(this.selected, "id"),
-            })
-                .then(async () => {
-                    await this.fetch();
-
-                    this.dialogDelete = false;
-                    this.$nextTick(() => (this.selected = []));
-                })
-                .catch((e) => eHandler(e))
-                .then(() => this.STOP_LOADING());
-        },
-        save() {
-            this.$refs.form.validate().then(async (valid) => {
-                if (valid) {
-                    this.START_LOADING();
-                    await this.SAVE_MODEL({
-                        model: this.model,
-                        payload: this.form,
-                    })
-                        .then(async (data) => {
-                            this.updateOrFetch(data);
-
-                            this.selected = [];
-                            this.close();
-                        })
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)))
-                        .then(() => this.STOP_LOADING());
-                }
-            });
-        },
-        updateOrFetch: async function (data) {
-            if (this.creating) {
-                await this.fetch();
-            } else {
-                this.UPDATE_MODEL({
-                    model: this.model,
-                    data,
-                });
-            }
-        },
+        ...mapActions("model", [GET_LIST]),
         fetchListPacker: async function () {
             await this.GET_LIST({
                 model: "packer",
@@ -235,13 +167,6 @@ export default {
             if (open) {
                 this.fetchListPacker();
             }
-        },
-        options: {
-            handler() {
-                this.fetch();
-            },
-            immediate: true,
-            deep: true,
         },
     },
 };

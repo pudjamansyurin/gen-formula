@@ -25,6 +25,12 @@ export default {
                 password: null,
                 password_confirmation: null
             };
+        },
+        ignorePasswordWhenUnchanged() {
+            if (!this.changePassword) {
+                this.$delete(this.form, "password");
+                this.$delete(this.form, "password_confirmation");
+            }
         }
     }
 };
