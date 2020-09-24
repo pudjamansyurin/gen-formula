@@ -86,7 +86,7 @@ export default {
         },
         width: {
             type: String,
-            default: "700",
+            default: "600",
         },
         tabs: {
             type: Array,

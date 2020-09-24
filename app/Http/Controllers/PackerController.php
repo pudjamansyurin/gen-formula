@@ -98,7 +98,7 @@ class PackerController extends Controller
         $this->authorize('viewAny', Packer::class);
 
         return response([
-            'data' => Packer::getAsList()
+            'data' => Packer::getAsList()->load(['packs:id,name,packer_id'])
         ], Response::HTTP_OK);
     }
 }

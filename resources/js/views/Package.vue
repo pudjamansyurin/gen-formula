@@ -154,28 +154,51 @@
             <template v-slot:PACK>
                 <v-form @submit.prevent="savePacker">
                     <validation-observer ref="form_packer">
-                        <validation-provider
-                            name="packers"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-autocomplete
-                                v-model="form.packers"
-                                :items="listPacker"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="fieldDisabled"
-                                item-text="name"
-                                item-value="id"
-                                label="Packer"
-                                hint="The packer"
-                                persistent-hint
-                                deletable-chips
-                                return-object
-                                filled
-                                multiple
-                                chips
-                            ></v-autocomplete>
-                        </validation-provider>
+                        <v-row>
+                            <v-col cols="12" sm="7">
+                                <validation-provider
+                                    name="packers"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-autocomplete
+                                        v-model="form.packers"
+                                        :items="listPacker"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        :readonly="fieldDisabled"
+                                        item-text="name"
+                                        item-value="id"
+                                        label="Packer"
+                                        hint="The packer"
+                                        persistent-hint
+                                        deletable-chips
+                                        return-object
+                                        outlined
+                                        multiple
+                                        chips
+                                    ></v-autocomplete>
+                                </validation-provider>
+                            </v-col>
+                            <v-col cols="12" sm="5">
+                                <validation-provider
+                                    name="price_total"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        :value="priceTotal"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        hint="This the total price"
+                                        label="Total Price"
+                                        type="number"
+                                        prefix="Rp"
+                                        outlined
+                                        disabled
+                                        persistent-hint
+                                    ></v-text-field>
+                                </validation-provider>
+                            </v-col>
+                        </v-row>
 
                         <template
                             v-if="form.packers && form.packers.length > 0"
@@ -197,17 +220,17 @@
                                                 :success="valid"
                                                 :readonly="fieldDisabled"
                                                 :label="packer.name"
-                                                type="number"
                                                 hint="The packer content"
+                                                type="number"
                                                 persistent-hint
                                             ></v-text-field>
                                         </validation-provider>
                                     </v-list-item-title>
                                 </template>
 
-                                <!-- <v-list-item
-                                    v-for="packet in packager.packets"
-                                    :key="packet.id"
+                                <v-list-item
+                                    v-for="pack in packer.packs"
+                                    :key="pack.id"
                                 >
                                     <v-list-item-action>
                                         <v-icon>
@@ -220,13 +243,11 @@
                                             v-slot="{ errors, valid }"
                                         >
                                             <v-text-field
-                                                v-model.number="
-                                                    packet.pivot.price
-                                                "
+                                                v-model.number="pack.price"
                                                 :error-messages="errors"
                                                 :success="valid"
                                                 :readonly="fieldDisabled"
-                                                :label="packet.name"
+                                                :label="pack.name"
                                                 prefix="Rp"
                                                 type="number"
                                                 hint="The pack price"
@@ -235,7 +256,7 @@
                                             ></v-text-field>
                                         </validation-provider>
                                     </v-list-item-title>
-                                </v-list-item> -->
+                                </v-list-item>
                             </v-list-group>
                         </template>
                     </validation-observer>
@@ -327,15 +348,29 @@ export default {
 
             listUnit: [],
             listPacker: [],
+            listPackerDefault: [],
             formTabList: ["DATA", "PACK", "REV"],
         };
     },
     computed: {
         ...mapState("model", ["packages"]),
+        priceTotal() {
+            return this.form.packers
+                .reduce((carry, el) => {
+                    let subTotal =
+                        el.packs.reduce((carry, el) => {
+                            return carry + Number(el.price);
+                        }, 0) / Number(el.content);
+
+                    return carry + subTotal;
+                }, 0)
+                .toFixed(2);
+        },
     },
     methods: {
         change(item) {
             this.formTabIndex = 0;
+            this.listPacker = this.$_.cloneDeep(this.listPackerDefault);
             this.form = this.$_.cloneDeep(item);
         },
         onCreate() {
@@ -343,19 +378,44 @@ export default {
         },
         onEdit(item) {
             this.change(item || this.selected[0]);
+            this.fetchDetail();
         },
-        transformData(data) {
+        fetchDetail() {
+            this.GET_MODEL({
+                model: this.model,
+                id: this.form.id,
+            }).then((data) => {
+                this.form = {
+                    ...this.$_.cloneDeep(data),
+                    packers: this.transformPackersByDetail(data),
+                };
+            });
+        },
+        transformPackersByDetail(data) {
             return data.packagers.map(
                 ({ packer_id: id, content, packer, packets }) => ({
                     id,
-                    content,
                     name: packer.name,
-                    packs: packets.map(({ pivot }) => ({
-                        pack_id: pivot.pack_id,
+                    content,
+                    packs: packets.map(({ name, pivot }) => ({
+                        id: pivot.pack_id,
+                        name,
                         price: pivot.price,
                     })),
                 })
             );
+        },
+        transformPackersByList(data) {
+            return data.map(({ id, name, packs }) => ({
+                id,
+                name,
+                content: 1,
+                packs: packs.map(({ id, name }) => ({
+                    id,
+                    name,
+                    price: 0,
+                })),
+            }));
         },
     },
     mounted() {
@@ -364,31 +424,9 @@ export default {
             .catch((e) => eHandler(e));
         this.fetchList("packer")
             .then((data) => {
-                this.listPacker = data.map((el) => ({
-                    ...el,
-                    content: 1,
-                    packs: [],
-                }));
+                this.listPackerDefault = this.transformPackersByList(data);
             })
             .catch((e) => eHandler(e));
-    },
-    watch: {
-        formTabIndex: function (index) {
-            if (this.formTabList[index] !== "PACK") return;
-            if (this.creating) return;
-
-            if (!this.form.packagers) {
-                this.GET_MODEL({
-                    model: this.model,
-                    id: this.form.id,
-                }).then((data) => {
-                    this.form = {
-                        ...this.$_.cloneDeep(data),
-                        packers: this.transformData(data),
-                    };
-                });
-            }
-        },
     },
 };
 </script>

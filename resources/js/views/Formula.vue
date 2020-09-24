@@ -91,9 +91,9 @@
                             v-model="form.name"
                             :error-messages="errors"
                             :success="valid"
+                            hint="This is to identify the formula"
                             label="Formula name"
                             type="text"
-                            hint="This is to identify the formula"
                             counter
                             persistent-hint
                         ></v-text-field>
@@ -107,9 +107,9 @@
                             v-model="form.description"
                             :error-messages="errors"
                             :success="valid"
+                            hint="Short description about the formula"
                             label="Formula description"
                             type="text"
-                            hint="Short description about the formula"
                             counter
                             persistent-hint
                         ></v-text-field>
@@ -161,14 +161,14 @@
                                 v-slot="{ errors, valid }"
                             >
                                 <v-text-field
-                                    class="mt-3"
-                                    label="Total Portion"
-                                    type="number"
                                     :value="portionTotal"
                                     :error-messages="errors"
                                     :success="valid"
-                                    suffix="%"
+                                    class="mt-3"
                                     hint="This should be 100%"
+                                    label="Total Portion"
+                                    type="number"
+                                    suffix="%"
                                     readonly
                                     filled
                                     persistent-hint
@@ -189,9 +189,9 @@
                                     :success="valid"
                                     :readonly="fieldDisabled"
                                     :filled="fieldDisabled"
+                                    hint="This material's portion"
                                     type="number"
                                     suffix="%"
-                                    hint="This material's portion"
                                     persistent-hint
                                 ></v-text-field>
                             </validation-provider>
@@ -259,11 +259,9 @@ export default {
             return this.form.name || "Related materials";
         },
         portionTotal() {
-            return this.$_.reduce(
-                this.form.portions,
-                (sum, el) => sum + Number(el.portion),
-                0
-            );
+            return this.form.portions
+                .reduce((carry, el) => carry + Number(el.portion), 0)
+                .toFixed(2);
         },
     },
     methods: {
@@ -271,18 +269,7 @@ export default {
             if (!item.authorized) return "grey";
             return item.portion_total == 100 ? "green" : "red";
         },
-        close() {
-            this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
-        },
-        create() {
-            this.form = this.$_.cloneDeep(Formula);
-            this.$nextTick(() => (this.dialog = true));
-        },
-        edit() {
-            this.form = this.$_.cloneDeep(this.selected[0]);
-            this.$nextTick(() => (this.dialog = true));
-        },
+
         // portion related routines
         closePortion() {
             this.dialogPortion = false;
