@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class ProfileRequest extends FormRequest
@@ -24,6 +25,8 @@ class ProfileRequest extends FormRequest
      */
     public function rules()
     {
+        debug(auth()->user());
+
         return [
             'name' => [
                 'min:3',

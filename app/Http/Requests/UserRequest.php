@@ -3,9 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class UserStoreRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -39,9 +40,11 @@ class UserStoreRequest extends FormRequest
                 'exists:roles,id'
             ],
             'password' => [
+                Rule::requiredIf(request()->isMethod('post')),
+                'sometimes',
                 'min:8',
                 'confirmed'
-            ],
+            ]
         ];
     }
 }
