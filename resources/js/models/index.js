@@ -19,7 +19,8 @@ export const Pack = {
 
 export const Packer = {
     id: -1,
-    name: ""
+    name: "",
+    packs: []
 };
 
 export const Package = {

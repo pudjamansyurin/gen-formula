@@ -172,39 +172,33 @@
                                 </validation-provider>
                             </v-col>
                             <v-col cols="12" sm="5">
-                                <validation-provider
-                                    name="price_total"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-text-field
-                                        :value="priceTotal"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        hint="This the total price"
-                                        label="Total Price"
-                                        type="number"
-                                        prefix="Rp"
-                                        filled
-                                        readonly
-                                        counter
-                                        persistent-hint
-                                    ></v-text-field>
-                                </validation-provider>
+                                <v-text-field
+                                    :value="priceTotal"
+                                    hint="This the total price"
+                                    label="Total Price"
+                                    type="number"
+                                    prefix="Rp"
+                                    filled
+                                    readonly
+                                    counter
+                                    persistent-hint
+                                ></v-text-field>
                             </v-col>
                         </v-row>
 
                         <template
                             v-if="form.packers && form.packers.length > 0"
                         >
-                            <v-list-group
-                                v-for="packer in form.packers"
-                                :key="packer.id"
+                            <div
+                                v-for="(packer, index) in form.packers"
+                                :key="`packers.${index}.content`"
                                 :value="true"
                             >
-                                <template v-slot:activator>
+                                <v-list-item>
                                     <v-list-item-title>
                                         <validation-provider
-                                            name="packer.content"
+                                            :vid="`packers.${index}.content`"
+                                            :name="`${packer.name} content`"
                                             v-slot="{ errors, valid }"
                                         >
                                             <v-text-field
@@ -219,11 +213,11 @@
                                             ></v-text-field>
                                         </validation-provider>
                                     </v-list-item-title>
-                                </template>
+                                </v-list-item>
 
                                 <v-list-item
-                                    v-for="pack in packer.packs"
-                                    :key="pack.id"
+                                    v-for="(pack, idx) in packer.packs"
+                                    :key="`packers.${index}.packs.${idx}.price`"
                                 >
                                     <v-list-item-action>
                                         <v-icon>
@@ -232,7 +226,8 @@
                                     </v-list-item-action>
                                     <v-list-item-title>
                                         <validation-provider
-                                            name="pack.price"
+                                            :vid="`packers.${index}.packs.${idx}.price`"
+                                            :name="`${pack.name} price`"
                                             v-slot="{ errors, valid }"
                                         >
                                             <v-text-field
@@ -250,7 +245,7 @@
                                         </validation-provider>
                                     </v-list-item-title>
                                 </v-list-item>
-                            </v-list-group>
+                            </div>
                         </template>
                     </validation-observer>
                     <v-btn v-show="false" type="submit"></v-btn>
