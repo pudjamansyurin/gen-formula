@@ -26,22 +26,45 @@ class PackageRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('packages', 'name')->ignore($this->package)
             ],
             'unit_id' => [
                 'required',
                 'integer',
-                'min:1',
                 'exists:units,id'
             ],
             'capacity' => [
-                'required',
                 'numeric',
                 'min:0',
                 'not_in:0',
             ],
+            'packers' => [
+                'required',
+                'array'
+            ],
+            'packers.*.id' => [
+                'integer',
+                'distinct',
+                'exists:packers,id'
+            ],
+            'packers.*.content' => [
+                'integer',
+                'min:1',
+            ],
+            'packers.*.packs' => [
+                'required',
+                'array'
+            ],
+            'packers.*.packs.*.id' => [
+                'integer',
+                'distinct',
+                'exists:packs,id'
+            ],
+            'packers.*.packs.*.price' => [
+                'integer',
+                'min:1',
+            ]
         ];
     }
 }

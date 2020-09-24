@@ -26,7 +26,6 @@ class MatterRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('matters', 'name')->ignore($this->matter)
             ],

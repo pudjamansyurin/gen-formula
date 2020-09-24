@@ -26,7 +26,6 @@ class PackerRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('packers', 'name')->ignore($this->packer)
             ],

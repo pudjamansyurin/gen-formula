@@ -276,9 +276,8 @@ export default {
         ]),
         ...mapActions("app", [LOGOUT]),
         setSearch(state) {
-            if (!state) {
-                this.search = "";
-            }
+            if (!state) this.search = "";
+
             this.searchBox = state;
         },
         toggleFs() {
@@ -287,9 +286,8 @@ export default {
             });
         },
         confirmFs(state) {
-            if (state) {
-                this.toggleFs();
-            }
+            if (state) this.toggleFs();
+
             ls.set("confirmedFullscreen", true);
 
             this.$nextTick(() => (this.dialog = false));

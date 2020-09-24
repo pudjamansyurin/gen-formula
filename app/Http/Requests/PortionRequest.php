@@ -30,12 +30,10 @@ class PortionRequest extends FormRequest
             ],
             'formula.*.material_id' => [
                 'integer',
-                'min:1',
                 'distinct',
                 'exists:materials,id'
             ],
             'formula.*.portion' => [
-                'integer',
                 'min:1',
                 'max:100'
             ]

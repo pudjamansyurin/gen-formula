@@ -26,7 +26,6 @@ class ProfileRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('users', 'name')->ignore(auth()->user())
             ],
@@ -37,7 +36,6 @@ class ProfileRequest extends FormRequest
             ],
             'password' => [
                 'sometimes',
-                'required',
                 'min:8',
                 'confirmed'
             ]

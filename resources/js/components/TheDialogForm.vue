@@ -2,7 +2,7 @@
     <v-dialog
         :value="value"
         @input="$emit('input', $event)"
-        :fullscreen="mobile"
+        :fullscreen="mobile || fullscreen"
         :max-width="width"
         persistent
         scrollable
@@ -12,6 +12,10 @@
                 <v-row no-gutters>
                     <v-col cols="12" sm="5">
                         <span class="headline">{{ formTitle }}</span>
+
+                        <v-btn @click="fullscreen = !fullscreen" icon>
+                            <v-icon>{{ fullscreenIcon }}</v-icon>
+                        </v-btn>
                     </v-col>
                     <v-col v-if="tabs.length" cols="12" sm="7">
                         <v-tabs
@@ -97,6 +101,11 @@ export default {
             default: 0,
         },
     },
+    data() {
+        return {
+            fullscreen: false,
+        };
+    },
     computed: {
         formTitle() {
             if (this.title) return this.title;
@@ -104,7 +113,11 @@ export default {
             return `${this.form.id === -1 ? "New" : "Edit"} Item`;
         },
         cardTextHeight() {
-            return !this.mobile ? "max-height: 500px;" : "";
+            if (!this.mobile && !this.fullscreen) return "max-height: 500px;";
+            return;
+        },
+        fullscreenIcon() {
+            return this.fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen";
         },
     },
 };

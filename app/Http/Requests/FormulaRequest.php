@@ -26,12 +26,10 @@ class FormulaRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('formulas', 'name')->ignore($this->formula)
             ],
             'description' => [
-                'required',
                 'min:5'
             ],
         ];

@@ -146,14 +146,6 @@
                                 </validation-provider>
                             </v-col>
                         </v-row>
-                    </validation-observer>
-                    <v-btn v-show="false" type="submit"></v-btn>
-                </v-form>
-            </template>
-
-            <template v-slot:PACK>
-                <v-form @submit.prevent="savePacker">
-                    <validation-observer ref="form_packer">
                         <v-row>
                             <v-col cols="12" sm="7">
                                 <validation-provider
@@ -192,8 +184,9 @@
                                         label="Total Price"
                                         type="number"
                                         prefix="Rp"
-                                        outlined
-                                        disabled
+                                        filled
+                                        readonly
+                                        counter
                                         persistent-hint
                                     ></v-text-field>
                                 </validation-provider>
@@ -263,6 +256,15 @@
                     <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
             </template>
+
+            <!-- <template v-slot:PACK>
+                <v-form @submit.prevent="savePacker">
+                    <validation-observer ref="form_packer">
+
+                    </validation-observer>
+                    <v-btn v-show="false" type="submit"></v-btn>
+                </v-form>
+            </template> -->
 
             <template v-slot:REV>
                 <v-list dense>
@@ -349,7 +351,7 @@ export default {
             listUnit: [],
             listPacker: [],
             listPackerDefault: [],
-            formTabList: ["DATA", "PACK", "REV"],
+            // formTabList: ["DATA", "PACK", "REV"],
         };
     },
     computed: {

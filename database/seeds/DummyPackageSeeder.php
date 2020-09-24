@@ -86,10 +86,10 @@ class DummyPackageSeeder extends Seeder
             $total = $thePackage->packagers->reduce(function ($carry, $packager) {
                 $pricePackets = $packager->packets->reduce(function ($carry, $packet) {
                     return $carry + $packet->pivot->price;
-                });
+                }, 0) / $packager->content;
 
-                return $carry + ($pricePackets / $packager->content);
-            });
+                return $carry + $pricePackets;
+            }, 0);
 
             // create revs
             $thePackage->revs()->create([

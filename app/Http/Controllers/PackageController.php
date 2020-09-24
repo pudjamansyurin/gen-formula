@@ -83,7 +83,8 @@ class PackageController extends Controller
         $this->authorize('update', $package);
 
         // create
-        $package->update($request->validated());
+        // $package->update($request->validated());
+        debug($request);
 
         return response(
             new PackageItem($package->loadRelation()),

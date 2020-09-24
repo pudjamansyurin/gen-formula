@@ -27,7 +27,6 @@ class UserUpdateRequest extends UserStoreRequest
         return array_merge(parent::rules(), [
             'password' => [
                 'sometimes',
-                'required',
                 'min:8',
                 'confirmed'
             ]

@@ -26,14 +26,12 @@ class PackRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('packs', 'name')->ignore($this->pack)
             ],
             'packer_id' => [
                 'required',
                 'integer',
-                'min:1',
                 'exists:packers,id'
             ],
         ];

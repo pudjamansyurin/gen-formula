@@ -26,7 +26,6 @@ class UserStoreRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('users', 'name')->ignore($this->user)
             ],
@@ -40,7 +39,6 @@ class UserStoreRequest extends FormRequest
                 'exists:roles,id'
             ],
             'password' => [
-                'required',
                 'min:8',
                 'confirmed'
             ],

@@ -26,18 +26,15 @@ class MaterialRequest extends FormRequest
     {
         return [
             'name' => [
-                'required',
                 'min:3',
                 Rule::unique('materials', 'name')->ignore($this->material)
             ],
             'matter_id' => [
                 'required',
                 'integer',
-                'min:1',
                 'exists:matters,id'
             ],
             'revs_price' => [
-                'required',
                 'integer',
                 'min:1',
             ],
