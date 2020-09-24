@@ -23,17 +23,18 @@ class PackageItem extends JsonResource
             'capacity' => $this->capacity,
             'unit_id' => $this->unit_id,
             'unit' => $this->whenLoaded('unit'),
-
             'packers' => [],
-            'packagers' => $this->whenLoaded('packagers'),
             'packagers_count' => $this->packagers_count,
-
-            'revs' => $this->whenLoaded('revs'),
             'revs_count' => $this->revs_count,
+
+
+            'packagers' => $this->whenLoaded('packagers'),
+            'revs' => $this->whenLoaded('revs'),
             'revs_price' => $this->whenLoaded(
                 'revs',
                 $this->revs->first()->price
             ),
+
 
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),

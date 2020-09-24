@@ -51,6 +51,11 @@ trait ClientQueryScope
             ->loadCount($this->counts);
     }
 
+    public function scopeLoadRelationDetailed()
+    {
+        return $this->loadRelation()->loadMissing($this->details);
+    }
+
     public function scopeFiltered($q)
     {
         // filtering

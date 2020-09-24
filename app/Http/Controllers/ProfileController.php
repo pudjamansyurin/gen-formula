@@ -20,7 +20,7 @@ class ProfileController extends Controller
         $me = $request->user();
 
         return response(
-            new UserItem($me->loadRelation()),
+            new UserItem($me->loadRelationDetailed()),
             Response::HTTP_OK
         );
     }

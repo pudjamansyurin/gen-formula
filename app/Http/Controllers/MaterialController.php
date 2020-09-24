@@ -41,7 +41,7 @@ class MaterialController extends Controller
         $this->authorize('viewAny', Material::class);
 
         return response(
-            new MaterialItem($material->loadRelation()),
+            new MaterialItem($material->loadRelationDetailed()),
             Response::HTTP_OK
         );
     }

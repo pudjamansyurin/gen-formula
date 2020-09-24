@@ -11,7 +11,8 @@ class Package extends Model
 
     protected $table = 'packages';
 
-    protected $relations = ['user:id,name', 'unit', 'revs'];
+    protected $relations = ['user:id,name', 'unit'];
+    protected $details = ['revs', 'packagers', 'packagers.packets', 'packagers.packer:id,name'];
     protected $counts = ['revs', 'packagers'];
 
     /**

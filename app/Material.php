@@ -11,7 +11,8 @@ class Material extends Model
 
     protected $table = 'materials';
 
-    protected $relations = ['user:id,name', 'matter:id,name', 'revs', 'revs.user:id,name'];
+    protected $relations = ['user:id,name', 'matter:id,name'];
+    protected $details = ['revs', 'revs.user:id,name'];
     protected $counts = ['revs'];
 
     /**

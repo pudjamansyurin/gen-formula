@@ -41,8 +41,7 @@ class PackageController extends Controller
         $this->authorize('viewAny', Package::class);
 
         return response(
-            new PackageItem($package->loadRelation()
-                ->load(['packagers', 'packagers.packets', 'packagers.packer:id,name'])),
+            new PackageItem($package->loadRelationDetailed()),
             Response::HTTP_OK
         );
     }

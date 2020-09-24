@@ -11,7 +11,8 @@ class Packer extends Model
 
     protected $table = 'packers';
 
-    protected $relations = ['user:id,name', 'packs'];
+    protected $relations = ['user:id,name'];
+    protected $details = ['packs'];
     protected $counts = ['packs'];
 
     /**

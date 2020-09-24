@@ -18,14 +18,17 @@ class MaterialItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'revs_count' => $this->revs_count,
             'matter_id' => $this->matter_id,
             'matter' => new MatterItem($this->whenLoaded('matter')),
+
+
             'revs' => MaterialRevItem::collection($this->whenLoaded('revs')),
-            'revs_count' => $this->revs_count,
             'revs_price' => $this->whenLoaded(
                 'revs',
                 $this->revs->first()->price
             ),
+
 
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),

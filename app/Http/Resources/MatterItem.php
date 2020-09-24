@@ -22,6 +22,7 @@ class MatterItem extends JsonResource
             'name' => $this->name,
             'materials_count' => $this->materials_count,
 
+
             'updated_at' => $this->updated_at,
             'user' => new UserItem($this->whenLoaded('user')),
             'authorized' => Gate::allows('update', $this->resource)

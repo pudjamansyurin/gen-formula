@@ -98,6 +98,24 @@
                 <v-form @submit.prevent="save">
                     <validation-observer ref="form">
                         <validation-provider
+                            name="name"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
+                                label="Material name"
+                                type="text"
+                                hint="This is to identify the material"
+                                counter
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
+
+                        <validation-provider
                             name="matter_id"
                             v-slot="{ errors, valid }"
                         >
@@ -117,33 +135,15 @@
                         </validation-provider>
 
                         <validation-provider
-                            name="name"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model="form.name"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="fieldDisabled"
-                                :filled="fieldDisabled"
-                                label="Material name"
-                                type="text"
-                                hint="This is to identify the material"
-                                counter
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-
-                        <validation-provider
                             name="revs_price"
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
-                                label="Material price"
-                                type="number"
                                 v-model.number="form.revs_price"
                                 :error-messages="errors"
                                 :success="valid"
+                                label="Material price"
+                                type="number"
                                 prefix="Rp"
                                 hint="The updated material price"
                                 counter
@@ -265,7 +265,17 @@ export default {
         },
         onEdit(item) {
             this.change(item || this.selected[0]);
+            this.fetchDetail();
         },
+        fetchDetail() {
+            this.GET_MODEL({
+                model: this.model,
+                id: this.form.id,
+            }).then((data) => {
+                this.form = this.$_.cloneDeep(data);
+            });
+        },
+
         // revision related routines
         confirmRev(rev) {
             this.selectedRev = [rev];
@@ -278,12 +288,7 @@ export default {
                 ids: this.$_.map(this.selectedRev, "id"),
             })
                 .then(async (ids) => {
-                    await this.GET_MODEL({
-                        model: this.model,
-                        id: this.form.id,
-                    }).then((data) => {
-                        this.form = this.$_.cloneDeep(data);
-                    });
+                    await this.fetchDetail();
 
                     this.dialogDeleteRev = false;
                     this.$nextTick(() => (this.selectedRev = []));
