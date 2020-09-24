@@ -57,12 +57,39 @@ class PackageController extends Controller
         $this->authorize('create', Package::class);
 
         // create
-        $package = Package::create(
-            array_merge(
-                $request->validated(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        $package = Package::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
+
+        // // create packager
+        // $request->packers->each(function ($packer) use ($package) {
+        //     $packager = $package->packagers()->create([
+        //         'packer_id' => $packer->id,
+        //         'content' => $packer->content
+        //     ]);
+
+        //     // create packets
+        //     $packer->packs->each(function ($pack) use ($packager) {
+        //         $packager->packets()->attach($pack, [
+        //             'price' => $pack->price
+        //         ]);
+        //     });
+        // });
+
+        // // calculate total price
+        // $total = $package->packagers->reduce(function ($carry, $packager) {
+        //     $price = $packager->packets->reduce(function ($carry, $packet) {
+        //         return $carry + $packet->pivot->price;
+        //     }, 0) / $packager->content;
+
+        //     return $carry + $price;
+        // }, 0);
+
+        // // create revs
+        // $package->revs()->create([
+        //     'price' => $total
+        // ]);
 
         return response(
             new PackageItem($package->loadRelation()),
@@ -81,9 +108,38 @@ class PackageController extends Controller
     {
         $this->authorize('update', $package);
 
-        // create
-        // $package->update($request->validated());
-        debug($request);
+        // update
+        $package->update($request->validated());
+
+        // create packager
+        foreach ($request->packers as $packer) {
+            $packager = $package->packagers()->create([
+                'packer_id' => $packer['id'],
+                'content' => $packer['content']
+            ]);
+
+            // create packets
+            foreach ($packer['packs'] as $pack) {
+                $packager->packets()->attach(
+                    $pack['id'],
+                    ['price' => $pack['price']]
+                );
+            }
+        }
+
+        // // calculate total price
+        // $total = $package->packagers->reduce(function ($carry, $packager) {
+        //     $price = $packager->packets->reduce(function ($carry, $packet) {
+        //         return $carry + $packet->pivot->price;
+        //     }, 0) / $packager->content;
+
+        //     return $carry + $price;
+        // }, 0);
+
+        // // create revs
+        // $package->revs()->create([
+        //     'price' => $total
+        // ]);
 
         return response(
             new PackageItem($package->loadRelation()),

@@ -35,8 +35,9 @@ class MaterialRequest extends FormRequest
                 'exists:matters,id'
             ],
             'revs_price' => [
-                'integer',
-                'min:1',
+                'numeric',
+                'min:0',
+                'not_in:0',
             ],
         ];
     }

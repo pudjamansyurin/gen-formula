@@ -192,60 +192,64 @@
                             <v-card
                                 v-for="(packer, index) in form.packers"
                                 :key="`packers.${index}.content`"
-                                class="ma-1 pa-1"
+                                class="ma-1"
                                 outlined
                             >
-                                <v-list-item>
-                                    <v-list-item-title>
-                                        <validation-provider
-                                            :vid="`packers.${index}.content`"
-                                            :name="`${packer.name} content`"
-                                            v-slot="{ errors, valid }"
-                                        >
-                                            <v-text-field
-                                                v-model.number="packer.content"
-                                                :error-messages="errors"
-                                                :success="valid"
-                                                :readonly="fieldDisabled"
-                                                :label="packer.name"
-                                                hint="The packer content"
-                                                type="number"
-                                                persistent-hint
-                                            ></v-text-field>
-                                        </validation-provider>
-                                    </v-list-item-title>
-                                </v-list-item>
+                                <v-card-text>
+                                    <v-list-item>
+                                        <v-list-item-title>
+                                            <validation-provider
+                                                :vid="`packers.${index}.content`"
+                                                :name="`${packer.name} content`"
+                                                v-slot="{ errors, valid }"
+                                            >
+                                                <v-text-field
+                                                    v-model.number="
+                                                        packer.content
+                                                    "
+                                                    :error-messages="errors"
+                                                    :success="valid"
+                                                    :readonly="fieldDisabled"
+                                                    :label="packer.name"
+                                                    hint="The packer content"
+                                                    type="number"
+                                                    persistent-hint
+                                                ></v-text-field>
+                                            </validation-provider>
+                                        </v-list-item-title>
+                                    </v-list-item>
 
-                                <v-list-item
-                                    v-for="(pack, idx) in packer.packs"
-                                    :key="`packers.${index}.packs.${idx}.price`"
-                                >
-                                    <v-list-item-action>
-                                        <v-icon>
-                                            mdi-subdirectory-arrow-right
-                                        </v-icon>
-                                    </v-list-item-action>
-                                    <v-list-item-title>
-                                        <validation-provider
-                                            :vid="`packers.${index}.packs.${idx}.price`"
-                                            :name="`${pack.name} price`"
-                                            v-slot="{ errors, valid }"
-                                        >
-                                            <v-text-field
-                                                v-model.number="pack.price"
-                                                :error-messages="errors"
-                                                :success="valid"
-                                                :readonly="fieldDisabled"
-                                                :label="pack.name"
-                                                prefix="Rp"
-                                                type="number"
-                                                hint="The pack price"
-                                                counter
-                                                persistent-hint
-                                            ></v-text-field>
-                                        </validation-provider>
-                                    </v-list-item-title>
-                                </v-list-item>
+                                    <v-list-item
+                                        v-for="(pack, idx) in packer.packs"
+                                        :key="`packers.${index}.packs.${idx}.price`"
+                                    >
+                                        <v-list-item-action>
+                                            <v-icon>
+                                                mdi-subdirectory-arrow-right
+                                            </v-icon>
+                                        </v-list-item-action>
+                                        <v-list-item-title>
+                                            <validation-provider
+                                                :vid="`packers.${index}.packs.${idx}.price`"
+                                                :name="`${pack.name} price`"
+                                                v-slot="{ errors, valid }"
+                                            >
+                                                <v-text-field
+                                                    v-model.number="pack.price"
+                                                    :error-messages="errors"
+                                                    :success="valid"
+                                                    :readonly="fieldDisabled"
+                                                    :label="pack.name"
+                                                    prefix="Rp"
+                                                    type="number"
+                                                    hint="The pack price"
+                                                    counter
+                                                    persistent-hint
+                                                ></v-text-field>
+                                            </validation-provider>
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                </v-card-text>
                             </v-card>
                         </template>
                     </validation-observer>

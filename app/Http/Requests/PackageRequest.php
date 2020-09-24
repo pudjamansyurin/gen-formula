@@ -62,8 +62,9 @@ class PackageRequest extends FormRequest
                 'exists:packs,id'
             ],
             'packers.*.packs.*.price' => [
-                'integer',
-                'min:1',
+                'numeric',
+                'min:0',
+                'not_in:0',
             ]
         ];
     }

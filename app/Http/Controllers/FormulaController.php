@@ -40,12 +40,10 @@ class FormulaController extends Controller
         $this->authorize('create', Formula::class);
 
         // create
-        $formula = Formula::create(
-            array_merge(
-                $request->validated(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        $formula = Formula::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
 
         return response(
             new FormulaItem($formula->loadRelation()),

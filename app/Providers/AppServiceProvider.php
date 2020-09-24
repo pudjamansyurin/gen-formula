@@ -33,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
         if (App::environment('production')) {
             Debugbar::disable();
 
+            /* Fix cpanel mysql issue */
+            Builder::defaultStringLength(191);
+
             /* Fix laravel-mix manifest issue */
             $this->app->bind('path.public', function () {
                 return base_path() . '/../';
@@ -45,8 +48,5 @@ class AppServiceProvider extends ServiceProvider
 
             return env('VUE_URL') . "/reset/{$token}/{$email}";
         });
-
-        /* Fix cpanel mysql issue */
-        Builder::defaultStringLength(191);
     }
 }

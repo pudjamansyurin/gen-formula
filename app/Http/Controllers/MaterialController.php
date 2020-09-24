@@ -56,12 +56,11 @@ class MaterialController extends Controller
     {
         $this->authorize('create', Material::class);
 
-        $material = Material::create(
-            array_merge(
-                $request->validated(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        // create
+        $material = Material::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
 
         // add price revs
         $material->revs()->create([
@@ -86,16 +85,14 @@ class MaterialController extends Controller
     {
         $fields = ['name', 'matter_id'];
 
-        if (array_diff(
-            $material->only($fields),
-            $request->only($fields)
-        )) {
+        // update
+        if (array_diff($material->only($fields), $request->only($fields))) {
             $this->authorize('update', $material);
 
             $material->update($request->validated());
         }
 
-        // update price revs
+        // add more price revs
         if ($material->revs()->first()->price != $request->revs_price) {
             $this->authorize('create', MaterialRev::class);
 

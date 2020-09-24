@@ -56,12 +56,10 @@ class PackerController extends Controller
         $this->authorize('create', Packer::class);
 
         // create
-        $packer = Packer::create(
-            array_merge(
-                $request->validated(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        $packer = Packer::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
 
         return response(
             new PackerItem($packer->loadRelation()),

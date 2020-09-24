@@ -40,12 +40,10 @@ class PackController extends Controller
         $this->authorize('create', Pack::class);
 
         // create
-        $pack = Pack::create(
-            array_merge(
-                $request->validated(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        $pack = Pack::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
 
         return response(
             new PackItem($pack->loadRelation()),

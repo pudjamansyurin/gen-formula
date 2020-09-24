@@ -40,12 +40,10 @@ class MatterController extends Controller
         $this->authorize('create', Matter::class);
 
         // create
-        $matter = Matter::create(
-            array_merge(
-                $request->validated(),
-                ['user_id' => auth()->id()]
-            )
-        );
+        $matter = Matter::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
 
         return response(
             new MatterItem($matter->loadRelation()),
