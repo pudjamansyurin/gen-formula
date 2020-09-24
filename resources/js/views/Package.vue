@@ -189,10 +189,11 @@
                         <template
                             v-if="form.packers && form.packers.length > 0"
                         >
-                            <div
+                            <v-card
                                 v-for="(packer, index) in form.packers"
                                 :key="`packers.${index}.content`"
-                                :value="true"
+                                class="ma-1 pa-1"
+                                outlined
                             >
                                 <v-list-item>
                                     <v-list-item-title>
@@ -245,7 +246,7 @@
                                         </validation-provider>
                                     </v-list-item-title>
                                 </v-list-item>
-                            </div>
+                            </v-card>
                         </template>
                     </validation-observer>
                     <v-btn v-show="false" type="submit"></v-btn>
