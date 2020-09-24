@@ -323,20 +323,16 @@ export default {
             });
         },
     },
-    watch: {
-        dialogPortion: function (open) {
-            if (open) {
-                this.fetchList("material")
-                    .then(
-                        (data) =>
-                            (this.listMaterial = data.map((material) => ({
-                                material,
-                                portion: 0,
-                            })))
-                    )
-                    .catch((e) => eHandler(e));
-            }
-        },
+    mounted() {
+        this.fetchList("material")
+            .then(
+                (data) =>
+                    (this.listMaterial = data.map((material) => ({
+                        material,
+                        portion: 0,
+                    })))
+            )
+            .catch((e) => eHandler(e));
     },
 };
 </script>

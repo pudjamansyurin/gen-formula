@@ -259,20 +259,16 @@ export default {
             this.ignorePasswordWhenUnchanged();
         },
     },
-    watch: {
-        dialog: function (open) {
-            if (open) {
-                this.fetchList("role")
-                    .then(
-                        (data) =>
-                            (this.listRole = data.map(({ id, name }) => ({
-                                id,
-                                name: name.toUpperCase(),
-                            })))
-                    )
-                    .catch((e) => eHandler(e));
-            }
-        },
+    mounted() {
+        this.fetchList("role")
+            .then(
+                (data) =>
+                    (this.listRole = data.map(({ id, name }) => ({
+                        id,
+                        name: name.toUpperCase(),
+                    })))
+            )
+            .catch((e) => eHandler(e));
     },
 };
 </script>

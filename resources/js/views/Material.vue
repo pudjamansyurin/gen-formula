@@ -236,7 +236,7 @@ export default {
                     width: 150,
                 },
                 {
-                    text: "Rev.",
+                    text: "Rev",
                     value: "revs_count",
                     align: "center",
                 },
@@ -292,14 +292,10 @@ export default {
                 .then(() => this.STOP_LOADING());
         },
     },
-    watch: {
-        dialog: function (open) {
-            if (open) {
-                this.fetchList("matter")
-                    .then((data) => (this.listMatter = data))
-                    .catch((e) => eHandler(e));
-            }
-        },
+    mounted() {
+        this.fetchList("matter")
+            .then((data) => (this.listMatter = data))
+            .catch((e) => eHandler(e));
     },
 };
 </script>

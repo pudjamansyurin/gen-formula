@@ -26,7 +26,8 @@ export const Package = {
     id: -1,
     name: "",
     unit_id: -1,
-    capacity: 0
+    capacity: 0,
+    packers: []
 };
 
 export const Matter = {

@@ -168,17 +168,21 @@
                                 item-value="id"
                                 label="Packer"
                                 hint="The packer"
+                                persistent-hint
+                                deletable-chips
+                                return-object
                                 filled
                                 multiple
                                 chips
-                                persistent-hint
                             ></v-autocomplete>
                         </validation-provider>
 
-                        <template v-if="form.packagers">
+                        <template
+                            v-if="form.packers && form.packers.length > 0"
+                        >
                             <v-list-group
-                                v-for="packager in form.packagers"
-                                :key="packager.id"
+                                v-for="packer in form.packers"
+                                :key="packer.id"
                                 :value="true"
                             >
                                 <template v-slot:activator>
@@ -188,14 +192,11 @@
                                             v-slot="{ errors, valid }"
                                         >
                                             <v-text-field
-                                                v-model.number="
-                                                    packager.content
-                                                "
+                                                v-model.number="packer.content"
                                                 :error-messages="errors"
                                                 :success="valid"
                                                 :readonly="fieldDisabled"
-                                                :filled="fieldDisabled"
-                                                :label="packager.packer.name"
+                                                :label="packer.name"
                                                 type="number"
                                                 hint="The packer content"
                                                 persistent-hint
@@ -204,7 +205,7 @@
                                     </v-list-item-title>
                                 </template>
 
-                                <v-list-item
+                                <!-- <v-list-item
                                     v-for="packet in packager.packets"
                                     :key="packet.id"
                                 >
@@ -225,7 +226,6 @@
                                                 :error-messages="errors"
                                                 :success="valid"
                                                 :readonly="fieldDisabled"
-                                                :filled="fieldDisabled"
                                                 :label="packet.name"
                                                 prefix="Rp"
                                                 type="number"
@@ -235,7 +235,7 @@
                                             ></v-text-field>
                                         </validation-provider>
                                     </v-list-item-title>
-                                </v-list-item>
+                                </v-list-item> -->
                             </v-list-group>
                         </template>
                     </validation-observer>
@@ -314,7 +314,7 @@ export default {
                     width: 150,
                 },
                 {
-                    text: "Rev.",
+                    text: "Rev",
                     value: "revs_count",
                     align: "center",
                 },
@@ -344,40 +344,48 @@ export default {
         onEdit(item) {
             this.change(item || this.selected[0]);
         },
+        transformData(data) {
+            return data.packagers.map(
+                ({ packer_id: id, content, packer, packets }) => ({
+                    id,
+                    content,
+                    name: packer.name,
+                    packs: packets.map(({ pivot }) => ({
+                        pack_id: pivot.pack_id,
+                        price: pivot.price,
+                    })),
+                })
+            );
+        },
+    },
+    mounted() {
+        this.fetchList("unit")
+            .then((data) => (this.listUnit = data))
+            .catch((e) => eHandler(e));
+        this.fetchList("packer")
+            .then((data) => {
+                this.listPacker = data.map((el) => ({
+                    ...el,
+                    content: 1,
+                    packs: [],
+                }));
+            })
+            .catch((e) => eHandler(e));
     },
     watch: {
-        dialog: async function (open) {
-            if (open) {
-                this.START_LOADING();
-                await this.fetchList("unit")
-                    .then((data) => (this.listUnit = data))
-                    .catch((e) => eHandler(e));
-                await this.fetchList("packer")
-                    .then((data) => (this.listPacker = data))
-                    .catch((e) => eHandler(e));
-                this.STOP_LOADING();
-            }
-        },
         formTabIndex: function (index) {
-            if (this.formTabList[index] === "PACK") {
+            if (this.formTabList[index] !== "PACK") return;
+            if (this.creating) return;
+
+            if (!this.form.packagers) {
                 this.GET_MODEL({
                     model: this.model,
                     id: this.form.id,
                 }).then((data) => {
-                    let x = data.packagers.map((el) => {
-                        return {
-                            ...el,
-                            packets: el.packets.map((el) => {
-                                return {
-                                    ...el,
-                                };
-                            }),
-                        };
-                    });
-                    console.warn(x);
-                    console.log(data);
-
-                    this.form = this.$_.cloneDeep(data);
+                    this.form = {
+                        ...this.$_.cloneDeep(data),
+                        packers: this.transformData(data),
+                    };
                 });
             }
         },

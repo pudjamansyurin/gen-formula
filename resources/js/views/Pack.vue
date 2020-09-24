@@ -151,14 +151,10 @@ export default {
             return castId(this.id);
         },
     },
-    watch: {
-        dialog: function (open) {
-            if (open) {
-                this.fetchList("packer")
-                    .then((data) => (this.listPacker = data))
-                    .catch((e) => eHandler(e));
-            }
-        },
+    mounted() {
+        this.fetchList("packer")
+            .then((data) => (this.listPacker = data))
+            .catch((e) => eHandler(e));
     },
 };
 </script>

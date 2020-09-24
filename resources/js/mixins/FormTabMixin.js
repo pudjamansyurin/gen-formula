@@ -1,3 +1,5 @@
+import { initial } from "lodash";
+
 export default {
     data() {
         return {
@@ -8,7 +10,7 @@ export default {
     computed: {
         formTabs() {
             if (this.creating) {
-                return this.formTabList.slice(-1, 1);
+                return initial(this.formTabList);
             }
             return this.formTabList;
         }
