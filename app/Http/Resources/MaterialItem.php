@@ -26,12 +26,12 @@ class MaterialItem extends JsonResource
             'revs' => MaterialRevItem::collection($this->whenLoaded('revs')),
             'revs_price' => $this->whenLoaded(
                 'revs',
-                $this->revs->first()->price
+                optional($this->revs->first())->price
             ),
 
 
             'updated_at' => $this->updated_at,
-            'user' => new UserItem($this->whenLoaded('user')),
+            'user' => $this->whenLoaded('user'),
             'authorized' => Gate::allows('update', $this->resource)
         ];
     }

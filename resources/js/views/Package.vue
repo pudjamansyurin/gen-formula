@@ -146,6 +146,7 @@
                                 </validation-provider>
                             </v-col>
                         </v-row>
+
                         <v-row>
                             <v-col cols="12" sm="7">
                                 <validation-provider
@@ -257,15 +258,6 @@
                 </v-form>
             </template>
 
-            <!-- <template v-slot:PACK>
-                <v-form @submit.prevent="savePacker">
-                    <validation-observer ref="form_packer">
-
-                    </validation-observer>
-                    <v-btn v-show="false" type="submit"></v-btn>
-                </v-form>
-            </template> -->
-
             <template v-slot:REV>
                 <v-list dense>
                     <template v-for="(rev, index) in form.revs">
@@ -351,7 +343,6 @@ export default {
             listUnit: [],
             listPacker: [],
             listPackerDefault: [],
-            // formTabList: ["DATA", "PACK", "REV"],
         };
     },
     computed: {
@@ -389,25 +380,23 @@ export default {
             }).then((data) => {
                 this.form = {
                     ...this.$_.cloneDeep(data),
-                    packers: this.transformPackersByDetail(data),
+                    packers: this.transformPackersDetail(data),
                 };
             });
         },
-        transformPackersByDetail(data) {
-            return data.packagers.map(
-                ({ packer_id: id, content, packer, packets }) => ({
+        transformPackersDetail(data) {
+            return data.packagers.map(({ packer, content, packets }) => ({
+                id: packer.id,
+                name: packer.name,
+                content: content,
+                packs: packets.map(({ id, name, pivot }) => ({
                     id,
-                    name: packer.name,
-                    content,
-                    packs: packets.map(({ name, pivot }) => ({
-                        id: pivot.pack_id,
-                        name,
-                        price: pivot.price,
-                    })),
-                })
-            );
+                    name,
+                    price: pivot.price,
+                })),
+            }));
         },
-        transformPackersByList(data) {
+        transformListPackers(data) {
             return data.map(({ id, name, packs }) => ({
                 id,
                 name,
@@ -426,9 +415,14 @@ export default {
             .catch((e) => eHandler(e));
         this.fetchList("packer")
             .then((data) => {
-                this.listPackerDefault = this.transformPackersByList(data);
+                this.listPackerDefault = this.transformListPackers(data);
             })
             .catch((e) => eHandler(e));
+    },
+    watch: {
+        "form.packers": function (val) {
+            console.log(val);
+        },
     },
 };
 </script>

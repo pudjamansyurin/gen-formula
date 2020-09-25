@@ -24,7 +24,7 @@ class PackerItem extends JsonResource
 
 
             'updated_at' => $this->updated_at,
-            'user' => new UserItem($this->whenLoaded('user')),
+            'user' => $this->whenLoaded('user'),
             'authorized' => Gate::allows('update', $this->resource)
         ];
     }

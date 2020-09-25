@@ -3,11 +3,12 @@
 namespace App;
 
 use App\Traits\ClientQueryScope;
+use App\Traits\PackageRoutine;
 use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
-    use ClientQueryScope;
+    use ClientQueryScope, PackageRoutine;
 
     protected $table = 'packages';
 
@@ -51,12 +52,19 @@ class Package extends Model
 
     public function revs()
     {
-        return $this->hasMany(PackageRev::class);
+        return $this->hasMany(PackageRev::class)->latest('updated_at');
     }
 
     public function packagers()
     {
         return $this->hasMany(Packager::class);
+    }
+
+    public function packers()
+    {
+        return $this->belongsToMany(Packer::class, 'packagers')
+            ->withPivot(['content'])
+            ->withTimestamps();
     }
 
     public function user()

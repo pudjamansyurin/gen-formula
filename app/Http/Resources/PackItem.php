@@ -22,7 +22,7 @@ class PackItem extends JsonResource
             'packer' => new PackerItem($this->whenLoaded('packer')),
 
             'updated_at' => $this->updated_at,
-            'user' => new UserItem($this->whenLoaded('user')),
+            'user' => $this->whenLoaded('user'),
             'authorized' => Gate::allows('update', $this->resource)
         ];
     }
