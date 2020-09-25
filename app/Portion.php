@@ -11,7 +11,7 @@ class Portion extends Model
 
     protected $table = 'portions';
 
-    protected $relations = ['user:id,name', 'portions.material.revs'];
+    protected $_relations = ['user:id,name', 'portions.material.revs'];
 
     /**
      * The attributes that are mass assignable.

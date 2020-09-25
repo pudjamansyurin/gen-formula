@@ -12,9 +12,9 @@ class Package extends Model
 
     protected $table = 'packages';
 
-    protected $relations = ['user:id,name', 'unit'];
-    protected $details = ['revs', 'packagers', 'packagers.packets', 'packagers.packer:id,name'];
-    protected $counts = ['revs', 'packagers'];
+    protected $_relations = ['user:id,name', 'unit'];
+    protected $_details = ['revs', 'packagers', 'packagers.packets', 'packagers.packer:id,name'];
+    protected $_counts = ['revs', 'packagers'];
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +41,14 @@ class Package extends Model
             'unit.symbol' => 'unit_id'
         ]
     ];
+
+    /**
+     * Accessors
+     */
+    public function getNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
 
     /**
      * Set relation tables.

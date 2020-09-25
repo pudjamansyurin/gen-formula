@@ -31,7 +31,7 @@ class PackageItem extends JsonResource
             'revs' => $this->whenLoaded('revs'),
             'revs_price' => $this->whenLoaded(
                 'revs',
-                optional($this->revs->first())->price
+                $this->revs->first()->price
             ),
 
             'updated_at' => $this->updated_at,

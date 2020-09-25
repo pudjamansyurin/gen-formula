@@ -25,8 +25,6 @@ class ProfileRequest extends FormRequest
      */
     public function rules()
     {
-        debug(auth()->user());
-
         return [
             'name' => [
                 'min:3',

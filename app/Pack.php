@@ -11,8 +11,7 @@ class Pack extends Model
 
     protected $table = 'packs';
 
-    protected $relations = ['user:id,name', 'packer:id,name'];
-    protected $counts = [];
+    protected $_relations = ['user:id,name', 'packer:id,name'];
 
     /**
      * The attributes that are mass assignable.

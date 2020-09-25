@@ -22,15 +22,26 @@ trait ClientQueryScope
         ];
     }
 
-    public function scopeCountQueried()
+    public function scopeLoadRelationDetailed()
     {
-        return $this->withRelation()
-            ->filtered()
-            ->sortered()
-            ->count();
+        return $this->loadRelation()->load($this->_details ?? []);
     }
 
-    public function scopeGetQueried()
+    public function scopeLoadRelation()
+    {
+        return $this
+            ->load(array_merge($this->_relations ?? [], $this->_counts ?? []))
+            ->loadCount($this->_counts ?? []);
+    }
+
+    protected function scopeWithRelation()
+    {
+        return $this
+            ->with(array_merge($this->_relations ?? [], $this->_counts ?? []))
+            ->withCount($this->_counts ?? []);
+    }
+
+    protected function scopeGetQueried()
     {
         return $this->withRelation()
             ->filtered()
@@ -39,24 +50,15 @@ trait ClientQueryScope
             ->get();
     }
 
-    public function scopeWithRelation()
+    protected function scopeCountQueried()
     {
-        return $this->with($this->relations)
-            ->withCount($this->counts);
+        return $this->withRelation()
+            ->filtered()
+            ->sortered()
+            ->count();
     }
 
-    public function scopeLoadRelation()
-    {
-        return $this->loadMissing($this->relations)
-            ->loadCount($this->counts);
-    }
-
-    public function scopeLoadRelationDetailed()
-    {
-        return $this->loadRelation()->loadMissing($this->details);
-    }
-
-    public function scopeFiltered($q)
+    protected function scopeFiltered($q)
     {
         // filtering
         $search = request('search', '');
@@ -94,7 +96,7 @@ trait ClientQueryScope
         return $q;
     }
 
-    public function scopeSortered($q)
+    protected function scopeSortered($q)
     {
         // get parameters
         $sortBy = request('sortBy.0', 'updated_at');
@@ -109,7 +111,7 @@ trait ClientQueryScope
         return $q;
     }
 
-    public function scopeLimited($q)
+    protected function scopeLimited($q)
     {
         // get parameters
         $page = request('page', 1);

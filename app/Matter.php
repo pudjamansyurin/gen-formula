@@ -11,9 +11,9 @@ class Matter extends Model
 
     protected $table = 'matters';
 
-    protected $relations = ['user:id,name'];
-    protected $details = ['materials'];
-    protected $counts = ['materials'];
+    protected $_relations = ['user:id,name'];
+    protected $_details = ['materials'];
+    protected $_counts = ['materials'];
 
     /**
      * The attributes that are mass assignable.

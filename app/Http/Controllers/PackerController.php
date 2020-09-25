@@ -83,7 +83,7 @@ class PackerController extends Controller
 
         return response(
             new PackerItem($packer->loadRelation()),
-            Response::HTTP_CREATED
+            Response::HTTP_OK
         );
     }
 

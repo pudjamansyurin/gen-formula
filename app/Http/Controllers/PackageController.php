@@ -92,7 +92,7 @@ class PackageController extends Controller
 
         return response(
             new PackageItem($package->loadRelation()),
-            Response::HTTP_CREATED
+            Response::HTTP_OK
         );
     }
 

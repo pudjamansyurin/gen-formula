@@ -67,7 +67,7 @@ class MatterController extends Controller
 
         return response(
             new MatterItem($matter->loadRelation()),
-            Response::HTTP_CREATED
+            Response::HTTP_OK
         );
     }
 

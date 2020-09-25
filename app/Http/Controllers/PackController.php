@@ -67,7 +67,7 @@ class PackController extends Controller
 
         return response(
             new PackItem($pack->loadRelation()),
-            Response::HTTP_CREATED
+            Response::HTTP_OK
         );
     }
 
