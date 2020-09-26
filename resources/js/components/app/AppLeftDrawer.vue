@@ -18,7 +18,15 @@
                 </v-list-item-avatar> -->
 
                 <v-list-item-action>
-                    <v-icon>mdi-face-profile</v-icon>
+                    <v-tooltip v-if="mini" right>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon v-bind="attrs" v-on="on">
+                                mdi-face-profile
+                            </v-icon>
+                        </template>
+                        <span>Profile</span>
+                    </v-tooltip>
+                    <v-icon v-else>mdi-face-profile</v-icon>
                 </v-list-item-action>
 
                 <v-list-item-content>
@@ -48,9 +56,21 @@
                     v-else-if="item.children"
                     :key="index"
                     v-model="item.model"
-                    :prepend-icon="item.icon"
                 >
                     <template v-slot:activator>
+                        <v-list-item-action>
+                            <v-tooltip v-if="mini" right>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-icon v-bind="attrs" v-on="on">
+                                        {{ item.icon }}
+                                    </v-icon>
+                                </template>
+                                <span>{{ item.text }}</span>
+                            </v-tooltip>
+                            <v-icon v-else>
+                                {{ item.icon }}
+                            </v-icon>
+                        </v-list-item-action>
                         <v-list-item-title>
                             {{ item.text }}
                         </v-list-item-title>
@@ -63,7 +83,14 @@
                         link
                     >
                         <v-list-item-action>
-                            <v-icon v-if="mini">{{ child.icon }}</v-icon>
+                            <v-tooltip v-if="mini" right>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-icon v-bind="attrs" v-on="on">
+                                        {{ child.icon }}
+                                    </v-icon>
+                                </template>
+                                <span>{{ child.text }}</span>
+                            </v-tooltip>
                         </v-list-item-action>
                         <v-list-item-title>
                             {{ child.text }}
@@ -82,7 +109,17 @@
                     link
                 >
                     <v-list-item-action>
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <v-tooltip v-if="mini" right>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-icon v-bind="attrs" v-on="on">
+                                    {{ item.icon }}
+                                </v-icon>
+                            </template>
+                            <span>{{ item.text }}</span>
+                        </v-tooltip>
+                        <v-icon v-else>
+                            {{ item.icon }}
+                        </v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>{{ item.text }}</v-list-item-title>

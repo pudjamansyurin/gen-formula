@@ -43,12 +43,12 @@
             <v-btn v-if="!webview" @click="toggleFs" icon>
                 <v-icon>{{ fullscreenIcon }}</v-icon>
             </v-btn>
+            <v-btn icon>
+                <v-icon>mdi-apps</v-icon>
+            </v-btn>
             <!-- <v-btn icon>
-            <v-icon>mdi-apps</v-icon>
-        </v-btn> -->
-            <!-- <v-btn icon>
-            <v-icon>mdi-bell</v-icon>
-        </v-btn> -->
+                <v-icon>mdi-bell</v-icon>
+            </v-btn> -->
 
             <v-menu offset-y>
                 <template v-slot:activator="{ on }">
