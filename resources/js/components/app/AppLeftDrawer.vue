@@ -2,7 +2,7 @@
     <v-navigation-drawer
         @input="SET_DRAWER"
         :value="drawer || $vuetify.breakpoint.lgAndUp"
-        :mini-variant="!drawer && $vuetify.breakpoint.lgAndUp"
+        :mini-variant="mini"
         app
     >
         <v-list>
@@ -62,7 +62,9 @@
                         :to="{ name: child.to }"
                         link
                     >
-                        <v-list-item-action> </v-list-item-action>
+                        <v-list-item-action>
+                            <v-icon v-if="mini">{{ child.icon }}</v-icon>
+                        </v-list-item-action>
                         <v-list-item-title>
                             {{ child.text }}
                         </v-list-item-title>
@@ -99,6 +101,9 @@ import { navigations } from "../../utils/navigation";
 export default {
     computed: {
         ...mapState("app", ["drawer", "profile"]),
+        mini() {
+            return !this.drawer && this.$vuetify.breakpoint.lgAndUp;
+        },
         navs() {
             let route = this.$route.name;
             let navs = this.$_.cloneDeep(navigations);

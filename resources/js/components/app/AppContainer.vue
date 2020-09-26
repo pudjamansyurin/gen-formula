@@ -1,5 +1,5 @@
 <template>
-    <v-content>
+    <v-content class="grey lighten-3">
         <v-container fluid>
             <slot></slot>
             <!-- loading overlay -->
