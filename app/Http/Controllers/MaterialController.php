@@ -62,11 +62,8 @@ class MaterialController extends Controller
             ['user_id' => auth()->id()]
         ));
 
-        // add price revs
-        $material->revs()->create([
-            'price' => $request->revs_price,
-            'user_id' => auth()->id()
-        ]);
+        // update revs
+        $material->updateRev($request->revs_price);
 
         return response(
             new MaterialItem($material->loadRelation()),
@@ -83,24 +80,17 @@ class MaterialController extends Controller
      */
     public function update(MaterialRequest $request, Material $material)
     {
-        $fields = ['name', 'matter_id'];
+        $this->authorize('update', $material);
+
+        // $fields = ['name', 'matter_id'];
 
         // update
-        if (array_diff($material->only($fields), $request->only($fields))) {
-            $this->authorize('update', $material);
+        // if (array_diff($material->only($fields), $request->only($fields))) {
+        $material->update($request->validated());
+        // }
 
-            $material->update($request->validated());
-        }
-
-        // add more price revs
-        if ($material->revs()->first()->price != $request->revs_price) {
-            $this->authorize('create', MaterialRev::class);
-
-            $material->revs()->create([
-                'price' => $request->revs_price,
-                'user_id' => auth()->id()
-            ]);
-        }
+        // update revs
+        $material->updateRev($request->revs_price);
 
         return response(
             new MaterialItem($material->loadRelation()),

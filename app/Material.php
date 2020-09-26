@@ -3,11 +3,12 @@
 namespace App;
 
 use App\Traits\ClientQueryScope;
+use App\Traits\MaterialRoutine;
 use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-    use ClientQueryScope;
+    use ClientQueryScope, MaterialRoutine;
 
     protected $table = 'materials';
 

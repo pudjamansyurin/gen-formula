@@ -26,7 +26,7 @@ class MaterialItem extends JsonResource
             'revs' => MaterialRevItem::collection($this->whenLoaded('revs')),
             'revs_price' => $this->whenLoaded(
                 'revs',
-                $this->revs->first()->price
+                optional($this->revs->first())->price
             ),
 
 

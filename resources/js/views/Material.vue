@@ -91,6 +91,7 @@
             :form="form"
             :tabs="formTabs"
             :tab.sync="formTabIndex"
+            :readonly="fieldDisabled"
             @close="close"
             @submit="save"
         >
@@ -142,6 +143,8 @@
                                 v-model.number="form.revs_price"
                                 :error-messages="errors"
                                 :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
                                 label="Material price"
                                 type="number"
                                 prefix="Rp"
@@ -169,7 +172,7 @@
                                 <v-list-item-title
                                     >{{ rev.price | currency }}
                                 </v-list-item-title>
-                                <v-list-item-subtitle>
+                                <v-list-item-subtitle v-if="rev.user">
                                     {{ rev.user.name }}
                                 </v-list-item-subtitle>
                             </v-list-item-content>

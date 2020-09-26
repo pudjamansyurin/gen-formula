@@ -56,8 +56,6 @@ trait PackageRoutine
                 return $this;
             }
         }
-        debug($rev->price);
-        debug($totalPrice);
 
         // create revs
         $this->revs()->create([
