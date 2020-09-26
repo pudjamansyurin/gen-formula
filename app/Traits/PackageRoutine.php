@@ -9,28 +9,47 @@ trait PackageRoutine
      */
     public function syncPackager($packers)
     {
-        $packers_id = [];
-        foreach ($packers as $packer) {
-            // update or create: packager
-            array_push($packers_id, $packer['id']);
-            $packager = $this->packagers()
-                ->updateOrCreate(
-                    ['packer_id' => $packer['id']],
-                    ['content' => $packer['content']]
-                );
 
-            // sync packets
-            $packs = [];
-            foreach ($packer['packs'] as $pack) {
-                $packs[$pack['id']] = ['price' => $pack['price']];
-            }
-            $packager->packets()
-                ->sync($packs);
+        // sync packagers
+        $packagers = [];
+        foreach ($packers as $packer) {
+            $packagers[$packer['id']] = ['content' => $packer['content']];
         }
-        // delete: packager (un-used)
-        $this->packagers()
-            ->whereNotIn('packer_id', $packers_id)
-            ->delete();
+        $this->packers()->sync($packagers);
+
+        // sync packets
+        foreach ($packers as $packer) {
+            $packets = [];
+            foreach ($packer['packs'] as $pack) {
+                $packets[$pack['id']] = ['price' => $pack['price']];
+            }
+            $this->packagers()
+                ->where('packer_id', $packer['id'])
+                ->first()
+                ->packets()
+                ->sync($packets);
+        }
+
+        // $packers_id = [];
+        // foreach ($packers as $packer) {
+        //     // update or create: packager
+        //     array_push($packers_id, $packer['id']);
+        //     $packager = $this->packagers()
+        //         ->updateOrCreate(
+        //             ['packer_id' => $packer['id']],
+        //             ['content' => $packer['content']]
+        //         );
+        //     // sync packets
+        //     $packs = [];
+        //     foreach ($packer['packs'] as $pack) {
+        //         $packs[$pack['id']] = ['price' => $pack['price']];
+        //     }
+        //     $packager->packets()->sync($packs);
+        // }
+        // // delete: packager (un-used)
+        // $this->packagers()
+        //     ->whereNotIn('packer_id', $packers_id)
+        //     ->delete();
 
         return $this;
     }
