@@ -62,9 +62,6 @@ class MaterialController extends Controller
             ['user_id' => auth()->id()]
         ));
 
-        // update revs
-        $material->updateRev($request->revs_price);
-
         return response(
             new MaterialItem($material->loadRelation()),
             Response::HTTP_CREATED
@@ -82,15 +79,8 @@ class MaterialController extends Controller
     {
         $this->authorize('update', $material);
 
-        // $fields = ['name', 'matter_id'];
-
         // update
-        // if (array_diff($material->only($fields), $request->only($fields))) {
         $material->update($request->validated());
-        // }
-
-        // update revs
-        $material->updateRev($request->revs_price);
 
         return response(
             new MaterialItem($material->loadRelation()),

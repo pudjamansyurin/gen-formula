@@ -43,14 +43,6 @@ class UserController extends Controller
         // create
         $user = User::create($request->validated());
 
-        // add role
-        if ($role = Role::find($request->role_id)) {
-            $user->syncRoles($role);
-        }
-
-        // send email verification
-        $user->sendEmailVerificationNotification();
-
         return response(
             new UserItem($user->loadRelation()),
             Response::HTTP_CREATED
@@ -68,21 +60,8 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        // on email changes
-        $user->unVerifyChangedEmail();
-
         // update
         $user->update($request->validated());
-
-        // update role
-        if ($role = Role::find($request->role_id)) {
-            $user->syncRoles($role);
-        }
-
-        // send email verification
-        if (!$user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
-        }
 
         return response(
             new UserItem($user->loadRelation()),

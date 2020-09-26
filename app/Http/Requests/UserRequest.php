@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             ],
             'email'   => [
                 'required',
-                'email:rfc,dns',
+                'email',
                 Rule::unique('users', 'email')->ignore($this->user)
             ],
             'role_id' => [

@@ -107,19 +107,4 @@ class User extends Authenticatable
     {
         $this->notify(new VerifyEmail());
     }
-
-    /**
-     * Mark the given user's email as un-verified.
-     *
-     * @return bool
-     */
-    public function unVerifyChangedEmail()
-    {
-        if ($this->email != request('email')) {
-            return $this->forceFill([
-                'email_verified_at' => null,
-            ])->save();
-        }
-        return $this;
-    }
 }

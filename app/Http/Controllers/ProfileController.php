@@ -37,17 +37,8 @@ class ProfileController extends Controller
         $this->authorize('profile', User::class);
 
         $me = $request->user();
-
-        // on email changes
-        $me->unVerifyChangedEmail();
-
         // update
         $me->update($request->validated());
-
-        // send email verification
-        if (!$me->hasVerifiedEmail()) {
-            $me->sendEmailVerificationNotification();
-        }
 
         return response(
             new UserItem($me->loadRelation()),

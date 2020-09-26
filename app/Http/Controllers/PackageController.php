@@ -61,10 +61,6 @@ class PackageController extends Controller
             $request->validated(),
             ['user_id' => auth()->id()]
         ));
-        // sync packager
-        $package->syncPackager($request->packers);
-        // update total price
-        $package->updateRev();
 
         return response(
             new PackageItem($package->loadRelation()),
@@ -85,10 +81,6 @@ class PackageController extends Controller
 
         // update
         $package->update($request->validated());
-        // sync packager
-        $package->syncPackager($request->packers);
-        // update total price
-        $package->updateRev();
 
         return response(
             new PackageItem($package->loadRelation()),
