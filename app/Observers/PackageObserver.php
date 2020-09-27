@@ -15,7 +15,9 @@ class PackageObserver
     public function saved(Package $package)
     {
         // sync packager
-        $package->syncPackager(request('packers'));
+        if ($packers = request('packers')) {
+            $package->syncPackager($packers);
+        }
         // update total price
         $package->updateRev();
     }

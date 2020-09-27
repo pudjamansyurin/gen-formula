@@ -55,46 +55,37 @@ class DummyPackageSeeder extends Seeder
         $packers = App\Packer::with('packs')->get();
 
         foreach ($packages as $package) {
-            $thePackage = factory(App\Package::class)->create([
-                'name' => $package[0],
-                'unit_id' => $units->firstWhere('symbol', $package[1])['id'],
-                'capacity' => $package[2],
-            ]);
-
-            // create packager
-            $packers->each(function ($packer) use ($thePackage, $faker, $package) {
-                $content = ($packer->name == 'KALENG' ? 1 : $package[3]);
-
-                if ($content) {
-                    $thePackager = $thePackage->packagers()->create([
-                        'packer_id' => $packer->id,
-                        'content' => $content
-                    ]);
-
-                    // create packets
-                    $packer->packs->each(function ($pack) use ($thePackager, $faker, $packer) {
-                        $digitPrice = ($packer->name == 'KALENG' ? 5 : 4);
-
-                        $thePackager->packets()->attach($pack, [
-                            'price' => $faker->randomNumber($digitPrice)
-                        ]);
-                    });
-                }
+            $thePackage = App\Package::withoutEvents(function () use ($faker, $package, $units, $packers) {
+                return factory(App\Package::class)->create([
+                    'name' => $package[0],
+                    'unit_id' => $units->firstWhere('symbol', $package[1])['id'],
+                    'capacity' => $package[2],
+                ]);
             });
 
-            // calculate total price
-            $total = $thePackage->packagers->reduce(function ($carry, $packager) {
-                $price = $packager->packets->reduce(function ($carry, $packet) {
-                    return $carry + $packet->pivot->price;
-                }, 0) / $packager->content;
+            // create packager
+            $thePackers = $packers->map(function ($packer) use ($faker, $package) {
+                $content = ($packer->name == 'KALENG' ? 1 : $package[3]);
+                $digitPrice = ($packer->name == 'KALENG' ? 5 : 4);
 
-                return $carry + $price;
-            }, 0);
+                return [
+                    'id' => $packer->id,
+                    'content' => $content,
+                    'packs' => $packer->packs->map(function ($pack) use ($faker, $digitPrice) {
+                        $price = $faker->randomNumber($digitPrice);
 
-            // create revs
-            $thePackage->revs()->create([
-                'price' => $total
-            ]);
+                        return [
+                            'id' => $pack->id,
+                            'price' => $price
+                        ];
+                    })->toArray()
+                ];
+            })->filter(function ($packer) {
+                return $packer['content'] > 0;
+            })->toArray();
+
+            $thePackage->syncPackager($thePackers);
+            $thePackage->updateRev();
         }
     }
 }

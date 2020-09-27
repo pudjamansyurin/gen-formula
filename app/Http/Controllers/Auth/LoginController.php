@@ -55,10 +55,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, User $user)
     {
         // record last login information
-        $user->forceFill([
-            'last_at' => now(),
-            'last_ip' => $request->getClientIp()
-        ])->save();
+        $user->recordLoginInfo();
 
         return response([
             'user' => new UserItem($user->loadMissing(['roles:id,name'])),

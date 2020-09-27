@@ -9,7 +9,6 @@ trait PackageRoutine
      */
     public function syncPackager($packers)
     {
-
         // sync packagers
         $packagers = [];
         foreach ($packers as $packer) {
@@ -24,32 +23,10 @@ trait PackageRoutine
                 $packets[$pack['id']] = ['price' => $pack['price']];
             }
             $this->packagers()
-                ->where('packer_id', $packer['id'])
-                ->first()
+                ->firstWhere('packer_id', $packer['id'])
                 ->packets()
                 ->sync($packets);
         }
-
-        // $packers_id = [];
-        // foreach ($packers as $packer) {
-        //     // update or create: packager
-        //     array_push($packers_id, $packer['id']);
-        //     $packager = $this->packagers()
-        //         ->updateOrCreate(
-        //             ['packer_id' => $packer['id']],
-        //             ['content' => $packer['content']]
-        //         );
-        //     // sync packets
-        //     $packs = [];
-        //     foreach ($packer['packs'] as $pack) {
-        //         $packs[$pack['id']] = ['price' => $pack['price']];
-        //     }
-        //     $packager->packets()->sync($packs);
-        // }
-        // // delete: packager (un-used)
-        // $this->packagers()
-        //     ->whereNotIn('packer_id', $packers_id)
-        //     ->delete();
 
         return $this;
     }

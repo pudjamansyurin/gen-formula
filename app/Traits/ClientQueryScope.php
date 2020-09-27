@@ -28,7 +28,8 @@ trait ClientQueryScope
             ->load(array_merge(
                 $this->_relations ?? [],
                 $this->_details ?? []
-            ))->loadCount($this->_counts ?? []);
+            ))
+            ->loadCount($this->_counts ?? []);
     }
 
     public function scopeLoadRelation()

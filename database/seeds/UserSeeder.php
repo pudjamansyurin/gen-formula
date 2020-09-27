@@ -35,12 +35,16 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            $theUser = App\User::create([
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'password' => $user['password']
-            ]);
-            $theUser->assignRole(Role::firstWhere('name', $user['role']));
+            $theUser = App\User::withoutEvents(function () use ($user) {
+                return App\User::create([
+                    'name' => $user['name'],
+                    'email' => $user['email'],
+                    'password' => $user['password']
+                ]);
+            });
+
+            $role = Role::firstWhere('name', $user['role']);
+            $theUser->assignRole($role);
         }
     }
 }

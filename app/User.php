@@ -107,4 +107,14 @@ class User extends Authenticatable
     {
         $this->notify(new VerifyEmail());
     }
+
+    public function recordLoginInfo()
+    {
+        $this->withoutEvents(function () {
+            $this->forceFill([
+                'last_at' => now(),
+                'last_ip' => request()->getClientIp()
+            ])->save();
+        });
+    }
 }

@@ -43,12 +43,10 @@ class ResetPasswordController extends Controller
      */
     protected function sendResetResponse(Request $request, $response)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = User::firstWhere('email', $request->email);
+
         // record last login information
-        $user->forceFill([
-            'last_at' => now(),
-            'last_ip' => $request->getClientIp()
-        ])->save();
+        $user->recordLoginInfo();
 
         return response([
             'user' => new UserItem($user->loadMissing(['roles:id,name'])),

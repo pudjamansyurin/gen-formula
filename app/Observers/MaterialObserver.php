@@ -15,6 +15,8 @@ class MaterialObserver
     public function saved(Material $material)
     {
         // update revs
-        $material->updateRev(request('rev.price'));
+        if ($revPrice = request('rev.price')) {
+            $material->updateRev($revPrice);
+        }
     }
 }

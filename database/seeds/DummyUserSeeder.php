@@ -13,9 +13,11 @@ class DummyUserSeeder extends Seeder
     public function run()
     {
         // Create users
-        factory(App\User::class, 10)->create()
-            ->each(function ($user) {
-                $user->assignRole(Role::inRandomOrder()->first());
-            });
+        App\User::withoutEvents(function () {
+            return factory(App\User::class, 10)->create();
+        })->each(function ($user) {
+            $role = Role::inRandomOrder()->first();
+            $user->assignRole($role);
+        });
     }
 }

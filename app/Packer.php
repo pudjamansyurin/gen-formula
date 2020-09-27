@@ -53,6 +53,11 @@ class Packer extends Model
         return $this->hasMany(Pack::class);
     }
 
+    public function packages()
+    {
+        return $this->belongsToMany(Package::class, 'packagers');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
