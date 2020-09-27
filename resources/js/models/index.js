@@ -40,7 +40,9 @@ export const Material = {
     id: -1,
     name: "",
     matter_id: -1,
-    revs_price: 0
+    rev: {
+        price: 0
+    }
 };
 
 export const MaterialRev = {

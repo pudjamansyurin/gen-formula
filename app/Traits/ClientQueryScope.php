@@ -24,21 +24,27 @@ trait ClientQueryScope
 
     public function scopeLoadRelationDetailed()
     {
-        return $this->loadRelation()->load($this->_details ?? []);
+        return $this
+            ->load(array_merge(
+                $this->_relations ?? [],
+                $this->_details ?? []
+            ))->loadCount($this->_counts ?? []);
     }
 
     public function scopeLoadRelation()
     {
         return $this
-            ->load(array_merge($this->_relations ?? [], $this->_counts ?? []))
-            ->loadCount($this->_counts ?? []);
+            ->load(array_merge(
+                $this->_relations ?? [],
+            ))->loadCount($this->_counts ?? []);
     }
 
     protected function scopeWithRelation()
     {
         return $this
-            ->with(array_merge($this->_relations ?? [], $this->_counts ?? []))
-            ->withCount($this->_counts ?? []);
+            ->with(array_merge(
+                $this->_relations ?? [],
+            ))->withCount($this->_counts ?? []);
     }
 
     protected function scopeGetQueried()

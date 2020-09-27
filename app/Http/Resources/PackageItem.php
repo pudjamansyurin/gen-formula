@@ -29,10 +29,7 @@ class PackageItem extends JsonResource
             'packers' => [],
             'packagers' => $this->whenLoaded('packagers'),
             'revs' => $this->whenLoaded('revs'),
-            'revs_price' => $this->whenLoaded(
-                'revs',
-                optional($this->revs->first())->price
-            ),
+            'rev' => $this->whenLoaded('latestRev'),
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

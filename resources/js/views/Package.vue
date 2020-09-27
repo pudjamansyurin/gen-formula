@@ -30,7 +30,7 @@
                     small
                     tile
                 >
-                    {{ item.revs_price | currency }}
+                    {{ item.rev.price | currency }}
                 </v-btn>
 
                 <v-card-text>
@@ -56,8 +56,8 @@
                     {{ item.name }}
                 </v-chip>
             </template>
-            <template v-slot:[`item.revs_price`]="{ item }">
-                {{ item.revs_price | currency }}
+            <template v-slot:[`item.rev.price`]="{ item }">
+                {{ item.rev.price | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -325,7 +325,7 @@ export default {
                 },
                 {
                     text: "Price",
-                    value: "revs_price",
+                    value: "rev.price",
                     align: "right",
                     sortable: false,
                     width: 150,
@@ -420,11 +420,6 @@ export default {
                 this.listPackerDefault = this.transformListPackers(data);
             })
             .catch((e) => eHandler(e));
-    },
-    watch: {
-        "form.packers": function (val) {
-            console.log(val);
-        },
     },
 };
 </script>

@@ -12,7 +12,7 @@ class Material extends Model
 
     protected $table = 'materials';
 
-    protected $_relations = ['user:id,name', 'matter:id,name'];
+    protected $_relations = ['user:id,name', 'matter:id,name', 'latestRev'];
     protected $_details = ['revs', 'revs.user:id,name'];
     protected $_counts = ['revs'];
 
@@ -60,6 +60,11 @@ class Material extends Model
     public function revs()
     {
         return $this->hasMany(MaterialRev::class)->latest('updated_at');
+    }
+
+    public function latestRev()
+    {
+        return $this->hasOne(MaterialRev::class)->latest('updated_at');
     }
 
     public function user()

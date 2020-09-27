@@ -30,7 +30,7 @@
                     small
                     tile
                 >
-                    {{ item.revs_price | currency }}
+                    {{ item.rev.price | currency }}
                 </v-btn>
                 <v-card-text>
                     <div class="overline">
@@ -55,8 +55,8 @@
                     {{ item.name }}
                 </v-chip>
             </template>
-            <template v-slot:[`item.revs_price`]="{ item }">
-                {{ item.revs_price | currency }}
+            <template v-slot:[`item.rev.price`]="{ item }">
+                {{ item.rev.price | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -136,11 +136,11 @@
                         </validation-provider>
 
                         <validation-provider
-                            name="revs_price"
+                            name="rev.price"
                             v-slot="{ errors, valid }"
                         >
                             <v-text-field
-                                v-model.number="form.revs_price"
+                                v-model.number="form.rev.price"
                                 :error-messages="errors"
                                 :success="valid"
                                 :readonly="fieldDisabled"
@@ -233,7 +233,7 @@ export default {
                 { text: "Matter", value: "matter.name" },
                 {
                     text: "Price",
-                    value: "revs_price",
+                    value: "rev.price",
                     align: "right",
                     sortable: false,
                     width: 150,

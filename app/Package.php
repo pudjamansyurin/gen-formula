@@ -12,7 +12,7 @@ class Package extends Model
 
     protected $table = 'packages';
 
-    protected $_relations = ['user:id,name', 'unit'];
+    protected $_relations = ['user:id,name', 'unit', 'latestRev'];
     protected $_details = ['revs', 'packagers', 'packagers.packets', 'packagers.packer:id,name'];
     protected $_counts = ['revs', 'packagers'];
 
@@ -61,6 +61,11 @@ class Package extends Model
     public function revs()
     {
         return $this->hasMany(PackageRev::class)->latest('updated_at');
+    }
+
+    public function latestRev()
+    {
+        return $this->hasOne(PackageRev::class)->latest('updated_at');
     }
 
     public function packagers()
