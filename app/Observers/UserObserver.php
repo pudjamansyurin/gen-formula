@@ -16,8 +16,10 @@ class UserObserver
     public function updating(User $user)
     {
         // unverify on email changes
-        if ($user->getOriginal('email') != request('email')) {
-            $user->email_verified_at = null;
+        if ($email = request('email')) {
+            if ($user->getOriginal('email') != $email) {
+                $user->email_verified_at = null;
+            }
         }
     }
 
@@ -31,8 +33,10 @@ class UserObserver
     {
         // update role
         if (auth()->id() != $user->id) {
-            if ($role = Role::find(request('role_id'))) {
-                $user->syncRoles($role);
+            if ($roleId = request('role_id')) {
+                if ($role = Role::find($roleId)) {
+                    $user->syncRoles($role);
+                }
             }
         }
 
