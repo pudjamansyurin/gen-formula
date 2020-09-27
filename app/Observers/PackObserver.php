@@ -3,29 +3,39 @@
 namespace App\Observers;
 
 use App\Pack;
+use App\Package;
 
 class PackObserver
 {
     /**
-     * Handle the pack "updating" event.
+     * Handle the pack "updated" event.
      *
      * @param  \App\Pack  $pack
      * @return void
      */
-    public function updating(Pack $pack)
+    public function updated(Pack $pack)
     {
-        //
-        // debug($pack->packagers()->with('package'));
+        $this->updatePackageRev();
     }
 
     /**
-     * Handle the pack "deleting" event.
+     * Handle the pack "deleted" event.
      *
      * @param  \App\Pack  $pack
      * @return void
      */
-    public function deleting(Pack $pack)
+    public function deleted(Pack $pack)
     {
-        //
+        $this->updatePackageRev();
+    }
+
+    /**
+     * Local routines
+     */
+    private function updatePackageRev()
+    {
+        Package::all()->each(function ($package) {
+            $package->updateRev();
+        });
     }
 }

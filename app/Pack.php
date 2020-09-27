@@ -61,11 +61,6 @@ class Pack extends Model
         return $this->belongsToMany(Packager::class, 'packets');
     }
 
-    public function packages()
-    {
-        //     return $this->hasManyThrough(Package::class, Packager::class, 'pack_id', 'id', 'id', 'packager_id');
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
