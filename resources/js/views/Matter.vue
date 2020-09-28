@@ -107,7 +107,7 @@ export default {
     data() {
         return {
             model: "matter",
-            modelProp: Matter,
+            modelDefault: Matter,
             form: this.$_.cloneDeep(Matter),
             headers: [
                 { text: "Name", value: "name" },

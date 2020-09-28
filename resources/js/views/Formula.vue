@@ -21,7 +21,7 @@
         >
             <template v-slot:card="{ item }">
                 <v-btn
-                    @click.stop="editPortion(item.id)"
+                    @click="edit(item)"
                     :color="chipColor(item)"
                     :outlined="!item.selected"
                     absolute
@@ -30,23 +30,25 @@
                     small
                     tile
                 >
-                    {{ item.price_total | currency }}
+                    {{ item.rev.price | currency }}
                 </v-btn>
+
                 <v-card-text>
                     <div class="overline">
                         {{ item.updated_at | moment("from") }}
                     </div>
-                    <div class="overline mb-2">{{ item.user.name }}</div>
+                    <div class="overline">
+                        {{ item.user.name }}
+                    </div>
                     <div class="subtitle-2 font-weight-bold">
                         {{ item.name }}
                     </div>
-                    {{ item.description }}
                 </v-card-text>
             </template>
 
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
-                    @click="editPortion(item.id)"
+                    @click="edit(item)"
                     :color="chipColor(item)"
                     :small="dense"
                     dark
@@ -54,14 +56,8 @@
                     {{ item.name }}
                 </v-chip>
             </template>
-            <template v-slot:[`item.price_total`]="{ item }">
-                {{ item.price_total | currency }}
-            </template>
-            <template v-slot:[`item.portion_total`]="{ item }"
-                >{{ item.portion_total }} %</template
-            >
-            <template v-slot:[`item.portion_count`]="{ item }">
-                {{ item.portions.length }}
+            <template v-slot:[`item.rev.price`]="{ item }">
+                {{ item.rev.price | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -75,251 +71,371 @@
             @delete="remove"
             @close="dialogDelete = false"
         >
-            <template v-slot="{ item }">{{ item.name }}</template>
+            <template v-slot="{ item }">
+                {{ item.name }}
+            </template>
         </the-dialog-delete>
 
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :tabs="formTabs"
+            :tab.sync="formTabIndex"
+            :readonly="fieldDisabled"
             @close="close"
             @submit="save"
         >
-            <v-form @submit.prevent="save">
-                <validation-observer ref="form">
-                    <validation-provider name="name" v-slot="{ errors, valid }">
-                        <v-text-field
-                            v-model="form.name"
-                            :error-messages="errors"
-                            :success="valid"
-                            hint="This is to identify the formula"
-                            label="Formula name"
-                            type="text"
-                            counter
-                            persistent-hint
-                        ></v-text-field>
-                    </validation-provider>
+            <template v-slot:DATA>
+                <v-form @submit.prevent="save">
+                    <validation-observer ref="form">
+                        <validation-provider
+                            name="name"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
+                                label="Name"
+                                type="text"
+                                hint="The formula name"
+                                counter
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider>
 
-                    <validation-provider
-                        name="description"
-                        v-slot="{ errors, valid }"
-                    >
-                        <v-text-field
-                            v-model="form.description"
-                            :error-messages="errors"
-                            :success="valid"
-                            hint="Short description about the formula"
-                            label="Formula description"
-                            type="text"
-                            counter
-                            persistent-hint
-                        ></v-text-field>
-                    </validation-provider>
-                </validation-observer>
-                <v-btn v-show="false" type="submit"></v-btn>
-            </v-form>
-        </the-dialog-form>
+                        <!-- <validation-provider
+                            name="description"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model="form.description"
+                                :error-messages="errors"
+                                :success="valid"
+                                hint="Short description about the formula"
+                                label="Formula description"
+                                type="text"
+                                counter
+                                persistent-hint
+                            ></v-text-field>
+                        </validation-provider> -->
 
-        <the-dialog-form
-            v-model="dialogPortion"
-            :title="portionFormTitle"
-            :readonly="fieldDisabled"
-            @close="closePortion"
-            @submit="savePortion"
-            width="1000"
-        >
-            <v-form @submit.prevent="savePortion">
-                <validation-observer ref="form_portion">
-                    <v-row>
-                        <v-col cols="12" sm="6">
-                            <validation-provider
-                                name="formula"
-                                v-slot="{ errors, valid }"
-                            >
-                                <v-autocomplete
-                                    v-model="form.portions"
-                                    :items="listMaterial"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    :clearable="form.authorized"
-                                    :readonly="fieldDisabled"
-                                    :filled="fieldDisabled"
-                                    item-text="material.name"
-                                    item-value="material.id"
-                                    label="Related materials"
-                                    hint="The related materials"
-                                    chips
-                                    multiple
-                                    auto-select-first
-                                    deletable-chips
-                                    persistent-hint
-                                    return-object
-                                ></v-autocomplete>
-                            </validation-provider>
+                        <!-- <v-row>
+                            <v-col>
+                                <validation-provider
+                                    name="capacity"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        v-model.number="form.capacity"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        :readonly="fieldDisabled"
+                                        :filled="fieldDisabled"
+                                        label="Capacity"
+                                        type="number"
+                                        hint="The formula capacity"
+                                        persistent-hint
+                                    ></v-text-field>
+                                </validation-provider>
+                            </v-col>
+                            <v-col>
+                                <validation-provider
+                                    name="unit_id"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-autocomplete
+                                        v-model="form.unit_id"
+                                        :items="listUnit"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        :readonly="fieldDisabled"
+                                        :filled="fieldDisabled"
+                                        item-text="name"
+                                        item-value="id"
+                                        label="Unit"
+                                        hint="The formula unit"
+                                        persistent-hint
+                                    ></v-autocomplete>
+                                </validation-provider>
+                            </v-col>
+                        </v-row>
 
-                            <validation-provider
-                                name="portion_total"
-                                v-slot="{ errors, valid }"
-                            >
+                        <v-row>
+                            <v-col cols="12" sm="7">
+                                <validation-provider
+                                    name="packers"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-autocomplete
+                                        v-model="form.packers"
+                                        :items="listPacker"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        :readonly="fieldDisabled"
+                                        item-text="name"
+                                        item-value="id"
+                                        label="Packer"
+                                        hint="The packer"
+                                        persistent-hint
+                                        deletable-chips
+                                        return-object
+                                        outlined
+                                        multiple
+                                        chips
+                                    ></v-autocomplete>
+                                </validation-provider>
+                            </v-col>
+                            <v-col cols="12" sm="5">
                                 <v-text-field
-                                    :value="portionTotal"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    class="mt-3"
-                                    hint="This should be 100%"
-                                    label="Total Portion"
+                                    :value="priceTotal"
+                                    hint="This the total price"
+                                    label="Total Price"
                                     type="number"
-                                    suffix="%"
-                                    readonly
+                                    prefix="Rp"
                                     filled
+                                    readonly
+                                    counter
                                     persistent-hint
                                 ></v-text-field>
-                            </validation-provider>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                            <validation-provider
-                                v-for="(el, key) in form.portions"
-                                :key="el.material.id"
-                                :name="`formula.${key}.portion`"
-                                v-slot="{ errors, valid }"
+                            </v-col>
+                        </v-row>
+
+                        <template
+                            v-if="form.packers && form.packers.length > 0"
+                        >
+                            <v-card
+                                v-for="(packer, index) in form.packers"
+                                :key="`packers.${index}.content`"
+                                class="ma-1"
+                                outlined
                             >
-                                <v-text-field
-                                    v-model.number="el.portion"
-                                    :label="el.material.name"
-                                    :error-messages="errors"
-                                    :success="valid"
-                                    :readonly="fieldDisabled"
-                                    :filled="fieldDisabled"
-                                    hint="This material's portion"
-                                    type="number"
-                                    suffix="%"
-                                    persistent-hint
-                                ></v-text-field>
-                            </validation-provider>
-                        </v-col>
-                    </v-row>
-                </validation-observer>
-                <v-btn v-show="false" type="submit"></v-btn>
-            </v-form>
+                                <v-card-text>
+                                    <v-list-item>
+                                        <v-list-item-title>
+                                            <validation-provider
+                                                :vid="`packers.${index}.content`"
+                                                :name="`${packer.name} content`"
+                                                v-slot="{ errors, valid }"
+                                            >
+                                                <v-text-field
+                                                    v-model.number="
+                                                        packer.content
+                                                    "
+                                                    :error-messages="errors"
+                                                    :success="valid"
+                                                    :readonly="fieldDisabled"
+                                                    :filled="fieldDisabled"
+                                                    :label="packer.name"
+                                                    hint="The packer content"
+                                                    type="number"
+                                                    persistent-hint
+                                                ></v-text-field>
+                                            </validation-provider>
+                                        </v-list-item-title>
+                                    </v-list-item>
+
+                                    <v-list-item
+                                        v-for="(pack, idx) in packer.packs"
+                                        :key="`packers.${index}.packs.${idx}.price`"
+                                    >
+                                        <v-list-item-action>
+                                            <v-icon>
+                                                mdi-subdirectory-arrow-right
+                                            </v-icon>
+                                        </v-list-item-action>
+                                        <v-list-item-title>
+                                            <validation-provider
+                                                :vid="`packers.${index}.packs.${idx}.price`"
+                                                :name="`${pack.name} price`"
+                                                v-slot="{ errors, valid }"
+                                            >
+                                                <v-text-field
+                                                    v-model.number="pack.price"
+                                                    :error-messages="errors"
+                                                    :success="valid"
+                                                    :readonly="fieldDisabled"
+                                                    :filled="fieldDisabled"
+                                                    :label="pack.name"
+                                                    prefix="Rp"
+                                                    type="number"
+                                                    hint="The pack price"
+                                                    counter
+                                                    persistent-hint
+                                                ></v-text-field>
+                                            </validation-provider>
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                </v-card-text>
+                            </v-card>
+                        </template> -->
+                    </validation-observer>
+                    <v-btn v-show="false" type="submit"></v-btn>
+                </v-form>
+            </template>
+
+            <template v-slot:REV>
+                <v-list dense>
+                    <template v-for="(rev, index) in form.revs">
+                        <v-list-item
+                            :key="rev.id"
+                            :class="{ primary: index === 0 }"
+                            :dark="index === 0"
+                            two-line
+                            dense
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{ rev.price | currency }}
+                                </v-list-item-title>
+                            </v-list-item-content>
+
+                            <v-list-item-action>
+                                <v-list-item-action-text>
+                                    {{ rev.updated_at | moment("from") }}
+                                </v-list-item-action-text>
+                            </v-list-item-action>
+                        </v-list-item>
+                        <v-divider :key="rev.updated_at"></v-divider>
+                    </template>
+                </v-list>
+            </template>
         </the-dialog-form>
     </fragment>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 import { Formula } from "../models";
 import { eHandler } from "../utils/helper";
-import { CommonMixin, ModelMixin, FetchListMixin } from "../mixins";
+import {
+    CommonMixin,
+    ModelMixin,
+    FormTabMixin,
+    FetchListMixin,
+} from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
 
 export default {
-    mixins: [CommonMixin, ModelMixin, FetchListMixin],
+    mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
     components: {
         AppTopBar,
     },
     data() {
         return {
             model: "formula",
-            modelProp: Formula,
+            modelDefault: Formula,
             form: this.$_.cloneDeep(Formula),
             headers: [
                 { text: "Name", value: "name" },
-                { text: "Description", value: "description" },
+                // { text: "Description", value: "description" },
+                // {
+                //     text: "Tot.Portion",
+                //     value: "portion_total",
+                //     align: "center",
+                //     sortable: false,
+                // },
                 {
-                    text: "Tot.Price",
-                    value: "price_total",
+                    text: "Recipes",
+                    value: "recipes_count",
+                    align: "center",
+                },
+                {
+                    text: "Price",
+                    value: "rev.price",
                     align: "right",
                     sortable: false,
                     width: 150,
                 },
                 {
-                    text: "Tot.Portion",
-                    value: "portion_total",
+                    text: "Rev",
+                    value: "revs_count",
                     align: "center",
-                    sortable: false,
-                },
-                {
-                    text: "Rel.Material",
-                    value: "portion_count",
-                    align: "center",
-                    sortable: false,
                 },
                 { text: "Creator", value: "user.name" },
                 { text: "UpdatedAt", value: "updated_at" },
             ],
 
-            dialogPortion: false,
-            listMaterial: [],
+            // listUnit: [],
+            // listPacker: [],
+            // listPackerDefault: [],
         };
     },
     computed: {
         ...mapState("model", ["formulas"]),
-        portionFormTitle() {
-            return this.form.name || "Related materials";
-        },
-        portionTotal() {
-            return this.form.portions
-                .reduce((carry, el) => carry + Number(el.portion), 0)
-                .toFixed(2);
-        },
+        // priceTotal() {
+        //     return this.form.packers
+        //         .reduce((carry, el) => {
+        //             let subTotal =
+        //                 el.packs.reduce((carry, el) => {
+        //                     return carry + Number(el.price);
+        //                 }, 0) / Number(el.content);
+
+        //             return carry + subTotal;
+        //         }, 0)
+        //         .toFixed(2);
+        // },
     },
     methods: {
-        chipColor(item) {
-            if (!item.authorized) return "grey";
-            return item.portion_total == 100 ? "green" : "red";
+        change(item) {
+            this.formTabIndex = 0;
+            // this.listPacker = this.$_.cloneDeep(this.listPackerDefault);
+            this.form = this.$_.cloneDeep(item);
         },
-
-        // portion related routines
-        closePortion() {
-            this.dialogPortion = false;
-            this.$nextTick(() => this.$refs.form_portion.reset());
+        onCreate() {
+            this.change(this.modelDefault);
         },
-        editPortion(id) {
-            let formula = this.$_.find(this.formulas, { id });
-            this.form = this.$_.cloneDeep(formula);
-            this.$nextTick(() => (this.dialogPortion = true));
+        onEdit(item) {
+            this.change(item || this.selected[0]);
+            this.fetchDetail();
         },
-        savePortion() {
-            this.$refs.form_portion.validate().then((valid) => {
-                if (valid) {
-                    this.SAVE_MODEL({
-                        url: `formula/${this.form.id}/portion`,
-                        payload: {
-                            formula: this.$_.map(
-                                this.form.portions,
-                                ({ material, portion }) => ({
-                                    material_id: material.id,
-                                    portion,
-                                })
-                            ),
-                        },
-                    })
-                        .then(async (data) => {
-                            this.UPDATE_MODEL({
-                                model: this.model,
-                                data,
-                            });
-
-                            this.closePortion();
-                        })
-                        .catch((e) =>
-                            this.$refs.form_portion.setErrors(eHandler(e))
-                        );
-                }
+        fetchDetail() {
+            this.GET_MODEL({
+                model: this.model,
+                id: this.form.id,
+            }).then((data) => {
+                console.warn(data);
+                this.form = this.$_.cloneDeep(data);
             });
         },
+        // transformPackersDetail(data) {
+        //     return data.formulars.map(({ packer, content, packets }) => ({
+        //         id: packer.id,
+        //         name: packer.name,
+        //         content: content,
+        //         packs: packets.map(({ id, name, pivot }) => ({
+        //             id,
+        //             name,
+        //             price: pivot.price,
+        //         })),
+        //     }));
+        // },
+        // transformListPackers(data) {
+        //     return data.map(({ id, name, packs }) => ({
+        //         id,
+        //         name,
+        //         content: 1,
+        //         packs: packs.map(({ id, name }) => ({
+        //             id,
+        //             name,
+        //             price: 0,
+        //         })),
+        //     }));
+        // },
     },
     mounted() {
-        this.fetchList("material")
-            .then(
-                (data) =>
-                    (this.listMaterial = data.map((material) => ({
-                        material,
-                        portion: 0,
-                    })))
-            )
-            .catch((e) => eHandler(e));
+        // this.fetchList("unit")
+        //     .then((data) => (this.listUnit = data))
+        //     .catch((e) => eHandler(e));
+        // this.fetchList("packer")
+        //     .then((data) => {
+        //         this.listPackerDefault = this.transformListPackers(data);
+        //     })
+        //     .catch((e) => eHandler(e));
     },
 };
 </script>

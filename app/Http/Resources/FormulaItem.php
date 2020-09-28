@@ -18,26 +18,32 @@ class FormulaItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description,
-            'portions' => PortionItem::collection($this->whenLoaded('portions')),
-            'portion_total' => $this->whenLoaded(
-                'portions',
-                $this->portions->reduce(function ($carry, $item) {
-                    return $carry + $item->portion;
-                })
-            ),
-            'price_total' => $this->whenLoaded(
-                'portions',
-                $this->portions->reduce(function ($carry, $item) {
-                    $value = 0;
-                    if ($material = $item->material) {
-                        if ($rev = $material->revs->first()) {
-                            $value = ($rev->price * $item->portion / 100);
-                        }
-                    }
-                    return $carry + $value;
-                })
-            ),
+            // 'description' => $this->description,
+            'recipes_count' => $this->recipes_count,
+            'recipes' => $this->whenLoaded('recipes'),
+
+            'revs_count' => $this->revs_count,
+            'revs' => $this->whenLoaded('revs'),
+            'rev' => $this->whenLoaded('rev'),
+
+            // 'portion_total' => $this->whenLoaded(
+            //     'portions',
+            //     $this->portions->reduce(function ($carry, $item) {
+            //         return $carry + $item->portion;
+            //     })
+            // ),
+            // 'price_total' => $this->whenLoaded(
+            //     'portions',
+            //     $this->portions->reduce(function ($carry, $item) {
+            //         $value = 0;
+            //         if ($material = $item->material) {
+            //             if ($rev = $material->revs->first()) {
+            //                 $value = ($rev->price * $item->portion / 100);
+            //             }
+            //         }
+            //         return $carry + $value;
+            //     })
+            // ),
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

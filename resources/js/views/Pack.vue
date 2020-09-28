@@ -127,7 +127,7 @@ export default {
     data() {
         return {
             model: "pack",
-            modelProp: Pack,
+            modelDefault: Pack,
             form: this.$_.cloneDeep(Pack),
             headers: [
                 { text: "Name", value: "name" },

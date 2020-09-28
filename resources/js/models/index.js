@@ -54,7 +54,7 @@ export const MaterialRev = {
 export const Formula = {
     id: -1,
     name: "",
-    description: "",
+    // description: "",
     user: User,
     portions: []
 };

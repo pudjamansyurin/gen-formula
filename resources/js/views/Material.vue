@@ -226,7 +226,7 @@ export default {
     data() {
         return {
             model: "material",
-            modelProp: Material,
+            modelDefault: Material,
             form: this.$_.cloneDeep(Material),
             headers: [
                 { text: "Name", value: "name" },
@@ -264,7 +264,7 @@ export default {
             this.form = this.$_.cloneDeep(item);
         },
         onCreate() {
-            this.change(this.modelProp);
+            this.change(this.modelDefault);
         },
         onEdit(item) {
             this.change(item || this.selected[0]);

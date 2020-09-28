@@ -212,7 +212,7 @@ export default {
     data() {
         return {
             model: "user",
-            modelProp: User,
+            modelDefault: User,
             form: {
                 ...this.$_.cloneDeep(User),
                 password: null,
@@ -242,7 +242,7 @@ export default {
             this.form = this.copyWithPassword(item);
         },
         onCreate() {
-            this.change(this.modelProp);
+            this.change(this.modelDefault);
         },
         onEdit(item) {
             this.change(item || this.selected[0]);

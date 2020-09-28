@@ -54,7 +54,7 @@ export default {
             this.$nextTick(() => this.$refs.form.reset());
         },
         onCreate() {
-            this.form = cloneDeep(this.modelProp);
+            this.form = cloneDeep(this.modelDefault);
         },
         onEdit(item) {
             this.form = cloneDeep(item || this.selected[0]);

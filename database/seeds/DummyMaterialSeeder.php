@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Generator as Faker;
 
 class DummyMaterialSeeder extends Seeder
 {
@@ -9,15 +10,15 @@ class DummyMaterialSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(Faker $faker)
     {
         // Create materials
         factory(App\Material::class, 50)->create()
-            ->each(function ($material) {
+            ->each(function ($material) use ($faker) {
                 for ($i = 0; $i < rand(1, 10); $i++) {
                     // Create revs
-                    factory(App\MaterialRev::class)->create([
-                        'material_id' => $material->id,
+                    $material->revs()->create([
+                        'price' => $faker->randomNumber(6),
                         'user_id' => $material->user_id,
                     ]);
                 }

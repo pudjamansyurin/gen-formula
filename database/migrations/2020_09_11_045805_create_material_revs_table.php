@@ -16,7 +16,7 @@ class CreateMaterialRevsTable extends Migration
         Schema::create('material_revs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('material_id');
-            $table->double('price');
+            $table->unsignedDecimal('price', 15, 2);
             $table->foreignId('user_id');
             $table->timestamps();
         });

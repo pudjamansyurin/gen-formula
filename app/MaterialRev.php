@@ -18,7 +18,6 @@ class MaterialRev extends Model
     protected $fillable = [
         'material_id',
         'price',
-        // 'updated_at',
         'user_id'
     ];
 
@@ -54,7 +53,6 @@ class MaterialRev extends Model
      */
     public function scopeGetById($q, $id)
     {
-        return $this->with($this->relations)
-            ->find($id);
+        return $this->with($this->relations)->find($id);
     }
 }

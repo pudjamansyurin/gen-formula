@@ -29,9 +29,9 @@ class FormulaRequest extends FormRequest
                 'min:3',
                 Rule::unique('formulas', 'name')->ignore($this->formula)
             ],
-            'description' => [
-                'min:5'
-            ],
+            // 'description' => [
+            //     'min:5'
+            // ],
         ];
     }
 }

@@ -3,15 +3,18 @@
 namespace App;
 
 use App\Traits\ClientQueryScope;
+use App\Traits\FormulaRoutine;
 use Illuminate\Database\Eloquent\Model;
 
 class Formula extends Model
 {
-    use ClientQueryScope;
+    use ClientQueryScope, FormulaRoutine;
 
     protected $table = 'formulas';
 
-    protected $_relations = ['user:id,name', 'portions.material.revs'];
+    protected $_relations = ['user:id,name', 'rev'];
+    protected $_details = ['revs', 'recipes', 'recipes.recipeable', 'recipes.recipeable.rev'];
+    protected $_counts = ['revs', 'recipes'];
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +23,7 @@ class Formula extends Model
      */
     protected $fillable = [
         'name',
-        'description',
+        // 'description',
         'user_id'
     ];
 
@@ -52,15 +55,35 @@ class Formula extends Model
     /**
      * Set relation tables.
      */
-    public function portions()
+    // public function portions()
+    // {
+    //     return $this->hasMany(Portion::class);
+    // }
+
+    // public function materials()
+    // {
+    //     return $this->hasManyThrough(Material::class, Portion::class);
+    // }
+
+
+    public function revs()
     {
-        return $this->hasMany(Portion::class);
+        return $this->hasMany(FormulaRev::class)->latest('updated_at');
     }
 
-    public function materials()
+    public function rev()
     {
-        return $this->hasManyThrough(Material::class, Portion::class);
-        // return $this->belongsToMany(Material::class, 'formula_material');
+        return $this->hasOne(FormulaRev::class)->latest('updated_at');
+    }
+
+    public function recipes()
+    {
+        return $this->hasMany(Recipe::class);
+    }
+
+    public function asRecipes()
+    {
+        return $this->morphMany(Recipe::class, 'recipeable');
     }
 
     public function user()

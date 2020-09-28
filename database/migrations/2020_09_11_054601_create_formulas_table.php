@@ -16,7 +16,10 @@ class CreateFormulasTable extends Migration
         Schema::create('formulas', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->text('description');
+            // $table->text('description');
+            $table->boolean('main');
+            $table->unsignedDecimal('density', 6, 2);
+            $table->unsignedDecimal('shrink', 6, 2);
             $table->foreignId('user_id');
             $table->timestamps();
         });

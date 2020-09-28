@@ -85,7 +85,11 @@ class DummyPackageSeeder extends Seeder
             })->toArray();
 
             $thePackage->syncPackager($thePackers);
-            $thePackage->updateRev();
+            // create revs
+            $thePackage->revs()->create([
+                'price' => $thePackage->calcRev(),
+                'user_id' => $thePackage->user_id,
+            ]);
         }
     }
 }

@@ -17,7 +17,7 @@ class CreatePacketsTable extends Migration
             $table->id();
             $table->foreignId('packager_id');
             $table->foreignId('pack_id');
-            $table->double('price');
+            $table->unsignedDecimal('price', 15, 2);
             $table->timestamps();
         });
 

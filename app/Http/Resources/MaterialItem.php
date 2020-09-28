@@ -23,7 +23,7 @@ class MaterialItem extends JsonResource
             'matter' => new MatterItem($this->whenLoaded('matter')),
 
             'revs' => MaterialRevItem::collection($this->whenLoaded('revs')),
-            'rev' => $this->whenLoaded('latestRev'),
+            'rev' => $this->whenLoaded('rev'),
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

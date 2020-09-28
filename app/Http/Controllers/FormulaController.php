@@ -30,6 +30,22 @@ class FormulaController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Formula  $formula
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Formula $formula)
+    {
+        $this->authorize('viewAny', Formula::class);
+
+        return response(
+            new FormulaItem($formula->loadRelationDetailed()),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

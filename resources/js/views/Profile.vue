@@ -270,7 +270,7 @@ export default {
     data() {
         return {
             model: "profile",
-            modelProp: User,
+            modelDefault: User,
             form: {
                 ...this.$_.cloneDeep(User),
                 password: null,

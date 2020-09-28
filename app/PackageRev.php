@@ -16,6 +16,7 @@ class PackageRev extends Model
     protected $fillable = [
         'package_id',
         'price',
+        'user_id'
     ];
 
     /**
@@ -25,5 +26,10 @@ class PackageRev extends Model
     public function packages()
     {
         return $this->belongsTo(Package::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -16,7 +16,8 @@ class CreatePackageRevsTable extends Migration
         Schema::create('package_revs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('package_id');
-            $table->double('price');
+            $table->unsignedDecimal('price', 15, 2);
+            $table->foreignId('user_id');
             $table->timestamps();
         });
 
@@ -25,6 +26,10 @@ class CreatePackageRevsTable extends Migration
             $table->foreign('package_id')
                 ->references('id')
                 ->on('packages')
+                ->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
                 ->onDelete('cascade');
         });
     }

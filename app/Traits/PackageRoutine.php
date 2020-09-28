@@ -33,18 +33,10 @@ trait PackageRoutine
 
     public function updateRev()
     {
-        $this->load(['packagers', 'packagers.packets', 'revs']);
+        $this->load(['revs']);
 
         // calculate total price
-        $totalPrice = $this->packagers
-            ->reduce(function ($carry, $packager) {
-                $price = $packager->packets
-                    ->reduce(function ($carry, $packet) {
-                        return $carry + $packet->pivot->price;
-                    }, 0) / $packager->content;
-
-                return $carry + $price;
-            }, 0);
+        $totalPrice = $this->calcRev();
 
         // reject if total price is same
         if ($rev = $this->revs->first()) {
@@ -55,9 +47,26 @@ trait PackageRoutine
 
         // create revs
         $this->revs()->create([
-            'price' => $totalPrice
+            'price' => $totalPrice,
+            'user_id' => auth()->id()
         ]);
 
         return $this;
+    }
+
+    public function calcRev()
+    {
+        $this->load(['packagers', 'packagers.packets']);
+
+        // calculate total price
+        return $this->packagers
+            ->reduce(function ($carry, $packager) {
+                $price = $packager->packets
+                    ->reduce(function ($carry, $packet) {
+                        return $carry + $packet->pivot->price;
+                    }, 0) / $packager->content;
+
+                return $carry + $price;
+            }, 0);
     }
 }
