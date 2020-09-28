@@ -110,6 +110,7 @@
                         <v-card
                             v-if="form.recipes && form.recipes.length > 0"
                             class="my-3"
+                            outlined
                         >
                             <v-simple-table>
                                 <template v-slot:default>
@@ -145,12 +146,15 @@
                                             </td>
                                             <td class="text-right">
                                                 {{
-                                                    ((item.portion *
-                                                        item.recipeable.rev
-                                                            .price) /
-                                                        100)
+                                                    (item.recipeable.rev.price *
+                                                        item.portion)
                                                         | currency
                                                 }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right" colspan="5">
+                                                {{ form.rev.price | currency }}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -350,7 +354,7 @@
                                 </v-list-item-action-text>
                             </v-list-item-action>
                         </v-list-item>
-                        <v-divider :key="rev.updated_at"></v-divider>
+                        <v-divider :key="`divider-${rev.id}`"></v-divider>
                     </template>
                 </v-list>
             </template>

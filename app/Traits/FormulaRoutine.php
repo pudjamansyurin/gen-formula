@@ -10,14 +10,14 @@ trait FormulaRoutine
 
     public function calcRev()
     {
-        $this->load(['recipes', 'recipes.recipeable']);
+        $this->load(['recipes', 'recipes.recipeable',  'recipes.recipeable.rev']);
 
         // calculate total price
         return $this->recipes
             ->reduce(function ($carry, $recipe) {
                 $price = $recipe->recipeable->rev->price;
 
-                return $carry + ($recipe->portion * $price / 100);
+                return $carry + ($price * $recipe->portion);
             }, 0);
     }
 }

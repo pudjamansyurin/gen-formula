@@ -195,7 +195,7 @@
                                 </v-btn>
                             </v-list-item-action>
                         </v-list-item>
-                        <v-divider :key="rev.updated_at"></v-divider>
+                        <v-divider :key="`divider-${rev.id}`"></v-divider>
                     </template>
                 </v-list>
             </template>

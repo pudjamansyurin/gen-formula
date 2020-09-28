@@ -37,8 +37,9 @@ class DummyFormulaSeeder extends Seeder
                 }
 
                 // create revs
+                $price = $formula->calcRev();
                 $formula->revs()->create([
-                    'price' => $formula->calcRev(),
+                    'price' => $price,
                     'user_id' => $formula->user_id,
                 ]);
             });
