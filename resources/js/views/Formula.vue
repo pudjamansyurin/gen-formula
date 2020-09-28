@@ -84,6 +84,7 @@
             :readonly="fieldDisabled"
             @close="close"
             @submit="save"
+            width="700"
         >
             <template v-slot:DATA>
                 <v-form @submit.prevent="save">
@@ -105,6 +106,57 @@
                                 persistent-hint
                             ></v-text-field>
                         </validation-provider>
+
+                        <v-card
+                            v-if="form.recipes && form.recipes.length > 0"
+                            class="my-3"
+                        >
+                            <v-simple-table>
+                                <template v-slot:default>
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">No</th>
+                                            <th class="text-left">Name</th>
+                                            <th class="text-right">Price</th>
+                                            <th class="text-right">Portion</th>
+                                            <th class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="(item,
+                                            index) in form.recipes"
+                                            :key="item.id"
+                                        >
+                                            <td class="text-center">
+                                                {{ index + 1 }}
+                                            </td>
+                                            <td class="text-left">
+                                                {{ item.recipeable.name }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{
+                                                    item.recipeable.rev.price
+                                                        | currency
+                                                }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ item.portion }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{
+                                                    ((item.portion *
+                                                        item.recipeable.rev
+                                                            .price) /
+                                                        100)
+                                                        | currency
+                                                }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table></v-card
+                        >
 
                         <!-- <validation-provider
                             name="description"
