@@ -107,60 +107,143 @@
                             ></v-text-field>
                         </validation-provider>
 
+                        <v-row>
+                            <v-col>
+                                <validation-provider
+                                    vid="density"
+                                    name="Density"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        v-model.number="form.density"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        :readonly="fieldDisabled"
+                                        :filled="fieldDisabled"
+                                        prefix="Kg/L"
+                                        label="Density"
+                                        hint="The formula density"
+                                        type="number"
+                                        reverse
+                                        persistent-hint
+                                    ></v-text-field>
+                                </validation-provider>
+                            </v-col>
+                            <v-col>
+                                <validation-provider
+                                    vid="shrink"
+                                    name="Shrink"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        v-model.number="form.shrink"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        :readonly="fieldDisabled"
+                                        :filled="fieldDisabled"
+                                        prefix="%"
+                                        label="Shrink Factor"
+                                        hint="The formula shrink factor"
+                                        type="number"
+                                        reverse
+                                        persistent-hint
+                                    ></v-text-field>
+                                </validation-provider>
+                            </v-col>
+                        </v-row>
+
                         <v-card
-                            v-if="form.recipes && form.recipes.length > 0"
+                            v-if="form.d_recipes.length > 0"
                             class="my-3"
                             outlined
                         >
-                            <v-simple-table>
+                            <v-simple-table dense>
                                 <template v-slot:default>
                                     <thead>
                                         <tr>
                                             <th class="text-center">No</th>
                                             <th class="text-left">Name</th>
                                             <th class="text-right">Price</th>
-                                            <th class="text-right">Portion</th>
+                                            <th
+                                                class="text-right"
+                                                style="width:120px"
+                                            >
+                                                Portion
+                                            </th>
                                             <th class="text-right">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr
-                                            v-for="(item,
-                                            index) in form.recipes"
-                                            :key="item.id"
+                                            v-for="(recipe,
+                                            index) in form.d_recipes"
+                                            :key="recipe.id"
                                         >
                                             <td class="text-center">
                                                 {{ index + 1 }}
                                             </td>
                                             <td class="text-left">
-                                                {{ item.recipeable.name }}
+                                                {{ recipe.name }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ recipe.price | currency }}
+                                            </td>
+                                            <td>
+                                                <validation-provider
+                                                    :vid="
+                                                        `d_recipes.${index}.portion`
+                                                    "
+                                                    :name="
+                                                        `${recipe.name} portion`
+                                                    "
+                                                    v-slot="{ errors, valid }"
+                                                >
+                                                    <v-text-field
+                                                        v-model.number="
+                                                            recipe.portion
+                                                        "
+                                                        :error-messages="errors"
+                                                        :success="valid"
+                                                        :readonly="
+                                                            fieldDisabled
+                                                        "
+                                                        :filled="fieldDisabled"
+                                                        prefix="Kg"
+                                                        type="number"
+                                                        hide-details="auto"
+                                                        reverse
+                                                        flat
+                                                        dense
+                                                    ></v-text-field>
+                                                </validation-provider>
                                             </td>
                                             <td class="text-right">
                                                 {{
-                                                    item.recipeable.rev.price
-                                                        | currency
-                                                }}
-                                            </td>
-                                            <td class="text-right">
-                                                {{ item.portion }}
-                                            </td>
-                                            <td class="text-right">
-                                                {{
-                                                    (item.recipeable.rev.price *
-                                                        item.portion)
+                                                    (recipe.price *
+                                                        recipe.portion)
                                                         | currency
                                                 }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-right" colspan="5">
-                                                {{ form.rev.price | currency }}
+                                            <td class="text-right">
+                                                Total
+                                            </td>
+                                            <td colspan="2"></td>
+                                            <td
+                                                class="text-right"
+                                                :class="recipePortionColor"
+                                            >
+                                                {{ recipesPortionTotal }} Kg
+                                            </td>
+                                            <td class="text-right">
+                                                {{ priceTotal | currency }}
                                             </td>
                                         </tr>
                                     </tbody>
                                 </template>
-                            </v-simple-table></v-card
-                        >
+                            </v-simple-table>
+                        </v-card>
 
                         <!-- <validation-provider
                             name="description"
@@ -371,7 +454,7 @@ import {
     CommonMixin,
     ModelMixin,
     FormTabMixin,
-    FetchListMixin,
+    FetchListMixin
 } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
@@ -379,7 +462,7 @@ import AppTopBar from "../components/app/AppTopBar";
 export default {
     mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
     components: {
-        AppTopBar,
+        AppTopBar
     },
     data() {
         return {
@@ -398,23 +481,23 @@ export default {
                 {
                     text: "Recipes",
                     value: "recipes_count",
-                    align: "center",
+                    align: "center"
                 },
                 {
                     text: "Price",
                     value: "rev.price",
                     align: "right",
                     sortable: false,
-                    width: 150,
+                    width: 150
                 },
                 {
                     text: "Rev",
                     value: "revs_count",
-                    align: "center",
+                    align: "center"
                 },
                 { text: "Creator", value: "user.name" },
-                { text: "UpdatedAt", value: "updated_at" },
-            ],
+                { text: "UpdatedAt", value: "updated_at" }
+            ]
 
             // listUnit: [],
             // listPacker: [],
@@ -423,18 +506,25 @@ export default {
     },
     computed: {
         ...mapState("model", ["formulas"]),
-        // priceTotal() {
-        //     return this.form.packers
-        //         .reduce((carry, el) => {
-        //             let subTotal =
-        //                 el.packs.reduce((carry, el) => {
-        //                     return carry + Number(el.price);
-        //                 }, 0) / Number(el.content);
+        recipePortionColor() {
+            return {
+                "red--text font-weight-bold": this.recipesPortionTotal != 100
+            };
+        },
+        recipesPortionTotal() {
+            return this.form.d_recipes
+                .reduce((carry, { portion }) => carry + Number(portion), 0)
+                .toFixed(2);
+        },
+        priceTotal() {
+            return this.form.d_recipes
+                .reduce((carry, { portion, price }) => {
+                    let subTotal = Number(price) * Number(portion);
 
-        //             return carry + subTotal;
-        //         }, 0)
-        //         .toFixed(2);
-        // },
+                    return carry + subTotal;
+                }, 0)
+                .toFixed(2);
+        }
     },
     methods: {
         change(item) {
@@ -452,25 +542,36 @@ export default {
         fetchDetail() {
             this.GET_MODEL({
                 model: this.model,
-                id: this.form.id,
-            }).then((data) => {
-                console.warn(data);
-                this.form = this.$_.cloneDeep(data);
+                id: this.form.id
+            }).then(data => {
+                console.warn(data.recipes);
+                this.form = {
+                    ...this.$_.cloneDeep(data),
+                    shrink: Number(data.shrink),
+                    density: Number(data.density),
+                    d_recipes: this.makeRecipesDetail(data.recipes)
+                };
             });
         },
-        // transformPackersDetail(data) {
-        //     return data.formulars.map(({ packer, content, packets }) => ({
-        //         id: packer.id,
-        //         name: packer.name,
-        //         content: content,
-        //         packs: packets.map(({ id, name, pivot }) => ({
-        //             id,
-        //             name,
-        //             price: pivot.price,
-        //         })),
-        //     }));
-        // },
-        // transformListPackers(data) {
+        makeRecipesDetail(recipes) {
+            return recipes.map(
+                ({
+                    id,
+                    portion,
+                    recipeable_id,
+                    recipeable_type,
+                    recipeable
+                }) => ({
+                    id,
+                    recipeable_id,
+                    recipeable_type,
+                    name: recipeable.name,
+                    portion: Number(portion),
+                    price: Number(recipeable.rev.price)
+                })
+            );
+        }
+        // makeListPackers(data) {
         //     return data.map(({ id, name, packs }) => ({
         //         id,
         //         name,
@@ -489,10 +590,10 @@ export default {
         //     .catch((e) => eHandler(e));
         // this.fetchList("packer")
         //     .then((data) => {
-        //         this.listPackerDefault = this.transformListPackers(data);
+        //         this.listPackerDefault = this.makeListPackers(data);
         //     })
         //     .catch((e) => eHandler(e));
-    },
+    }
 };
 </script>
 

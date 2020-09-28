@@ -24,6 +24,9 @@ class Formula extends Model
     protected $fillable = [
         'name',
         // 'description',
+        'main',
+        'shrink',
+        'density',
         'user_id'
     ];
 

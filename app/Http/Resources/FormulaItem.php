@@ -19,8 +19,13 @@ class FormulaItem extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             // 'description' => $this->description,
+            'main' => $this->main,
+            'density' => $this->density,
+            'shrink' => $this->shrink,
+
             'recipes_count' => $this->recipes_count,
             'recipes' => $this->whenLoaded('recipes'),
+            'd_recipes' => [],
 
             'revs_count' => $this->revs_count,
             'revs' => $this->whenLoaded('revs'),

@@ -187,9 +187,7 @@
                             </v-col>
                         </v-row>
 
-                        <template
-                            v-if="form.packers && form.packers.length > 0"
-                        >
+                        <template v-if="form.packers.length > 0">
                             <v-card
                                 v-for="(packer, index) in form.packers"
                                 :key="`packers.${index}.content`"
@@ -351,11 +349,11 @@ export default {
         ...mapState("model", ["packages"]),
         priceTotal() {
             return this.form.packers
-                .reduce((carry, el) => {
+                .reduce((carry, { content, packs }) => {
                     let subTotal =
-                        el.packs.reduce((carry, el) => {
-                            return carry + Number(el.price);
-                        }, 0) / Number(el.content);
+                        packs.reduce((carry, { price }) => {
+                            return carry + Number(price);
+                        }, 0) / Number(content);
 
                     return carry + subTotal;
                 }, 0)
@@ -382,15 +380,15 @@ export default {
             }).then((data) => {
                 this.form = {
                     ...this.$_.cloneDeep(data),
-                    packers: this.transformPackersDetail(data),
+                    packers: this.makePackersDetail(data.packagers),
                 };
             });
         },
-        transformPackersDetail(data) {
-            return data.packagers.map(({ packer, content, packets }) => ({
+        makePackersDetail(packagers) {
+            return packagers.map(({ packer, content, packets }) => ({
                 id: packer.id,
                 name: packer.name,
-                content: content,
+                content,
                 packs: packets.map(({ id, name, pivot }) => ({
                     id,
                     name,
@@ -398,7 +396,7 @@ export default {
                 })),
             }));
         },
-        transformListPackers(data) {
+        makeListPackers(data) {
             return data.map(({ id, name, packs }) => ({
                 id,
                 name,
@@ -417,7 +415,7 @@ export default {
             .catch((e) => eHandler(e));
         this.fetchList("packer")
             .then((data) => {
-                this.listPackerDefault = this.transformListPackers(data);
+                this.listPackerDefault = this.makeListPackers(data);
             })
             .catch((e) => eHandler(e));
     },

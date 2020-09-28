@@ -10,5 +10,8 @@ export default {
     },
     methods: {
         ...mapMutations("app", [START_LOADING, STOP_LOADING])
+    },
+    mounted() {
+        this.$vuetify.goTo(0);
     }
 };

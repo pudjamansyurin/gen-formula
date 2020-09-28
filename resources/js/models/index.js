@@ -55,6 +55,8 @@ export const Formula = {
     id: -1,
     name: "",
     // description: "",
-    user: User,
-    portions: []
+    main: 0,
+    density: 1,
+    shrink: 0,
+    d_recipes: []
 };
