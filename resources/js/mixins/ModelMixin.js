@@ -90,7 +90,9 @@ export default {
                 .catch(e => eHandler(e))
                 .then(() => this.STOP_LOADING());
         },
-        onSave() {},
+        onSave() {
+            console.warn(this.form);
+        },
         save() {
             this.onSave();
 

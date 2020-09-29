@@ -7,7 +7,7 @@ trait PackageRoutine
     /**
      * Custom methods
      */
-    public function syncPackager($packers)
+    public function updatePackager($packers)
     {
         // sync packagers
         $packagers = [];

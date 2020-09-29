@@ -27,6 +27,7 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => [
+                'required',
                 'min:3',
                 Rule::unique('users', 'name')->ignore($this->user)
             ],

@@ -56,6 +56,15 @@
                     {{ item.name }}
                 </v-chip>
             </template>
+            <template v-slot:[`item.main`]="{ item }">
+                <v-icon>
+                    {{
+                        item.main
+                            ? "mdi-check-bold"
+                            : "mdi-checkbox-blank-circle"
+                    }}
+                </v-icon>
+            </template>
             <template v-slot:[`item.rev.price`]="{ item }">
                 {{ item.rev.price | currency }}
             </template>
@@ -81,7 +90,7 @@
             :form="form"
             :tabs="formTabs"
             :tab.sync="formTabIndex"
-            :readonly="fieldDisabled || portionTotal != 100"
+            :readonly="fieldDisabled"
             @close="close"
             @submit="save"
             width="700"
@@ -106,6 +115,34 @@
                                 persistent-hint
                             ></v-text-field>
                         </validation-provider>
+
+                        <validation-provider
+                            name="name"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-radio-group
+                                v-model="form.main"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
+                                :row="!mobile"
+                                hide-details
+                            >
+                                <template v-slot:label>
+                                    <div class="caption">Type :</div>
+                                </template>
+                                <v-radio
+                                    label="Main formula"
+                                    :value="1"
+                                ></v-radio>
+                                <v-radio
+                                    label="Sub formula"
+                                    :value="0"
+                                ></v-radio>
+                            </v-radio-group>
+                        </validation-provider>
+                        <v-divider class="mt-1" color="green"></v-divider>
 
                         <v-row>
                             <v-col>
@@ -155,6 +192,7 @@
                         <validation-provider
                             name="_recipes"
                             v-slot="{ errors, valid }"
+                            v-if="form._recipes"
                         >
                             <v-autocomplete
                                 v-model="form._recipes"
@@ -187,7 +225,7 @@
                         </validation-provider>
 
                         <v-card
-                            v-if="form._recipes.length > 0"
+                            v-if="form._recipes && form._recipes.length > 0"
                             class="my-3"
                             outlined
                         >
@@ -253,9 +291,9 @@
                                                             fieldDisabled
                                                         "
                                                         :filled="fieldDisabled"
-                                                        prefix="Kg"
                                                         type="number"
-                                                        hide-details="auto"
+                                                        prefix="Kg"
+                                                        hide-details
                                                         reverse
                                                         flat
                                                         dense
@@ -273,22 +311,38 @@
                                         <tr>
                                             <td colspan="5"></td>
                                         </tr>
-                                        <tr>
+                                        <tr class="font-weight-black">
+                                            <td class="text-right" colspan="3">
+                                                Total
+                                            </td>
                                             <td
-                                                colspan="4"
                                                 class="text-right"
                                                 :class="recipePortionColor"
                                             >
-                                                Total ({{
-                                                    Number(portionTotal)
-                                                }}
-                                                Kg)
+                                                <validation-provider
+                                                    vid="portion_total"
+                                                    name="Total portion"
+                                                    v-slot="{ errors, valid }"
+                                                >
+                                                    <v-text-field
+                                                        :value="portionTotal"
+                                                        :error-messages="errors"
+                                                        :success="valid"
+                                                        readonly
+                                                        type="number"
+                                                        prefix="Kg"
+                                                        hide-details
+                                                        reverse
+                                                        flat
+                                                        dense
+                                                    ></v-text-field>
+                                                </validation-provider>
                                             </td>
                                             <td class="text-right">
                                                 {{ priceTotal | currency }}
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="font-weight-black">
                                             <td colspan="4" class="text-right">
                                                 RMC (Kg)
                                             </td>
@@ -390,6 +444,11 @@ export default {
                     align: "center",
                 },
                 {
+                    text: "Main",
+                    value: "main",
+                    align: "center",
+                },
+                {
                     text: "Price",
                     value: "rev.price",
                     align: "right",
@@ -418,18 +477,25 @@ export default {
             };
         },
         portionTotal() {
-            return this.form._recipes
-                .reduce((carry, { portion }) => carry + Number(portion), 0)
-                .toFixed(2);
+            if (this.form._recipes) {
+                return this.form._recipes.reduce(
+                    (carry, { portion }) => carry + Number(portion),
+                    0
+                );
+            }
+            return 0;
         },
         priceTotal() {
-            return this.form._recipes
-                .reduce((carry, { portion, price }) => {
-                    let subTotal = Number(price) * Number(portion);
+            if (this.form._recipes) {
+                return this.form._recipes
+                    .reduce((carry, { portion, price }) => {
+                        let subTotal = Number(price) * Number(portion);
 
-                    return carry + subTotal;
-                }, 0)
-                .toFixed(2);
+                        return carry + subTotal;
+                    }, 0)
+                    .toFixed(2);
+            }
+            return 0;
         },
         rmcTotal() {
             return this.priceTotal / this.portionTotal;
@@ -445,7 +511,10 @@ export default {
         change(item) {
             this.formTabIndex = 0;
             this.listRecipe = this.$_.cloneDeep(this.listRecipeDefault);
-            this.form = this.$_.cloneDeep(item);
+            this.form = {
+                ...this.$_.cloneDeep(item),
+                _recipes: [],
+            };
         },
         onCreate() {
             this.change(this.modelDefault);

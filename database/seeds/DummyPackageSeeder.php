@@ -84,7 +84,7 @@ class DummyPackageSeeder extends Seeder
                 return $packer['content'] > 0;
             })->toArray();
 
-            $thePackage->syncPackager($thePackers);
+            $thePackage->updatePackager($thePackers);
             // create revs
             $thePackage->revs()->create([
                 'price' => $thePackage->calcRev(),

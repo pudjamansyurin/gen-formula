@@ -8,6 +8,10 @@ trait FormulaRoutine
      * Custom methods
      */
 
+    public function updateRecipe($recipes)
+    {
+    }
+
     public function calcRev()
     {
         $this->load(['recipes', 'recipes.recipeable',  'recipes.recipeable.rev']);

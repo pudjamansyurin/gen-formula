@@ -29,11 +29,13 @@ class PortionRequest extends FormRequest
                 'array',
             ],
             'formula.*.material_id' => [
+                'required',
                 'integer',
                 'distinct',
                 'exists:materials,id'
             ],
             'formula.*.portion' => [
+                'required',
                 'min:1',
                 'max:100'
             ]

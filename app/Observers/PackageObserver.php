@@ -16,7 +16,7 @@ class PackageObserver
     {
         // sync packager
         if ($packers = request('_packers')) {
-            $package->syncPackager($packers);
+            $package->updatePackager($packers);
         }
         // update total price
         $package->updateRev();

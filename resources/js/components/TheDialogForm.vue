@@ -39,6 +39,7 @@
                     v-if="tabs.length"
                     :value="tab"
                     @input="$emit('update:tab', $event)"
+                    touchless
                 >
                     <v-tab-item v-for="item in tabs" :key="item">
                         <slot :name="item"></slot>

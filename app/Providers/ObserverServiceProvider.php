@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Formula;
 use App\Material;
+use App\Observers\FormulaObserver;
 use App\Observers\MaterialObserver;
 use App\Observers\PackageObserver;
 use App\Observers\PackerObserver;
@@ -38,5 +40,6 @@ class ObserverServiceProvider extends ServiceProvider
         Material::observe(MaterialObserver::class);
         Packer::observe(PackerObserver::class);
         Pack::observe(PackObserver::class);
+        Formula::observe(FormulaObserver::class);
     }
 }

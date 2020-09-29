@@ -148,6 +148,7 @@
                         </v-row>
 
                         <validation-provider
+                            v-if="form._packers"
                             name="_packers"
                             v-slot="{ errors, valid }"
                         >
@@ -168,7 +169,7 @@
                             ></v-autocomplete>
                         </validation-provider>
 
-                        <template v-if="form._packers.length > 0">
+                        <template v-if="form._packers">
                             <v-card
                                 v-for="(packer, index) in form._packers"
                                 :key="`_packers.${index}.content`"
@@ -350,23 +351,29 @@ export default {
     computed: {
         ...mapState("model", ["packages"]),
         priceTotal() {
-            return this.form._packers
-                .reduce((carry, { content, packs }) => {
-                    let subTotal =
-                        packs.reduce((carry, { price }) => {
-                            return carry + Number(price);
-                        }, 0) / Number(content);
+            if (this.form._packers) {
+                return this.form._packers
+                    .reduce((carry, { content, packs }) => {
+                        let subTotal =
+                            packs.reduce((carry, { price }) => {
+                                return carry + Number(price);
+                            }, 0) / Number(content);
 
-                    return carry + subTotal;
-                }, 0)
-                .toFixed(2);
+                        return carry + subTotal;
+                    }, 0)
+                    .toFixed(2);
+            }
+            return 0;
         },
     },
     methods: {
         change(item) {
             this.formTabIndex = 0;
             this.listPacker = this.$_.cloneDeep(this.listPackerDefault);
-            this.form = this.$_.cloneDeep(item);
+            this.form = {
+                ...this.$_.cloneDeep(item),
+                _packers: [],
+            };
         },
         onCreate() {
             this.change(this.modelProp);

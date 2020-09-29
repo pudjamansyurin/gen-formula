@@ -26,7 +26,6 @@ class PackageItem extends JsonResource
 
             'packagers_count' => $this->packagers_count,
             'packagers' => $this->whenLoaded('packagers'),
-            '_packers' => [],
 
             'revs_count' => $this->revs_count,
             'revs' => $this->whenLoaded('revs'),

@@ -26,6 +26,7 @@ class PackRequest extends FormRequest
     {
         return [
             'name' => [
+                'required',
                 'min:3',
                 Rule::unique('packs', 'name')->ignore($this->pack)
             ],

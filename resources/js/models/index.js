@@ -27,8 +27,7 @@ export const Package = {
     id: -1,
     name: "",
     unit_id: -1,
-    capacity: 0,
-    _packers: []
+    capacity: 0
 };
 
 export const Matter = {
@@ -57,6 +56,5 @@ export const Formula = {
     // description: "",
     main: 0,
     density: 1,
-    shrink: 0,
-    _recipes: []
+    shrink: 0
 };

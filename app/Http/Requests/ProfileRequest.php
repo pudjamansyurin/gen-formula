@@ -27,6 +27,7 @@ class ProfileRequest extends FormRequest
     {
         return [
             'name' => [
+                'required',
                 'min:3',
                 Rule::unique('users', 'name')->ignore(auth()->user())
             ],
