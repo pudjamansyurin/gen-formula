@@ -7,6 +7,7 @@ use App\Http\Requests\FormulaRequest;
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Resources\FormulaCollection;
 use App\Http\Resources\FormulaItem;
+use App\Material;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -102,5 +103,19 @@ class FormulaController extends Controller
         Formula::destroy($formulasId);
 
         return response($formulasId, Response::HTTP_OK);
+    }
+
+    /**
+     * Get lists of recipes
+     */
+    public function recipes()
+    {
+        $this->authorize('viewAny', Formula::class);
+
+        $materials = Material::getAsRecipeList();
+
+        return response([
+            'data' => $materials
+        ], Response::HTTP_OK);
     }
 }

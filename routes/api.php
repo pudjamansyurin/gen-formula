@@ -36,7 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('packer', 'PackerController@list');
         Route::get('matter', 'MatterController@list');
         Route::get('material', 'MaterialController@list');
-        Route::get('unit', 'PackageController@unit');
-        Route::get('role', 'UserController@role');
+        Route::get('recipe', 'FormulaController@recipes');
+        Route::get('unit', 'PackageController@units');
+        Route::get('role', 'UserController@roles');
     });
 });

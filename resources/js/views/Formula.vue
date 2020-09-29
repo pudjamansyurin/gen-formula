@@ -81,7 +81,7 @@
             :form="form"
             :tabs="formTabs"
             :tab.sync="formTabIndex"
-            :readonly="fieldDisabled"
+            :readonly="fieldDisabled || portionTotal != 100"
             @close="close"
             @submit="save"
             width="700"
@@ -152,8 +152,42 @@
                             </v-col>
                         </v-row>
 
+                        <validation-provider
+                            name="_recipes"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-autocomplete
+                                v-model="form._recipes"
+                                :items="listRecipe"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
+                                item-text="name"
+                                label="Recipes"
+                                hint="The recipes list"
+                                persistent-hint
+                                multiple
+                                return-object
+                                chips
+                                deletable-chips
+                            >
+                                <!-- <template v-slot:selection="{ item, index }">
+                                <v-chip v-if="index === 0">
+                                    <span>{{ item.name }}</span>
+                                </v-chip>
+                                <span
+                                    v-if="index === 1"
+                                    class="grey--text caption"
+                                >
+                                    (+{{ form._recipes.length - 1 }} others)
+                                </span>
+                            </template> -->
+                            </v-autocomplete>
+                        </validation-provider>
+
                         <v-card
-                            v-if="form.d_recipes.length > 0"
+                            v-if="form._recipes.length > 0"
                             class="my-3"
                             outlined
                         >
@@ -161,22 +195,37 @@
                                 <template v-slot:default>
                                     <thead>
                                         <tr>
-                                            <th class="text-center">No</th>
+                                            <th
+                                                class="text-center"
+                                                style="width: 50px"
+                                            >
+                                                No
+                                            </th>
                                             <th class="text-left">Name</th>
-                                            <th class="text-right">Price</th>
                                             <th
                                                 class="text-right"
-                                                style="width:120px"
+                                                style="width: 200px"
+                                            >
+                                                Price
+                                            </th>
+                                            <th
+                                                class="text-right"
+                                                style="width: 120px"
                                             >
                                                 Portion
                                             </th>
-                                            <th class="text-right">Total</th>
+                                            <th
+                                                class="text-right"
+                                                style="width: 200px"
+                                            >
+                                                Total
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr
                                             v-for="(recipe,
-                                            index) in form.d_recipes"
+                                            index) in form._recipes"
                                             :key="recipe.id"
                                         >
                                             <td class="text-center">
@@ -190,12 +239,8 @@
                                             </td>
                                             <td>
                                                 <validation-provider
-                                                    :vid="
-                                                        `d_recipes.${index}.portion`
-                                                    "
-                                                    :name="
-                                                        `${recipe.name} portion`
-                                                    "
+                                                    :vid="`_recipes.${index}.portion`"
+                                                    :name="`${recipe.name} portion`"
                                                     v-slot="{ errors, valid }"
                                                 >
                                                     <v-text-field
@@ -226,190 +271,51 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-right">
-                                                Total
-                                            </td>
-                                            <td colspan="2"></td>
+                                            <td colspan="5"></td>
+                                        </tr>
+                                        <tr>
                                             <td
+                                                colspan="4"
                                                 class="text-right"
                                                 :class="recipePortionColor"
                                             >
-                                                {{ recipesPortionTotal }} Kg
+                                                Total ({{
+                                                    Number(portionTotal)
+                                                }}
+                                                Kg)
                                             </td>
                                             <td class="text-right">
                                                 {{ priceTotal | currency }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">
+                                                RMC (Kg)
+                                            </td>
+                                            <td class="text-right">
+                                                {{ rmcTotal | currency }}
+                                            </td>
+                                        </tr>
+                                        <tr class="font-weight-black">
+                                            <td colspan="4" class="text-right">
+                                                RMCS (Kg)
+                                            </td>
+                                            <td class="text-right">
+                                                {{ rmcsKilogram | currency }}
+                                            </td>
+                                        </tr>
+                                        <tr class="font-weight-black">
+                                            <td colspan="4" class="text-right">
+                                                RMCS (L)
+                                            </td>
+                                            <td class="text-right">
+                                                {{ rmcsLiter | currency }}
                                             </td>
                                         </tr>
                                     </tbody>
                                 </template>
                             </v-simple-table>
                         </v-card>
-
-                        <!-- <validation-provider
-                            name="description"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model="form.description"
-                                :error-messages="errors"
-                                :success="valid"
-                                hint="Short description about the formula"
-                                label="Formula description"
-                                type="text"
-                                counter
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider> -->
-
-                        <!-- <v-row>
-                            <v-col>
-                                <validation-provider
-                                    name="capacity"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-text-field
-                                        v-model.number="form.capacity"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        :readonly="fieldDisabled"
-                                        :filled="fieldDisabled"
-                                        label="Capacity"
-                                        type="number"
-                                        hint="The formula capacity"
-                                        persistent-hint
-                                    ></v-text-field>
-                                </validation-provider>
-                            </v-col>
-                            <v-col>
-                                <validation-provider
-                                    name="unit_id"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-autocomplete
-                                        v-model="form.unit_id"
-                                        :items="listUnit"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        :readonly="fieldDisabled"
-                                        :filled="fieldDisabled"
-                                        item-text="name"
-                                        item-value="id"
-                                        label="Unit"
-                                        hint="The formula unit"
-                                        persistent-hint
-                                    ></v-autocomplete>
-                                </validation-provider>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="12" sm="7">
-                                <validation-provider
-                                    name="packers"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-autocomplete
-                                        v-model="form.packers"
-                                        :items="listPacker"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        :readonly="fieldDisabled"
-                                        item-text="name"
-                                        item-value="id"
-                                        label="Packer"
-                                        hint="The packer"
-                                        persistent-hint
-                                        deletable-chips
-                                        return-object
-                                        outlined
-                                        multiple
-                                        chips
-                                    ></v-autocomplete>
-                                </validation-provider>
-                            </v-col>
-                            <v-col cols="12" sm="5">
-                                <v-text-field
-                                    :value="priceTotal"
-                                    hint="This the total price"
-                                    label="Total Price"
-                                    type="number"
-                                    prefix="Rp"
-                                    filled
-                                    readonly
-                                    counter
-                                    persistent-hint
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-
-                        <template
-                            v-if="form.packers && form.packers.length > 0"
-                        >
-                            <v-card
-                                v-for="(packer, index) in form.packers"
-                                :key="`packers.${index}.content`"
-                                class="ma-1"
-                                outlined
-                            >
-                                <v-card-text>
-                                    <v-list-item>
-                                        <v-list-item-title>
-                                            <validation-provider
-                                                :vid="`packers.${index}.content`"
-                                                :name="`${packer.name} content`"
-                                                v-slot="{ errors, valid }"
-                                            >
-                                                <v-text-field
-                                                    v-model.number="
-                                                        packer.content
-                                                    "
-                                                    :error-messages="errors"
-                                                    :success="valid"
-                                                    :readonly="fieldDisabled"
-                                                    :filled="fieldDisabled"
-                                                    :label="packer.name"
-                                                    hint="The packer content"
-                                                    type="number"
-                                                    persistent-hint
-                                                ></v-text-field>
-                                            </validation-provider>
-                                        </v-list-item-title>
-                                    </v-list-item>
-
-                                    <v-list-item
-                                        v-for="(pack, idx) in packer.packs"
-                                        :key="`packers.${index}.packs.${idx}.price`"
-                                    >
-                                        <v-list-item-action>
-                                            <v-icon>
-                                                mdi-subdirectory-arrow-right
-                                            </v-icon>
-                                        </v-list-item-action>
-                                        <v-list-item-title>
-                                            <validation-provider
-                                                :vid="`packers.${index}.packs.${idx}.price`"
-                                                :name="`${pack.name} price`"
-                                                v-slot="{ errors, valid }"
-                                            >
-                                                <v-text-field
-                                                    v-model.number="pack.price"
-                                                    :error-messages="errors"
-                                                    :success="valid"
-                                                    :readonly="fieldDisabled"
-                                                    :filled="fieldDisabled"
-                                                    :label="pack.name"
-                                                    prefix="Rp"
-                                                    type="number"
-                                                    hint="The pack price"
-                                                    counter
-                                                    persistent-hint
-                                                ></v-text-field>
-                                            </validation-provider>
-                                        </v-list-item-title>
-                                    </v-list-item>
-                                </v-card-text>
-                            </v-card>
-                        </template> -->
                     </validation-observer>
                     <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
@@ -454,7 +360,7 @@ import {
     CommonMixin,
     ModelMixin,
     FormTabMixin,
-    FetchListMixin
+    FetchListMixin,
 } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
@@ -462,7 +368,7 @@ import AppTopBar from "../components/app/AppTopBar";
 export default {
     mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
     components: {
-        AppTopBar
+        AppTopBar,
     },
     data() {
         return {
@@ -481,55 +387,64 @@ export default {
                 {
                     text: "Recipes",
                     value: "recipes_count",
-                    align: "center"
+                    align: "center",
                 },
                 {
                     text: "Price",
                     value: "rev.price",
                     align: "right",
                     sortable: false,
-                    width: 150
+                    width: 150,
                 },
                 {
                     text: "Rev",
                     value: "revs_count",
-                    align: "center"
+                    align: "center",
                 },
                 { text: "Creator", value: "user.name" },
-                { text: "UpdatedAt", value: "updated_at" }
-            ]
+                { text: "UpdatedAt", value: "updated_at" },
+            ],
 
             // listUnit: [],
-            // listPacker: [],
-            // listPackerDefault: [],
+            listRecipe: [],
+            listRecipeDefault: [],
         };
     },
     computed: {
         ...mapState("model", ["formulas"]),
         recipePortionColor() {
             return {
-                "red--text font-weight-bold": this.recipesPortionTotal != 100
+                "red--text font-weight-bold": this.portionTotal != 100,
             };
         },
-        recipesPortionTotal() {
-            return this.form.d_recipes
+        portionTotal() {
+            return this.form._recipes
                 .reduce((carry, { portion }) => carry + Number(portion), 0)
                 .toFixed(2);
         },
         priceTotal() {
-            return this.form.d_recipes
+            return this.form._recipes
                 .reduce((carry, { portion, price }) => {
                     let subTotal = Number(price) * Number(portion);
 
                     return carry + subTotal;
                 }, 0)
                 .toFixed(2);
-        }
+        },
+        rmcTotal() {
+            return this.priceTotal / this.portionTotal;
+        },
+        rmcsKilogram() {
+            return (this.rmcTotal * 100) / (100 - this.form.shrink);
+        },
+        rmcsLiter() {
+            return this.form.density * this.rmcsKilogram;
+        },
     },
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            // this.listPacker = this.$_.cloneDeep(this.listPackerDefault);
+            this.listRecipe = this.$_.cloneDeep(this.listRecipeDefault);
             this.form = this.$_.cloneDeep(item);
         },
         onCreate() {
@@ -542,58 +457,51 @@ export default {
         fetchDetail() {
             this.GET_MODEL({
                 model: this.model,
-                id: this.form.id
-            }).then(data => {
-                console.warn(data.recipes);
+                id: this.form.id,
+            }).then((data) => {
                 this.form = {
                     ...this.$_.cloneDeep(data),
                     shrink: Number(data.shrink),
                     density: Number(data.density),
-                    d_recipes: this.makeRecipesDetail(data.recipes)
+                    _recipes: this.makeRecipesDetail(data.recipes),
                 };
             });
         },
         makeRecipesDetail(recipes) {
             return recipes.map(
-                ({
-                    id,
-                    portion,
-                    recipeable_id,
-                    recipeable_type,
-                    recipeable
-                }) => ({
-                    id,
+                ({ recipeable_type, recipeable_id, portion, recipeable }) => ({
+                    id: `${recipeable_type}-${recipeable_id}`,
                     recipeable_id,
                     recipeable_type,
                     name: recipeable.name,
                     portion: Number(portion),
-                    price: Number(recipeable.rev.price)
+                    price: Number(recipeable.rev.price),
                 })
             );
-        }
-        // makeListPackers(data) {
-        //     return data.map(({ id, name, packs }) => ({
-        //         id,
-        //         name,
-        //         content: 1,
-        //         packs: packs.map(({ id, name }) => ({
-        //             id,
-        //             name,
-        //             price: 0,
-        //         })),
-        //     }));
-        // },
+        },
+        makeListRecipes(data) {
+            return data.map(
+                ({ recipeable_type, recipeable_id, name, price }) => ({
+                    id: `${recipeable_type}-${recipeable_id}`,
+                    recipeable_id,
+                    recipeable_type,
+                    name,
+                    portion: 0,
+                    price: Number(price),
+                })
+            );
+        },
     },
     mounted() {
         // this.fetchList("unit")
         //     .then((data) => (this.listUnit = data))
         //     .catch((e) => eHandler(e));
-        // this.fetchList("packer")
-        //     .then((data) => {
-        //         this.listPackerDefault = this.makeListPackers(data);
-        //     })
-        //     .catch((e) => eHandler(e));
-    }
+        this.fetchList("recipe")
+            .then((data) => {
+                this.listRecipeDefault = this.makeListRecipes(data);
+            })
+            .catch((e) => eHandler(e));
+    },
 };
 </script>
 

@@ -147,60 +147,43 @@
                             </v-col>
                         </v-row>
 
-                        <v-row>
-                            <v-col cols="12" sm="7">
-                                <validation-provider
-                                    name="packers"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-autocomplete
-                                        v-model="form.packers"
-                                        :items="listPacker"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        :readonly="fieldDisabled"
-                                        item-text="name"
-                                        item-value="id"
-                                        label="Packer"
-                                        hint="The packer"
-                                        persistent-hint
-                                        deletable-chips
-                                        return-object
-                                        outlined
-                                        multiple
-                                        chips
-                                    ></v-autocomplete>
-                                </validation-provider>
-                            </v-col>
-                            <v-col cols="12" sm="5">
-                                <v-text-field
-                                    :value="priceTotal"
-                                    hint="This the total price"
-                                    label="Total Price"
-                                    type="number"
-                                    prefix="Rp"
-                                    filled
-                                    readonly
-                                    counter
-                                    persistent-hint
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
+                        <validation-provider
+                            name="_packers"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-autocomplete
+                                v-model="form._packers"
+                                :items="listPacker"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                item-text="name"
+                                label="Packer"
+                                hint="The packer"
+                                persistent-hint
+                                deletable-chips
+                                return-object
+                                multiple
+                                chips
+                            ></v-autocomplete>
+                        </validation-provider>
 
-                        <template v-if="form.packers.length > 0">
+                        <template v-if="form._packers.length > 0">
                             <v-card
-                                v-for="(packer, index) in form.packers"
-                                :key="`packers.${index}.content`"
-                                class="ma-1"
-                                outlined
+                                v-for="(packer, index) in form._packers"
+                                :key="`_packers.${index}.content`"
+                                class="mb-3"
                             >
                                 <v-card-text>
-                                    <v-list-item>
-                                        <v-list-item-title>
+                                    <v-row dense>
+                                        <v-col cols="12" sm="4">
                                             <validation-provider
-                                                :vid="`packers.${index}.content`"
+                                                :vid="`_packers.${index}.content`"
                                                 :name="`${packer.name} content`"
-                                                v-slot="{ errors, valid }"
+                                                v-slot="{
+                                                    errors,
+                                                    valid,
+                                                }"
                                             >
                                                 <v-text-field
                                                     v-model.number="
@@ -216,43 +199,62 @@
                                                     persistent-hint
                                                 ></v-text-field>
                                             </validation-provider>
-                                        </v-list-item-title>
-                                    </v-list-item>
-
-                                    <v-list-item
-                                        v-for="(pack, idx) in packer.packs"
-                                        :key="`packers.${index}.packs.${idx}.price`"
-                                    >
-                                        <v-list-item-action>
-                                            <v-icon>
-                                                mdi-subdirectory-arrow-right
-                                            </v-icon>
-                                        </v-list-item-action>
-                                        <v-list-item-title>
-                                            <validation-provider
-                                                :vid="`packers.${index}.packs.${idx}.price`"
-                                                :name="`${pack.name} price`"
-                                                v-slot="{ errors, valid }"
+                                        </v-col>
+                                        <v-col cols="12" sm="8">
+                                            <div
+                                                v-for="(pack,
+                                                idx) in packer.packs"
+                                                :key="`_packers.${index}.packs.${idx}.price`"
                                             >
-                                                <v-text-field
-                                                    v-model.number="pack.price"
-                                                    :error-messages="errors"
-                                                    :success="valid"
-                                                    :readonly="fieldDisabled"
-                                                    :filled="fieldDisabled"
-                                                    :label="pack.name"
-                                                    prefix="Rp"
-                                                    type="number"
-                                                    hint="The pack price"
-                                                    counter
-                                                    persistent-hint
-                                                ></v-text-field>
-                                            </validation-provider>
-                                        </v-list-item-title>
-                                    </v-list-item>
+                                                <validation-provider
+                                                    :vid="`_packers.${index}.packs.${idx}.price`"
+                                                    :name="`${pack.name} price`"
+                                                    v-slot="{
+                                                        errors,
+                                                        valid,
+                                                    }"
+                                                >
+                                                    <v-text-field
+                                                        v-model.number="
+                                                            pack.price
+                                                        "
+                                                        :error-messages="errors"
+                                                        :success="valid"
+                                                        :readonly="
+                                                            fieldDisabled
+                                                        "
+                                                        :filled="fieldDisabled"
+                                                        :label="pack.name"
+                                                        prefix="Rp"
+                                                        type="number"
+                                                        hint="The pack price"
+                                                        counter
+                                                        persistent-hint
+                                                    ></v-text-field>
+                                                </validation-provider>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
                                 </v-card-text>
                             </v-card>
                         </template>
+
+                        <v-row dense>
+                            <v-col cols="12" sm="4"> </v-col>
+                            <v-col cols="12" sm="8">
+                                <v-text-field
+                                    :value="priceTotal"
+                                    hint="This the total price"
+                                    label="Total Price"
+                                    type="number"
+                                    prefix="Rp"
+                                    filled
+                                    readonly
+                                    counter
+                                    persistent-hint
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
                     </validation-observer>
                     <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
@@ -348,7 +350,7 @@ export default {
     computed: {
         ...mapState("model", ["packages"]),
         priceTotal() {
-            return this.form.packers
+            return this.form._packers
                 .reduce((carry, { content, packs }) => {
                     let subTotal =
                         packs.reduce((carry, { price }) => {
@@ -380,7 +382,7 @@ export default {
             }).then((data) => {
                 this.form = {
                     ...this.$_.cloneDeep(data),
-                    packers: this.makePackersDetail(data.packagers),
+                    _packers: this.makePackersDetail(data.packagers),
                 };
             });
         },

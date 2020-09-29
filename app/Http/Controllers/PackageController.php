@@ -108,7 +108,7 @@ class PackageController extends Controller
     /**
      * Get units
      */
-    public function unit()
+    public function units()
     {
         $this->authorize('unit', Package::class);
 

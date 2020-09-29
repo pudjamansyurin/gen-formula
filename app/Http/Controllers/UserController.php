@@ -89,7 +89,7 @@ class UserController extends Controller
     /**
      * Get roles
      */
-    public function role()
+    public function roles()
     {
         $this->authorize('role', User::class);
 

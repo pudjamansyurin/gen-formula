@@ -39,29 +39,29 @@ class PackageRequest extends FormRequest
                 'min:0',
                 'not_in:0',
             ],
-            'packers' => [
+            '_packers' => [
                 'required',
                 'array'
             ],
-            'packers.*.id' => [
+            '_packers.*.id' => [
                 'integer',
                 'distinct',
                 'exists:packers,id'
             ],
-            'packers.*.content' => [
+            '_packers.*.content' => [
                 'integer',
                 'min:1',
             ],
-            'packers.*.packs' => [
+            '_packers.*.packs' => [
                 'required',
                 'array'
             ],
-            'packers.*.packs.*.id' => [
+            '_packers.*.packs.*.id' => [
                 'integer',
                 'distinct',
                 'exists:packs,id'
             ],
-            'packers.*.packs.*.price' => [
+            '_packers.*.packs.*.price' => [
                 'numeric',
                 'min:0',
                 'not_in:0',

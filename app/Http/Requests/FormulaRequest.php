@@ -32,6 +32,17 @@ class FormulaRequest extends FormRequest
             // 'description' => [
             //     'min:5'
             // ],
+            'density' => [
+                'numeric',
+                'min:0',
+                'max:1',
+                'not_in:0',
+            ],
+            'shrink' => [
+                'numeric',
+                'min:0',
+                'max:100',
+            ],
         ];
     }
 }

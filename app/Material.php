@@ -87,4 +87,22 @@ class Material extends Model
     //     return $this->hasManyThrough(Formula::class, Portion::class);
     //     // return $this->belongsToMany(Formula::class, 'formula_material');
     // }
+
+    /**
+     * Custom local scopes
+     */
+    public function scopeGetAsRecipeList()
+    {
+        return $this->with('rev')->get()
+            ->map(function ($material) {
+                $result = [];
+
+                $result['recipeable_id'] = $material->id;
+                $result['recipeable_type'] = get_class($material);
+                $result['name'] = $material->name;
+                $result['price'] = $material->rev->price;
+
+                return $result;
+            });
+    }
 }
