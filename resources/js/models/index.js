@@ -27,7 +27,7 @@ export const Package = {
     id: -1,
     name: "",
     unit_id: -1,
-    capacity: 0
+    capacity: null
 };
 
 export const Matter = {
@@ -40,7 +40,7 @@ export const Material = {
     name: "",
     matter_id: -1,
     rev: {
-        price: 0
+        price: null
     }
 };
 
@@ -54,7 +54,7 @@ export const Formula = {
     id: -1,
     name: "",
     // description: "",
-    main: 0,
-    density: 1,
-    shrink: 0
+    main: null,
+    density: null,
+    shrink: null
 };

@@ -409,11 +409,11 @@ export default {
             return data.map(({ id, name, packs }) => ({
                 id,
                 name,
-                content: 1,
+                content: null,
                 packs: packs.map(({ id, name }) => ({
                     id,
                     name,
-                    price: 0,
+                    price: null,
                 })),
             }));
         },

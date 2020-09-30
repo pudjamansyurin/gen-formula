@@ -117,7 +117,7 @@
                         </validation-provider>
 
                         <validation-provider
-                            name="name"
+                            name="main"
                             v-slot="{ errors, valid }"
                         >
                             <v-radio-group
@@ -127,7 +127,7 @@
                                 :readonly="fieldDisabled"
                                 :filled="fieldDisabled"
                                 :row="!mobile"
-                                hide-details
+                                hide-details="auto"
                             >
                                 <template v-slot:label>
                                     <div class="caption">Type :</div>
@@ -142,7 +142,7 @@
                                 ></v-radio>
                             </v-radio-group>
                         </validation-provider>
-                        <v-divider class="mt-1" color="green"></v-divider>
+                        <v-divider class="mt-1"></v-divider>
 
                         <v-row>
                             <v-col>
