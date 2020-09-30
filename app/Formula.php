@@ -107,4 +107,22 @@ class Formula extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Custom local scopes
+     */
+    public function scopeGetAsRecipeList()
+    {
+        return $this->with('rev')->whereMain('0')->get()
+            ->map(function ($formula) {
+                $result = [];
+
+                $result['recipeable_id'] = $formula->id;
+                $result['recipeable_type'] = get_class($formula);
+                $result['name'] = $formula->name;
+                $result['price'] = $formula->rev->price;
+
+                return $result;
+            });
+    }
 }

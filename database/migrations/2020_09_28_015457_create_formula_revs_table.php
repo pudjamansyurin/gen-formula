@@ -16,7 +16,7 @@ class CreateFormulaRevsTable extends Migration
         Schema::create('formula_revs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('formula_id');
-            $table->unsignedDecimal('price_kilogram', 15, 2);
+            $table->unsignedDecimal('price', 15, 2);
             $table->unsignedDecimal('price_liter', 15, 2);
             $table->foreignId('user_id');
             $table->timestamps();

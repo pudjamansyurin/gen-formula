@@ -113,9 +113,13 @@ class FormulaController extends Controller
         $this->authorize('viewAny', Formula::class);
 
         $materials = Material::getAsRecipeList();
+        $formulas = Formula::getAsRecipeList();
 
         return response([
-            'data' => $materials
+            'data' => array_merge(
+                $materials->toArray(),
+                $formulas->toArray()
+            )
         ], Response::HTTP_OK);
     }
 }

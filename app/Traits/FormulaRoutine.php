@@ -19,12 +19,13 @@ trait FormulaRoutine
         foreach ($recipes as $recipe) {
             $portion = ['portion' => $recipe['portion']];
             $id = $recipe['recipeable_id'];
+            $type = $recipe['recipeable_type'];
 
-            switch ($recipe['recipeable_type']) {
+            switch ($type) {
                 case Material::class:
                     $materialRecipes[$id] = $portion;
                     break;
-                case Formula::class:
+                case get_class($this):
                     $formulaRecipes[$id] = $portion;
                     break;
                 default:
@@ -42,12 +43,12 @@ trait FormulaRoutine
         $this->load(['revs']);
 
         // calculate total price
-        [$priceKilogram, $priceLiter] = $this->calcRev();
+        [$price, $priceLiter] = $this->calcRev();
 
         // reject if total price is same
         if ($rev = $this->revs->first()) {
             if (
-                round($rev->price_kilogram, 2) == round($priceKilogram, 2) &&
+                round($rev->price, 2) == round($price, 2) &&
                 round($rev->price_liter, 2) == round($priceLiter, 2)
             ) {
                 return $this;
@@ -56,7 +57,7 @@ trait FormulaRoutine
 
         // create revs
         $this->revs()->create([
-            'price_kilogram' => $priceKilogram,
+            'price' => $price,
             'price_liter' => $priceLiter,
             'user_id' => auth()->id() ?? $this->user_id
         ]);
@@ -83,11 +84,11 @@ trait FormulaRoutine
             }, 0);
 
         // calc RMC / 100 Kg
-        $rmcTotal = $priceTotal / $portionTotal;
+        $rmc = $priceTotal / $portionTotal;
         // calc RMCS / (KG or L)
-        $rmcsKilogram = ($rmcTotal * 100) / (100 - $this->shrink);
-        $rmcsLiter = $this->density * $rmcsKilogram;
+        $rmcs = ($rmc * 100) / (100 - $this->shrink);
+        $rmcsLiter = $this->density * $rmcs;
 
-        return [$rmcsKilogram, $rmcsLiter];
+        return [$rmcs, $rmcsLiter];
     }
 }

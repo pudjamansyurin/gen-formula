@@ -30,7 +30,7 @@
                     small
                     tile
                 >
-                    {{ item.rev.price_kilogram | currency }} / Kg
+                    {{ item.rev.price | currency }} / Kg
                 </v-btn>
 
                 <v-card-text>
@@ -65,8 +65,8 @@
                     }}
                 </v-icon>
             </template>
-            <template v-slot:[`item.rev.price_kilogram`]="{ item }">
-                {{ item.rev.price_kilogram | currency }}
+            <template v-slot:[`item.rev.price`]="{ item }">
+                {{ item.rev.price | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -358,7 +358,7 @@
                                                 RMC (Kg)
                                             </td>
                                             <td class="text-right">
-                                                {{ rmcTotal | currency }}
+                                                {{ rmc | currency }}
                                             </td>
                                         </tr>
                                         <tr class="font-weight-black">
@@ -366,7 +366,7 @@
                                                 RMCS (Kg)
                                             </td>
                                             <td class="text-right">
-                                                {{ rmcsKilogram | currency }}
+                                                {{ rmcs | currency }}
                                             </td>
                                         </tr>
                                         <tr class="font-weight-black">
@@ -398,7 +398,7 @@
                         >
                             <v-list-item-content>
                                 <v-list-item-title>
-                                    {{ rev.price_kilogram | currency }} / Kg
+                                    {{ rev.price | currency }} / Kg
                                 </v-list-item-title>
                                 <v-list-item-title>
                                     {{ rev.price_liter | currency }} / L
@@ -464,7 +464,7 @@ export default {
                 },
                 {
                     text: "Price (Kg)",
-                    value: "rev.price_kilogram",
+                    value: "rev.price",
                     align: "right",
                     sortable: false,
                     width: 150,
@@ -511,14 +511,14 @@ export default {
             }
             return 0;
         },
-        rmcTotal() {
+        rmc() {
             return this.priceTotal / this.portionTotal;
         },
-        rmcsKilogram() {
-            return (this.rmcTotal * 100) / (100 - this.form.shrink);
+        rmcs() {
+            return (this.rmc * 100) / (100 - this.form.shrink);
         },
         rmcsLiter() {
-            return this.form.density * this.rmcsKilogram;
+            return this.form.density * this.rmcs;
         },
     },
     methods: {
