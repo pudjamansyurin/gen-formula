@@ -30,7 +30,7 @@
                     small
                     tile
                 >
-                    {{ item.rev.price | currency }}
+                    {{ item.rev.price_kilogram | currency }} / Kg
                 </v-btn>
 
                 <v-card-text>
@@ -65,8 +65,8 @@
                     }}
                 </v-icon>
             </template>
-            <template v-slot:[`item.rev.price`]="{ item }">
-                {{ item.rev.price | currency }}
+            <template v-slot:[`item.rev.price_kilogram`]="{ item }">
+                {{ item.rev.price_kilogram | currency }}
             </template>
             <template v-slot:[`item.updated_at`]="{ item }">
                 {{ item.updated_at | moment("from") }}
@@ -390,7 +390,10 @@
                         >
                             <v-list-item-content>
                                 <v-list-item-title>
-                                    {{ rev.price | currency }}
+                                    {{ rev.price_kilogram | currency }} / Kg
+                                </v-list-item-title>
+                                <v-list-item-title>
+                                    {{ rev.price_liter | currency }} / L
                                 </v-list-item-title>
                             </v-list-item-content>
 
@@ -452,8 +455,8 @@ export default {
                     align: "center",
                 },
                 {
-                    text: "Price",
-                    value: "rev.price",
+                    text: "Price (Kg)",
+                    value: "rev.price_kilogram",
                     align: "right",
                     sortable: false,
                     width: 150,
