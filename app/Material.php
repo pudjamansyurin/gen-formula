@@ -69,7 +69,7 @@ class Material extends Model
 
     public function recipes()
     {
-        return $this->morphMany(Recipe::class, 'recipeable');
+        return $this->morphToMany(Formula::class, 'recipeable');
     }
 
     public function user()

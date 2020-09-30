@@ -55,11 +55,11 @@ class DummyPackageSeeder extends Seeder
         $packers = App\Packer::with('packs')->get();
 
         foreach ($packages as $package) {
-            $thePackage = App\Package::withoutEvents(function () use ($faker, $package, $units, $packers) {
+            $thePackage = App\Package::withoutEvents(function () use ($package, $units) {
                 return factory(App\Package::class)->create([
                     'name' => $package[0],
-                    'unit_id' => $units->firstWhere('symbol', $package[1])['id'],
                     'capacity' => $package[2],
+                    'unit_id' => $units->firstWhere('symbol', $package[1])['id'],
                 ]);
             });
 
@@ -84,12 +84,10 @@ class DummyPackageSeeder extends Seeder
                 return $packer['content'] > 0;
             })->toArray();
 
+            // update packagers
             $thePackage->updatePackager($thePackers);
             // create revs
-            $thePackage->revs()->create([
-                'price' => $thePackage->calcRev(),
-                'user_id' => $thePackage->user_id,
-            ]);
+            $thePackage->updateRev();
         }
     }
 }

@@ -15,7 +15,8 @@ class FormulaRev extends Model
      */
     protected $fillable = [
         'formula_id',
-        'price',
+        'price_kilogram',
+        'price_liter',
         'user_id'
     ];
 

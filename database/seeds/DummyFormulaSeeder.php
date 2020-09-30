@@ -1,5 +1,6 @@
 <?php
 
+use App\Material;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 
@@ -15,33 +16,33 @@ class DummyFormulaSeeder extends Seeder
         $materials = App\Material::all();
 
         // Create formulas
-        factory(App\Formula::class, 25)->create()
-            ->each(function ($formula) use ($materials) {
-                $materialsUsed = [];
-                $portionQuota = 100;
+        App\Formula::withoutEvents(function () use ($materials) {
+            factory(App\Formula::class, 25)->create()
+                ->each(function ($formula) use ($materials) {
+                    $portionQuota = 100;
 
-                // create recipes
-                while ($portionQuota) {
-                    $portion = rand(1, $portionQuota);
-                    $portionQuota -= $portion;
+                    // create recipes: material
+                    $materialsUsed = [];
+                    $materialRecipes = [];
+                    while ($portionQuota) {
+                        $portion = rand(1, $portionQuota);
+                        $portionQuota -= $portion;
 
-                    $material = $materials->whereNotIn('id', $materialsUsed)->random();
-                    array_push($materialsUsed, $material->id);
+                        $material = $materials->whereNotIn('id', $materialsUsed)->random();
+                        array_push($materialsUsed, $material->id);
 
-                    // Create into database
-                    $formula->recipes()->create([
-                        'portion' => $portion,
-                        'recipeable_id' => $material->id,
-                        'recipeable_type' => get_class($material)
-                    ]);
-                }
+                        array_push($materialRecipes, [
+                            'recipeable_id' => $material->id,
+                            'recipeable_type' => get_class($material),
+                            'portion' => $portion
+                        ]);
+                    }
 
-                // create revs
-                $price = $formula->calcRev();
-                $formula->revs()->create([
-                    'price' => $price,
-                    'user_id' => $formula->user_id,
-                ]);
-            });
+                    // update recipes: material
+                    $formula->updateRecipe($materialRecipes);
+                    // create revs
+                    $formula->updateRev();
+                });
+        });
     }
 }

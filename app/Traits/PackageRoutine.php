@@ -48,7 +48,7 @@ trait PackageRoutine
         // create revs
         $this->revs()->create([
             'price' => $totalPrice,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id() ?? $this->user_id
         ]);
 
         return $this;

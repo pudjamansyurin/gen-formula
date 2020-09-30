@@ -504,7 +504,10 @@ export default {
             return this.priceTotal / this.portionTotal;
         },
         rmcsKilogram() {
-            return (this.rmcTotal * 100) / (100 - this.form.shrink);
+            if (this.form.shrink < 100) {
+                return (this.rmcTotal * 100) / (100 - this.form.shrink);
+            }
+            return 0;
         },
         rmcsLiter() {
             return this.form.density * this.rmcsKilogram;

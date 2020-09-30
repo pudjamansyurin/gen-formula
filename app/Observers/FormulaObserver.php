@@ -14,6 +14,11 @@ class FormulaObserver
      */
     public function saved(Formula $formula)
     {
-        //
+        // update packager
+        if ($recipes = request('_recipes')) {
+            $formula->updateRecipe($recipes);
+        }
+        // update total price
+        $formula->updateRev();
     }
 }

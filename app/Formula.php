@@ -79,6 +79,20 @@ class Formula extends Model
         return $this->hasOne(FormulaRev::class)->latest('updated_at');
     }
 
+    public function materialRecipes()
+    {
+        return $this->morphedByMany(Material::class, 'recipeable')
+            ->withPivot(['portion'])
+            ->withTimestamps();
+    }
+
+    public function formulaRecipes()
+    {
+        return $this->morphedByMany(Formula::class, 'recipeable')
+            ->withPivot(['portion'])
+            ->withTimestamps();
+    }
+
     public function recipes()
     {
         return $this->hasMany(Recipe::class);
@@ -86,7 +100,7 @@ class Formula extends Model
 
     public function asRecipes()
     {
-        return $this->morphMany(Recipe::class, 'recipeable');
+        return $this->morphToMany(Formula::class, 'recipeable');
     }
 
     public function user()

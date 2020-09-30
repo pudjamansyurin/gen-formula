@@ -14,7 +14,7 @@ class PackageObserver
      */
     public function saved(Package $package)
     {
-        // sync packager
+        // update packager
         if ($packers = request('_packers')) {
             $package->updatePackager($packers);
         }
