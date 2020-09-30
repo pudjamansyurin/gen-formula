@@ -19,30 +19,36 @@ class DummyFormulaSeeder extends Seeder
         App\Formula::withoutEvents(function () use ($materials) {
             factory(App\Formula::class, 25)->create()
                 ->each(function ($formula) use ($materials) {
-                    $portionQuota = 100;
-
                     // create recipes: material
-                    $materialsUsed = [];
-                    $materialRecipes = [];
-                    while ($portionQuota) {
-                        $portion = rand(1, $portionQuota);
-                        $portionQuota -= $portion;
-
-                        $material = $materials->whereNotIn('id', $materialsUsed)->random();
-                        array_push($materialsUsed, $material->id);
-
-                        array_push($materialRecipes, [
-                            'recipeable_id' => $material->id,
-                            'recipeable_type' => get_class($material),
-                            'portion' => $portion
-                        ]);
-                    }
-
+                    $materialRecipes = $this->makeMaterialRecipes($materials);
                     // update recipes: material
                     $formula->updateRecipe($materialRecipes);
                     // create revs
                     $formula->updateRev();
                 });
         });
+    }
+
+    private function makeMaterialRecipes($materials)
+    {
+        $portionQuota = 100;
+
+        $materialsUsed = [];
+        $materialRecipes = [];
+        while ($portionQuota) {
+            $portion = rand(1, $portionQuota);
+            $portionQuota -= $portion;
+
+            $material = $materials->whereNotIn('id', $materialsUsed)->random();
+            array_push($materialsUsed, $material->id);
+
+            array_push($materialRecipes, [
+                'recipeable_id' => $material->id,
+                'recipeable_type' => get_class($material),
+                'portion' => $portion
+            ]);
+        }
+
+        return $materialRecipes;
     }
 }

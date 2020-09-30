@@ -93,7 +93,7 @@
             :readonly="fieldDisabled"
             @close="close"
             @submit="save"
-            width="700"
+            width="1000"
         >
             <template v-slot:DATA>
                 <v-form @submit.prevent="save">
@@ -217,7 +217,7 @@
                                         ></v-list-item-title>
                                         <v-list-item-subtitle>
                                             {{
-                                                stripRecipeNamespace(
+                                                stripRecipeClass(
                                                     item.recipeable_type
                                                 )
                                             }}
@@ -243,6 +243,7 @@
                                                 No
                                             </th>
                                             <th class="text-left">Name</th>
+                                            <th class="text-left">Type</th>
                                             <th
                                                 class="text-right"
                                                 style="width: 200px"
@@ -274,6 +275,13 @@
                                             </td>
                                             <td class="text-left">
                                                 {{ recipe.name }}
+                                            </td>
+                                            <td class="text-left">
+                                                {{
+                                                    stripRecipeClass(
+                                                        recipe.recipeable_type
+                                                    )
+                                                }}
                                             </td>
                                             <td class="text-right">
                                                 {{ recipe.price | currency }}
@@ -312,10 +320,10 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5"></td>
+                                            <td colspan="6"></td>
                                         </tr>
-                                        <tr class="font-weight-black">
-                                            <td class="text-right" colspan="3">
+                                        <tr>
+                                            <td class="text-right" colspan="4">
                                                 Total
                                             </td>
                                             <td
@@ -345,8 +353,8 @@
                                                 {{ priceTotal | currency }}
                                             </td>
                                         </tr>
-                                        <tr class="font-weight-black">
-                                            <td colspan="4" class="text-right">
+                                        <tr>
+                                            <td colspan="5" class="text-right">
                                                 RMC (Kg)
                                             </td>
                                             <td class="text-right">
@@ -354,7 +362,7 @@
                                             </td>
                                         </tr>
                                         <tr class="font-weight-black">
-                                            <td colspan="4" class="text-right">
+                                            <td colspan="5" class="text-right">
                                                 RMCS (Kg)
                                             </td>
                                             <td class="text-right">
@@ -362,7 +370,7 @@
                                             </td>
                                         </tr>
                                         <tr class="font-weight-black">
-                                            <td colspan="4" class="text-right">
+                                            <td colspan="5" class="text-right">
                                                 RMCS (L)
                                             </td>
                                             <td class="text-right">
@@ -507,10 +515,7 @@ export default {
             return this.priceTotal / this.portionTotal;
         },
         rmcsKilogram() {
-            if (this.form.shrink < 100) {
-                return (this.rmcTotal * 100) / (100 - this.form.shrink);
-            }
-            return 0;
+            return (this.rmcTotal * 100) / (100 - this.form.shrink);
         },
         rmcsLiter() {
             return this.form.density * this.rmcsKilogram;
@@ -569,7 +574,7 @@ export default {
                 })
             );
         },
-        stripRecipeNamespace(recipeable_type) {
+        stripRecipeClass(recipeable_type) {
             return recipeable_type.replace("App\\", "");
         },
     },

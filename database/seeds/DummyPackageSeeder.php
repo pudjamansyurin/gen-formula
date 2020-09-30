@@ -64,30 +64,36 @@ class DummyPackageSeeder extends Seeder
             });
 
             // create packager
-            $thePackers = $packers->map(function ($packer) use ($faker, $package) {
-                $content = ($packer->name == 'KALENG' ? 1 : $package[3]);
-                $digitPrice = ($packer->name == 'KALENG' ? 5 : 4);
-
-                return [
-                    'id' => $packer->id,
-                    'content' => $content,
-                    'packs' => $packer->packs->map(function ($pack) use ($faker, $digitPrice) {
-                        $price = $faker->randomNumber($digitPrice);
-
-                        return [
-                            'id' => $pack->id,
-                            'price' => $price
-                        ];
-                    })->toArray()
-                ];
-            })->filter(function ($packer) {
-                return $packer['content'] > 0;
-            })->toArray();
-
+            $thePackers = $this->makePackagers($faker, $package, $packers);
             // update packagers
             $thePackage->updatePackager($thePackers);
             // create revs
             $thePackage->updateRev();
         }
+    }
+
+    private function makePackagers($faker, $package, $packers)
+    {
+        $thePackers = $packers->map(function ($packer) use ($faker, $package) {
+            $content = ($packer->name == 'KALENG' ? 1 : $package[3]);
+            $digitPrice = ($packer->name == 'KALENG' ? 5 : 4);
+
+            return [
+                'id' => $packer->id,
+                'content' => $content,
+                'packs' => $packer->packs->map(function ($pack) use ($faker, $digitPrice) {
+                    $price = $faker->randomNumber($digitPrice);
+
+                    return [
+                        'id' => $pack->id,
+                        'price' => $price
+                    ];
+                })->toArray()
+            ];
+        })->filter(function ($packer) {
+            return $packer['content'] > 0;
+        })->toArray();
+
+        return $thePackers;
     }
 }

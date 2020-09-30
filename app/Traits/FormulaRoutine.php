@@ -46,7 +46,10 @@ trait FormulaRoutine
 
         // reject if total price is same
         if ($rev = $this->revs->first()) {
-            if (round($rev->price_kilogram, 2) == round($priceKilogram, 2)) {
+            if (
+                round($rev->price_kilogram, 2) == round($priceKilogram, 2) &&
+                round($rev->price_liter, 2) == round($priceLiter, 2)
+            ) {
                 return $this;
             }
         }
@@ -82,11 +85,7 @@ trait FormulaRoutine
         // calc RMC / 100 Kg
         $rmcTotal = $priceTotal / $portionTotal;
         // calc RMCS / (KG or L)
-        if ($this->shrink < 100) {
-            $rmcsKilogram = ($rmcTotal * 100) / (100 - $this->shrink);
-        } else {
-            $rmcsKilogram = 0;
-        }
+        $rmcsKilogram = ($rmcTotal * 100) / (100 - $this->shrink);
         $rmcsLiter = $this->density * $rmcsKilogram;
 
         return [$rmcsKilogram, $rmcsLiter];

@@ -48,6 +48,7 @@ class FormulaRequest extends FormRequest
                 'numeric',
                 'min:0',
                 'max:100',
+                'not_in:100',
             ],
             '_recipes' => [
                 'required',
