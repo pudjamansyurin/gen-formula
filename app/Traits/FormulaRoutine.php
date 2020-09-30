@@ -17,16 +17,19 @@ trait FormulaRoutine
         $formulaRecipes = [];
 
         foreach ($recipes as $recipe) {
-            $portion = ['portion' => $recipe['portion']];
             $id = $recipe['recipeable_id'];
             $type = $recipe['recipeable_type'];
+            $portion = ['portion' => $recipe['portion']];
 
             switch ($type) {
                 case Material::class:
-                    $materialRecipes[$id] = $portion;
+                    $child = ['child' => 0];
+                    $materialRecipes[$id] = array_merge($portion, $child);
                     break;
                 case get_class($this):
-                    $formulaRecipes[$id] = $portion;
+                    /** TODO: Change this line with routine */
+                    $child = ['child' => 1];
+                    $formulaRecipes[$id] = array_merge($portion, $child);
                     break;
                 default:
                     break;

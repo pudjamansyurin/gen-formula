@@ -446,12 +446,6 @@ export default {
             headers: [
                 { text: "Name", value: "name" },
                 // { text: "Description", value: "description" },
-                // {
-                //     text: "Tot.Portion",
-                //     value: "portion_total",
-                //     align: "center",
-                //     sortable: false,
-                // },
                 {
                     text: "Recipes",
                     value: "recipes_count",

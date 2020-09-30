@@ -45,7 +45,7 @@ class DummyFormulaSeeder extends Seeder
             array_push($materialRecipes, [
                 'recipeable_id' => $material->id,
                 'recipeable_type' => get_class($material),
-                'portion' => $portion
+                'portion' => $portion,
             ]);
         }
 

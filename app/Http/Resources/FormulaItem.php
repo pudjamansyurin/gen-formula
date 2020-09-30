@@ -30,25 +30,6 @@ class FormulaItem extends JsonResource
             'revs' => $this->whenLoaded('revs'),
             'rev' => $this->whenLoaded('rev'),
 
-            // 'portion_total' => $this->whenLoaded(
-            //     'portions',
-            //     $this->portions->reduce(function ($carry, $item) {
-            //         return $carry + $item->portion;
-            //     })
-            // ),
-            // 'price_total' => $this->whenLoaded(
-            //     'portions',
-            //     $this->portions->reduce(function ($carry, $item) {
-            //         $value = 0;
-            //         if ($material = $item->material) {
-            //             if ($rev = $material->revs->first()) {
-            //                 $value = ($rev->price * $item->portion / 100);
-            //             }
-            //         }
-            //         return $carry + $value;
-            //     })
-            // ),
-
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),
             'authorized' => Gate::allows('update', $this->resource)

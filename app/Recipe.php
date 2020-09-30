@@ -8,6 +8,21 @@ class Recipe extends Model
 {
     protected $table = "recipeables";
 
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'formula_id',
+        'portion',
+        'child',
+        'recipeable_id',
+        'recipeable_type'
+    ];
+
+
     /**
      * Get the owning recipeable model.
      */

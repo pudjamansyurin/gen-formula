@@ -58,16 +58,6 @@ class Formula extends Model
     /**
      * Set relation tables.
      */
-    // public function portions()
-    // {
-    //     return $this->hasMany(Portion::class);
-    // }
-
-    // public function materials()
-    // {
-    //     return $this->hasManyThrough(Material::class, Portion::class);
-    // }
-
 
     public function revs()
     {
@@ -96,6 +86,12 @@ class Formula extends Model
     public function recipes()
     {
         return $this->hasMany(Recipe::class);
+    }
+
+    public function childs()
+    {
+        return $this->morphedByMany(Formula::class, 'recipeable')
+            ->with('formulaRecipes');
     }
 
     public function asRecipes()

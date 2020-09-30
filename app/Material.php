@@ -77,17 +77,6 @@ class Material extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function portions()
-    // {
-    //     return $this->hasMany(Portion::class);
-    // }
-
-    // public function formulas()
-    // {
-    //     return $this->hasManyThrough(Formula::class, Portion::class);
-    //     // return $this->belongsToMany(Formula::class, 'formula_material');
-    // }
-
     /**
      * Custom local scopes
      */
