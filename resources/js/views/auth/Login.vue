@@ -12,16 +12,15 @@
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
-                            label="Email"
-                            type="email"
-                            :value="email"
+                            v-model="form.email"
                             :error-messages="errors"
                             :success="valid"
-                            hint="Your verified account's email"
-                            persistent-hint
+                            label="Email"
+                            type="email"
+                            hint="Your account's email"
                             prepend-icon="mdi-account"
                             autocomplete="on"
-                            readonly
+                            persistent-hint
                         ></v-text-field>
                     </validation-provider>
 
@@ -37,41 +36,28 @@
                             :success="valid"
                             @click:append="showPassword = !showPassword"
                             label="Password"
-                            hint="Your new password"
+                            hint="Your account's password"
                             prepend-icon="mdi-lock"
-                            autocomplete="off"
+                            autocomplete="on"
                             persistent-hint
-                            counter
                         ></v-text-field>
                     </validation-provider>
 
-                    <validation-provider
-                        name="password_confirmation"
-                        v-slot="{ errors, valid }"
+                    <v-checkbox
+                        v-model="form.remember"
+                        label="Keep me logged in"
                     >
-                        <v-text-field
-                            v-model="form.password_confirmation"
-                            :type="passwordState.type"
-                            :append-icon="passwordState.icon"
-                            :error-messages="errors"
-                            :success="valid"
-                            @click:append="showPassword = !showPassword"
-                            label="Password Confirmation"
-                            hint="Fill again the password"
-                            prepend-icon="mdi-lock"
-                            autocomplete="off"
-                            persistent-hint
-                            counter
-                        ></v-text-field>
-                    </validation-provider>
+                    </v-checkbox>
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-btn :to="{ name: 'login' }" exact text> Login </v-btn>
+                    <v-btn :to="{ name: 'forget' }" text>
+                        Forget Password
+                    </v-btn>
 
                     <v-spacer></v-spacer>
                     <v-btn :disabled="!!loading" type="submit" color="primary">
-                        Reset Password
+                        Login
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -80,44 +66,53 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 
-import { RESET } from "../../../store/app/action-types";
-import { eHandler } from "../../../utils/helper";
-import { CommonMixin, PasswordMixin } from "../../../mixins";
+import { CommonMixin, PasswordMixin } from "../../mixins";
+import { LOGIN } from "../../store/app/action-types";
+import { ls, eHandler } from "../../utils/helper";
 
 export default {
     mixins: [CommonMixin, PasswordMixin],
-    props: {
-        token: String,
-        email: String,
-    },
     data() {
         return {
-            title: "RESET PASSWORD",
-            subtitle: "Type your new password to live again",
+            title: "LOGIN",
+            subtitle: "Enter your credentials to going further",
             form: {
-                password: null,
-                password_confirmation: null,
+                email: "",
+                password: "",
+                remember: false,
             },
         };
     },
+    computed: {
+        ...mapState("app", ["remember"]),
+    },
     methods: {
-        ...mapActions("app", [RESET]),
+        ...mapActions("app", [LOGIN]),
         submit() {
-            let payload = {
-                ...this.form,
-                email: this.email,
-                token: this.token,
-            };
-
-            this.RESET(payload)
-                .then(() => this.$router.push({ path: "/app" }))
+            this.LOGIN(this.form)
+                .then(() =>
+                    this.$router.push({
+                        path: this.$route.query.redirect || "/app",
+                    })
+                )
                 .catch((e) => this.$refs.form.setErrors(eHandler(e)));
         },
     },
-    mounted() {
-        this.submit();
+    watch: {
+        remember: {
+            handler(val) {
+                this.form.remember = val;
+
+                let credential = ls.get("credential");
+                if (val && credential) {
+                    this.form.email = credential.email;
+                    this.form.password = credential.password;
+                }
+            },
+            immediate: true,
+        },
     },
 };
 </script>

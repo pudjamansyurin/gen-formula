@@ -1,27 +1,24 @@
 const Landing = () =>
     import(/* webpackChunkName: "landing" */ "../layouts/Landing");
+const Dashboard = () =>
+    import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
+
 const Error = () =>
     import(/* webpackChunkName: "error" */ "../views/landing/Error");
 const Policy = () =>
     import(/* webpackChunkName: "policy" */ "../views/landing/Policy");
 
 const Login = () =>
-    import(/* webpackChunkName: "auth.login" */ "../views/landing/auth/Login");
+    import(/* webpackChunkName: "auth.login" */ "../views/auth/Login");
 const Forget = () =>
-    import(
-        /* webpackChunkName: "auth.forget" */ "../views/landing/auth/Forget"
-    );
+    import(/* webpackChunkName: "auth.forget" */ "../views/auth/Forget");
 const Reset = () =>
-    import(/* webpackChunkName: "auth.reset" */ "../views/landing/auth/Reset");
+    import(/* webpackChunkName: "auth.reset" */ "../views/auth/Reset");
 const Verify = () =>
-    import(
-        /* webpackChunkName: "auth.verify" */ "../views/landing/auth/Verify"
-    );
+    import(/* webpackChunkName: "auth.verify" */ "../views/auth/Verify");
 
 const Profile = () =>
     import(/* webpackChunkName: "profile" */ "../views/Profile");
-const Dashboard = () =>
-    import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
 const Pack = () => import(/* webpackChunkName: "pack" */ "../views/Pack");
 const Packer = () => import(/* webpackChunkName: "packer" */ "../views/Packer");
 const Package = () =>

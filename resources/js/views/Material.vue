@@ -132,6 +132,7 @@
                                 label="Matter"
                                 hint="The material's category"
                                 persistent-hint
+                                chips
                             ></v-autocomplete>
                         </validation-provider>
 
@@ -213,7 +214,7 @@ import {
     CommonMixin,
     ModelMixin,
     FormTabMixin,
-    FetchListMixin
+    FetchListMixin,
 } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
@@ -221,7 +222,7 @@ import AppTopBar from "../components/app/AppTopBar";
 export default {
     mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
     components: {
-        AppTopBar
+        AppTopBar,
     },
     data() {
         return {
@@ -236,27 +237,27 @@ export default {
                     value: "rev.price",
                     align: "right",
                     sortable: false,
-                    width: 150
+                    width: 150,
                 },
                 {
                     text: "Rev",
                     value: "revs_count",
-                    align: "center"
+                    align: "center",
                 },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",
-                    value: "updated_at"
-                }
+                    value: "updated_at",
+                },
             ],
 
             dialogDeleteRev: false,
             selectedRev: [],
-            listMatter: []
+            listMatter: [],
         };
     },
     computed: {
-        ...mapState("model", ["materials"])
+        ...mapState("model", ["materials"]),
     },
     methods: {
         change(item) {
@@ -273,8 +274,8 @@ export default {
         fetchDetail() {
             this.GET_MODEL({
                 model: this.model,
-                id: this.form.id
-            }).then(data => {
+                id: this.form.id,
+            }).then((data) => {
                 this.form = this.$_.cloneDeep(data);
             });
         },
@@ -284,27 +285,27 @@ export default {
             this.selectedRev = [rev];
             this.$nextTick(() => (this.dialogDeleteRev = true));
         },
-        removeRev: async function() {
+        removeRev: async function () {
             this.START_LOADING();
             await this.DELETE_MODELS({
                 model: "material-rev",
-                ids: this.$_.map(this.selectedRev, "id")
+                ids: this.$_.map(this.selectedRev, "id"),
             })
-                .then(async ids => {
+                .then(async (ids) => {
                     await this.fetchDetail();
 
                     this.dialogDeleteRev = false;
                     this.$nextTick(() => (this.selectedRev = []));
                 })
-                .catch(e => eHandler(e))
+                .catch((e) => eHandler(e))
                 .then(() => this.STOP_LOADING());
-        }
+        },
     },
     mounted() {
         this.fetchList("matter")
-            .then(data => (this.listMatter = data))
-            .catch(e => eHandler(e));
-    }
+            .then((data) => (this.listMatter = data))
+            .catch((e) => eHandler(e));
+    },
 };
 </script>
 

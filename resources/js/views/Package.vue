@@ -161,6 +161,7 @@
                                 item-text="name"
                                 label="Packer"
                                 hint="The packer"
+                                class="mb-3"
                                 persistent-hint
                                 deletable-chips
                                 return-object

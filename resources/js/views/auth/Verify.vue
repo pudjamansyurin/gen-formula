@@ -5,9 +5,9 @@
             <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
             <v-divider></v-divider>
             <v-card-text>
-                <v-btn :disabled="!!loading" @click="submit" color="primary"
-                    >Verify Email</v-btn
-                >
+                <v-btn :disabled="!!loading" @click="submit" color="primary">
+                    Verify Email
+                </v-btn>
             </v-card-text>
         </v-card>
     </v-col>
@@ -16,9 +16,9 @@
 <script>
 import { mapActions } from "vuex";
 
-import { VERIFY } from "../../../store/app/action-types";
-import { eHandler } from "../../../utils/helper";
-import { CommonMixin } from "../../../mixins";
+import { VERIFY } from "../../store/app/action-types";
+import { eHandler } from "../../utils/helper";
+import { CommonMixin } from "../../mixins";
 
 export default {
     mixins: [CommonMixin],

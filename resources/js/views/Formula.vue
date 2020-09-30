@@ -210,17 +210,20 @@
                                 chips
                                 deletable-chips
                             >
-                                <!-- <template v-slot:selection="{ item, index }">
-                                <v-chip v-if="index === 0">
-                                    <span>{{ item.name }}</span>
-                                </v-chip>
-                                <span
-                                    v-if="index === 1"
-                                    class="grey--text caption"
-                                >
-                                    (+{{ form._recipes.length - 1 }} others)
-                                </span>
-                            </template> -->
+                                <template v-slot:item="{ item }">
+                                    <v-list-item-content>
+                                        <v-list-item-title
+                                            v-html="item.name"
+                                        ></v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            {{
+                                                stripRecipeNamespace(
+                                                    item.recipeable_type
+                                                )
+                                            }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </template>
                             </v-autocomplete>
                         </validation-provider>
 
@@ -559,6 +562,9 @@ export default {
                     price: Number(price),
                 })
             );
+        },
+        stripRecipeNamespace(recipeable_type) {
+            return recipeable_type.replace("App\\", "");
         },
     },
     mounted() {

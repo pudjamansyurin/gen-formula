@@ -100,6 +100,7 @@
                             label="Packer"
                             hint="The packer"
                             persistent-hint
+                            chips
                         ></v-autocomplete>
                     </validation-provider>
                 </validation-observer>
