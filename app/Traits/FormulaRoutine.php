@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Formula;
 use App\Material;
 
 trait FormulaRoutine
@@ -27,6 +28,8 @@ trait FormulaRoutine
                     $materialRecipes[$id] = array_merge($portion, $child);
                     break;
                 case get_class($this):
+                    $this->getChildren($id);
+                    $this->getParents($id);
                     /** TODO: Change this line with routine */
                     $child = ['child' => 1];
                     $formulaRecipes[$id] = array_merge($portion, $child);
@@ -93,5 +96,23 @@ trait FormulaRoutine
         $rmcsLiter = $this->density * $rmcs;
 
         return [$rmcs, $rmcsLiter];
+    }
+
+    private function getChildren($id)
+    {
+        $formula = Formula::find($id);
+        $children = $formula->children;
+
+        debug($formula->name . ' : Children');
+        debug($children);
+    }
+
+    private function getParents($id)
+    {
+        $formula = Formula::find($id);
+        $parents = $formula->parents;
+
+        debug($formula->name . ' : Parents');
+        debug($parents);
     }
 }
