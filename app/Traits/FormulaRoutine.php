@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use App\Formula;
 use App\Material;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 trait FormulaRoutine
 {
@@ -28,10 +30,9 @@ trait FormulaRoutine
                     $materialRecipes[$id] = array_merge($portion, $child);
                     break;
                 case get_class($this):
-                    $this->getChildren($id);
-                    $this->getParents($id);
+                    // $this->getParents($id);
                     /** TODO: Change this line with routine */
-                    $child = ['child' => 1];
+                    $child = ['child' => $this->countChildren($id)];
                     $formulaRecipes[$id] = array_merge($portion, $child);
                     break;
                 default:
@@ -98,21 +99,58 @@ trait FormulaRoutine
         return [$rmcs, $rmcsLiter];
     }
 
-    private function getChildren($id)
+    private function countChildren($id)
     {
-        $formula = Formula::find($id);
-        $children = $formula->children;
+        $formula = Formula::with('children')->find($id);
+        $children = $this->toRecursiveArray($formula->children);
+        $children = $this->recursiveChildren($children);
+        $children = [
+            'name' => $formula->name,
+            'children' => $children,
+        ];
+        $childrenCount = (($this->getArrayDepth($children) - 1) / 2) + 1;
 
         debug($formula->name . ' : Children');
         debug($children);
+        return $childrenCount;
     }
 
     private function getParents($id)
     {
-        $formula = Formula::find($id);
+        $formula = Formula::with('parents')->find($id);
         $parents = $formula->parents;
 
         debug($formula->name . ' : Parents');
         debug($parents);
+    }
+
+    private function recursiveChildren($items)
+    {
+        $data = [];
+
+        foreach ($items as $item) {
+            $data[] = [
+                'name' => $item->name,
+                'children' => $this->recursiveChildren($item->children),
+            ];
+        }
+
+        return $data;
+    }
+
+    private function toRecursiveArray($item)
+    {
+        return json_decode(json_encode($item));
+    }
+
+    private function getArrayDepth($arr, $n = 0)
+    {
+        $max = $n;
+        foreach ($arr as $item) {
+            if (is_array($item)) {
+                $max = max($max, $this->getArrayDepth($item, $n + 1));
+            }
+        }
+        return $max;
     }
 }
