@@ -17,7 +17,7 @@ class CreateRecipeablesTable extends Migration
             $table->id();
             $table->foreignId('formula_id');
             $table->unsignedDecimal('portion', 6, 2);
-            $table->integer('child');
+            $table->integer('depth');
             $table->morphs('recipeable');
             $table->timestamps();
         });

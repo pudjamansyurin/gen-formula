@@ -472,7 +472,6 @@ export default {
                 { text: "UpdatedAt", value: "updated_at" },
             ],
 
-            // listUnit: [],
             listRecipe: [],
             listRecipeDefault: [],
         };
@@ -563,7 +562,7 @@ export default {
                     recipeable_id,
                     recipeable_type,
                     name,
-                    portion: 0,
+                    portion: null,
                     price: Number(price),
                 })
             );
@@ -573,9 +572,6 @@ export default {
         },
     },
     mounted() {
-        // this.fetchList("unit")
-        //     .then((data) => (this.listUnit = data))
-        //     .catch((e) => eHandler(e));
         this.fetchList("recipe")
             .then((data) => {
                 this.listRecipeDefault = this.makeListRecipes(data);

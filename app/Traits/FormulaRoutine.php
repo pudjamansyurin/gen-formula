@@ -22,19 +22,25 @@ trait FormulaRoutine
         foreach ($recipes as $recipe) {
             $id = $recipe['recipeable_id'];
             $type = $recipe['recipeable_type'];
-            $portion = ['portion' => $recipe['portion']];
 
             switch ($type) {
                 case Material::class:
-                    $child = ['child' => 0];
-                    $materialRecipes[$id] = array_merge($portion, $child);
+                    $materialRecipes[$id] = [
+                        'portion' => $recipe['portion'],
+                        'depth' => 0
+                    ];
                     break;
+
                 case get_class($this):
                     // $this->getParents($id);
-                    /** TODO: Change this line with routine */
-                    $child = ['child' => $this->countChildren($id)];
-                    $formulaRecipes[$id] = array_merge($portion, $child);
+                    [$children, $depth] = $this->getChildren($id);
+
+                    $formulaRecipes[$id] = [
+                        'portion' => $recipe['portion'],
+                        'depth' => $depth
+                    ];
                     break;
+
                 default:
                     break;
             }
@@ -99,56 +105,48 @@ trait FormulaRoutine
         return [$rmcs, $rmcsLiter];
     }
 
-    private function countChildren($id)
+    private function getChildren($id)
     {
         $formula = Formula::with('children')->find($id);
-        $children = $this->toRecursiveArray($formula->children);
-        $children = $this->recursiveChildren($children);
-        $children = [
-            'name' => $formula->name,
-            'children' => $children,
-        ];
-        $childrenCount = (($this->getArrayDepth($children) - 1) / 2) + 1;
+        $item = json_decode(json_encode($formula));
 
-        debug($formula->name . ' : Children');
-        debug($children);
-        return $childrenCount;
+        $children = $this->getRecursiveChildren([$item]);
+        $maxDepth = $this->maxRecursiveDepth($children) / 2;
+
+        // debug($formula->name . ' : Children');
+        // debug($children);
+
+        return [$children, $maxDepth];
     }
 
     private function getParents($id)
     {
         $formula = Formula::with('parents')->find($id);
-        $parents = $formula->parents;
+        $item = json_decode(json_encode($formula));
 
         debug($formula->name . ' : Parents');
-        debug($parents);
+        debug($item);
     }
 
-    private function recursiveChildren($items)
+    private function getRecursiveChildren($items)
     {
         $data = [];
-
         foreach ($items as $item) {
             $data[] = [
                 'name' => $item->name,
-                'children' => $this->recursiveChildren($item->children),
+                'main' => $item->main,
+                'children' => $this->getRecursiveChildren($item->children),
             ];
         }
-
         return $data;
     }
 
-    private function toRecursiveArray($item)
-    {
-        return json_decode(json_encode($item));
-    }
-
-    private function getArrayDepth($arr, $n = 0)
+    private function maxRecursiveDepth($arr, $n = 0)
     {
         $max = $n;
         foreach ($arr as $item) {
             if (is_array($item)) {
-                $max = max($max, $this->getArrayDepth($item, $n + 1));
+                $max = max($max, $this->maxRecursiveDepth($item, $n + 1));
             }
         }
         return $max;
