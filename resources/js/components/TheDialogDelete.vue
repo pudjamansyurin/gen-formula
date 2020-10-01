@@ -67,7 +67,7 @@ export default {
             const { length: single } = this.selected;
 
             if (single) {
-                return `this ${this.model} ?`;
+                return `this ${this.model}?`;
             }
             return `these ${length} ${pluralize(this.model)}?`;
         },

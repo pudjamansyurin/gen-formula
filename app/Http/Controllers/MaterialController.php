@@ -99,9 +99,16 @@ class MaterialController extends Controller
         $materialsId = $request->ids;
         $this->authorize('delete', [Material::class, $materialsId]);
 
+        // check
+        if (Material::has('formulas')->whereIn('id', $materialsId)->count()) {
+            // failed
+            return response([
+                'message' => "Still have 'FORMULA' relations!"
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         // delete
         Material::destroy($materialsId);
-
         return response($materialsId, Response::HTTP_OK);
     }
 

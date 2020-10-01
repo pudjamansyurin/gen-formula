@@ -19,6 +19,9 @@ class MaterialItem extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'revs_count' => $this->revs_count,
+
+            'formulas_count' => $this->formulas_count,
+
             'matter_id' => $this->matter_id,
             'matter' => new MatterItem($this->whenLoaded('matter')),
 

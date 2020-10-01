@@ -9,6 +9,7 @@ use App\Http\Resources\PackerItem;
 use App\Packer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class PackerController extends Controller
 {
@@ -98,9 +99,21 @@ class PackerController extends Controller
         $packersId = $request->ids;
         $this->authorize('delete', [Packer::class, $packersId]);
 
+        // // delete with no relations
+        // Packer::doesntHave('packs')
+        //     ->whereIn('id', $packersId)
+        //     ->delete();
+
+        // check
+        if (Packer::has('packs')->whereIn('id', $packersId)->count()) {
+            // failed
+            return response([
+                'message' => "Still have 'PACKS' relations!"
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         // delete
         Packer::destroy($packersId);
-
         return response($packersId, Response::HTTP_OK);
     }
 

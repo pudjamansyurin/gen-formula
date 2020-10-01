@@ -14,7 +14,7 @@ class Material extends Model
 
     protected $_relations = ['user:id,name', 'matter:id,name', 'rev'];
     protected $_details = ['revs', 'revs.user:id,name'];
-    protected $_counts = ['revs'];
+    protected $_counts = ['revs', 'formulas'];
 
     /**
      * The attributes that are mass assignable.
@@ -67,7 +67,7 @@ class Material extends Model
         return $this->hasOne(MaterialRev::class)->latest('updated_at');
     }
 
-    public function recipes()
+    public function formulas()
     {
         return $this->morphToMany(Formula::class, 'recipeable');
     }

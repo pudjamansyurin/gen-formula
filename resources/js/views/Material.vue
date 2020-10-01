@@ -76,7 +76,7 @@
         <the-dialog-delete
             v-model="dialogDeleteRev"
             :selected="selectedRev"
-            model="material-rev"
+            model="revision"
             @delete="removeRev"
             @close="dialogDeleteRev = false"
         >
@@ -242,6 +242,11 @@ export default {
                 {
                     text: "Rev",
                     value: "revs_count",
+                    align: "center",
+                },
+                {
+                    text: "Formula",
+                    value: "formulas_count",
                     align: "center",
                 },
                 { text: "Creator", value: "user.name" },

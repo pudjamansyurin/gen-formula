@@ -82,9 +82,16 @@ class PackController extends Controller
         $packsId = $request->ids;
         $this->authorize('delete', [Pack::class, $packsId]);
 
+        // check
+        if (Pack::has('packagers')->whereIn('id', $packsId)->count()) {
+            // failed
+            return response([
+                'message' => "Still have 'PACKAGER' relations!"
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         // delete
         Pack::destroy($packsId);
-
         return response($packsId, Response::HTTP_OK);
     }
 }

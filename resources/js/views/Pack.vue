@@ -136,6 +136,16 @@ export default {
                     text: "Packer",
                     value: "packer.name",
                 },
+                {
+                    text: "Packager",
+                    value: "packagers_count",
+                    align: "center",
+                },
+                // {
+                //     text: "Package",
+                //     value: "packages_count",
+                //     align: "center",
+                // },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",

@@ -100,8 +100,19 @@ class FormulaController extends Controller
         $this->authorize('delete', [Formula::class, $formulasId]);
 
         // delete
-        Formula::destroy($formulasId);
+        // Formula::destroy($formulasId);
 
+        // return response($formulasId, Response::HTTP_OK);
+        // check
+        if (Formula::has('parents')->whereIn('id', $formulasId)->count()) {
+            // failed
+            return response([
+                'message' => "Still have 'PARENTS' relations!"
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // delete
+        Formula::destroy($formulasId);
         return response($formulasId, Response::HTTP_OK);
     }
 

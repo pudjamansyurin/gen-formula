@@ -20,6 +20,8 @@ class PackItem extends JsonResource
             'name' => $this->name,
             'packer_id' => $this->packer_id,
             'packer' => new PackerItem($this->whenLoaded('packer')),
+            'packagers_count' => $this->packagers_count,
+            // 'packages_count' => $this->packages_count,
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

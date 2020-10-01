@@ -12,6 +12,8 @@ class Pack extends Model
     protected $table = 'packs';
 
     protected $_relations = ['user:id,name', 'packer:id,name'];
+    protected $_details = [];
+    protected $_counts = ['packagers'];
 
     /**
      * The attributes that are mass assignable.
@@ -60,6 +62,11 @@ class Pack extends Model
     {
         return $this->belongsToMany(Packager::class, 'packets');
     }
+
+    // public function packages()
+    // {
+    //     return $this->hasManyDeep(Package::class, Packager::class);
+    // }
 
     public function user()
     {

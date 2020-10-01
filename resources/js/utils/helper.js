@@ -24,9 +24,9 @@ export const castId = value => {
 };
 
 export const eHandler = e => {
-    const { status: code, statusText: text } = e;
+    const { status: code, statusText: text, data } = e;
+    const { errors, message } = data;
     const { profile } = store.state.app;
-    let errors = [];
 
     // save system generated message
     store.commit(ns("app", SET_ERROR), {
@@ -35,13 +35,8 @@ export const eHandler = e => {
     });
 
     // handle each error codes
+    let error = [];
     switch (code) {
-        case HTTP_UNPROCESSABLE_ENTITY:
-            if (get(e, "data.errors")) {
-                errors = e.data.errors;
-            }
-            break;
-
         case HTTP_UNAUTHORIZED:
             if (profile.id > -1) {
                 // remove session
@@ -56,10 +51,13 @@ export const eHandler = e => {
             }
             break;
 
+        case HTTP_UNPROCESSABLE_ENTITY:
+            error = errors || [];
+            break;
+
         default:
             router.push({ name: "error" });
             break;
     }
-
-    return errors;
+    return error;
 };

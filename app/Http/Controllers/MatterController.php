@@ -82,9 +82,16 @@ class MatterController extends Controller
         $mattersId = $request->ids;
         $this->authorize('delete', [Matter::class, $mattersId]);
 
+        // check
+        if (Matter::has('materials')->whereIn('id', $mattersId)->count()) {
+            // failed
+            return response([
+                'message' => "Still have 'MATERIAL' relations!"
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         // delete
         Matter::destroy($mattersId);
-
         return response($mattersId, Response::HTTP_OK);
     }
 

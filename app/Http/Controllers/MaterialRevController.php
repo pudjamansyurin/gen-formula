@@ -26,6 +26,8 @@ class MaterialRevController extends Controller
 
             return response($revsId, Response::HTTP_OK);
         }
-        return response([], Response::HTTP_BAD_REQUEST);
+        return response([
+            'message' => "At least 1 price exist!"
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

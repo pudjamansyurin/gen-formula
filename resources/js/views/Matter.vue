@@ -56,7 +56,7 @@
             @close="dialogDelete = false"
         >
             <template v-slot="{ item }">
-                {{ item.name }} | {{ item.material_count }} Material
+                {{ item.name }}
             </template>
         </the-dialog-delete>
 
