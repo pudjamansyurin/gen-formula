@@ -28,6 +28,7 @@ const Material = () =>
     import(/* webpackChunkName: "material" */ "../views/Material");
 const Formula = () =>
     import(/* webpackChunkName: "formula" */ "../views/Formula");
+const Sale = () => import(/* webpackChunkName: "sale" */ "../views/Sale");
 const User = () => import(/* webpackChunkName: "user" */ "../views/User");
 // const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
 // const Setting = () => import(/* webpackChunkName: "setting" */ "../views/Setting");
@@ -133,12 +134,15 @@ export default [
                     roles: ["admin", "manager"]
                 }
             },
-            // {
-            //     path: "price/:id?",
-            //     name: "price",
-            //     component: Price,
-            //     props: true
-            // },
+            {
+                path: "sale",
+                name: "sale",
+                component: Sale,
+                meta: {
+                    nav: true,
+                    roles: ["admin", "manager"]
+                }
+            },
             // {
             //     path: "report",
             //     name: "report",

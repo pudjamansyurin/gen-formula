@@ -22,6 +22,18 @@ class PackagePolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Package  $package
+     * @return mixed
+     */
+    public function view(User $user, Package $package)
+    {
+        return $user->can('package.view');
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param  \App\User  $user

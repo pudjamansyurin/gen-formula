@@ -58,3 +58,12 @@ export const Formula = {
     density: null,
     shrink: null
 };
+
+export const Sale = {
+    id: -1,
+    name: "",
+    filled: null,
+    rev: {
+        price: null
+    }
+};

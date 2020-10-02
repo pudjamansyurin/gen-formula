@@ -38,7 +38,7 @@ class FormulaController extends Controller
      */
     public function show(Formula $formula)
     {
-        $this->authorize('viewAny', Formula::class);
+        $this->authorize('view', $formula);
 
         return response(
             new FormulaItem($formula->loadRelationDetailed()),

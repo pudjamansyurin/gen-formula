@@ -7,7 +7,6 @@ use App\Http\Requests\MaterialRequest;
 use App\Http\Resources\MaterialCollection;
 use App\Http\Resources\MaterialItem;
 use App\Material;
-use App\MaterialRev;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -38,7 +37,7 @@ class MaterialController extends Controller
      */
     public function show(Material $material)
     {
-        $this->authorize('viewAny', Material::class);
+        $this->authorize('view', $material);
 
         return response(
             new MaterialItem($material->loadRelationDetailed()),

@@ -22,22 +22,22 @@ class MaterialRevPolicy
         return $user->can('material-rev.create');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\MaterialRev  $rev
-     * @return mixed
-     */
-    public function update(User $user, MaterialRev $rev)
-    {
-        // only owner can update
-        if ($user->id === $rev->user_id) {
-            return true;
-        }
-        // above role can update all
-        return $user->hasRole(['admin', 'manager']);
-    }
+    // /**
+    //  * Determine whether the user can update the model.
+    //  *
+    //  * @param  \App\User  $user
+    //  * @param  \App\MaterialRev  $rev
+    //  * @return mixed
+    //  */
+    // public function update(User $user, MaterialRev $rev)
+    // {
+    //     // only owner can update
+    //     if ($user->id === $rev->user_id) {
+    //         return true;
+    //     }
+    //     // above role can update all
+    //     return $user->hasRole(['admin', 'manager']);
+    // }
 
     /**
      * Determine whether the user can delete the model.

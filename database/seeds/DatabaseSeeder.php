@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             DummyUserSeeder::class,
             DummyPackageSeeder::class,
             DummyMaterialSeeder::class,
-            DummyFormulaSeeder::class
+            DummyFormulaSeeder::class,
+            DummySaleSeeder::class
         ]);
     }
 }

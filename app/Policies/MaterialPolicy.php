@@ -22,6 +22,18 @@ class MaterialPolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Material  $material
+     * @return mixed
+     */
+    public function view(User $user, Material $material)
+    {
+        return $user->can('material.view');
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param  \App\User  $user

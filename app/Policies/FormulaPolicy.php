@@ -22,6 +22,18 @@ class FormulaPolicy
     }
 
     /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Formula  $formula
+     * @return mixed
+     */
+    public function view(User $user, Formula $formula)
+    {
+        return $user->can('formula.view');
+    }
+
+    /**
      * Determine whether the user can create models.
      *
      * @param  \App\User  $user

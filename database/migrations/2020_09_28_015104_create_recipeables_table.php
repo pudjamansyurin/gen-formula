@@ -16,7 +16,7 @@ class CreateRecipeablesTable extends Migration
         Schema::create('recipeables', function (Blueprint $table) {
             $table->id();
             $table->foreignId('formula_id');
-            $table->unsignedDecimal('portion', 6, 2);
+            $table->unsignedDecimal('portion', 5, 2);
             $table->integer('depth');
             $table->morphs('recipeable');
             $table->timestamps();

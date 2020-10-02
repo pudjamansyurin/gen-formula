@@ -27,6 +27,7 @@ class RolesAndPermissionSeeder extends Seeder
             'material',
             'material-rev',
             'formula',
+            'sale',
             'user'
         ];
         $actions = [
@@ -54,6 +55,7 @@ class RolesAndPermissionSeeder extends Seeder
                 'material' => '*',
                 'material-rev' => '*',
                 'formula' => '*',
+                'sale' => '*'
             ],
             'admin' => [
                 'unit' => ['view'],
@@ -64,6 +66,7 @@ class RolesAndPermissionSeeder extends Seeder
                 'material' => '*',
                 'material-rev' => '*',
                 'formula' => '*',
+                'sale' => '*',
                 'user' => '*',
             ],
         ];

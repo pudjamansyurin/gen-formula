@@ -276,6 +276,9 @@
                                 <v-list-item-title>
                                     {{ rev.price | currency }}
                                 </v-list-item-title>
+                                <v-list-item-subtitle>
+                                    {{ rev.user.name }}
+                                </v-list-item-subtitle>
                             </v-list-item-content>
 
                             <v-list-item-action>

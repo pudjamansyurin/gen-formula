@@ -10,6 +10,7 @@ const state = {
     matters: [],
     materials: [],
     formulas: [],
+    sales: [],
     roles: [],
     users: []
 };

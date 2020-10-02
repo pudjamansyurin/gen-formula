@@ -7,6 +7,12 @@ export const navigations = [
     //     bottomNav: true
     // },
     {
+        text: "Sale",
+        to: "sale",
+        icon: "mdi-currency-usd",
+        bottomNav: true
+    },
+    {
         text: "Formula",
         to: "formula",
         icon: "mdi-microsoft-excel",

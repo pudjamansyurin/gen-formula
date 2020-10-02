@@ -31,22 +31,6 @@ class PackerController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Packer  $packer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Packer $packer)
-    {
-        $this->authorize('viewAny', Packer::class);
-
-        return response(
-            new PackerItem($packer->loadRelationDetailed()),
-            Response::HTTP_OK
-        );
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

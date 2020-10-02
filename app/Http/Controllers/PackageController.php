@@ -38,7 +38,7 @@ class PackageController extends Controller
      */
     public function show(Package $package)
     {
-        $this->authorize('viewAny', Package::class);
+        $this->authorize('view', $package);
 
         return response(
             new PackageItem($package->loadRelationDetailed()),

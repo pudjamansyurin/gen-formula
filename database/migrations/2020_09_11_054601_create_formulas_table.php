@@ -18,8 +18,8 @@ class CreateFormulasTable extends Migration
             $table->string('name')->unique();
             // $table->text('description');
             $table->boolean('main');
-            $table->unsignedDecimal('density', 6, 2);
-            $table->unsignedDecimal('shrink', 6, 2);
+            $table->unsignedDecimal('density', 5, 2);
+            $table->unsignedDecimal('shrink', 4, 2);
             $table->foreignId('user_id');
             $table->timestamps();
         });
