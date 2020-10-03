@@ -483,11 +483,11 @@ export default {
         ...mapState("model", ["formulas"]),
 
         formWidth() {
-            // let { _recipes } = this.form;
-            // if (_recipes && _recipes.length > 0) {
-            //     return 1000;
-            // }
-            return 800;
+            let { _recipes } = this.form;
+            if (_recipes && _recipes.length > 0) {
+                return 1000;
+            }
+            return 700;
         },
         recipePortionColor() {
             return {

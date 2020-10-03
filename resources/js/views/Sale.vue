@@ -273,11 +273,11 @@ export default {
     computed: {
         ...mapState("model", ["sales"]),
         formWidth() {
-            // let { _products } = this.form;
-            // if (_products && _products.length > 1) {
-            //     return 1000;
-            // }
-            return 800;
+            let { _products } = this.form;
+            if (_products && _products.length > 1) {
+                return 1000;
+            }
+            return 700;
         },
     },
     methods: {
