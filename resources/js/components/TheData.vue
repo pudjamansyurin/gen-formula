@@ -1,8 +1,19 @@
 <template>
     <fragment>
-        <!-- loading -->
-        <v-skeleton-loader v-show="items.length == 0 && !!loading" type="table">
+        <!-- loading desktop -->
+        <v-skeleton-loader
+            v-show="items.length == 0 && !!loading && !mobile"
+            type="table"
+        >
         </v-skeleton-loader>
+        <!-- loading mobile  -->
+        <v-skeleton-loader
+            v-show="items.length == 0 && !!loading && mobile"
+            v-for="n in 10"
+            :key="n"
+            type="article"
+            class="my-3"
+        ></v-skeleton-loader>
         <!-- no data -->
         <v-alert
             v-show="items.length == 0 && !!!loading"
@@ -91,14 +102,6 @@ export default {
             if (!this.$_.isEqual(this.options, options)) {
                 this.$emit("update:options", options);
             }
-        },
-    },
-    watch: {
-        "items.length": function (val) {
-            console.warn("length", val);
-        },
-        loading: function (val) {
-            console.warn("loading", val);
         },
     },
 };

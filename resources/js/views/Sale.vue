@@ -183,33 +183,34 @@
             </template>
 
             <template v-slot:REV>
-                <v-list dense>
-                    <template v-for="(rev, index) in form.revs">
-                        <v-list-item
-                            :key="rev.id"
-                            :class="{ primary: index === 0 }"
-                            :dark="index === 0"
-                            two-line
-                            dense
-                        >
-                            <v-list-item-content>
-                                <v-list-item-title
-                                    >{{ rev.price | currency }}
-                                </v-list-item-title>
-                                <v-list-item-subtitle>
-                                    {{ rev.user.name }}
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-
-                            <v-list-item-action>
-                                <v-list-item-action-text>
-                                    {{ rev.updated_at | moment("from") }}
-                                </v-list-item-action-text>
-                            </v-list-item-action>
-                        </v-list-item>
-                        <v-divider :key="`divider-${rev.id}`"></v-divider>
-                    </template>
-                </v-list>
+                <v-timeline dense clipped>
+                    <v-timeline-item
+                        v-for="(rev, index) in form.revs"
+                        :key="rev.id"
+                        :color="index === 0 ? 'primary' : 'grey'"
+                        small
+                    >
+                        <v-card class="elevation-2">
+                            <v-card-subtitle class="py-2">
+                                <v-row no-gutters>
+                                    <v-col>
+                                        <b v-if="rev.user">
+                                            {{ rev.user.name }}
+                                        </b>
+                                    </v-col>
+                                    <v-col class="text-right">
+                                        {{ rev.updated_at | moment("from") }}
+                                    </v-col>
+                                </v-row>
+                            </v-card-subtitle>
+                            <v-card-text>
+                                <v-chip :color="index === 0 ? 'primary' : ''">
+                                    {{ rev.price | currency }}
+                                </v-chip>
+                            </v-card-text>
+                        </v-card>
+                    </v-timeline-item>
+                </v-timeline>
             </template>
         </the-dialog-form>
     </fragment>

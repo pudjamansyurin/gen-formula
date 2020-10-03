@@ -8,7 +8,7 @@
         scrollable
     >
         <v-card :loading="!!loading">
-            <v-card-title class="headline grey lighten-2" primary-title>
+            <v-card-title class="headline grey lighten-2">
                 <v-row no-gutters>
                     <v-col cols="12" sm="5">
                         <span class="headline">{{ formTitle }}</span>
@@ -22,7 +22,6 @@
                             :value="tab"
                             @change="$emit('update:tab', $event)"
                             background-color="transparent"
-                            height="30"
                             right
                         >
                             <v-tab v-for="item in tabs" :key="item">
