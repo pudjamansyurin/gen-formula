@@ -12,7 +12,7 @@ class Pack extends Model
     protected $table = 'packs';
 
     protected $_relations = ['user:id,name', 'packer:id,name'];
-    protected $_details = [];
+    protected $_details = ['packagers', 'packagers.package'];
     protected $_counts = ['packagers'];
 
     /**

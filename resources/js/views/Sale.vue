@@ -126,33 +126,13 @@
                         </validation-provider>
                         <v-divider class="mt-1"></v-divider>
 
-                        <v-row>
+                        <v-row v-if="form._products">
                             <v-col
                                 v-for="(product, index) in form._products"
                                 :key="index"
                             >
                                 <v-card outlined>
                                     <v-card-text>
-                                        <validation-provider
-                                            :name="`_products.${index}.package_id`"
-                                            v-slot="{ errors, valid }"
-                                        >
-                                            <v-autocomplete
-                                                v-model="product.package_id"
-                                                :items="listPackage"
-                                                :error-messages="errors"
-                                                :success="valid"
-                                                :readonly="fieldDisabled"
-                                                :filled="fieldDisabled"
-                                                item-text="name"
-                                                item-value="id"
-                                                label="Package"
-                                                hint="The packages"
-                                                persistent-hint
-                                                chips
-                                            ></v-autocomplete>
-                                        </validation-provider>
-
                                         <validation-provider
                                             :name="`_products.${index}.formula_id`"
                                             v-slot="{ errors, valid }"
@@ -168,6 +148,26 @@
                                                 item-value="id"
                                                 label="Formula"
                                                 hint="The formulas"
+                                                persistent-hint
+                                                chips
+                                            ></v-autocomplete>
+                                        </validation-provider>
+
+                                        <validation-provider
+                                            :name="`_products.${index}.package_id`"
+                                            v-slot="{ errors, valid }"
+                                        >
+                                            <v-autocomplete
+                                                v-model="product.package_id"
+                                                :items="listPackage"
+                                                :error-messages="errors"
+                                                :success="valid"
+                                                :readonly="fieldDisabled"
+                                                :filled="fieldDisabled"
+                                                item-text="name"
+                                                item-value="id"
+                                                label="Package"
+                                                hint="The packages"
                                                 persistent-hint
                                                 chips
                                             ></v-autocomplete>
@@ -272,11 +272,11 @@ export default {
     computed: {
         ...mapState("model", ["sales"]),
         formWidth() {
-            let { _products } = this.form;
-            if (_products && _products.length > 1) {
-                return 1000;
-            }
-            return 600;
+            // let { _products } = this.form;
+            // if (_products && _products.length > 1) {
+            //     return 1000;
+            // }
+            return 800;
         },
     },
     methods: {
@@ -335,7 +335,7 @@ export default {
                 let count = current - previous;
 
                 while (count--) {
-                    this.form._products.push(data);
+                    this.form._products.push(this.$_.cloneDeep(data));
                 }
             } else {
                 // remove
