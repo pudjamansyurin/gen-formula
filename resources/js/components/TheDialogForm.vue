@@ -90,8 +90,8 @@ export default {
             default: "",
         },
         width: {
-            type: String,
-            default: "600",
+            type: [String, Number],
+            default: 600,
         },
         tabs: {
             type: Array,

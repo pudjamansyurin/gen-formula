@@ -176,9 +176,12 @@
                                 ></v-text-field>
 
                                 <v-btn
-                                    color="blue darken-1"
                                     @click="changePassword = !changePassword"
-                                    text
+                                    color="red"
+                                    class="mt-3"
+                                    dark
+                                    small
+                                    outlined
                                 >
                                     {{ passwordChangeText }} Password
                                 </v-btn>

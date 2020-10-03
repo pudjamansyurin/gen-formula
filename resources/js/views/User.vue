@@ -137,13 +137,16 @@
 
                     <v-btn
                         v-if="!creating"
-                        color="red"
                         @click="changePassword = !changePassword"
+                        color="red"
+                        class="mt-3"
                         dark
                         small
+                        outlined
                     >
                         {{ passwordChangeText }} Password
                     </v-btn>
+
                     <template v-if="changePassword">
                         <validation-provider
                             name="password"

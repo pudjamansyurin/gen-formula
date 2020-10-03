@@ -1,15 +1,15 @@
 {
-    "/js/app.js": "/js/app.js?id=c800d39a91a441154322",
+    "/js/app.js": "/js/app.js?id=ac91be06a1ed308e2a3c",
     "/css/app.css": "/css/app.css?id=3462204912f6bda7044e",
     "/js/auth.forget.js": "/js/auth.forget.js?id=806d47fef2740e57117e",
-    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js?id=b72fb2c33293d9bfee39",
+    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js?id=1825857e7f3ed3e41b22",
     "/js/auth.login.js": "/js/auth.login.js?id=e7553d56bf32073d726b",
     "/js/auth.reset.js": "/js/auth.reset.js?id=95f33e74dc04c42cdf33",
     "/js/auth.verify.js": "/js/auth.verify.js?id=172002610ccf3bcca9a4",
     "/js/dashboard.js": "/js/dashboard.js?id=d07f699ff79ff4162fd6",
     "/js/dashboard~formula~material~matter~pack~package~packer~profile~sale~user.js": "/js/dashboard~formula~material~matter~pack~package~packer~profile~sale~user.js?id=6e5eb24b01910ae9a681",
     "/js/error.js": "/js/error.js?id=37c63176de9b2108f96c",
-    "/js/formula.js": "/js/formula.js?id=54293284f359b52d183f",
+    "/js/formula.js": "/js/formula.js?id=e9d945d2690fc6a25639",
     "/js/landing.js": "/js/landing.js?id=181855c974c6bb359724",
     "/js/material.js": "/js/material.js?id=9dbbe55b2f62efcd12fd",
     "/js/matter.js": "/js/matter.js?id=58f12b7f7b821f685d4b",
@@ -17,7 +17,9 @@
     "/js/package.js": "/js/package.js?id=98eff32c8e859339dbcc",
     "/js/packer.js": "/js/packer.js?id=64af7d2a44a62554c918",
     "/js/policy.js": "/js/policy.js?id=3ca71ada821cc5243155",
-    "/js/profile.js": "/js/profile.js?id=6c7f91667f8ad1fee3cb",
-    "/js/sale.js": "/js/sale.js?id=9b0193e46e1a7958d1c4",
-    "/js/user.js": "/js/user.js?id=cd32a51013aee3db379b"
+    "/js/profile.js": "/js/profile.js?id=d92a602a382491990d11",
+    "/js/sale.js": "/js/sale.js?id=b1a1cf598df436047f7d",
+    "/js/user.js": "/js/user.js?id=d1cacbb0dbc2dfb3e66b",
+    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~ed9224b0.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~ed9224b0.js?id=97f1b72770637c1422a5",
+    "/js/dashboard~formula~material~matter~pack~package~packer~profile~user.js": "/js/dashboard~formula~material~matter~pack~package~packer~profile~user.js?id=79043a0ae7c2e6c22c45"
 }

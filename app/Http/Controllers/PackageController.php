@@ -113,7 +113,7 @@ class PackageController extends Controller
         $this->authorize('viewAny', Package::class);
 
         return response([
-            'data' => Package::getAsList()
+            'data' => Package::getAsProductList()
         ], Response::HTTP_OK);
     }
 

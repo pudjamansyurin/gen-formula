@@ -84,4 +84,12 @@ class Package extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Custom local scopes
+     */
+    public function scopeGetAsProductList()
+    {
+        return $this->with('rev')->get();
+    }
 }

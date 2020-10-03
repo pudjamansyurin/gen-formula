@@ -93,7 +93,7 @@
             :readonly="fieldDisabled"
             @close="close"
             @submit="save"
-            width="1000"
+            :width="formWidth"
         >
             <template v-slot:DATA>
                 <v-form @submit.prevent="save">
@@ -481,6 +481,14 @@ export default {
     },
     computed: {
         ...mapState("model", ["formulas"]),
+
+        formWidth() {
+            let { _recipes } = this.form;
+            if (_recipes && _recipes.length > 0) {
+                return 1000;
+            }
+            return 600;
+        },
         recipePortionColor() {
             return {
                 "red--text font-weight-bold": this.portionTotal != 100,

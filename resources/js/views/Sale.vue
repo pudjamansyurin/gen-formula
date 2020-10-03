@@ -81,7 +81,7 @@
             :readonly="fieldDisabled"
             @close="close"
             @submit="save"
-            width="800"
+            :width="formWidth"
         >
             <template v-slot:DATA>
                 <v-form @submit.prevent="save">
@@ -271,6 +271,13 @@ export default {
     },
     computed: {
         ...mapState("model", ["sales"]),
+        formWidth() {
+            let { _products } = this.form;
+            if (_products && _products.length > 1) {
+                return 1000;
+            }
+            return 600;
+        },
     },
     methods: {
         change(item) {
