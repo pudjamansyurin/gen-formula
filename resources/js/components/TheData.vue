@@ -1,17 +1,19 @@
 <template>
     <fragment>
+        <!-- loading -->
+        <v-skeleton-loader v-show="items.length == 0 && !!loading" type="table">
+        </v-skeleton-loader>
+        <!-- no data -->
         <v-alert
-            v-show="items.length === 0"
-            :type="alertType"
+            v-show="items.length == 0 && !!!loading"
+            type="info"
             border="top"
             outlined
         >
-            <span v-if="!!loading">Fetching {{ model }} data...</span>
-            <span v-else>Oops, no {{ model }} data.</span>
+            <span>Oops, no {{ model }} data.</span>
         </v-alert>
-        <!-- <v-skeleton-loader v-show="items.length === 0" type="table">
-        </v-skeleton-loader> -->
-        <div v-show="items.length">
+        <!-- has data -->
+        <div v-show="items.length > 0">
             <the-data-card
                 v-if="mobile"
                 :value="value"
@@ -84,16 +86,19 @@ export default {
         TheDataCard,
         TheDataTable,
     },
-    computed: {
-        alertType() {
-            return !!this.loading ? "info" : "warning";
-        },
-    },
     methods: {
         fetch(options) {
             if (!this.$_.isEqual(this.options, options)) {
                 this.$emit("update:options", options);
             }
+        },
+    },
+    watch: {
+        "items.length": function (val) {
+            console.warn("length", val);
+        },
+        loading: function (val) {
+            console.warn("loading", val);
         },
     },
 };
