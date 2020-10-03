@@ -9,6 +9,8 @@
             <span v-if="!!loading">Fetching {{ model }} data...</span>
             <span v-else>Oops, no {{ model }} data.</span>
         </v-alert>
+        <!-- <v-skeleton-loader v-show="items.length === 0" type="table">
+        </v-skeleton-loader> -->
         <div v-show="items.length">
             <the-data-card
                 v-if="mobile"

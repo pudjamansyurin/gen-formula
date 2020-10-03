@@ -109,7 +109,8 @@
                             v-slot="{ errors, valid }"
                         >
                             <v-radio-group
-                                v-model="form.component"
+                                :value="form._products.length"
+                                @change="onComponentChange"
                                 :error-messages="errors"
                                 :success="valid"
                                 :readonly="fieldDisabled"
@@ -282,10 +283,7 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.form = {
-                ...this.$_.cloneDeep(item),
-                _products: [],
-            };
+            this.form = this.$_.cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);
@@ -312,6 +310,14 @@ export default {
                 ratio,
             }));
         },
+        onComponentChange(value) {
+            if (value == 2) {
+                let data = this.$_.cloneDeep(Sale._products[0]);
+                this.form._products.push(data);
+            } else {
+                this.form._products.pop();
+            }
+        },
     },
     mounted() {
         this.fetchList("package")
@@ -320,32 +326,6 @@ export default {
         this.fetchList("formula")
             .then((data) => (this.listFormula = data))
             .catch((e) => eHandler(e));
-    },
-    watch: {
-        "form.component": function (current, previous) {
-            let data = {
-                package_id: null,
-                formula_id: null,
-                ratio: null,
-                price: null,
-            };
-
-            if (current > previous) {
-                // add
-                let count = current - previous;
-
-                while (count--) {
-                    this.form._products.push(this.$_.cloneDeep(data));
-                }
-            } else {
-                // remove
-                let count = previous - current;
-
-                while (count--) {
-                    this.form._products.pop();
-                }
-            }
-        },
     },
 };
 </script>

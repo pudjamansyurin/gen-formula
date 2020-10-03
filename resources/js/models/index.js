@@ -63,8 +63,15 @@ export const Sale = {
     id: -1,
     name: "",
     filled: null,
-    component: 0,
     rev: {
         price: null
-    }
+    },
+    _products: [
+        {
+            package_id: null,
+            formula_id: null,
+            ratio: null,
+            price: null
+        }
+    ]
 };

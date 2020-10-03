@@ -3,7 +3,7 @@
         <v-container fluid>
             <slot></slot>
             <!-- loading overlay -->
-            <v-overlay :value="loading" absolute>
+            <v-overlay v-if="mobile" :value="loading" absolute>
                 <v-progress-circular indeterminate size="64" color="white">
                 </v-progress-circular>
             </v-overlay>
