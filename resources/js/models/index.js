@@ -63,6 +63,7 @@ export const Sale = {
     id: -1,
     name: "",
     filled: null,
+    component: 0,
     rev: {
         price: null
     }

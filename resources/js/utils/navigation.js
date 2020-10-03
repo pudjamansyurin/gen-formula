@@ -53,20 +53,7 @@ export const navigations = [
             }
         ]
     },
-    // {
-    //     text: "Material",
-    //     to: "material",
-    //     icon: "mdi-package",
-    //     bottomNav: true
-    // },
-    // {
-    //     text: "Matter",
-    //     to: "matter",
-    //     icon: "mdi-package-variant",
-    //     bottomNav: true
-    // },
     { text: "User", to: "user", icon: "mdi-account-group" }
-    // { icon: "mdi-currency-usd", text: "Price", to: "price", bottomNav: true },
     // { icon: "mdi-account-cog", text: "Profile", to: "profile" }
     // { icon: "mdi-cogs", text: "Setting", to: "setting" }
     //     { icon: "mdi-content-copy", text: "Duplicates" }

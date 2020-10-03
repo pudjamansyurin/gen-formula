@@ -76,9 +76,53 @@ export default [
                     const { role } = store.state.app.profile;
 
                     if (["admin", "manager"].includes(role.name)) {
-                        return { name: "formula" };
+                        return { name: "sale" };
                     }
                     return { name: "material" };
+                }
+            },
+            {
+                path: "sale",
+                name: "sale",
+                component: Sale,
+                meta: {
+                    roles: ["admin", "manager"]
+                }
+            },
+            {
+                path: "formula",
+                name: "formula",
+                component: Formula,
+                meta: {
+                    roles: ["admin", "manager"]
+                }
+            },
+            {
+                path: "material",
+                name: "material",
+                component: Material,
+                meta: {}
+            },
+            {
+                path: "matter",
+                name: "matter",
+                component: Matter,
+                meta: {
+                    roles: ["admin", "manager"]
+                }
+            },
+            {
+                path: "package",
+                name: "package",
+                component: Package,
+                meta: {}
+            },
+            {
+                path: "packer",
+                name: "packer",
+                component: Packer,
+                meta: {
+                    roles: ["admin", "manager"]
                 }
             },
             {
@@ -87,59 +131,6 @@ export default [
                 component: Pack,
                 props: true,
                 meta: {
-                    nav: true,
-                    roles: ["admin", "manager"]
-                }
-            },
-            {
-                path: "packer",
-                name: "packer",
-                component: Packer,
-                meta: {
-                    nav: true,
-                    roles: ["admin", "manager"]
-                }
-            },
-            {
-                path: "package",
-                name: "package",
-                component: Package,
-                meta: {
-                    nav: true
-                }
-            },
-            {
-                path: "matter",
-                name: "matter",
-                component: Matter,
-                meta: {
-                    nav: true,
-                    roles: ["admin", "manager"]
-                }
-            },
-            {
-                path: "material",
-                name: "material",
-                component: Material,
-                meta: {
-                    nav: true
-                }
-            },
-            {
-                path: "formula",
-                name: "formula",
-                component: Formula,
-                meta: {
-                    nav: true,
-                    roles: ["admin", "manager"]
-                }
-            },
-            {
-                path: "sale",
-                name: "sale",
-                component: Sale,
-                meta: {
-                    nav: true,
                     roles: ["admin", "manager"]
                 }
             },
@@ -158,7 +149,6 @@ export default [
                 name: "user",
                 component: User,
                 meta: {
-                    nav: true,
                     roles: ["admin"]
                 }
             },

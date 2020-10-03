@@ -117,6 +117,18 @@ class FormulaController extends Controller
     }
 
     /**
+     * Get lists of this model
+     */
+    public function list()
+    {
+        $this->authorize('viewAny', Formula::class);
+
+        return response([
+            'data' => Formula::getAsProductList()
+        ], Response::HTTP_OK);
+    }
+
+    /**
      * Get lists of recipes
      */
     public function recipes()

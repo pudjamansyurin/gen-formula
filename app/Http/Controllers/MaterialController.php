@@ -110,16 +110,4 @@ class MaterialController extends Controller
         Material::destroy($materialsId);
         return response($materialsId, Response::HTTP_OK);
     }
-
-    /**
-     * Get lists of this model
-     */
-    public function list()
-    {
-        $this->authorize('viewAny', Material::class);
-
-        return response([
-            'data' => Material::getAsList()
-        ], Response::HTTP_OK);
-    }
 }

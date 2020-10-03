@@ -34,10 +34,11 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::group(['prefix' => 'list'], function () {
-        Route::get('packer', 'PackerController@list');
         Route::get('matter', 'MatterController@list');
-        Route::get('material', 'MaterialController@list');
+        Route::get('packer', 'PackerController@list');
+        Route::get('package', 'PackageController@list');
         Route::get('recipe', 'FormulaController@recipes');
+        Route::get('formula', 'FormulaController@list');
         Route::get('unit', 'PackageController@units');
         Route::get('role', 'UserController@roles');
     });

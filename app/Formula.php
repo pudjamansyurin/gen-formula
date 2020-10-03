@@ -13,7 +13,7 @@ class Formula extends Model
     protected $table = 'formulas';
 
     protected $_relations = ['user:id,name', 'rev'];
-    protected $_details = ['revs', 'recipes', 'recipes.recipeable', 'recipes.recipeable.rev'];
+    protected $_details = ['revs', 'revs.user:id,name', 'recipes', 'recipes.recipeable', 'recipes.recipeable.rev'];
     protected $_counts = ['revs', 'recipes'];
 
     /**
@@ -107,6 +107,21 @@ class Formula extends Model
     /**
      * Custom local scopes
      */
+    public function scopeGetAsProductList()
+    {
+        return $this->with('rev')->whereMain('1')->get();
+        // ->map(function ($formula) {
+        //     $result = [];
+
+        //     $result['recipeable_id'] = $formula->id;
+        //     $result['recipeable_type'] = get_class($formula);
+        //     $result['name'] = $formula->name;
+        //     $result['price'] = $formula->rev->price;
+
+        //     return $result;
+        // });
+    }
+
     public function scopeGetAsRecipeList()
     {
         return $this->with('rev')->whereMain('0')->get()

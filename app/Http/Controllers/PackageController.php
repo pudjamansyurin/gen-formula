@@ -106,6 +106,18 @@ class PackageController extends Controller
     }
 
     /**
+     * Get lists of this model
+     */
+    public function list()
+    {
+        $this->authorize('viewAny', Package::class);
+
+        return response([
+            'data' => Package::getAsList()
+        ], Response::HTTP_OK);
+    }
+
+    /**
      * Get units
      */
     public function units()

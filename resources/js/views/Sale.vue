@@ -81,6 +81,7 @@
             :readonly="fieldDisabled"
             @close="close"
             @submit="save"
+            width="800"
         >
             <template v-slot:DATA>
                 <v-form @submit.prevent="save">
@@ -102,6 +103,79 @@
                                 persistent-hint
                             ></v-text-field>
                         </validation-provider>
+
+                        <validation-provider
+                            name="component"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-radio-group
+                                v-model="form.component"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
+                                :row="!mobile"
+                                hide-details="auto"
+                            >
+                                <template v-slot:label>
+                                    <div class="caption">Component :</div>
+                                </template>
+                                <v-radio label="1 Product" :value="1"></v-radio>
+                                <v-radio label="2 Product" :value="2"></v-radio>
+                            </v-radio-group>
+                        </validation-provider>
+                        <v-divider class="mt-1"></v-divider>
+
+                        <v-row>
+                            <v-col
+                                v-for="(product, index) in form._products"
+                                :key="index"
+                            >
+                                <v-card outlined>
+                                    <v-card-text>
+                                        <validation-provider
+                                            :name="`_products.${index}.package_id`"
+                                            v-slot="{ errors, valid }"
+                                        >
+                                            <v-autocomplete
+                                                v-model="product.package_id"
+                                                :items="listPackage"
+                                                :error-messages="errors"
+                                                :success="valid"
+                                                :readonly="fieldDisabled"
+                                                :filled="fieldDisabled"
+                                                item-text="name"
+                                                item-value="id"
+                                                label="Package"
+                                                hint="The packages"
+                                                persistent-hint
+                                                chips
+                                            ></v-autocomplete>
+                                        </validation-provider>
+
+                                        <validation-provider
+                                            :name="`_products.${index}.formula_id`"
+                                            v-slot="{ errors, valid }"
+                                        >
+                                            <v-autocomplete
+                                                v-model="product.formula_id"
+                                                :items="listFormula"
+                                                :error-messages="errors"
+                                                :success="valid"
+                                                :readonly="fieldDisabled"
+                                                :filled="fieldDisabled"
+                                                item-text="name"
+                                                item-value="id"
+                                                label="Formula"
+                                                hint="The formulas"
+                                                persistent-hint
+                                                chips
+                                            ></v-autocomplete>
+                                        </validation-provider>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                        </v-row>
                     </validation-observer>
                     <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
@@ -191,7 +265,8 @@ export default {
                 },
             ],
 
-            // listMatter: [],
+            listPackage: [],
+            listFormula: [],
         };
     },
     computed: {
@@ -200,7 +275,10 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(item);
+            this.form = {
+                ...this.$_.cloneDeep(item),
+                _products: [],
+            };
         },
         onCreate() {
             this.change(this.modelDefault);
@@ -214,14 +292,53 @@ export default {
                 model: this.model,
                 id: this.form.id,
             }).then((data) => {
-                this.form = this.$_.cloneDeep(data);
+                this.form = {
+                    ...this.$_.cloneDeep(data),
+                    _products: this.makeProductsDetail(data.products),
+                };
             });
+        },
+        makeProductsDetail(products) {
+            return products.map(({ id, package_id, ratio }) => ({
+                id,
+                package_id,
+                ratio,
+            }));
         },
     },
     mounted() {
-        // this.fetchList("matter")
-        //     .then((data) => (this.listMatter = data))
-        //     .catch((e) => eHandler(e));
+        this.fetchList("package")
+            .then((data) => (this.listPackage = data))
+            .catch((e) => eHandler(e));
+        this.fetchList("formula")
+            .then((data) => (this.listFormula = data))
+            .catch((e) => eHandler(e));
+    },
+    watch: {
+        "form.component": function (current, previous) {
+            let data = {
+                package_id: null,
+                formula_id: null,
+                ratio: null,
+                price: null,
+            };
+
+            if (current > previous) {
+                // add
+                let count = current - previous;
+
+                while (count--) {
+                    this.form._products.push(data);
+                }
+            } else {
+                // remove
+                let count = previous - current;
+
+                while (count--) {
+                    this.form._products.pop();
+                }
+            }
+        },
     },
 };
 </script>
