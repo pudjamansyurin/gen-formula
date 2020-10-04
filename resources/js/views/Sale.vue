@@ -139,7 +139,7 @@
                                             v-slot="{ errors, valid }"
                                         >
                                             <v-autocomplete
-                                                v-model="product.formula_id"
+                                                v-model="product.formula"
                                                 :items="listFormula"
                                                 :error-messages="errors"
                                                 :success="valid"
@@ -151,15 +151,36 @@
                                                 hint="The formulas"
                                                 persistent-hint
                                                 chips
+                                                return-object
                                             ></v-autocomplete>
                                         </validation-provider>
+
+                                        <div
+                                            v-if="product.formula"
+                                            class="mt-2 mb-4"
+                                        >
+                                            <v-chip label>
+                                                {{
+                                                    product.formula.rev.price
+                                                        | currency
+                                                }}
+                                                / KG
+                                            </v-chip>
+                                            <v-chip label>
+                                                {{
+                                                    product.formula.rev
+                                                        .price_liter | currency
+                                                }}
+                                                / L
+                                            </v-chip>
+                                        </div>
 
                                         <validation-provider
                                             :name="`_products.${index}.package_id`"
                                             v-slot="{ errors, valid }"
                                         >
                                             <v-autocomplete
-                                                v-model="product.package_id"
+                                                v-model="product.package"
                                                 :items="listPackage"
                                                 :error-messages="errors"
                                                 :success="valid"
@@ -171,8 +192,25 @@
                                                 hint="The packages"
                                                 persistent-hint
                                                 chips
+                                                return-object
                                             ></v-autocomplete>
                                         </validation-provider>
+
+                                        <div
+                                            v-if="product.package"
+                                            class="mt-2 mb-4"
+                                        >
+                                            <v-chip label>
+                                                {{
+                                                    product.package.rev.price
+                                                        | currency
+                                                }}
+                                            </v-chip>
+                                            <v-chip label>
+                                                {{ product.package.capacity }}
+                                                {{ product.package.unit.name }}
+                                            </v-chip>
+                                        </div>
                                     </v-card-text>
                                 </v-card>
                             </v-col>

@@ -22,6 +22,9 @@
                             :value="tab"
                             @change="$emit('update:tab', $event)"
                             background-color="transparent"
+                            active-class="font-weight-bold"
+                            height="30"
+                            hide-slider
                             right
                         >
                             <v-tab v-for="item in tabs" :key="item">

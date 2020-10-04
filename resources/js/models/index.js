@@ -69,7 +69,9 @@ export const Sale = {
     _products: [
         {
             package_id: null,
+            package: null,
             formula_id: null,
+            formula: null,
             ratio: null,
             price: null
         }

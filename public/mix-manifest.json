@@ -1,8 +1,8 @@
 {
-    "/js/app.js": "/js/app.js?id=1d5e827680c370615014",
+    "/js/app.js": "/js/app.js?id=6d409a7a79819196ebdc",
     "/css/app.css": "/css/app.css?id=3462204912f6bda7044e",
     "/js/auth.forget.js": "/js/auth.forget.js?id=806d47fef2740e57117e",
-    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js?id=35c2defc2ed81ca9e7bd",
+    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js?id=484d1feb7c07dcc53586",
     "/js/auth.login.js": "/js/auth.login.js?id=e7553d56bf32073d726b",
     "/js/auth.reset.js": "/js/auth.reset.js?id=95f33e74dc04c42cdf33",
     "/js/auth.verify.js": "/js/auth.verify.js?id=172002610ccf3bcca9a4",
@@ -18,6 +18,6 @@
     "/js/packer.js": "/js/packer.js?id=64af7d2a44a62554c918",
     "/js/policy.js": "/js/policy.js?id=3ca71ada821cc5243155",
     "/js/profile.js": "/js/profile.js?id=d92a602a382491990d11",
-    "/js/sale.js": "/js/sale.js?id=10c1d33feeaacabb150a",
+    "/js/sale.js": "/js/sale.js?id=ae0e1cc6a2a25a669345",
     "/js/user.js": "/js/user.js?id=d1cacbb0dbc2dfb3e66b"
 }

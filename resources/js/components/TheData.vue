@@ -19,7 +19,6 @@
             v-show="items.length == 0 && !!!loading"
             type="info"
             border="top"
-            outlined
         >
             <span>Oops, no {{ model }} data.</span>
         </v-alert>

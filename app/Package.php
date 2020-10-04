@@ -90,6 +90,6 @@ class Package extends Model
      */
     public function scopeGetAsProductList()
     {
-        return $this->with('rev')->get();
+        return $this->with(['rev', 'unit'])->get();
     }
 }
