@@ -17,6 +17,7 @@ class CreateSaleRevsTable extends Migration
             $table->id();
             $table->foreignId('sale_id');
             $table->unsignedDecimal('price', 15, 2);
+            $table->unsignedDecimal('filled', 5, 2);
             $table->foreignId('user_id');
             $table->timestamps();
         });

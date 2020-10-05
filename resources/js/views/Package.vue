@@ -98,7 +98,8 @@
             </template>
 
             <template v-slot:REV>
-                <rev-timeline v-if="form.revs" :revs="form.revs"></rev-timeline>
+                <rev-timeline v-if="form.revs" :revs="form.revs">
+                </rev-timeline>
             </template>
         </the-dialog-form>
     </fragment>

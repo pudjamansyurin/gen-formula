@@ -27,7 +27,7 @@
                         text
                     >
                         <span class="caption">Total RMP</span><br />
-                        <span>{{ priceTotal | currency }}</span>
+                        <b>{{ priceTotal | currency }}</b>
                     </v-alert>
                 </v-col>
             </v-row>
@@ -181,11 +181,11 @@
                                     </validation-provider>
                                     <validation-provider
                                         v-else
-                                        :name="`filled`"
+                                        :name="`rev.filled`"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-text-field
-                                            v-model.number="form.filled"
+                                            v-model.number="form.rev.filled"
                                             :error-messages="errors"
                                             :success="valid"
                                             :readonly="fieldDisabled"
@@ -277,7 +277,7 @@ export default {
             return 0;
         },
         saleFilled() {
-            return (Number(this.form.filled) * this.saleCapacity) / 100;
+            return (Number(this.form.rev.filled) * this.saleCapacity) / 100;
         },
         saleRatio() {
             return this.form._products.reduce(
@@ -286,11 +286,11 @@ export default {
             );
         },
         saleReady() {
-            let { _products: products, filled } = this.form;
+            let { _products: products, rev } = this.form;
 
             // skip if has empty field
             return !(
-                !filled ||
+                !rev.filled ||
                 products.some(
                     ({ package: pkg, formula, ratio }) =>
                         !pkg || !formula || !ratio
@@ -320,16 +320,17 @@ export default {
             return (Number(ratio) * this.saleFilled) / this.saleRatio;
         },
         calcProductRMP({ package: pkg, formula, ratio }) {
-            let rmcs = this.getProductRMCS(formula.rev);
-            let filledProduct = this.calcProductFilled(ratio);
-
-            return rmcs * filledProduct + Number(pkg.rev.price);
+            return (
+                this.getProductRMCS(formula.rev) *
+                    this.calcProductFilled(ratio) +
+                Number(pkg.rev.price)
+            );
         },
         onComponentChange(value) {
             if (value == 2) {
                 let data = this.$_.cloneDeep(this.modelDefault._products[0]);
 
-                this.form.filled = 100;
+                this.form.rev.filled = 100;
                 this.form._products.push(data);
             } else {
                 this.form._products[0].ratio = 1;

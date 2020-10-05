@@ -4,9 +4,10 @@
             v-for="(rev, index) in revs"
             :key="rev.id"
             :color="index === 0 ? 'primary' : 'grey'"
+            :fill-dot="index === 0"
             small
         >
-            <v-card class="elevation-2">
+            <v-card :outlined="index === 0" elevation="2">
                 <v-card-subtitle class="py-2">
                     <v-row no-gutters>
                         <v-col>

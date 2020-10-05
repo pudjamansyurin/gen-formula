@@ -16,7 +16,6 @@ class CreateSalesTable extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->unsignedDecimal('filled', 5, 2);
             $table->foreignId('user_id');
             $table->timestamps();
         });

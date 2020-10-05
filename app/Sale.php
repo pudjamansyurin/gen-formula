@@ -22,7 +22,7 @@ class Sale extends Model
      */
     protected $fillable = [
         'name',
-        'filled',
+        // 'filled',
         'user_id',
     ];
 

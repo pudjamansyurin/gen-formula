@@ -62,15 +62,15 @@ export const Formula = {
 export const Sale = {
     id: -1,
     name: "",
-    filled: null,
     rev: {
+        filled: null,
         price: null
     },
     _products: [
         {
-            package_id: null,
+            // package_id: null,
             package: null,
-            formula_id: null,
+            // formula_id: null,
             formula: null,
             ratio: 1
         }

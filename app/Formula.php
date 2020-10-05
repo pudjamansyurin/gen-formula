@@ -110,16 +110,6 @@ class Formula extends Model
     public function scopeGetAsProductList()
     {
         return $this->with('rev')->whereMain('1')->get();
-        // ->map(function ($formula) {
-        //     $result = [];
-
-        //     $result['recipeable_id'] = $formula->id;
-        //     $result['recipeable_type'] = get_class($formula);
-        //     $result['name'] = $formula->name;
-        //     $result['price'] = $formula->rev->price;
-
-        //     return $result;
-        // });
     }
 
     public function scopeGetAsRecipeList()

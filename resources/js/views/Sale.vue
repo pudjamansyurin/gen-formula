@@ -70,7 +70,9 @@
             @delete="remove"
             @close="dialogDelete = false"
         >
-            <template v-slot="{ item }">{{ item.name }}</template>
+            <template v-slot="{ item }">
+                {{ item.name }}
+            </template>
         </the-dialog-delete>
 
         <the-dialog-form
@@ -97,7 +99,8 @@
             </template>
 
             <template v-slot:REV>
-                <rev-timeline v-if="form.revs" :revs="form.revs"></rev-timeline>
+                <rev-timeline v-if="form.revs" :revs="form.revs">
+                </rev-timeline>
             </template>
         </the-dialog-form>
     </fragment>
@@ -184,6 +187,7 @@ export default {
                 model: this.model,
                 id: this.form.id,
             }).then((data) => {
+                console.warn(data);
                 this.form = {
                     ...this.$_.cloneDeep(data),
                     _products: this.makeProductsDetail(data.products),

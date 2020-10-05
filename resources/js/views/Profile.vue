@@ -82,9 +82,9 @@
                             <v-list-item-title>
                                 {{ profile.created_at | moment("from") }}
                             </v-list-item-title>
-                            <v-list-item-subtitle
-                                >Created at</v-list-item-subtitle
-                            >
+                            <v-list-item-subtitle>
+                                Created at
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item v-if="profile.updated_at">
@@ -93,9 +93,9 @@
                             <v-list-item-title>
                                 {{ profile.updated_at | moment("from") }}
                             </v-list-item-title>
-                            <v-list-item-subtitle
-                                >Updated at</v-list-item-subtitle
-                            >
+                            <v-list-item-subtitle>
+                                Updated at
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                     <v-divider inset></v-divider>
@@ -108,10 +108,12 @@
                             <v-list-item-title v-if="profile.last_at">
                                 {{ profile.last_at | moment("from") }}
                             </v-list-item-title>
-                            <v-list-item-title v-else>Never</v-list-item-title>
-                            <v-list-item-subtitle
-                                >Last login</v-list-item-subtitle
-                            >
+                            <v-list-item-title v-else>
+                                Never
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                Last login
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item>
@@ -120,16 +122,16 @@
                             <v-list-item-title>
                                 {{ profile.last_ip || "None" }}
                             </v-list-item-title>
-                            <v-list-item-subtitle
-                                >Last Ip Address</v-list-item-subtitle
-                            >
+                            <v-list-item-subtitle>
+                                Last Ip Address
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                 </v-card>
 
                 <v-card v-show="editting" :loading="!!loading">
                     <v-card-title class="headline grey lighten-2" primary-title>
-                        <span class="headline"> Edit Profile</span>
+                        <span class="headline"> Edit Profile </span>
                     </v-card-title>
 
                     <v-divider></v-divider>

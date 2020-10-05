@@ -27,7 +27,7 @@
                         text
                     >
                         <span class="caption">Total Price</span><br />
-                        <span>{{ priceTotal | currency }}</span>
+                        <b>{{ priceTotal | currency }}</b>
                     </v-alert>
                 </v-col>
             </v-row>

@@ -21,8 +21,8 @@
                 <v-col cols="12" sm="6">
                     <v-alert color="primary" class="my-0" dense outlined text>
                         <span class="caption">Total RMC</span><br />
-                        <span>{{ rmcs | currency }} / Kg</span><br />
-                        <span>{{ rmcsLiter | currency }} / L</span>
+                        <b>{{ rmcs | currency }} / Kg</b><br />
+                        <b>{{ rmcsLiter | currency }} / L</b>
                     </v-alert>
                 </v-col>
             </v-row>
