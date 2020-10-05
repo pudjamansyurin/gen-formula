@@ -72,8 +72,7 @@ export const Sale = {
             package: null,
             formula_id: null,
             formula: null,
-            ratio: null,
-            price: null
+            ratio: 1
         }
     ]
 };

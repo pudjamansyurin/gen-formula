@@ -1,20 +1,36 @@
 <template>
     <v-form @submit.prevent="$emit('save')">
         <validation-observer ref="form">
-            <validation-provider name="name" v-slot="{ errors, valid }">
-                <v-text-field
-                    v-model="form.name"
-                    :error-messages="errors"
-                    :success="valid"
-                    :readonly="fieldDisabled"
-                    :filled="fieldDisabled"
-                    label="Name"
-                    type="text"
-                    hint="The package name"
-                    counter
-                    persistent-hint
-                ></v-text-field>
-            </validation-provider>
+            <v-row>
+                <v-col cols="12" sm="6">
+                    <validation-provider name="name" v-slot="{ errors, valid }">
+                        <v-text-field
+                            v-model="form.name"
+                            :error-messages="errors"
+                            :success="valid"
+                            :readonly="fieldDisabled"
+                            :filled="fieldDisabled"
+                            label="Name"
+                            type="text"
+                            hint="The package name"
+                            counter
+                            persistent-hint
+                        ></v-text-field>
+                    </validation-provider>
+                </v-col>
+                <v-col cols="12" sm="6">
+                    <v-alert
+                        color="primary"
+                        class="py-4 my-0"
+                        dense
+                        outlined
+                        text
+                    >
+                        <span class="caption">Total Price</span><br />
+                        <span>{{ priceTotal | currency }}</span>
+                    </v-alert>
+                </v-col>
+            </v-row>
 
             <v-row>
                 <v-col>
@@ -143,23 +159,6 @@
                     </v-card-text>
                 </v-card>
             </template>
-
-            <v-row dense>
-                <v-col cols="12" sm="4"> </v-col>
-                <v-col cols="12" sm="8">
-                    <v-text-field
-                        :value="priceTotal"
-                        hint="This the total price"
-                        label="Total Price"
-                        type="number"
-                        prefix="Rp"
-                        filled
-                        readonly
-                        counter
-                        persistent-hint
-                    ></v-text-field>
-                </v-col>
-            </v-row>
         </validation-observer>
         <v-btn v-show="false" type="submit"></v-btn>
     </v-form>

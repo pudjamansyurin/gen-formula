@@ -1,20 +1,36 @@
 <template>
     <v-form @submit.prevent="$emit('save')">
         <validation-observer ref="form">
-            <validation-provider name="name" v-slot="{ errors, valid }">
-                <v-text-field
-                    v-model="form.name"
-                    :error-messages="errors"
-                    :success="valid"
-                    :readonly="fieldDisabled"
-                    :filled="fieldDisabled"
-                    label="Sale name"
-                    type="text"
-                    hint="This is to identify the sale"
-                    counter
-                    persistent-hint
-                ></v-text-field>
-            </validation-provider>
+            <v-row>
+                <v-col cols="12" sm="6">
+                    <validation-provider name="name" v-slot="{ errors, valid }">
+                        <v-text-field
+                            v-model="form.name"
+                            :error-messages="errors"
+                            :success="valid"
+                            :readonly="fieldDisabled"
+                            :filled="fieldDisabled"
+                            label="Sale name"
+                            type="text"
+                            hint="This is to identify the sale"
+                            counter
+                            persistent-hint
+                        ></v-text-field>
+                    </validation-provider>
+                </v-col>
+                <v-col cols="12" sm="6">
+                    <v-alert
+                        color="primary"
+                        class="py-4 my-0"
+                        dense
+                        outlined
+                        text
+                    >
+                        <span class="caption">Total RMP</span><br />
+                        <span>{{ priceTotal | currency }}</span>
+                    </v-alert>
+                </v-col>
+            </v-row>
 
             <validation-provider name="component" v-slot="{ errors, valid }">
                 <v-radio-group
@@ -40,7 +56,7 @@
                 <v-col v-for="(product, index) in form._products" :key="index">
                     <v-card outlined>
                         <v-card-text>
-                            <v-row no-gutters>
+                            <v-row class="mb-3" no-gutters>
                                 <v-col cols="12">
                                     <validation-provider
                                         :name="`_products.${index}.package_id`"
@@ -69,14 +85,22 @@
                                             product.package.rev.price | currency
                                         }}
                                     </v-chip>
-                                    <v-chip label>
+                                    <v-chip
+                                        :color="index == 0 ? 'primary' : ''"
+                                        :dark="index == 0"
+                                        label
+                                    >
                                         {{ product.package.capacity }}
                                         {{ product.package.unit.name }}
                                     </v-chip>
                                 </v-col>
                             </v-row>
 
-                            <v-row v-if="product.package" no-gutters>
+                            <v-row
+                                v-if="product.package"
+                                class="mb-3"
+                                no-gutters
+                            >
                                 <v-col cols="12">
                                     <validation-provider
                                         :name="`_products.${index}.formula_id`"
@@ -101,9 +125,12 @@
                                 </v-col>
                                 <v-col cols="12" v-if="product.formula">
                                     <v-chip
-                                        v-if="
-                                            product.package.unit.symbol == 'KG'
+                                        :color="
+                                            saleUnitSymbol == 'KG'
+                                                ? 'primary'
+                                                : ''
                                         "
+                                        :dark="saleUnitSymbol == 'KG'"
                                         label
                                     >
                                         {{
@@ -111,12 +138,80 @@
                                         }}
                                         / KG
                                     </v-chip>
-                                    <v-chip v-else label>
+                                    <v-chip
+                                        :color="
+                                            saleUnitSymbol == 'L'
+                                                ? 'primary'
+                                                : ''
+                                        "
+                                        :dark="saleUnitSymbol == 'L'"
+                                        label
+                                    >
                                         {{
                                             product.formula.rev.price_liter
                                                 | currency
                                         }}
                                         / L
+                                    </v-chip>
+                                </v-col>
+                            </v-row>
+
+                            <v-row
+                                v-if="product.formula"
+                                class="mb-3"
+                                no-gutters
+                            >
+                                <v-col cols="12">
+                                    <validation-provider
+                                        v-if="form._products.length == 2"
+                                        :name="`_products.${index}.ratio`"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            v-model.number="product.ratio"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            :readonly="fieldDisabled"
+                                            :filled="fieldDisabled"
+                                            label="Filled Ratio"
+                                            type="number"
+                                            hint="The product filled ratio"
+                                            persistent-hint
+                                        ></v-text-field>
+                                    </validation-provider>
+                                    <validation-provider
+                                        v-else
+                                        :name="`filled`"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            v-model.number="form.filled"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            :readonly="fieldDisabled"
+                                            :filled="fieldDisabled"
+                                            label="Filled Percentage"
+                                            type="number"
+                                            prefix="%"
+                                            hint="The product filled percentage"
+                                            persistent-hint
+                                            reverse
+                                        ></v-text-field>
+                                    </validation-provider>
+                                </v-col>
+                                <v-col cols="12" v-if="saleReady">
+                                    <v-chip label>
+                                        {{
+                                            calcProductFilled(
+                                                product.ratio
+                                            ).toFixed(2)
+                                        }}
+                                        /
+                                        {{ product.package.capacity }}
+                                        {{ product.package.unit.name }}
+                                    </v-chip>
+                                    <v-chip label>
+                                        {{ calcProductRMP(product) | currency }}
                                     </v-chip>
                                 </v-col>
                             </v-row>
@@ -165,13 +260,79 @@ export default {
                 this.$emit("input", value);
             },
         },
+        saleUnitSymbol() {
+            let { package: pkg } = this.form._products[0];
+
+            if (pkg) {
+                return pkg.unit.symbol;
+            }
+            return;
+        },
+        saleCapacity() {
+            let { package: pkg } = this.form._products[0];
+
+            if (pkg) {
+                return Number(pkg.capacity);
+            }
+            return 0;
+        },
+        saleFilled() {
+            return (Number(this.form.filled) * this.saleCapacity) / 100;
+        },
+        saleRatio() {
+            return this.form._products.reduce(
+                (carry, { ratio }) => carry + Number(ratio),
+                0
+            );
+        },
+        saleReady() {
+            let { _products: products, filled } = this.form;
+
+            // skip if has empty field
+            return !(
+                !filled ||
+                products.some(
+                    ({ package: pkg, formula, ratio }) =>
+                        !pkg || !formula || !ratio
+                )
+            );
+        },
+        priceTotal() {
+            // skip if has empty field
+            if (!this.saleReady) {
+                return 0;
+            }
+
+            // calculating
+            return this.form._products
+                .reduce(
+                    (carry, product) => carry + this.calcProductRMP(product),
+                    0
+                )
+                .toFixed(2);
+        },
     },
     methods: {
+        getProductRMCS({ price, price_liter }) {
+            return Number(this.saleUnitSymbol == "KG" ? price : price_liter);
+        },
+        calcProductFilled(ratio) {
+            return (Number(ratio) * this.saleFilled) / this.saleRatio;
+        },
+        calcProductRMP({ package: pkg, formula, ratio }) {
+            let rmcs = this.getProductRMCS(formula.rev);
+            let filledProduct = this.calcProductFilled(ratio);
+
+            return rmcs * filledProduct + Number(pkg.rev.price);
+        },
         onComponentChange(value) {
             if (value == 2) {
                 let data = this.$_.cloneDeep(this.modelDefault._products[0]);
+
+                this.form.filled = 100;
                 this.form._products.push(data);
             } else {
+                this.form._products[0].ratio = 1;
                 this.form._products.pop();
             }
         },
