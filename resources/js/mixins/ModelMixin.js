@@ -51,7 +51,7 @@ export default {
         },
         close() {
             this.dialog = false;
-            this.$nextTick(() => this.$refs.form.reset());
+            this.$nextTick(() => this.$refs.form.$refs.form.reset());
         },
         onCreate() {
             this.form = cloneDeep(this.modelDefault);
@@ -91,10 +91,10 @@ export default {
                 .then(() => this.STOP_LOADING());
         },
         onSave() {},
-        save() {
+        save: async function() {
             this.onSave();
 
-            this.$refs.form.validate().then(async valid => {
+            this.$refs.form.$refs.form.validate().then(async valid => {
                 if (valid) {
                     this.START_LOADING();
                     await this.SAVE_MODEL({
@@ -107,7 +107,9 @@ export default {
                             this.selected = [];
                             this.close();
                         })
-                        .catch(e => this.$refs.form.setErrors(eHandler(e)))
+                        .catch(e =>
+                            this.$refs.form.$refs.form.setErrors(eHandler(e))
+                        )
                         .then(() => this.STOP_LOADING());
                 }
             });

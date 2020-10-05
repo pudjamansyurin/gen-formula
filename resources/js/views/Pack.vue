@@ -67,45 +67,14 @@
             @close="close"
             @submit="save"
         >
-            <v-form @submit.prevent="save">
-                <validation-observer ref="form">
-                    <validation-provider name="name" v-slot="{ errors, valid }">
-                        <v-text-field
-                            v-model="form.name"
-                            :error-messages="errors"
-                            :success="valid"
-                            :readonly="fieldDisabled"
-                            :filled="fieldDisabled"
-                            label="Name"
-                            type="text"
-                            hint="The pack's name"
-                            counter
-                            persistent-hint
-                        ></v-text-field>
-                    </validation-provider>
-
-                    <validation-provider
-                        name="packer_id"
-                        v-slot="{ errors, valid }"
-                    >
-                        <v-autocomplete
-                            v-model="form.packer_id"
-                            :items="listPacker"
-                            :error-messages="errors"
-                            :success="valid"
-                            :readonly="fieldDisabled"
-                            :filled="fieldDisabled"
-                            item-text="name"
-                            item-value="id"
-                            label="Packer"
-                            hint="The packer"
-                            persistent-hint
-                            chips
-                        ></v-autocomplete>
-                    </validation-provider>
-                </validation-observer>
-                <v-btn v-show="false" type="submit"></v-btn>
-            </v-form>
+            <pack-form
+                v-if="form"
+                ref="form"
+                v-model="form"
+                @save="save"
+                :field-disabled="fieldDisabled"
+                :list-packer="listPacker"
+            ></pack-form>
         </the-dialog-form>
     </fragment>
 </template>
@@ -118,12 +87,14 @@ import { CommonMixin, ModelMixin, FetchListMixin } from "../mixins";
 import { eHandler, castId } from "../utils/helper";
 
 import AppTopBar from "../components/app/AppTopBar";
+import PackForm from "../components/features/PackForm";
 
 export default {
     mixins: [CommonMixin, ModelMixin, FetchListMixin],
     props: ["id"],
     components: {
         AppTopBar,
+        PackForm,
     },
     data() {
         return {

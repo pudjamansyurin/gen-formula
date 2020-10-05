@@ -96,112 +96,31 @@
             @submit="save"
         >
             <template v-slot:DATA>
-                <v-form @submit.prevent="save">
-                    <validation-observer ref="form">
-                        <validation-provider
-                            name="name"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model="form.name"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="fieldDisabled"
-                                :filled="fieldDisabled"
-                                label="Material name"
-                                type="text"
-                                hint="This is to identify the material"
-                                counter
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-
-                        <validation-provider
-                            name="matter_id"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-autocomplete
-                                v-model="form.matter_id"
-                                :items="listMatter"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="fieldDisabled"
-                                :filled="fieldDisabled"
-                                item-text="name"
-                                item-value="id"
-                                label="Matter"
-                                hint="The material's category"
-                                persistent-hint
-                                chips
-                            ></v-autocomplete>
-                        </validation-provider>
-
-                        <validation-provider
-                            name="rev.price"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model.number="form.rev.price"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="fieldDisabled"
-                                :filled="fieldDisabled"
-                                label="Material price"
-                                type="number"
-                                prefix="Rp"
-                                hint="The updated material price"
-                                counter
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-                    </validation-observer>
-                    <v-btn v-show="false" type="submit"></v-btn>
-                </v-form>
+                <material-form
+                    v-if="form"
+                    ref="form"
+                    v-model="form"
+                    @save="save"
+                    :field-disabled="fieldDisabled"
+                    :list-matter="listMatter"
+                ></material-form>
             </template>
 
             <template v-slot:REV>
-                <v-timeline dense clipped>
-                    <v-timeline-item
-                        v-for="(rev, index) in form.revs"
-                        :key="rev.id"
-                        :color="index === 0 ? 'primary' : 'grey'"
-                        small
-                    >
-                        <v-card class="elevation-2">
-                            <v-card-subtitle class="py-2">
-                                <v-row no-gutters>
-                                    <v-col>
-                                        <b v-if="rev.user">
-                                            {{ rev.user.name }}
-                                        </b>
-                                    </v-col>
-                                    <v-col class="text-right">
-                                        {{ rev.updated_at | moment("from") }}
-                                    </v-col>
-                                </v-row>
-                            </v-card-subtitle>
-                            <v-card-text>
-                                <v-chip :color="index === 0 ? 'primary' : ''">
-                                    {{ rev.price | currency }}
-                                </v-chip>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    v-if="
-                                        form.revs.length > 1 && rev.authorized
-                                    "
-                                    @click="confirmRev(rev)"
-                                    color="red"
-                                    small
-                                    text
-                                >
-                                    Delete
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-timeline-item>
-                </v-timeline>
+                <rev-timeline v-if="form.revs" :revs="form.revs">
+                    <template v-slot:card-actions="{ item: { rev } }">
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            v-if="form.revs.length > 1 && rev.authorized"
+                            @click="confirmRev(rev)"
+                            color="red"
+                            small
+                            text
+                        >
+                            Delete
+                        </v-btn>
+                    </template>
+                </rev-timeline>
             </template>
         </the-dialog-form>
     </fragment>
@@ -213,19 +132,18 @@ import pluralize from "pluralize";
 
 import { Material } from "../models";
 import { eHandler } from "../utils/helper";
-import {
-    CommonMixin,
-    ModelMixin,
-    FormTabMixin,
-    FetchListMixin,
-} from "../mixins";
+import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
+import MaterialForm from "../components/features/MaterialForm";
+import RevTimeline from "../components/features/RevTimeline";
 
 export default {
-    mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
+    mixins: [CommonMixin, ModelMixin, TabMixin, FetchListMixin],
     components: {
         AppTopBar,
+        MaterialForm,
+        RevTimeline,
     },
     data() {
         return {

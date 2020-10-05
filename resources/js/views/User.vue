@@ -86,109 +86,16 @@
             @close="close"
             @submit="save"
         >
-            <v-form @submit.prevent="save">
-                <validation-observer ref="form">
-                    <validation-provider name="name" v-slot="{ errors, valid }">
-                        <v-text-field
-                            v-model="form.name"
-                            :error-messages="errors"
-                            :success="valid"
-                            label="Name"
-                            type="text"
-                            hint="This is to identify the user"
-                            counter
-                            persistent-hint
-                        ></v-text-field>
-                    </validation-provider>
-
-                    <validation-provider
-                        name="email"
-                        v-slot="{ errors, valid }"
-                    >
-                        <v-text-field
-                            v-model="form.email"
-                            :error-messages="errors"
-                            :success="valid"
-                            label="E-mail"
-                            type="email"
-                            hint="This email is for recovery"
-                            counter
-                            persistent-hint
-                        ></v-text-field>
-                    </validation-provider>
-
-                    <validation-provider
-                        name="role_id"
-                        v-slot="{ errors, valid }"
-                    >
-                        <v-autocomplete
-                            v-model="form.role_id"
-                            :items="listRole"
-                            :error-messages="errors"
-                            :success="valid"
-                            item-text="name"
-                            item-value="id"
-                            label="Role"
-                            hint="Role for this user"
-                            chips
-                            persistent-hint
-                        ></v-autocomplete>
-                    </validation-provider>
-
-                    <v-btn
-                        v-if="!creating"
-                        @click="changePassword = !changePassword"
-                        color="red"
-                        class="mt-3"
-                        dark
-                        small
-                        outlined
-                    >
-                        {{ passwordChangeText }} Password
-                    </v-btn>
-
-                    <template v-if="changePassword">
-                        <validation-provider
-                            name="password"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model="form.password"
-                                :type="passwordState.type"
-                                :append-icon="passwordState.icon"
-                                :error-messages="errors"
-                                :success="valid"
-                                @click:append="showPassword = !showPassword"
-                                label="Password"
-                                hint="Password for this user"
-                                autocomplete="off"
-                                persistent-hint
-                                counter
-                            ></v-text-field>
-                        </validation-provider>
-
-                        <validation-provider
-                            name="password_confirmation"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model="form.password_confirmation"
-                                :type="passwordState.type"
-                                :append-icon="passwordState.icon"
-                                :error-messages="errors"
-                                :success="valid"
-                                @click:append="showPassword = !showPassword"
-                                label="Password Confirmation"
-                                hint="Fill again the password"
-                                autocomplete="off"
-                                persistent-hint
-                                counter
-                            ></v-text-field>
-                        </validation-provider>
-                    </template>
-                </validation-observer>
-                <v-btn v-show="false" type="submit"></v-btn>
-            </v-form>
+            <user-form
+                v-if="form"
+                ref="form"
+                v-model="form"
+                @save="save"
+                :change-pass.sync="changePassword"
+                :field-disabled="fieldDisabled"
+                :creating="creating"
+                :list-role="listRole"
+            ></user-form>
         </the-dialog-form>
     </fragment>
 </template>
@@ -206,11 +113,13 @@ import {
 } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
+import UserForm from "../components/features/UserForm";
 
 export default {
     mixins: [CommonMixin, ModelMixin, PasswordMixin, FetchListMixin],
     components: {
         AppTopBar,
+        UserForm,
     },
     data() {
         return {
@@ -230,6 +139,7 @@ export default {
             ],
 
             listRole: [],
+            changePassword: false,
         };
     },
     computed: {
@@ -256,10 +166,11 @@ export default {
                 this.$router.push({ name: "profile" });
                 return;
             }
+            // next for other users
             this.change(item || this.selected[0]);
         },
         onSave() {
-            this.ignorePasswordWhenUnchanged();
+            this.removeUnchangedPassword();
         },
     },
     mounted() {

@@ -67,25 +67,13 @@
             @close="close"
             @submit="save"
         >
-            <v-form @submit.prevent="save">
-                <validation-observer ref="form">
-                    <validation-provider name="name" v-slot="{ errors, valid }">
-                        <v-text-field
-                            v-model="form.name"
-                            :error-messages="errors"
-                            :success="valid"
-                            :readonly="fieldDisabled"
-                            :filled="fieldDisabled"
-                            label="Name"
-                            type="text"
-                            hint="The packer's name"
-                            counter
-                            persistent-hint
-                        ></v-text-field>
-                    </validation-provider>
-                </validation-observer>
-                <v-btn v-show="false" type="submit"></v-btn>
-            </v-form>
+            <packer-form
+                v-if="form"
+                ref="form"
+                v-model="form"
+                @save="save"
+                :field-disabled="fieldDisabled"
+            ></packer-form>
         </the-dialog-form>
     </fragment>
 </template>
@@ -98,11 +86,13 @@ import { eHandler } from "../utils/helper";
 import { CommonMixin, ModelMixin } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
+import PackerForm from "../components/features/PackerForm";
 
 export default {
     mixins: [CommonMixin, ModelMixin],
     components: {
         AppTopBar,
+        PackerForm,
     },
     data() {
         return {

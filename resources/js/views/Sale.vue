@@ -84,171 +84,20 @@
             :width="formWidth"
         >
             <template v-slot:DATA>
-                <v-form @submit.prevent="save">
-                    <validation-observer ref="form">
-                        <validation-provider
-                            name="name"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-text-field
-                                v-model="form.name"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="fieldDisabled"
-                                :filled="fieldDisabled"
-                                label="Sale name"
-                                type="text"
-                                hint="This is to identify the sale"
-                                counter
-                                persistent-hint
-                            ></v-text-field>
-                        </validation-provider>
-
-                        <validation-provider
-                            name="component"
-                            v-slot="{ errors, valid }"
-                        >
-                            <v-radio-group
-                                :value="form._products.length"
-                                @change="onComponentChange"
-                                :error-messages="errors"
-                                :success="valid"
-                                :readonly="fieldDisabled"
-                                :filled="fieldDisabled"
-                                :row="!mobile"
-                                hide-details="auto"
-                            >
-                                <template v-slot:label>
-                                    <div class="caption">Component :</div>
-                                </template>
-                                <v-radio label="1 Product" :value="1"></v-radio>
-                                <v-radio label="2 Product" :value="2"></v-radio>
-                            </v-radio-group>
-                        </validation-provider>
-                        <v-divider class="mt-1"></v-divider>
-
-                        <v-row v-if="form._products">
-                            <v-col
-                                v-for="(product, index) in form._products"
-                                :key="index"
-                            >
-                                <v-card outlined>
-                                    <v-card-text>
-                                        <validation-provider
-                                            :name="`_products.${index}.formula_id`"
-                                            v-slot="{ errors, valid }"
-                                        >
-                                            <v-autocomplete
-                                                v-model="product.formula"
-                                                :items="listFormula"
-                                                :error-messages="errors"
-                                                :success="valid"
-                                                :readonly="fieldDisabled"
-                                                :filled="fieldDisabled"
-                                                item-text="name"
-                                                item-value="id"
-                                                label="Formula"
-                                                hint="The formulas"
-                                                persistent-hint
-                                                chips
-                                                return-object
-                                            ></v-autocomplete>
-                                        </validation-provider>
-
-                                        <div
-                                            v-if="product.formula"
-                                            class="mt-2 mb-4"
-                                        >
-                                            <v-chip label>
-                                                {{
-                                                    product.formula.rev.price
-                                                        | currency
-                                                }}
-                                                / KG
-                                            </v-chip>
-                                            <v-chip label>
-                                                {{
-                                                    product.formula.rev
-                                                        .price_liter | currency
-                                                }}
-                                                / L
-                                            </v-chip>
-                                        </div>
-
-                                        <validation-provider
-                                            :name="`_products.${index}.package_id`"
-                                            v-slot="{ errors, valid }"
-                                        >
-                                            <v-autocomplete
-                                                v-model="product.package"
-                                                :items="listPackage"
-                                                :error-messages="errors"
-                                                :success="valid"
-                                                :readonly="fieldDisabled"
-                                                :filled="fieldDisabled"
-                                                item-text="name"
-                                                item-value="id"
-                                                label="Package"
-                                                hint="The packages"
-                                                persistent-hint
-                                                chips
-                                                return-object
-                                            ></v-autocomplete>
-                                        </validation-provider>
-
-                                        <div
-                                            v-if="product.package"
-                                            class="mt-2 mb-4"
-                                        >
-                                            <v-chip label>
-                                                {{
-                                                    product.package.rev.price
-                                                        | currency
-                                                }}
-                                            </v-chip>
-                                            <v-chip label>
-                                                {{ product.package.capacity }}
-                                                {{ product.package.unit.name }}
-                                            </v-chip>
-                                        </div>
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </validation-observer>
-                    <v-btn v-show="false" type="submit"></v-btn>
-                </v-form>
+                <sale-form
+                    v-if="form"
+                    ref="form"
+                    v-model="form"
+                    @save="save"
+                    :model-default="modelDefault"
+                    :field-disabled="fieldDisabled"
+                    :list-package="listPackage"
+                    :list-formula="listFormula"
+                ></sale-form>
             </template>
 
             <template v-slot:REV>
-                <v-timeline dense clipped>
-                    <v-timeline-item
-                        v-for="(rev, index) in form.revs"
-                        :key="rev.id"
-                        :color="index === 0 ? 'primary' : 'grey'"
-                        small
-                    >
-                        <v-card class="elevation-2">
-                            <v-card-subtitle class="py-2">
-                                <v-row no-gutters>
-                                    <v-col>
-                                        <b v-if="rev.user">
-                                            {{ rev.user.name }}
-                                        </b>
-                                    </v-col>
-                                    <v-col class="text-right">
-                                        {{ rev.updated_at | moment("from") }}
-                                    </v-col>
-                                </v-row>
-                            </v-card-subtitle>
-                            <v-card-text>
-                                <v-chip :color="index === 0 ? 'primary' : ''">
-                                    {{ rev.price | currency }}
-                                </v-chip>
-                            </v-card-text>
-                        </v-card>
-                    </v-timeline-item>
-                </v-timeline>
+                <rev-timeline v-if="form.revs" :revs="form.revs"></rev-timeline>
             </template>
         </the-dialog-form>
     </fragment>
@@ -260,19 +109,18 @@ import pluralize from "pluralize";
 
 import { Sale } from "../models";
 import { eHandler } from "../utils/helper";
-import {
-    CommonMixin,
-    ModelMixin,
-    FormTabMixin,
-    FetchListMixin,
-} from "../mixins";
+import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
+import SaleForm from "../components/features/SaleForm";
+import RevTimeline from "../components/features/RevTimeline";
 
 export default {
-    mixins: [CommonMixin, ModelMixin, FormTabMixin, FetchListMixin],
+    mixins: [CommonMixin, ModelMixin, TabMixin, FetchListMixin],
     components: {
         AppTopBar,
+        SaleForm,
+        RevTimeline,
     },
     data() {
         return {
@@ -316,7 +164,7 @@ export default {
             if (_products && _products.length > 1) {
                 return 1000;
             }
-            return 700;
+            return 500;
         },
     },
     methods: {
@@ -348,14 +196,6 @@ export default {
                 package_id,
                 ratio,
             }));
-        },
-        onComponentChange(value) {
-            if (value == 2) {
-                let data = this.$_.cloneDeep(Sale._products[0]);
-                this.form._products.push(data);
-            } else {
-                this.form._products.pop();
-            }
         },
     },
     mounted() {

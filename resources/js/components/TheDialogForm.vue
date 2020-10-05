@@ -44,7 +44,7 @@
                     touchless
                 >
                     <v-tab-item v-for="item in tabs" :key="item">
-                        <slot :name="item"></slot>
+                        <slot :name="item"> </slot>
                     </v-tab-item>
                 </v-tabs-items>
                 <slot v-else></slot>

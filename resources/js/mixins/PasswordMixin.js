@@ -3,8 +3,8 @@ import { cloneDeep } from "lodash";
 export default {
     data() {
         return {
-            showPassword: false,
-            changePassword: false
+            showPassword: false
+            // changePassword: false
         };
     },
     computed: {
@@ -26,7 +26,7 @@ export default {
                 password_confirmation: null
             };
         },
-        ignorePasswordWhenUnchanged() {
+        removeUnchangedPassword() {
             if (!this.changePassword) {
                 this.$delete(this.form, "password");
                 this.$delete(this.form, "password_confirmation");

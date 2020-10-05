@@ -1,11 +1,13 @@
 <template>
     <fragment>
         <v-row align="center" justify="center" dense>
-            <v-col v-for="item in datas" :key="item.id" cols="12" sm="6">
+            <v-col v-for="item in items" :key="item.id" cols="12" sm="6">
                 <v-card
                     @click="toggleSelect(item)"
-                    :color="item.selected ? 'primary darken-2' : 'white'"
-                    :dark="item.selected"
+                    :color="
+                        selectedIndex(item) > -1 ? 'primary darken-2' : 'white'
+                    "
+                    :dark="selectedIndex(item) > -1"
                     :ripple="false"
                     tile
                 >
@@ -37,42 +39,31 @@ export default {
             default: () => {},
         },
     },
-    data() {
-        return {
-            datas: [],
-        };
+    computed: {
+        selected: {
+            get() {
+                return this.value;
+            },
+            set(value) {
+                this.$emit("input", value);
+            },
+        },
     },
     methods: {
+        selectedIndex(item) {
+            // find in selected
+            return this.selected.findIndex(({ id }) => id === item.id);
+        },
         toggleSelect(item) {
             if (!item.authorized) return;
 
-            item.selected = !item.selected;
-
-            this.$emit(
-                "input",
-                this.datas.filter((el) => el.selected)
-            );
-        },
-    },
-    watch: {
-        items: {
-            handler(items) {
-                this.datas = items.map((el) => ({
-                    ...el,
-                    selected: false,
-                }));
-            },
-            immediate: true,
-            // deep: true,
-        },
-        value: {
-            handler(selected) {
-                if (selected.length === 0) {
-                    this.datas.forEach((el) => (el.selected = false));
-                }
-            },
-            immediate: true,
-            // deep: true,
+            // manage selected item
+            let index = this.selectedIndex(item);
+            if (index > -1) {
+                this.selected.splice(index, 1, item);
+            } else {
+                this.selected.push(item);
+            }
         },
     },
 };

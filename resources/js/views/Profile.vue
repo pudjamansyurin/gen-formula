@@ -134,104 +134,14 @@
 
                     <v-divider></v-divider>
                     <v-card-text>
-                        <v-form @submit.prevent="saveProfile">
-                            <validation-observer ref="form">
-                                <validation-provider
-                                    name="name"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-text-field
-                                        v-model="form.name"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        label="Name"
-                                        type="text"
-                                        hint="This is to identify the user"
-                                        persistent-hint
-                                    ></v-text-field>
-                                </validation-provider>
-
-                                <validation-provider
-                                    name="email"
-                                    v-slot="{ errors, valid }"
-                                >
-                                    <v-text-field
-                                        v-model="form.email"
-                                        :error-messages="errors"
-                                        :success="valid"
-                                        label="E-mail"
-                                        type="email"
-                                        hint="This email is for recovery"
-                                        persistent-hint
-                                    ></v-text-field>
-                                </validation-provider>
-
-                                <v-text-field
-                                    v-model="form.role.name"
-                                    type="text"
-                                    label="Role"
-                                    hint="Role for this user"
-                                    persistent-hint
-                                    readonly
-                                ></v-text-field>
-
-                                <v-btn
-                                    @click="changePassword = !changePassword"
-                                    color="red"
-                                    class="mt-3"
-                                    dark
-                                    small
-                                    outlined
-                                >
-                                    {{ passwordChangeText }} Password
-                                </v-btn>
-
-                                <template v-if="changePassword">
-                                    <validation-provider
-                                        name="password"
-                                        v-slot="{ errors, valid }"
-                                    >
-                                        <v-text-field
-                                            v-model="form.password"
-                                            :type="passwordState.type"
-                                            :append-icon="passwordState.icon"
-                                            :error-messages="errors"
-                                            :success="valid"
-                                            @click:append="
-                                                showPassword = !showPassword
-                                            "
-                                            label="Password"
-                                            hint="Your new password"
-                                            autocomplete="off"
-                                            persistent-hint
-                                            counter
-                                        ></v-text-field>
-                                    </validation-provider>
-
-                                    <validation-provider
-                                        name="password_confirmation"
-                                        v-slot="{ errors, valid }"
-                                    >
-                                        <v-text-field
-                                            v-model="form.password_confirmation"
-                                            :type="passwordState.type"
-                                            :append-icon="passwordState.icon"
-                                            :error-messages="errors"
-                                            :success="valid"
-                                            @click:append="
-                                                showPassword = !showPassword
-                                            "
-                                            label="Password Confirmation"
-                                            hint="Fill again the password"
-                                            autocomplete="off"
-                                            persistent-hint
-                                            counter
-                                        ></v-text-field>
-                                    </validation-provider>
-                                </template>
-                            </validation-observer>
-                            <v-btn v-show="false" type="submit"></v-btn>
-                        </v-form>
+                        <user-form
+                            v-if="form"
+                            ref="form"
+                            v-model="form"
+                            @save="saveProfile"
+                            :change-pass.sync="changePassword"
+                            profile
+                        ></user-form>
                     </v-card-text>
 
                     <v-divider></v-divider>
@@ -264,11 +174,13 @@ import { RESEND, GET_PROFILE, UPDATE_PROFILE } from "../store/app/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
 
 import AppTopBar from "../components/app/AppTopBar";
+import UserForm from "../components/features/UserForm";
 
 export default {
     mixins: [CommonMixin, PasswordMixin],
     components: {
         AppTopBar,
+        UserForm,
     },
     data() {
         return {
@@ -279,7 +191,9 @@ export default {
                 password: null,
                 password_confirmation: null,
             },
+
             editting: false,
+            changePassword: false,
         };
     },
     mounted() {
@@ -289,12 +203,12 @@ export default {
     computed: {
         ...mapState("app", ["profile"]),
         verifier() {
-            let { email_verified_at } = this.profile;
+            let { email_verified_at: verified } = this.profile;
 
             return {
-                text: email_verified_at ? "Verified" : "Verify",
-                color: email_verified_at ? "teal" : "orange",
-                icon: email_verified_at
+                text: verified ? "Verified" : "Verify",
+                color: verified ? "teal" : "orange",
+                icon: verified
                     ? "mdi-checkbox-marked-circle"
                     : "mdi-help-circle-outline",
             };
@@ -305,7 +219,7 @@ export default {
         ...mapActions("app", [RESEND, GET_PROFILE, UPDATE_PROFILE]),
         closeProfile() {
             this.editting = false;
-            this.$nextTick(() => this.$refs.form.reset());
+            this.$nextTick(() => this.$refs.form.$refs.form.reset());
         },
         editProfile(item) {
             this.changePassword = false;
@@ -313,13 +227,15 @@ export default {
             this.$nextTick(() => (this.editting = true));
         },
         saveProfile() {
-            this.ignorePasswordWhenUnchanged();
+            this.removeUnchangedPassword();
 
-            this.$refs.form.validate().then(async (valid) => {
+            this.$refs.form.$refs.form.validate().then(async (valid) => {
                 if (valid) {
                     await this.UPDATE_PROFILE({ payload: this.form })
                         .then(() => this.closeProfile())
-                        .catch((e) => this.$refs.form.setErrors(eHandler(e)));
+                        .catch((e) =>
+                            this.$refs.form.$refs.form.setErrors(eHandler(e))
+                        );
                 }
             });
         },
