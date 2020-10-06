@@ -18,6 +18,7 @@ class PackItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+
             'packer_id' => $this->packer_id,
             'packer' => new PackerItem($this->whenLoaded('packer')),
             'packagers_count' => $this->packagers_count,

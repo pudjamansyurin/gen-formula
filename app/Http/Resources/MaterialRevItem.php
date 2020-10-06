@@ -18,9 +18,9 @@ class MaterialRevItem extends JsonResource
         return [
             'id' => $this->id,
             'price' => $this->price,
+
             'material_id' => $this->material_id,
             'material' => new MaterialItem($this->whenLoaded('material')),
-
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

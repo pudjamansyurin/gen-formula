@@ -18,13 +18,12 @@ class SaleItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'filled' => $this->filled,
+
+            'products_count' => $this->products_count,
+            'products' => $this->whenLoaded('products'),
+
             'revs_count' => $this->revs_count,
-
-            // 'formulas_count' => $this->formulas_count,
-
-            // 'matter_id' => $this->matter_id,
-            // 'matter' => new MatterItem($this->whenLoaded('matter')),
-
             'revs' => MaterialRevItem::collection($this->whenLoaded('revs')),
             'rev' => $this->whenLoaded('rev'),
 

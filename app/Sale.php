@@ -3,17 +3,18 @@
 namespace App;
 
 use App\Traits\ClientQueryScope;
+use App\Traits\SaleRoutine;
 use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
-    use ClientQueryScope;
+    use ClientQueryScope, SaleRoutine;
 
     protected $table = 'sales';
 
     protected $_relations = ['user:id,name', 'rev'];
-    protected $_details = ['revs', 'revs.user:id,name'];
-    protected $_counts = ['revs',];
+    protected $_details = ['revs', 'revs.user:id,name', 'products', 'products.formula', 'products.formula.rev', 'products.package', 'products.package.unit', 'products.package.rev'];
+    protected $_counts = ['revs', 'products'];
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +23,7 @@ class Sale extends Model
      */
     protected $fillable = [
         'name',
-        // 'filled',
+        'filled',
         'user_id',
     ];
 
@@ -59,6 +60,25 @@ class Sale extends Model
     {
         return $this->hasOne(SaleRev::class)->latest('updated_at');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function formulas()
+    {
+        return $this->belongsToMany(Formula::class, 'products')
+            ->withPivot(['package_id', 'ratio'])
+            ->withTimestamps();
+    }
+
+    // public function products()
+    // {
+    //     return $this->belongsToMany(Formula::class, 'products')
+    //         ->withPivot('package_id')
+    //         ->join('packages', 'packages.id', '=', 'products.package_id');
+    // }
 
     public function user()
     {

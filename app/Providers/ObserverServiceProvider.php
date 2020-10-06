@@ -9,10 +9,12 @@ use App\Observers\MaterialObserver;
 use App\Observers\PackageObserver;
 use App\Observers\PackerObserver;
 use App\Observers\PackObserver;
+use App\Observers\SaleObserver;
 use App\Observers\UserObserver;
 use App\Pack;
 use App\Package;
 use App\Packer;
+use App\Sale;
 use App\User;
 use Illuminate\Support\ServiceProvider;
 
@@ -41,5 +43,6 @@ class ObserverServiceProvider extends ServiceProvider
         Packer::observe(PackerObserver::class);
         Pack::observe(PackObserver::class);
         Formula::observe(FormulaObserver::class);
+        Sale::observe(SaleObserver::class);
     }
 }

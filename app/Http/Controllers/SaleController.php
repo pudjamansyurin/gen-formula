@@ -53,18 +53,18 @@ class SaleController extends Controller
      */
     public function store(SaleRequest $request)
     {
-        // $this->authorize('create', Sale::class);
+        $this->authorize('create', Sale::class);
 
-        // // create
-        // $sale = Sale::create(array_merge(
-        //     $request->validated(),
-        //     ['user_id' => auth()->id()]
-        // ));
+        // create
+        $sale = Sale::create(array_merge(
+            $request->validated(),
+            ['user_id' => auth()->id()]
+        ));
 
-        // return response(
-        //     new SaleItem($sale->loadRelation()),
-        //     Response::HTTP_CREATED
-        // );
+        return response(
+            new SaleItem($sale->loadRelation()),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -76,15 +76,15 @@ class SaleController extends Controller
      */
     public function update(SaleRequest $request, Sale $sale)
     {
-        // $this->authorize('update', $sale);
+        $this->authorize('update', $sale);
 
-        // // update
-        // $sale->update($request->validated());
+        // update
+        $sale->update($request->validated());
 
-        // return response(
-        //     new SaleItem($sale->loadRelation()),
-        //     Response::HTTP_OK
-        // );
+        return response(
+            new SaleItem($sale->loadRelation()),
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -95,19 +95,11 @@ class SaleController extends Controller
      */
     public function destroy(DeleteSomeRequest $request)
     {
-        // $salesId = $request->ids;
-        // $this->authorize('delete', [Sale::class, $salesId]);
+        $salesId = $request->ids;
+        $this->authorize('delete', [Sale::class, $salesId]);
 
-        // // check
-        // if (Sale::has('formulas')->whereIn('id', $salesId)->count()) {
-        //     // failed
-        //     return response([
-        //         'message' => "Still have 'FORMULA' relations!"
-        //     ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        // }
-
-        // // delete
-        // Sale::destroy($salesId);
-        // return response($salesId, Response::HTTP_OK);
+        // delete
+        Sale::destroy($salesId);
+        return response($salesId, Response::HTTP_OK);
     }
 }

@@ -20,8 +20,8 @@ class MatterItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'materials_count' => $this->materials_count,
 
+            'materials_count' => $this->materials_count,
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

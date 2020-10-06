@@ -19,6 +19,11 @@ class DummySaleSeeder extends Seeder
         factory(App\Sale::class, 25)->create()
             ->each(function ($sale) use ($faker, $packages, $formulas) {
                 $component = rand(1, 2);
+                // update filled
+                if ($component > 1) {
+                    $sale->filled = 100;
+                    $sale->save();
+                }
 
                 // create products
                 $products = $this->makeProducts($packages, $formulas, $component);
@@ -26,15 +31,6 @@ class DummySaleSeeder extends Seeder
                 $sale->updateProduct($products);
                 // create revs
                 $sale->updateRev();
-
-
-                // for ($i = 0; $i < rand(1, 5); $i++) {
-                //     // Create revs
-                //     $sale->revs()->create([
-                //         'price' => $faker->randomNumber(6),
-                //         'user_id' => $sale->user_id,
-                //     ]);
-                // }
             });
     }
 
@@ -43,28 +39,49 @@ class DummySaleSeeder extends Seeder
         $products = [];
         $packagesUsed = [];
         $formulasUsed = [];
+        $ratioTotal = 0;
+        $salePackage = collect();
 
         for ($i = 0; $i < $component; $i++) {
-            if ($component == 2) {
-                $ratio = $i == 0 ? rand(7, 9) : rand(1, 3);
-            } else {
-                $ratio = 1;
+            // generate ratio
+            $ratio = 1;
+            if ($component > 1) {
+                $ratio = $i == 0 ? rand(80, 99) : rand(1, 20);
             }
+            $ratioTotal += $ratio;
 
+            // generate package
             $package = $packages->whereNotIn('id', $packagesUsed)
-                ->filter(function ($package) use ($i) {
+                ->filter(function ($package) use ($i, $salePackage, $ratio, $ratioTotal) {
+                    $capacity = $package->capacity;
                     if ($i == 0) {
-                        return $package->capacity >= 50;
+                        return $capacity >= 50;
                     }
-                    return $package->capacity < 50;
+
+                    $saleCapacity = $salePackage->capacity;
+                    $minPackageCapacity = ($ratio * $saleCapacity) / $ratioTotal;
+                    return ($capacity > $minPackageCapacity && $capacity < $saleCapacity);
+                })
+                ->filter(function ($package) use ($i, $salePackage) {
+                    if ($i == 0) {
+                        return true;
+                    }
+
+                    return $package->unit->id == $salePackage->unit->id;
                 })
                 ->random();
             array_push($packagesUsed, $package->id);
 
-            $formula = $formulas->whereNotIn('id', $formulasUsed)
-                ->random();
+            // catch first package
+            if ($i == 0) {
+                $salePackage = $package;
+            }
+
+            // generate formula
+            $formula = $formulas->whereNotIn('id', $formulasUsed)->random();
             array_push($formulasUsed, $formula->id);
 
+            // save them
             array_push($products, [
                 'package_id' => $package->id,
                 'formula_id' => $formula->id,

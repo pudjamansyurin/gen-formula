@@ -20,8 +20,8 @@ class PackerItem extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'packs_count' => $this->packs_count,
 
+            'packs_count' => $this->packs_count,
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

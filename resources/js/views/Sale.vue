@@ -55,6 +55,9 @@
                     {{ item.name }}
                 </v-chip>
             </template>
+            <template v-slot:[`item.filled`]="{ item }">
+                {{ item.filled }} %
+            </template>
             <template v-slot:[`item.rev.price`]="{ item }">
                 {{ item.rev.price | currency }}
             </template>
@@ -139,16 +142,17 @@ export default {
                     sortable: false,
                     width: 150,
                 },
+                // { text: "Filled", align: "center", value: "filled" },
+                {
+                    text: "Product",
+                    value: "products_count",
+                    align: "center",
+                },
                 {
                     text: "Rev",
                     value: "revs_count",
                     align: "center",
                 },
-                // {
-                //     text: "Formula",
-                //     value: "formulas_count",
-                //     align: "center",
-                // },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",
@@ -173,7 +177,10 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(item);
+            this.form = {
+                ...this.$_.cloneDeep(item),
+                _products: this.$_.cloneDeep(this.modelDefault._products),
+            };
         },
         onCreate() {
             this.change(this.modelDefault);
@@ -182,12 +189,20 @@ export default {
             this.change(item || this.selected[0]);
             this.fetchDetail();
         },
+        onSave() {
+            // convert model as foreignID
+            this.form._products = this.form._products.map((product) => ({
+                ...product,
+                package_id: this.$_.get(product.package, "id"),
+                formula_id: this.$_.get(product.formula, "id"),
+                ratio: Number(product.ratio),
+            }));
+        },
         fetchDetail() {
             this.GET_MODEL({
                 model: this.model,
                 id: this.form.id,
             }).then((data) => {
-                console.warn(data);
                 this.form = {
                     ...this.$_.cloneDeep(data),
                     _products: this.makeProductsDetail(data.products),
@@ -195,9 +210,9 @@ export default {
             });
         },
         makeProductsDetail(products) {
-            return products.map(({ id, package_id, ratio }) => ({
-                id,
-                package_id,
+            return products.map(({ formula, package: pkg, ratio }) => ({
+                formula,
+                package: pkg,
                 ratio,
             }));
         },

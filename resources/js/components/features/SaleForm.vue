@@ -27,12 +27,12 @@
                         text
                     >
                         <span class="caption">Total RMP</span><br />
-                        <b>{{ priceTotal | currency }}</b>
+                        <b>{{ priceTotal.toFixed(2) | currency }}</b>
                     </v-alert>
                 </v-col>
             </v-row>
 
-            <validation-provider name="component" v-slot="{ errors, valid }">
+            <validation-provider name="_products" v-slot="{ errors, valid }">
                 <v-radio-group
                     :value="form._products.length"
                     @change="onComponentChange"
@@ -64,7 +64,11 @@
                                     >
                                         <v-autocomplete
                                             v-model="product.package"
-                                            :items="listPackage"
+                                            :items="
+                                                index == 0
+                                                    ? listPackage
+                                                    : listPackageSecond
+                                            "
                                             :error-messages="errors"
                                             :success="valid"
                                             :readonly="fieldDisabled"
@@ -108,7 +112,11 @@
                                     >
                                         <v-autocomplete
                                             v-model="product.formula"
-                                            :items="listFormula"
+                                            :items="
+                                                index == 0
+                                                    ? listFormula
+                                                    : listFormulaSecond
+                                            "
                                             :error-messages="errors"
                                             :success="valid"
                                             :readonly="fieldDisabled"
@@ -163,7 +171,7 @@
                             >
                                 <v-col cols="12">
                                     <validation-provider
-                                        v-if="form._products.length == 2"
+                                        v-if="form._products.length > 1"
                                         :name="`_products.${index}.ratio`"
                                         v-slot="{ errors, valid }"
                                     >
@@ -181,11 +189,11 @@
                                     </validation-provider>
                                     <validation-provider
                                         v-else
-                                        :name="`rev.filled`"
+                                        :name="`filled`"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-text-field
-                                            v-model.number="form.rev.filled"
+                                            v-model.number="form.filled"
                                             :error-messages="errors"
                                             :success="valid"
                                             :readonly="fieldDisabled"
@@ -260,24 +268,43 @@ export default {
                 this.$emit("input", value);
             },
         },
-        saleUnitSymbol() {
+        listPackageSecond() {
             let { package: pkg } = this.form._products[0];
 
-            if (pkg) {
-                return pkg.unit.symbol;
+            if (this.saleUnitSymbol) {
+                return this.listPackage
+                    .filter(({ unit }) => unit.symbol == this.saleUnitSymbol)
+                    .filter(({ id }) => id != this.$_.get(pkg, "id"));
+            }
+            return this.listPackage;
+        },
+        listFormulaSecond() {
+            let { formula } = this.form._products[0];
+
+            if (formula) {
+                return this.listFormula.filter(({ id }) => id != formula.id);
+            }
+            return this.listFormula;
+        },
+        salePackage() {
+            let { package: pkg } = this.form._products[0];
+
+            return pkg;
+        },
+        saleUnitSymbol() {
+            if (this.salePackage) {
+                return this.salePackage.unit.symbol;
             }
             return;
         },
         saleCapacity() {
-            let { package: pkg } = this.form._products[0];
-
-            if (pkg) {
-                return Number(pkg.capacity);
+            if (this.salePackage) {
+                return Number(this.salePackage.capacity);
             }
             return 0;
         },
         saleFilled() {
-            return (Number(this.form.rev.filled) * this.saleCapacity) / 100;
+            return (Number(this.form.filled) * this.saleCapacity) / 100;
         },
         saleRatio() {
             return this.form._products.reduce(
@@ -286,12 +313,12 @@ export default {
             );
         },
         saleReady() {
-            let { _products: products, rev } = this.form;
+            let { _products, filled } = this.form;
 
             // skip if has empty field
             return !(
-                !rev.filled ||
-                products.some(
+                !filled ||
+                _products.some(
                     ({ package: pkg, formula, ratio }) =>
                         !pkg || !formula || !ratio
                 )
@@ -304,12 +331,10 @@ export default {
             }
 
             // calculating
-            return this.form._products
-                .reduce(
-                    (carry, product) => carry + this.calcProductRMP(product),
-                    0
-                )
-                .toFixed(2);
+            return this.form._products.reduce(
+                (carry, product) => carry + this.calcProductRMP(product),
+                0
+            );
         },
     },
     methods: {
@@ -327,14 +352,44 @@ export default {
             );
         },
         onComponentChange(value) {
-            if (value == 2) {
+            if (value > 1) {
                 let data = this.$_.cloneDeep(this.modelDefault._products[0]);
 
-                this.form.rev.filled = 100;
+                this.form.filled = 100;
                 this.form._products.push(data);
             } else {
                 this.form._products[0].ratio = 1;
                 this.form._products.pop();
+            }
+        },
+    },
+    watch: {
+        listPackageSecond: function (list) {
+            let { _products } = this.form;
+
+            if (_products.length > 1) {
+                if (_products[1].package) {
+                    if (!list.find(({ id }) => id == _products[1].package.id)) {
+                        _products.splice(1, 1, {
+                            ..._products[1],
+                            package: null,
+                        });
+                    }
+                }
+            }
+        },
+        listFormulaSecond: function (list) {
+            let { _products } = this.form;
+
+            if (_products.length > 1) {
+                if (_products[1].formula) {
+                    if (!list.find(({ id }) => id == _products[1].formula.id)) {
+                        _products.splice(1, 1, {
+                            ..._products[1],
+                            formula: null,
+                        });
+                    }
+                }
             }
         },
     },

@@ -80,6 +80,13 @@ class Package extends Model
             ->withTimestamps();
     }
 
+    public function sales()
+    {
+        return $this->belongsToMany(Sale::class, 'products')
+            ->withPivot(['formula_id', 'ratio'])
+            ->withTimestamps();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

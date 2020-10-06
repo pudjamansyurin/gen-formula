@@ -21,6 +21,7 @@ class PackageItem extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'capacity' => $this->capacity,
+
             'unit_id' => $this->unit_id,
             'unit' => $this->whenLoaded('unit'),
 
