@@ -40,7 +40,6 @@ class ObserverServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Package::observe(PackageObserver::class);
         Material::observe(MaterialObserver::class);
-        Packer::observe(PackerObserver::class);
         Pack::observe(PackObserver::class);
         Formula::observe(FormulaObserver::class);
         Sale::observe(SaleObserver::class);

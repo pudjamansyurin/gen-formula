@@ -7,39 +7,30 @@ use App\Package;
 
 class PackObserver
 {
-    // /**
-    //  * Handle the pack "updated" event.
-    //  *
-    //  * @param  \App\Pack  $pack
-    //  * @return void
-    //  */
-    // public function updated(Pack $pack)
-    // {
-    //     if ($packerId = request('packer_id')) {
-    //         if ($pack->getOriginal('packer_id') != $packerId) {
-    //             $this->updatePackageRev();
-    //         }
-    //     }
-    // }
-
     /**
-     * Handle the pack "deleted" event.
+     * Handle the pack "updated" event.
      *
      * @param  \App\Pack  $pack
      * @return void
      */
-    public function deleted(Pack $pack)
+    public function updated(Pack $pack)
     {
-        $this->updatePackageRev();
+        if ($packerId = request('packer_id')) {
+            if ($pack->getOriginal('packer_id') != $packerId) {
+                $this->updatePackageRev($pack);
+            }
+        }
     }
 
     /**
      * Local routines
      */
-    private function updatePackageRev()
+    private function updatePackageRev($pack)
     {
-        Package::all()->each(function ($package) {
-            $package->updateRev();
+        $pack->load(['packagers', 'packagers.package']);
+
+        $pack->packagers->each(function ($packager) {
+            $packager->package->updateRev();
         });
     }
 }

@@ -84,7 +84,7 @@
                                     </validation-provider>
                                 </v-col>
                                 <v-col cols="12" v-if="product.package">
-                                    <v-chip label>
+                                    <v-chip color="primary" dark label>
                                         {{
                                             product.package.rev.price | currency
                                         }}
@@ -208,6 +208,9 @@
                                     </validation-provider>
                                 </v-col>
                                 <v-col cols="12" v-if="saleReady">
+                                    <v-chip color="primary" dark label>
+                                        {{ calcProductRMP(product) | currency }}
+                                    </v-chip>
                                     <v-chip label>
                                         {{
                                             calcProductFilled(
@@ -217,9 +220,6 @@
                                         /
                                         {{ product.package.capacity }}
                                         {{ product.package.unit.name }}
-                                    </v-chip>
-                                    <v-chip label>
-                                        {{ calcProductRMP(product) | currency }}
                                     </v-chip>
                                 </v-col>
                             </v-row>

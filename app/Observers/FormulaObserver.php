@@ -20,5 +20,9 @@ class FormulaObserver
         }
         // update total price
         $formula->updateRev();
+
+        // FIXME: update related recipes (not creating)
+
+        // FIXME: update related sale (not creating)
     }
 }

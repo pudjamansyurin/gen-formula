@@ -64,11 +64,6 @@ class Pack extends Model
         return $this->belongsToMany(Packager::class, 'packets');
     }
 
-    // public function packages()
-    // {
-    //     return $this->hasManyDeep(Package::class, Packager::class);
-    // }
-
     public function user()
     {
         return $this->belongsTo(User::class);

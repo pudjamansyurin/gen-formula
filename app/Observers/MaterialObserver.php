@@ -18,5 +18,7 @@ class MaterialObserver
         if ($revPrice = request('rev.price')) {
             $material->updateRev($revPrice);
         }
+
+        // FIXME: update related recipes (not creating)
     }
 }

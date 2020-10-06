@@ -20,5 +20,7 @@ class PackageObserver
         }
         // update total price
         $package->updateRev();
+
+        // FIXME: update related sale (not creating)
     }
 }
