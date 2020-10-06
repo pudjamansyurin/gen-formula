@@ -2,13 +2,15 @@
 
 namespace App;
 
-use App\Traits\ClientQueryScope;
-use App\Traits\FormulaRoutine;
+use App\Traits\Scopes\ClientQueryScope;
+use App\Traits\Routines\FormulaRoutine;
+use App\Traits\Scopes\ExtendedLocalScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Formula extends Model
 {
-    use ClientQueryScope, FormulaRoutine;
+    use ClientQueryScope, ExtendedLocalScope;
+    use FormulaRoutine;
 
     protected $table = 'formulas';
 

@@ -80,9 +80,15 @@ class UserController extends Controller
         $usersId = $request->ids;
         $this->authorize('delete', [User::class, $usersId]);
 
+        // check
+        if ($response = User::rejectWhenHas($usersId, [
+            'sales', 'formulas', 'materials', 'matters', 'packages', 'packers', 'packs'
+        ])) {
+            return $response;
+        }
+
         // delete
         User::destroy($usersId);
-
         return response($usersId, Response::HTTP_OK);
     }
 

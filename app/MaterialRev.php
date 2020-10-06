@@ -47,12 +47,4 @@ class MaterialRev extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * Custom query scopes
-     */
-    public function scopeGetById($q, $id)
-    {
-        return $this->with($this->relations)->find($id);
-    }
 }

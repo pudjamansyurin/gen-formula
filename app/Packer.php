@@ -2,12 +2,13 @@
 
 namespace App;
 
-use App\Traits\ClientQueryScope;
+use App\Traits\Scopes\ClientQueryScope;
+use App\Traits\Scopes\ExtendedLocalScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Packer extends Model
 {
-    use ClientQueryScope;
+    use ClientQueryScope, ExtendedLocalScope;
 
     protected $table = 'packers';
 
@@ -61,5 +62,13 @@ class Packer extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Custom local scopes
+     */
+    public function scopeGetAsListWithPacks()
+    {
+        return $this->with('packs:id,name,packer_id')->get();
     }
 }

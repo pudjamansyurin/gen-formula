@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Routines;
 
 use App\MaterialRev;
 use Illuminate\Support\Facades\Gate;

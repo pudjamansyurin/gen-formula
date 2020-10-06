@@ -99,6 +99,11 @@ class PackageController extends Controller
         $packagesId = $request->ids;
         $this->authorize('delete', [Package::class, $packagesId]);
 
+        // check
+        if ($response = Package::rejectWhenHas($packagesId, ['sales'])) {
+            return $response;
+        }
+
         // delete
         Package::destroy($packagesId);
 

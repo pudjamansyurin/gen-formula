@@ -16,22 +16,24 @@ class DummySaleSeeder extends Seeder
         $formulas = App\Formula::getAsProductList();
 
         // Create sales
-        factory(App\Sale::class, 25)->create()
-            ->each(function ($sale) use ($faker, $packages, $formulas) {
-                $component = rand(1, 2);
-                // update filled
-                if ($component > 1) {
-                    $sale->filled = 100;
-                    $sale->save();
-                }
+        App\Sale::withoutEvents(function () use ($packages, $formulas) {
+            factory(App\Sale::class, 25)->create()
+                ->each(function ($sale) use ($packages, $formulas) {
+                    $component = rand(1, 2);
+                    // update filled
+                    if ($component > 1) {
+                        $sale->filled = 100;
+                        $sale->save();
+                    }
 
-                // create products
-                $products = $this->makeProducts($packages, $formulas, $component);
-                // update products
-                $sale->updateProduct($products);
-                // create revs
-                $sale->updateRev();
-            });
+                    // create products
+                    $products = $this->makeProducts($packages, $formulas, $component);
+                    // update products
+                    $sale->updateProduct($products);
+                    // create revs
+                    $sale->updateRev();
+                });
+        });
     }
 
     private function makeProducts($packages, $formulas, $component)

@@ -19,15 +19,15 @@ class MaterialRevController extends Controller
         $revsId = $request->ids;
         $this->authorize('delete', [MaterialRev::class, $revsId]);
 
-        // delete (if not the last one)
-        $rev = MaterialRev::getById($revsId[0]);
-        if ($rev->material->revs->count() > 1) {
-            MaterialRev::destroy($revsId);
-
-            return response($revsId, Response::HTTP_OK);
+        // check: at least 1 existing
+        if (MaterialRev::find($revsId[0])->material->revs->count() <= 1) {
+            return response([
+                'message' => "At least 1 price exist!"
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        return response([
-            'message' => "At least 1 price exist!"
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        // delete
+        MaterialRev::destroy($revsId);
+        return response($revsId, Response::HTTP_OK);
     }
 }

@@ -83,17 +83,9 @@ class PackerController extends Controller
         $packersId = $request->ids;
         $this->authorize('delete', [Packer::class, $packersId]);
 
-        // // delete with no relations
-        // Packer::doesntHave('packs')
-        //     ->whereIn('id', $packersId)
-        //     ->delete();
-
-        // check
-        if (Packer::has('packs')->whereIn('id', $packersId)->count()) {
-            // failed
-            return response([
-                'message' => "Still have 'PACKS' relations!"
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        // check: relations
+        if ($response = Packer::rejectWhenHas($packersId, ['packages', 'packs'])) {
+            return $response;
         }
 
         // delete
@@ -109,7 +101,7 @@ class PackerController extends Controller
         $this->authorize('viewAny', Packer::class);
 
         return response([
-            'data' => Packer::getAsList()->load(['packs:id,name,packer_id'])
+            'data' => Packer::getAsListWithPacks()
         ], Response::HTTP_OK);
     }
 }

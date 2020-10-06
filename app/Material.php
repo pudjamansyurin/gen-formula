@@ -2,13 +2,15 @@
 
 namespace App;
 
-use App\Traits\ClientQueryScope;
-use App\Traits\MaterialRoutine;
+use App\Traits\Scopes\ClientQueryScope;
+use App\Traits\Routines\MaterialRoutine;
+use App\Traits\Scopes\ExtendedLocalScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-    use ClientQueryScope, MaterialRoutine;
+    use ClientQueryScope, ExtendedLocalScope;
+    use MaterialRoutine;
 
     protected $table = 'materials';
 

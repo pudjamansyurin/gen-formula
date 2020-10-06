@@ -2,20 +2,21 @@
 
 namespace App;
 
-use App\Traits\ClientQueryScope;
+use App\Traits\Scopes\ClientQueryScope;
 use App\Notifications\VerifyEmail;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\Scopes\ExtendedLocalScope;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Models\Role;
+// use Laravel\Sanctum\HasApiTokens;
+// use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasRoles, Notifiable;
-    use ClientQueryScope;
+    use ClientQueryScope, ExtendedLocalScope;
 
     protected $table = 'users';
 
@@ -96,6 +97,11 @@ class User extends Authenticatable
     public function formulas()
     {
         return $this->hasMany(Formula::class);
+    }
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
     }
 
     /**

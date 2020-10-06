@@ -1,19 +1,12 @@
 <?php
 
-namespace App\Traits;
-
-use Illuminate\Http\Request;
+namespace App\Traits\Scopes;
 
 trait ClientQueryScope
 {
     /**
      * Local scopes
      */
-    public function scopeGetAsList()
-    {
-        return $this->all(['id', 'name']);
-    }
-
     public function scopeQueried()
     {
         return [

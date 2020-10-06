@@ -2,13 +2,15 @@
 
 namespace App;
 
-use App\Traits\ClientQueryScope;
-use App\Traits\PackageRoutine;
+use App\Traits\Scopes\ClientQueryScope;
+use App\Traits\Routines\PackageRoutine;
+use App\Traits\Scopes\ExtendedLocalScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
-    use ClientQueryScope, PackageRoutine;
+    use ClientQueryScope, ExtendedLocalScope;
+    use PackageRoutine;
 
     protected $table = 'packages';
 

@@ -8,7 +8,6 @@ class Recipe extends Model
 {
     protected $table = "recipeables";
 
-
     /**
      * The attributes that are mass assignable.
      *

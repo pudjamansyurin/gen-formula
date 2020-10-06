@@ -2,12 +2,13 @@
 
 namespace App;
 
-use App\Traits\ClientQueryScope;
+use App\Traits\Scopes\ClientQueryScope;
+use App\Traits\Scopes\ExtendedLocalScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Pack extends Model
 {
-    use ClientQueryScope;
+    use ClientQueryScope, ExtendedLocalScope;
 
     protected $table = 'packs';
 
