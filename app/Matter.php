@@ -3,12 +3,12 @@
 namespace App;
 
 use App\Traits\Scopes\ClientQueryScope;
-use App\Traits\Scopes\ExtendedLocalScope;
+use App\Traits\Scopes\ExtendedScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Matter extends Model
 {
-    use ClientQueryScope, ExtendedLocalScope;
+    use ClientQueryScope, ExtendedScope;
 
     protected $table = 'matters';
 

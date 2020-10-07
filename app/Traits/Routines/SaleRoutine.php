@@ -10,13 +10,15 @@ trait SaleRoutine
     public function updateProduct($products)
     {
         // sync products
-        $formulas = [];
-        foreach ($products as $product) {
-            $formulas[$product['formula_id']] = [
+        $formulas = array_reduce($products, function ($carry, $product) {
+            $carry[$product['formula_id']] = [
                 'package_id' => $product['package_id'],
                 'ratio' => $product['ratio']
             ];
-        }
+
+            return $carry;
+        }, []);
+
         $this->formulas()->sync($formulas);
 
         return $this;

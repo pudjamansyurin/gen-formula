@@ -138,7 +138,9 @@
                                     No
                                 </th>
                                 <th class="text-left">Name</th>
-                                <th class="text-left">Type</th>
+                                <th class="text-left" style="width: 100px">
+                                    Type
+                                </th>
                                 <th class="text-right" style="width: 200px">
                                     Price
                                 </th>
@@ -159,20 +161,47 @@
                                     {{ index + 1 }}
                                 </td>
                                 <td class="text-left">
-                                    {{ recipe.name }}
+                                    <validation-provider
+                                        :name="`_recipes.${index}.recipeable_id`"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            :value="recipe.name"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            readonly
+                                            hide-details="auto"
+                                            flat
+                                            dense
+                                        ></v-text-field>
+                                    </validation-provider>
                                 </td>
                                 <td class="text-left">
-                                    {{
-                                        stripRecipeClass(recipe.recipeable_type)
-                                    }}
+                                    <validation-provider
+                                        :name="`_recipes.${index}.recipeable_type`"
+                                        v-slot="{ errors, valid }"
+                                    >
+                                        <v-text-field
+                                            :value="
+                                                stripRecipeClass(
+                                                    recipe.recipeable_type
+                                                )
+                                            "
+                                            :error-messages="errors"
+                                            :success="valid"
+                                            readonly
+                                            hide-details="auto"
+                                            flat
+                                            dense
+                                        ></v-text-field>
+                                    </validation-provider>
                                 </td>
                                 <td class="text-right">
                                     {{ recipe.price | currency }}
                                 </td>
                                 <td>
                                     <validation-provider
-                                        :vid="`_recipes.${index}.portion`"
-                                        :name="`${recipe.name} portion`"
+                                        :name="`_recipes.${index}.portion`"
                                         v-slot="{ errors, valid }"
                                     >
                                         <v-text-field
@@ -183,7 +212,7 @@
                                             :filled="fieldDisabled"
                                             type="number"
                                             prefix="Kg"
-                                            hide-details
+                                            hide-details="auto"
                                             reverse
                                             flat
                                             dense
@@ -218,7 +247,7 @@
                                             readonly
                                             type="number"
                                             prefix="Kg"
-                                            hide-details
+                                            hide-details="auto"
                                             reverse
                                             flat
                                             dense

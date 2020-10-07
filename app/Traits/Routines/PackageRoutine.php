@@ -10,18 +10,22 @@ trait PackageRoutine
     public function updatePackager($packers)
     {
         // sync packagers
-        $packagers = [];
-        foreach ($packers as $packer) {
-            $packagers[$packer['id']] = ['content' => $packer['content']];
-        }
+        $packagers = array_reduce($packers, function ($carry, $packer) {
+            $carry[$packer['id']] = ['content' => $packer['content']];
+
+            return $carry;
+        }, []);
+
         $this->packers()->sync($packagers);
 
         // sync packets
         foreach ($packers as $packer) {
-            $packets = [];
-            foreach ($packer['packs'] as $pack) {
-                $packets[$pack['id']] = ['price' => $pack['price']];
-            }
+            $packets = array_reduce($packer['packs'], function ($carry, $pack) {
+                $carry[$pack['id']] = ['price' => $pack['price']];
+
+                return $carry;
+            }, []);
+
             $this->packagers()
                 ->firstWhere('packer_id', $packer['id'])
                 ->packets()

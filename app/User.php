@@ -4,7 +4,7 @@ namespace App;
 
 use App\Traits\Scopes\ClientQueryScope;
 use App\Notifications\VerifyEmail;
-use App\Traits\Scopes\ExtendedLocalScope;
+use App\Traits\Scopes\ExtendedScope;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasRoles, Notifiable;
-    use ClientQueryScope, ExtendedLocalScope;
+    use ClientQueryScope, ExtendedScope;
 
     protected $table = 'users';
 

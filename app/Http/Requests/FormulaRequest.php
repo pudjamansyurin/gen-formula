@@ -4,11 +4,14 @@ namespace App\Http\Requests;
 
 use App\Formula;
 use App\Material;
+use App\Traits\Validators\ExtendedValidator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class FormulaRequest extends FormRequest
 {
+    use ExtendedValidator;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -81,65 +84,70 @@ class FormulaRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $this->validateSumTotal($validator,  '_recipes', 'portion', 100);
-            $this->validateExistPolymorphic($validator, '_recipes', 'recipeable');
-            $this->validateDistinctPolymorphic($validator, '_recipes', 'recipeable');
+            $this->validateSum($validator,  '_recipes', 'portion', 100);
+            $this->validatePolymorphicExist($validator, '_recipes', 'recipeable');
+            $this->validatePolymorphicDistinct($validator, '_recipes', 'recipeable');
+            $this->validateMainFormulaAsRecipe($validator);
+            $this->validateHasParentAsMain($validator);
+            $this->validateSelfAsRecipe($validator);
+            $this->validateParentAsRecipe($validator);
         });
     }
 
-    private function validateSumTotal($validator, $array, $field, $value)
+    private function validateParentAsRecipe($validator)
     {
-        if ($items = request($array)) {
-            // validate
-            $total = array_reduce($items, function ($carry, $item)  use ($field) {
-                return $carry + $item[$field];
-            }, 0);
-
-            // add error message
-            if ($total != $value) {
-                $validator->errors()
-                    ->add("{$array}_{$field}", "Total {$field} should be {$value}.");
-            }
-        }
     }
 
-    private function validateExistPolymorphic($validator, $array, $polymorphic)
+    private function validateSelfAsRecipe($validator)
     {
-        if ($items = request($array)) {
-            foreach ($items as $key => $item) {
-                // check class
-                $itemClass = resolve($item["{$polymorphic}_type"]);
-                if (!$itemClass) {
-                    $validator->errors()
-                        ->add("{$array}.{$key}.{$polymorphic}_type", 'Polymorphic type is not valid.');
-                    return;
-                } else {
-                    // check model
-                    $itemModel = $itemClass->find($item["{$polymorphic}_id"]);
-                    if (!$itemModel) {
-                        $validator->errors()
-                            ->add("{$array}.{$key}.{$polymorphic}_id", 'Polymorphic is not valid.');
-                        return;
-                    }
+        $id = request('id');
+
+        if ($formula = Formula::find($id)) {
+            if ($recipes = request('_recipes')) {
+                $recipeFormulas = $this->getRecipeableFormulas($recipes);
+            }
+
+            foreach ($recipeFormulas as $key => $recipeFormula) {
+                if ($formula->id == $recipeFormula['recipeable_id']) {
+                    $target = "_recipes.{$key}.recipeable_id";
+                    $validator->errors()->add($target, "Can not use self as recipe.");
+                    break;
                 }
             }
         }
     }
 
-    private function validateDistinctPolymorphic($validator, $array, $polymorphic)
+    private function validateHasParentAsMain($validator)
     {
-        if ($items = request($array)) {
-            $group = [];
-            foreach ($items as $key => $item) {
-                $uniqueKey = $item['recipeable_type'] . $item['recipeable_id'];
+        $id = request('id');
+        $main = request('main');
 
-                if (isset($group[$uniqueKey])) {
-                    $validator->errors()
-                        ->add("{$array}.{$key}.{$polymorphic}_id", 'Polymorphic is not unique.');
-                } else {
-                    $group[$uniqueKey] = $item;
+        if ($main) {
+            if (Formula::has('parents')->find($id)) {
+                $validator->errors()->add("main", "Still used by other formulas.");
+            }
+        }
+    }
+
+
+    private function validateMainFormulaAsRecipe($validator)
+    {
+        if ($recipes = request('_recipes')) {
+            $recipeFormulas = $this->getRecipeableFormulas($recipes);
+
+            foreach ($recipeFormulas as $key => $recipeFormula) {
+                if (Formula::find($recipeFormula['recipeable_id'])->main) {
+                    $target = "_recipes.{$key}.recipeable_id";
+                    $validator->errors()->add($target, "Main formula may not be used as recipe.");
                 }
             }
         }
+    }
+
+    private function getRecipeableFormulas($recipes)
+    {
+        return array_filter($recipes, function ($recipe) {
+            return $recipe['recipeable_type'] == Formula::class;
+        });
     }
 }

@@ -4,8 +4,6 @@ namespace App\Traits\Routines;
 
 use App\Formula;
 use App\Material;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 trait FormulaRoutine
 {
@@ -32,8 +30,7 @@ trait FormulaRoutine
                     break;
 
                 case get_class($this):
-                    // $this->getParents($id);
-                    [$children, $depth] = $this->getChildren($id);
+                    [$children, $depth] = $this->getRecipe('children', $id);
 
                     $formulaRecipes[$id] = [
                         'portion' => $recipe['portion'],
@@ -105,43 +102,79 @@ trait FormulaRoutine
         return [$rmcs, $rmcsLiter];
     }
 
-    private function getChildren($id)
+    public function getRecipe($type, $id = null)
     {
-        $formula = Formula::with('children')->find($id);
+        if ($id) {
+            $formula = Formula::with($type)->find($id);
+        } else if ($this->exists()) {
+            $formula = $this->load($type);
+        }
+
+        // bad arguments
+        if (!$formula) {
+            return [];
+        }
+
         $item = json_decode(json_encode($formula));
+        $recipes = $this->getRecursive($type, $item->{$type});
+        // $flatten = $this->getFlatRecursive($type, $item->{$type});
+        $maxDepth = $this->maxRecursiveDepth($recipes) / 2;
 
-        $children = $this->getRecursiveChildren([$item]);
-        $maxDepth = $this->maxRecursiveDepth($children) / 2;
-
-        // debug($formula->name . ' : Children');
-        // debug($children);
-
-        return [$children, $maxDepth];
+        return [$recipes, $maxDepth];
     }
 
-    private function getParents($id)
+    public function getRecursive($type, $items)
     {
-        $formula = Formula::with('parents')->find($id);
-        $item = json_decode(json_encode($formula));
-
-        debug($formula->name . ' : Parents');
-        debug($item);
-    }
-
-    private function getRecursiveChildren($items)
-    {
-        $data = [];
-        foreach ($items as $item) {
-            $data[] = [
+        return array_reduce($items, function ($carry, $item) use ($type, &$flattenId) {
+            $carry[] = [
+                'id' => $item->id,
                 'name' => $item->name,
                 'main' => $item->main,
-                'children' => $this->getRecursiveChildren($item->children),
+                $type => $this->getRecursive($type, $item->{$type}),
             ];
-        }
-        return $data;
+
+            return $carry;
+        }, []);
     }
 
-    private function maxRecursiveDepth($arr, $n = 0)
+    public function getFlatRecursive($type, $items)
+    {
+        $flatten = [];
+
+        // array_walk_recursive($items, function ($item, $key) use (&$flatten) {
+        //     if (!in_array($item->id, $flatten)) {
+        //         $flatten[] = $item->id;
+        //     }
+        // });
+
+        foreach ($items as $item) {
+            if (!in_array($item->id, $flatten)) {
+                $flatten[] = $item->id;
+            }
+            if (is_array($item)) {
+                $max = $this->getFlatRecursive($type, $item);
+            }
+        }
+
+        return $flatten;
+
+        // return array_reduce($items, function ($carry, $item) use ($type) {
+        //     if (!in_array($item->id, $carry)) {
+        //         $carry[] = $item->id;
+        //     }
+
+        //     $carry[] = [
+        //         'id' => $item->id,
+        //         'name' => $item->name,
+        //         'main' => $item->main,
+        //         $type => $this->getFlatRecursive($type, $item->{$type}),
+        //     ];
+
+        //     return $carry;
+        // }, []);
+    }
+
+    public function maxRecursiveDepth($arr, $n = 0)
     {
         $max = $n;
         foreach ($arr as $item) {

@@ -40,6 +40,9 @@ class FormulaController extends Controller
     {
         $this->authorize('view', $formula);
 
+        debug($formula->getRecipe('parents'));
+        // debug($formula->getRecipe('children'));
+
         return response(
             new FormulaItem($formula->loadRelationDetailed()),
             Response::HTTP_OK

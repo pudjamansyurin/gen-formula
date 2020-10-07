@@ -23,9 +23,9 @@ class FormulaObserver
 
         // event:updated
         if ($updated = $formula->getOriginal('id')) {
-            // FIXME: update related recipes (not creating)
+            // FIXME: update parents
 
-            // FIXME: update related sale (not creating)
+            // FIXME: update sale
         }
     }
 }

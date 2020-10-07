@@ -191,11 +191,15 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.listRecipe = this.$_.cloneDeep(this.listRecipeDefault);
             this.form = {
                 ...this.$_.cloneDeep(item),
                 _recipes: [],
             };
+            this.listRecipe = this.$_.cloneDeep(
+                this.listRecipeDefault.filter(
+                    ({ id }) => id != `App\\Formula-${this.form.id}`
+                )
+            );
         },
         onCreate() {
             this.change(this.modelDefault);

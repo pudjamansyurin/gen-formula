@@ -4,12 +4,12 @@ namespace App;
 
 use App\Traits\Scopes\ClientQueryScope;
 use App\Traits\Routines\SaleRoutine;
-use App\Traits\Scopes\ExtendedLocalScope;
+use App\Traits\Scopes\ExtendedScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
-    use ClientQueryScope, ExtendedLocalScope;
+    use ClientQueryScope, ExtendedScope;
     use SaleRoutine;
 
     protected $table = 'sales';
