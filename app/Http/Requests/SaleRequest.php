@@ -48,17 +48,6 @@ class SaleRequest extends FormRequest
                 'distinct',
                 'exists:packages,id'
             ],
-            // '_products.1.package_id' => [
-            //     'sometimes',
-            //     function ($attribute, $value, $fail) {
-            //         $firstPackageUnit = Package::with('unit')->find(request('_products.0.package_id'))->unit;
-            //         $secondPackageUnit = Package::with('unit')->find($value)->unit;
-
-            //         if ($secondPackageUnit->id != $firstPackageUnit->id) {
-            //             $fail($attribute . ' should not different.');
-            //         }
-            //     },
-            // ],
             '_products.*.formula_id' => [
                 'required',
                 'integer',
@@ -71,5 +60,89 @@ class SaleRequest extends FormRequest
                 'min:1',
             ],
         ];
+    }
+
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $this->validateSingleRatio($validator);
+            $this->validateMultiFilled($validator);
+            $this->validateMultiUnit($validator);
+            $this->validateMultiRatio($validator);
+        });
+    }
+
+    private function validateSingleRatio($validator)
+    {
+        if ($products = request('_products')) {
+            if (count($products) == 1) {
+                if (request('ratio') != 1) {
+                    $validator->errors()
+                        ->add("_products.0.ratio", 'Ratio for 1 components should be 1.');
+                }
+            }
+        }
+    }
+
+    private function validateMultiFilled($validator)
+    {
+        if ($products = request('_products')) {
+            if (count($products) > 1) {
+                if (request('filled') != 100) {
+                    $validator->errors()
+                        ->add("filled", 'Filled for 2 components should be 100.');
+                }
+            }
+        }
+    }
+
+    private function validateMultiUnit($validator)
+    {
+        if ($products = request('_products')) {
+            if (count($products) > 1) {
+                $package = array_map(function ($item) {
+                    return Package::find($item['package_id']);
+                }, $products);
+
+                if ($package[1]->unit_id != $package[0]->unit_id) {
+                    $validator->errors()
+                        ->add("_products.1.package_id", 'Second package unit may not different.');
+                }
+            }
+        }
+    }
+
+    private function validateMultiRatio($validator)
+    {
+        if ($products = request('_products')) {
+            if (count($products) > 1) {
+                $saleRatio = array_reduce($products, function ($carry, $item) {
+                    return $carry + $item['ratio'];
+                }, 0);
+
+                $saleCapacity = null;
+                foreach ($products as $key => $item) {
+                    $pkg = Package::find($item['package_id']);
+
+                    if (is_null($saleCapacity)) {
+                        $saleCapacity = $pkg->capacity;
+                    }
+
+                    $filled = ($item['ratio'] * $saleCapacity) / $saleRatio;
+
+                    if ($filled > $pkg->capacity) {
+                        $validator->errors()
+                            ->add("_products.{$key}.ratio", 'Filled may not greater than capacity.');
+                    }
+                }
+            }
+        }
     }
 }

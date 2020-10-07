@@ -89,10 +89,10 @@ class FormulaRequest extends FormRequest
 
     private function validateSumTotal($validator, $array, $field, $value)
     {
-        if ($recipes = request($array)) {
+        if ($items = request($array)) {
             // validate
-            $total = array_reduce($recipes, function ($carry, $recipe)  use ($field) {
-                return $carry + $recipe[$field];
+            $total = array_reduce($items, function ($carry, $item)  use ($field) {
+                return $carry + $item[$field];
             }, 0);
 
             // add error message
@@ -105,18 +105,18 @@ class FormulaRequest extends FormRequest
 
     private function validateExistPolymorphic($validator, $array, $polymorphic)
     {
-        if ($recipes = request($array)) {
-            foreach ($recipes as $key => $recipe) {
+        if ($items = request($array)) {
+            foreach ($items as $key => $item) {
                 // check class
-                $recipeClass = resolve($recipe["{$polymorphic}_type"]);
-                if (!$recipeClass) {
+                $itemClass = resolve($item["{$polymorphic}_type"]);
+                if (!$itemClass) {
                     $validator->errors()
                         ->add("{$array}.{$key}.{$polymorphic}_type", 'Polymorphic type is not valid.');
                     return;
                 } else {
                     // check model
-                    $recipeModel = $recipeClass->find($recipe["{$polymorphic}_id"]);
-                    if (!$recipeModel) {
+                    $itemModel = $itemClass->find($item["{$polymorphic}_id"]);
+                    if (!$itemModel) {
                         $validator->errors()
                             ->add("{$array}.{$key}.{$polymorphic}_id", 'Polymorphic is not valid.');
                         return;
@@ -128,23 +128,18 @@ class FormulaRequest extends FormRequest
 
     private function validateDistinctPolymorphic($validator, $array, $polymorphic)
     {
-        if ($recipes = request($array)) {
-            $key = 0;
-            $grouped = array_reduce($recipes, function ($carry, $item) use (&$key, $validator, $array, $polymorphic) {
+        if ($items = request($array)) {
+            $group = [];
+            foreach ($items as $key => $item) {
                 $uniqueKey = $item['recipeable_type'] . $item['recipeable_id'];
 
-                if (isset($carry[$uniqueKey])) {
-                    // duplicate
+                if (isset($group[$uniqueKey])) {
                     $validator->errors()
                         ->add("{$array}.{$key}.{$polymorphic}_id", 'Polymorphic is not unique.');
                 } else {
-                    // unique
-                    $carry[$uniqueKey] = $item;
+                    $group[$uniqueKey] = $item;
                 }
-
-                $key++;
-                return $carry;
-            }, []);
+            }
         }
     }
 }
