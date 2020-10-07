@@ -21,8 +21,11 @@ class FormulaObserver
         // update total price
         $formula->updateRev();
 
-        // FIXME: update related recipes (not creating)
+        // event:updated
+        if ($updated = $formula->getOriginal('id')) {
+            // FIXME: update related recipes (not creating)
 
-        // FIXME: update related sale (not creating)
+            // FIXME: update related sale (not creating)
+        }
     }
 }

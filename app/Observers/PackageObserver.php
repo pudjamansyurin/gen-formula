@@ -21,6 +21,21 @@ class PackageObserver
         // update total price
         $package->updateRev();
 
-        // FIXME: update related sale (not creating)
+        // event:updated
+        if ($updated = $package->getOriginal('id')) {
+            $this->updateSaleRev($package);
+        }
+    }
+
+    /**
+     * Local routines
+     */
+    private function updateSaleRev($package)
+    {
+        $package->load(['sales']);
+
+        $package->sales->each(function ($sale) {
+            $sale->updateRev();
+        });
     }
 }

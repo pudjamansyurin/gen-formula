@@ -61,8 +61,8 @@ trait FormulaRoutine
         // reject if total price is same
         if ($rev = $this->revs->first()) {
             if (
-                round($rev->price, 2) == round($price, 2) &&
-                round($rev->price_liter, 2) == round($priceLiter, 2)
+                round($rev->price) == round($price) &&
+                round($rev->price_liter) == round($priceLiter)
             ) {
                 return $this;
             }

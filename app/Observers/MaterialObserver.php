@@ -19,6 +19,21 @@ class MaterialObserver
             $material->updateRev($revPrice);
         }
 
-        // FIXME: update related recipes (not creating)
+        // event:updated
+        if ($updated = $material->getOriginal('id')) {
+            $this->updateFormulaRev($material);
+        }
+    }
+
+    /**
+     * Local routines
+     */
+    private function updateFormulaRev($material)
+    {
+        $material->load(['formulas']);
+
+        $material->formulas->each(function ($formula) {
+            $formula->updateRev();
+        });
     }
 }

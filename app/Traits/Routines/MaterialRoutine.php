@@ -14,7 +14,7 @@ trait MaterialRoutine
     {
         // ignore if same
         if ($rev = $this->revs()->first()) {
-            if (round($rev->price, 2) == round($price, 2)) {
+            if (round($rev->price) == round($price)) {
                 return $this;
             }
         }

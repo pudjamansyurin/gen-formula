@@ -8,16 +8,19 @@ use App\Package;
 class PackObserver
 {
     /**
-     * Handle the pack "updated" event.
+     * Handle the pack "saved" event.
      *
      * @param  \App\Pack  $pack
      * @return void
      */
-    public function updated(Pack $pack)
+    public function saved(Pack $pack)
     {
-        if ($packerId = request('packer_id')) {
-            if ($pack->getOriginal('packer_id') != $packerId) {
-                $this->updatePackageRev($pack);
+        // event:updated
+        if ($updated = $pack->getOriginal('id')) {
+            if ($packerId = request('packer_id')) {
+                if ($pack->getOriginal('packer_id') != $packerId) {
+                    $this->updatePackageRev($pack);
+                }
             }
         }
     }

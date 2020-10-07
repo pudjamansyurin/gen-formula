@@ -75,13 +75,6 @@ class Sale extends Model
             ->withTimestamps();
     }
 
-    // public function products()
-    // {
-    //     return $this->belongsToMany(Formula::class, 'products')
-    //         ->withPivot('package_id')
-    //         ->join('packages', 'packages.id', '=', 'products.package_id');
-    // }
-
     public function user()
     {
         return $this->belongsTo(User::class);

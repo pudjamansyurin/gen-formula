@@ -40,7 +40,7 @@ trait PackageRoutine
 
         // reject if total price is same
         if ($rev = $this->revs->first()) {
-            if (round($rev->price, 2) == round($totalPrice, 2)) {
+            if (round($rev->price) == round($totalPrice)) {
                 return $this;
             }
         }
