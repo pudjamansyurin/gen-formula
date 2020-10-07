@@ -1,5 +1,5 @@
 {
-    "/js/app.js": "/js/app.js?id=96f3b4e7f0482cd7f173",
+    "/js/app.js": "/js/app.js?id=64a202b57f6b4b2f3c80",
     "/css/app.css": "/css/app.css?id=3462204912f6bda7044e",
     "/js/auth.forget.js": "/js/auth.forget.js?id=637173bb39cdc191f5c9",
     "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~42253f74.js?id=9a453e6182a243da8ddb",
@@ -9,7 +9,7 @@
     "/js/dashboard.js": "/js/dashboard.js?id=ecd0679cefaf6883bd87",
     "/js/dashboard~formula~material~matter~pack~package~packer~profile~sale~user.js": "/js/dashboard~formula~material~matter~pack~package~packer~profile~sale~user.js?id=82eebc897c4528ab0e58",
     "/js/error.js": "/js/error.js?id=5263f23ad7e197ac91dd",
-    "/js/formula.js": "/js/formula.js?id=ee50dbcf87f4d8a5f956",
+    "/js/formula.js": "/js/formula.js?id=cc6d033e5a0c91595f1f",
     "/js/landing.js": "/js/landing.js?id=fc723af382a7469ba5f6",
     "/js/material.js": "/js/material.js?id=b9437e349682e0c37d4a",
     "/js/matter.js": "/js/matter.js?id=c621418cb06efc039fa8",
@@ -20,7 +20,5 @@
     "/js/profile.js": "/js/profile.js?id=b9065169b4391c6e3f6e",
     "/js/profile~user.js": "/js/profile~user.js?id=21c4a8d528020c1cce1f",
     "/js/sale.js": "/js/sale.js?id=a7794d21cd3b770d2598",
-    "/js/user.js": "/js/user.js?id=bd12ac6882516037beea",
-    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~ed9224b0.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~formula~material~matter~pack~package~packer~~ed9224b0.js?id=e3e61f56d074af047a72",
-    "/js/dashboard~formula~material~matter~pack~package~packer~profile~user.js": "/js/dashboard~formula~material~matter~pack~package~packer~profile~user.js?id=dd665a5d74b537c5fce7"
+    "/js/user.js": "/js/user.js?id=bd12ac6882516037beea"
 }

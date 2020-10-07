@@ -57,15 +57,10 @@ class FormulaRequest extends FormRequest
             '_recipes.*.recipeable_id' => [
                 'required',
                 'integer',
-                'distinct',
-                // 'exists:packers,id'
             ],
             '_recipes.*.recipeable_type' => [
                 'required',
                 Rule::in([Material::class, Formula::class]),
-                // 'integer',
-                // 'distinct',
-                // 'exists:packers,id'
             ],
             '_recipes.*.portion' => [
                 'required',
@@ -86,19 +81,70 @@ class FormulaRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if ($this->calcPortionTotal() != 100) {
-                $validator->errors()
-                    ->add('portion_total', 'Total portion should be 100%.');
-            }
+            $this->validateSumTotal($validator,  '_recipes', 'portion', 100);
+            $this->validateExistPolymorphic($validator, '_recipes', 'recipeable');
+            $this->validateDistinctPolymorphic($validator, '_recipes', 'recipeable');
         });
     }
 
-    private function calcPortionTotal()
+    private function validateSumTotal($validator, $array, $field, $value)
     {
-        $recipes = request('_recipes');
+        if ($recipes = request($array)) {
+            // validate
+            $total = array_reduce($recipes, function ($carry, $recipe)  use ($field) {
+                return $carry + $recipe[$field];
+            }, 0);
 
-        return array_reduce($recipes, function ($carry, $recipe) {
-            return $carry + $recipe['portion'];
-        }, 0);
+            // add error message
+            if ($total != $value) {
+                $validator->errors()
+                    ->add("{$array}_{$field}", "Total {$field} should be {$value}.");
+            }
+        }
+    }
+
+    private function validateExistPolymorphic($validator, $array, $polymorphic)
+    {
+        if ($recipes = request($array)) {
+            foreach ($recipes as $key => $recipe) {
+                // check class
+                $recipeClass = resolve($recipe["{$polymorphic}_type"]);
+                if (!$recipeClass) {
+                    $validator->errors()
+                        ->add("{$array}.{$key}.{$polymorphic}_type", 'Polymorphic type is not valid.');
+                    return;
+                } else {
+                    // check model
+                    $recipeModel = $recipeClass->find($recipe["{$polymorphic}_id"]);
+                    if (!$recipeModel) {
+                        $validator->errors()
+                            ->add("{$array}.{$key}.{$polymorphic}_id", 'Polymorphic is not valid.');
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private function validateDistinctPolymorphic($validator, $array, $polymorphic)
+    {
+        if ($recipes = request($array)) {
+            $key = 0;
+            $grouped = array_reduce($recipes, function ($carry, $item) use (&$key, $validator, $array, $polymorphic) {
+                $uniqueKey = $item['recipeable_type'] . $item['recipeable_id'];
+
+                if (isset($carry[$uniqueKey])) {
+                    // duplicate
+                    $validator->errors()
+                        ->add("{$array}.{$key}.{$polymorphic}_id", 'Polymorphic is not unique.');
+                } else {
+                    // unique
+                    $carry[$uniqueKey] = $item;
+                }
+
+                $key++;
+                return $carry;
+            }, []);
+        }
     }
 }

@@ -207,7 +207,7 @@
                                     :class="recipePortionColor"
                                 >
                                     <validation-provider
-                                        vid="portion_total"
+                                        vid="_recipes_portion"
                                         name="Total portion"
                                         v-slot="{ errors, valid }"
                                     >
