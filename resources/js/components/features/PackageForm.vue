@@ -107,8 +107,7 @@
                         <v-row dense>
                             <v-col cols="12" sm="4">
                                 <validation-provider
-                                    :vid="`_packers.${index}.content`"
-                                    :name="`${packer.name} content`"
+                                    :name="`_packers.${index}.content`"
                                     v-slot="{
                                         errors,
                                         valid,
@@ -133,8 +132,7 @@
                                     :key="`_packers.${index}.packs.${idx}.price`"
                                 >
                                     <validation-provider
-                                        :vid="`_packers.${index}.packs.${idx}.price`"
-                                        :name="`${pack.name} price`"
+                                        :name="`_packers.${index}.packs.${idx}.price`"
                                         v-slot="{
                                             errors,
                                             valid,

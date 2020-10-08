@@ -50,8 +50,7 @@
             <v-row>
                 <v-col>
                     <validation-provider
-                        vid="density"
-                        name="Density"
+                        name="density"
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
@@ -71,8 +70,7 @@
                 </v-col>
                 <v-col>
                     <validation-provider
-                        vid="shrink"
-                        name="Shrink"
+                        name="shrink"
                         v-slot="{ errors, valid }"
                     >
                         <v-text-field
@@ -203,8 +201,7 @@
                             <v-list-item-content>Portion</v-list-item-content>
                             <v-list-item-content>
                                 <validation-provider
-                                    vid="_recipes_portion"
-                                    name="Total portion"
+                                    name="_recipes_portion"
                                     v-slot="{ errors, valid }"
                                 >
                                     <v-text-field
@@ -248,38 +245,6 @@
                         </v-list-item>
                     </template>
                 </the-data-iterator>
-
-                <!-- <v-data-iterator
-                    :items="form._recipes"
-                    item-key="id"
-                    hide-default-footer
-                >
-                    <template v-slot:default="{ items }">
-                        <v-card
-                            v-for="(item, index) in items"
-                            :key="item.id"
-                            class="mb-1"
-                        >
-                            <v-card-title>
-                                <h4>{{ item.name }}</h4>
-                            </v-card-title>
-                            <v-divider></v-divider>
-                            <v-list dense>
-                                <v-list-item
-                                    v-for="header in headers"
-                                    :key="header.value"
-                                >
-                                    <v-list-item-content>
-                                        {{ header.text }} :
-                                    </v-list-item-content>
-                                    <v-list-item-content class="align-end">
-                                        Lala poo
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-list>
-                        </v-card>
-                    </template>
-                </v-data-iterator> -->
                 <the-simple-table
                     v-else
                     :headers="headers"
@@ -355,8 +320,7 @@
                             <td class="text-right" colspan="4">Total</td>
                             <td class="text-right" :class="recipePortionColor">
                                 <validation-provider
-                                    vid="_recipes_portion"
-                                    name="Total portion"
+                                    name="_recipes_portion"
                                     v-slot="{ errors, valid }"
                                 >
                                     <v-text-field
