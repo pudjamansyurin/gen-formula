@@ -40,9 +40,9 @@ class UserObserver
             }
         }
 
-        // send email verification
-        if (!$user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
-        }
+        // // send email verification
+        // if (!$user->hasVerifiedEmail()) {
+        //     $user->sendEmailVerificationNotification();
+        // }
     }
 }

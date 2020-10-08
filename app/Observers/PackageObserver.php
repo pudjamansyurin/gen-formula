@@ -35,7 +35,8 @@ class PackageObserver
         $package->load(['sales']);
 
         $package->sales->each(function ($sale) {
-            $sale->updateRev();
+            // $sale->updateRev();
+            $sale->save();
         });
     }
 }

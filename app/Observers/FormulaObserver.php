@@ -37,12 +37,13 @@ class FormulaObserver
         $formula->load('parents');
 
         $formula->parents->each(function ($parent) {
-            $parent->updateRev();
-            $this->updateSaleRev($parent);
+            // $parent->updateRev();
+            // $this->updateSaleRev($parent);
+            $parent->save();
 
-            if ($parent->parents) {
-                $this->updateParentRecipe($parent);
-            }
+            // if ($parent->parents) {
+            //     $this->updateParentRecipe($parent);
+            // }
         });
     }
 
@@ -51,7 +52,8 @@ class FormulaObserver
         $formula->load(['sales']);
 
         $formula->sales->each(function ($sale) {
-            $sale->updateRev();
+            // $sale->updateRev();
+            $sale->save();
         });
     }
 }

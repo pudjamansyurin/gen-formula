@@ -33,7 +33,8 @@ class PackObserver
         $pack->load(['packagers', 'packagers.package']);
 
         $pack->packagers->each(function ($packager) {
-            $packager->package->updateRev();
+            // $packager->package->updateRev();
+            $packager->package->save();
         });
     }
 }

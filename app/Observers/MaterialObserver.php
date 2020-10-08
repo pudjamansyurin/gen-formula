@@ -33,7 +33,8 @@ class MaterialObserver
         $material->load(['formulas']);
 
         $material->formulas->each(function ($formula) {
-            $formula->updateRev();
+            // $formula->updateRev();
+            $formula->save();
         });
     }
 }
