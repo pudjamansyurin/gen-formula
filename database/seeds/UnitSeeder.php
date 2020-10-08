@@ -1,5 +1,6 @@
 <?php
 
+use App\Unit;
 use Illuminate\Database\Seeder;
 
 class UnitSeeder extends Seeder
@@ -22,7 +23,7 @@ class UnitSeeder extends Seeder
         ];
 
         foreach ($units as $unit) {
-            App\Unit::create([
+            Unit::create([
                 'name' => $unit[0],
                 'symbol' => $unit[1],
             ]);

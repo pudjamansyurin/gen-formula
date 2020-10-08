@@ -88,23 +88,37 @@ class FormulaRequest extends FormRequest
             $this->validatePolymorphicExist($validator, '_recipes', 'recipeable');
             $this->validatePolymorphicDistinct($validator, '_recipes', 'recipeable');
             $this->validateMainFormulaAsRecipe($validator);
+            $this->validateHasSaleChangeMain($validator);
             $this->validateHasParentAsMain($validator);
             $this->validateSelfAsRecipe($validator);
             $this->validateParentAsRecipe($validator);
         });
     }
 
+    private function validateHasSaleChangeMain($validator)
+    {
+        $main = request('main');
+
+        if ($id = request('id')) {
+            if ($formula = Formula::has('sales')->find($id)) {
+                if ($formula->main && !$main) {
+                    $validator->errors()->add("main", "Still used by sale as product.");
+                }
+            }
+        }
+    }
+
     private function validateParentAsRecipe($validator)
     {
         if ($id = request('id')) {
             if ($formula = Formula::find($id)) {
-                if ($recipes = request('_recipes')) {
-                    [,, $flatten] = $formula->getRecipe('parents', $formula->id);
+                $parents = $formula->getRecipe('parents', $formula->id);
 
+                if ($recipes = request('_recipes')) {
                     $recipeFormulas = $this->getRecipeableFormulas($recipes);
 
                     foreach ($recipeFormulas as $key => $recipeFormula) {
-                        if (in_array($recipeFormula['recipeable_id'], $flatten)) {
+                        if (in_array($recipeFormula['recipeable_id'], $parents->flatten)) {
                             $target = "_recipes.{$key}.recipeable_id";
                             $validator->errors()->add($target, "Can not use parent as recipe.");
                         }

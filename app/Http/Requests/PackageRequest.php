@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Package;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -73,5 +74,36 @@ class PackageRequest extends FormRequest
                 'not_in:0',
             ]
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $this->validateHasPackageChangePacker($validator);
+        });
+    }
+
+    private function validateHasPackageChangePacker($validator)
+    {
+        $unitId = request('unit_id');
+        $capacity = request('capacity');
+
+        if ($id = request('id')) {
+            if ($package = Package::has('sales')->find($id)) {
+                if ($package->unit_id != $unitId) {
+                    $validator->errors()->add("unit_id", "Still used by sale as product.");
+                }
+
+                if ($package->capacity != $capacity) {
+                    $validator->errors()->add("capacity", "Still used by sale as product.");
+                }
+            }
+        }
     }
 }

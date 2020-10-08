@@ -16,7 +16,6 @@ class Recipe extends Model
     protected $fillable = [
         'formula_id',
         'portion',
-        'depth',
         'recipeable_id',
         'recipeable_type'
     ];

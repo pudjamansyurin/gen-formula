@@ -23,9 +23,35 @@ class FormulaObserver
 
         // event:updated
         if ($updated = $formula->getOriginal('id')) {
-            // FIXME: update parents
-
-            // FIXME: update sale
+            $this->updateParentRecipe($formula);
+            $this->updateSaleRev($formula);
         }
+    }
+
+    /**
+     * Local routines
+     */
+
+    private function updateParentRecipe($formula)
+    {
+        $formula->load('parents');
+
+        $formula->parents->each(function ($parent) {
+            $parent->updateRev();
+            $this->updateSaleRev($parent);
+
+            if ($parent->parents) {
+                $this->updateParentRecipe($parent);
+            }
+        });
+    }
+
+    private function updateSaleRev($formula)
+    {
+        $formula->load(['sales']);
+
+        $formula->sales->each(function ($sale) {
+            $sale->updateRev();
+        });
     }
 }

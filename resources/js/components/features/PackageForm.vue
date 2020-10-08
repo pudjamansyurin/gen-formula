@@ -14,6 +14,7 @@
                             type="text"
                             hint="The package name"
                             counter
+                            autofocus
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -195,6 +196,9 @@ export default {
             set(value) {
                 this.$emit("input", value);
             },
+        },
+        validator() {
+            return this.$refs.form;
         },
         priceTotal() {
             if (this.form._packers) {

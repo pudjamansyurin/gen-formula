@@ -97,7 +97,6 @@
         >
             <template v-slot:DATA>
                 <formula-form
-                    v-if="form"
                     ref="form"
                     v-model="form"
                     @save="save"
@@ -191,35 +190,45 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.form = {
-                ...this.$_.cloneDeep(item),
-                _recipes: [],
-            };
             this.listRecipe = this.$_.cloneDeep(
-                this.listRecipeDefault.filter(
-                    ({ id }) => id != `App\\Formula-${this.form.id}`
-                )
+                this.listRecipeDefault
+                    .filter(({ id }) => id != `App\\Formula-${item.id}`)
+                    .filter(({ recipeable_id, recipeable_type }) => {
+                        if (recipeable_type == "App\\Formula") {
+                            if (item.parents) {
+                                return !item.parents.flatten.includes(
+                                    recipeable_id
+                                );
+                            }
+                        }
+                        return true;
+                    })
             );
+            this.form = this.$_.cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit(item) {
+        onEdit: async function (item) {
+            item = await this.fetchDetail(item);
             this.change(item || this.selected[0]);
-            this.fetchDetail();
         },
-        fetchDetail() {
-            this.GET_MODEL({
+        fetchDetail: async function ({ id }) {
+            let item;
+
+            await this.GET_MODEL({
                 model: this.model,
-                id: this.form.id,
+                id,
             }).then((data) => {
-                this.form = {
+                item = {
                     ...this.$_.cloneDeep(data),
                     shrink: Number(data.shrink),
                     density: Number(data.density),
                     _recipes: this.makeRecipesDetail(data.recipes),
                 };
             });
+
+            return item;
         },
         makeRecipesDetail(recipes) {
             return recipes.map(

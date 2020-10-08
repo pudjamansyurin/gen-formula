@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -35,8 +36,8 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            $theUser = App\User::withoutEvents(function () use ($user) {
-                return App\User::create([
+            $theUser = User::withoutEvents(function () use ($user) {
+                return User::create([
                     'name' => $user['name'],
                     'email' => $user['email'],
                     'password' => $user['password']

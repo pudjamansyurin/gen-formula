@@ -83,7 +83,7 @@ class SaleRequest extends FormRequest
     {
         if ($products = request('_products')) {
             if (count($products) == 1) {
-                if (request('ratio') != 1) {
+                if (request('_products.0.ratio') != 1) {
                     $validator->errors()
                         ->add("_products.0.ratio", 'Ratio for 1 components should be 1.');
                 }

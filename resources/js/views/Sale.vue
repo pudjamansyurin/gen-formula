@@ -90,7 +90,6 @@
         >
             <template v-slot:DATA>
                 <sale-form
-                    v-if="form"
                     ref="form"
                     v-model="form"
                     @save="save"
@@ -177,20 +176,16 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.form = {
-                ...this.$_.cloneDeep(item),
-                _products: this.$_.cloneDeep(this.modelDefault._products),
-            };
+            this.form = this.$_.cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit(item) {
+        onEdit: async function (item) {
+            item = await this.fetchDetail(item);
             this.change(item || this.selected[0]);
-            this.fetchDetail();
         },
         onSave() {
-            // convert model as foreignID
             this.form._products = this.form._products.map((product) => ({
                 ...product,
                 package_id: this.$_.get(product.package, "id"),
@@ -198,22 +193,26 @@ export default {
                 ratio: Number(product.ratio),
             }));
         },
-        fetchDetail() {
-            this.GET_MODEL({
+        fetchDetail: async function ({ id }) {
+            let item;
+
+            await this.GET_MODEL({
                 model: this.model,
-                id: this.form.id,
+                id,
             }).then((data) => {
-                this.form = {
+                item = {
                     ...this.$_.cloneDeep(data),
                     _products: this.makeProductsDetail(data.products),
                 };
             });
+
+            return item;
         },
         makeProductsDetail(products) {
             return products.map(({ formula, package: pkg, ratio }) => ({
                 formula,
                 package: pkg,
-                ratio,
+                ratio: Number(ratio),
             }));
         },
     },

@@ -68,7 +68,6 @@
             @submit="save"
         >
             <pack-form
-                v-if="form"
                 ref="form"
                 v-model="form"
                 @save="save"

@@ -1,5 +1,7 @@
 <?php
 
+use App\Pack;
+use App\Packer;
 use Illuminate\Database\Seeder;
 
 class PackerAndPackSeeder extends Seeder
@@ -23,12 +25,12 @@ class PackerAndPackSeeder extends Seeder
         ];
 
         foreach ($packers as $packer) {
-            $thePacker = factory(App\Packer::class)->create([
+            $thePacker = factory(Packer::class)->create([
                 'name' => $packer['name'],
             ]);
 
             foreach ($packer['packs'] as $pack) {
-                factory(App\Pack::class)->create([
+                factory(Pack::class)->create([
                     'name' => $pack,
                     'packer_id' => $thePacker->id
                 ]);

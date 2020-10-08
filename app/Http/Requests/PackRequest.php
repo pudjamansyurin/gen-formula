@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Pack;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -36,5 +37,32 @@ class PackRequest extends FormRequest
                 'exists:packers,id'
             ],
         ];
+    }
+
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $this->validateHasPackageChangePacker($validator);
+        });
+    }
+
+    private function validateHasPackageChangePacker($validator)
+    {
+        $packerId = request('packer_id');
+
+        if ($id = request('id')) {
+            if ($pack = Pack::has('packagers')->find($id)) {
+                if ($pack->packer_id != $packerId) {
+                    $validator->errors()->add("packer_id", "Still used by package.");
+                }
+            }
+        }
     }
 }

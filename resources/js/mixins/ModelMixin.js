@@ -51,7 +51,7 @@ export default {
         },
         close() {
             this.dialog = false;
-            this.$nextTick(() => this.$refs.form.$refs.form.reset());
+            this.$nextTick(() => this.$refs.form.validator.reset());
         },
         onCreate() {
             this.form = cloneDeep(this.modelDefault);
@@ -59,12 +59,12 @@ export default {
         onEdit(item) {
             this.form = cloneDeep(item || this.selected[0]);
         },
-        create() {
-            this.onCreate();
+        create: async function() {
+            await this.onCreate();
             this.$nextTick(() => (this.dialog = true));
         },
-        edit(item) {
-            this.onEdit(item);
+        edit: async function(item) {
+            await this.onEdit(item);
             this.$nextTick(() => (this.dialog = true));
         },
         fetchAll: async function() {
@@ -94,7 +94,7 @@ export default {
         save: async function() {
             this.onSave();
 
-            this.$refs.form.$refs.form.validate().then(async valid => {
+            this.$refs.form.validator.validate().then(async valid => {
                 if (valid) {
                     this.START_LOADING();
                     await this.SAVE_MODEL({
@@ -108,7 +108,7 @@ export default {
                             this.close();
                         })
                         .catch(e =>
-                            this.$refs.form.$refs.form.setErrors(eHandler(e))
+                            this.$refs.form.validator.setErrors(eHandler(e))
                         )
                         .then(() => this.STOP_LOADING());
                 }

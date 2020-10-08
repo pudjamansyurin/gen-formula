@@ -1,5 +1,8 @@
 <?php
 
+use App\Formula;
+use App\Package;
+use App\Sale;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 
@@ -12,12 +15,12 @@ class DummySaleSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $packages = App\Package::getAsProductList();
-        $formulas = App\Formula::getAsProductList();
+        $packages = Package::getAsProductList();
+        $formulas = Formula::getAsProductList();
 
         // Create sales
-        App\Sale::withoutEvents(function () use ($packages, $formulas) {
-            factory(App\Sale::class, 25)->create()
+        Sale::withoutEvents(function () use ($packages, $formulas) {
+            factory(Sale::class, 25)->create()
                 ->each(function ($sale) use ($packages, $formulas) {
                     $component = rand(1, 2);
                     // update filled

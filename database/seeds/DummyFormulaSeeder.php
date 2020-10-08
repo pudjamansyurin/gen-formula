@@ -1,5 +1,6 @@
 <?php
 
+use App\Formula;
 use App\Material;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
@@ -13,11 +14,11 @@ class DummyFormulaSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $materials = App\Material::all();
+        $materials = Material::all();
 
         // Create formulas
-        App\Formula::withoutEvents(function () use ($materials) {
-            factory(App\Formula::class, 25)->create()
+        Formula::withoutEvents(function () use ($materials) {
+            factory(Formula::class, 25)->create()
                 ->each(function ($formula) use ($materials) {
                     // create recipes: material
                     $materialRecipes = $this->makeMaterialRecipes($materials);

@@ -97,7 +97,6 @@
         >
             <template v-slot:DATA>
                 <material-form
-                    v-if="form"
                     ref="form"
                     v-model="form"
                     @save="save"
@@ -193,17 +192,21 @@ export default {
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit(item) {
+        onEdit: async function (item) {
+            item = await this.fetchDetail(item);
             this.change(item || this.selected[0]);
-            this.fetchDetail();
         },
-        fetchDetail() {
-            this.GET_MODEL({
+        fetchDetail: async function ({ id }) {
+            let item;
+
+            await this.GET_MODEL({
                 model: this.model,
-                id: this.form.id,
+                id,
             }).then((data) => {
-                this.form = this.$_.cloneDeep(data);
+                item = this.$_.cloneDeep(data);
             });
+
+            return item;
         },
 
         // revision related routines
@@ -218,7 +221,7 @@ export default {
                 ids: this.$_.map(this.selectedRev, "id"),
             })
                 .then(async (ids) => {
-                    await this.fetchDetail();
+                    this.form = await this.fetchDetail(this.form);
 
                     this.dialogDeleteRev = false;
                     this.$nextTick(() => (this.selectedRev = []));

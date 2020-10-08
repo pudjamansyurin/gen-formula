@@ -68,7 +68,6 @@
             @submit="save"
         >
             <packer-form
-                v-if="form"
                 ref="form"
                 v-model="form"
                 @save="save"

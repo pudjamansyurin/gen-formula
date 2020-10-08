@@ -68,7 +68,6 @@
             @submit="save"
         >
             <matter-form
-                v-if="form"
                 ref="form"
                 v-model="form"
                 @save="save"

@@ -87,7 +87,6 @@
         >
             <template v-slot:DATA>
                 <package-form
-                    v-if="form"
                     ref="form"
                     v-model="form"
                     @save="save"
@@ -168,28 +167,29 @@ export default {
         change(item) {
             this.formTabIndex = 0;
             this.listPacker = this.$_.cloneDeep(this.listPackerDefault);
-            this.form = {
-                ...this.$_.cloneDeep(item),
-                _packers: [],
-            };
+            this.form = this.$_.cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit(item) {
+        onEdit: async function (item) {
+            item = await this.fetchDetail(item);
             this.change(item || this.selected[0]);
-            this.fetchDetail();
         },
-        fetchDetail() {
-            this.GET_MODEL({
+        fetchDetail: async function ({ id }) {
+            let item;
+
+            await this.GET_MODEL({
                 model: this.model,
-                id: this.form.id,
+                id,
             }).then((data) => {
-                this.form = {
+                item = {
                     ...this.$_.cloneDeep(data),
                     _packers: this.makePackersDetail(data.packagers),
                 };
             });
+
+            return item;
         },
         makePackersDetail(packagers) {
             return packagers.map(({ packer, content, packets }) => ({

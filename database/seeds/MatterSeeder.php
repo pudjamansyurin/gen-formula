@@ -1,5 +1,6 @@
 <?php
 
+use App\Matter;
 use Illuminate\Database\Seeder;
 
 class MatterSeeder extends Seeder
@@ -21,7 +22,7 @@ class MatterSeeder extends Seeder
         ];
 
         foreach ($matters as $matter) {
-            factory(App\Matter::class)->create([
+            factory(Matter::class)->create([
                 'name' => $matter
             ]);
         };

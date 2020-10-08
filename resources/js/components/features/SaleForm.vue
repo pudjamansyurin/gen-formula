@@ -14,6 +14,7 @@
                             type="text"
                             hint="This is to identify the sale"
                             counter
+                            autofocus
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -268,13 +269,16 @@ export default {
                 this.$emit("input", value);
             },
         },
+        validator() {
+            return this.$refs.form;
+        },
         listPackageSecond() {
             let { package: pkg } = this.form._products[0];
 
-            if (this.saleUnitSymbol) {
+            if (this.saleUnitSymbol && pkg) {
                 return this.listPackage
                     .filter(({ unit }) => unit.symbol == this.saleUnitSymbol)
-                    .filter(({ id }) => id != this.$_.get(pkg, "id"));
+                    .filter(({ id }) => id != pkg.id);
             }
             return this.listPackage;
         },

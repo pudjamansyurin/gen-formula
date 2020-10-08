@@ -1,5 +1,8 @@
 <?php
 
+use App\Package;
+use App\Packer;
+use App\Unit;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 
@@ -51,12 +54,12 @@ class DummyPackageSeeder extends Seeder
             ['BLAZER PAIL', 'L', 50, 0]
         ];
 
-        $units = App\Unit::all();
-        $packers = App\Packer::with('packs')->get();
+        $units = Unit::all();
+        $packers = Packer::with('packs')->get();
 
         foreach ($packages as $package) {
-            $thePackage = App\Package::withoutEvents(function () use ($package, $units) {
-                return factory(App\Package::class)->create([
+            $thePackage = Package::withoutEvents(function () use ($package, $units) {
+                return factory(Package::class)->create([
                     'name' => $package[0],
                     'capacity' => $package[2],
                     'unit_id' => $units->firstWhere('symbol', $package[1])['id'],

@@ -137,7 +137,6 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <user-form
-                            v-if="form"
                             ref="form"
                             v-model="form"
                             @save="saveProfile"
@@ -221,7 +220,7 @@ export default {
         ...mapActions("app", [RESEND, GET_PROFILE, UPDATE_PROFILE]),
         closeProfile() {
             this.editting = false;
-            this.$nextTick(() => this.$refs.form.$refs.form.reset());
+            this.$nextTick(() => this.$refs.form.validator.reset());
         },
         editProfile(item) {
             this.changePassword = false;
@@ -231,12 +230,12 @@ export default {
         saveProfile() {
             this.removeUnchangedPassword();
 
-            this.$refs.form.$refs.form.validate().then(async (valid) => {
+            this.$refs.form.validator.validate().then(async (valid) => {
                 if (valid) {
                     await this.UPDATE_PROFILE({ payload: this.form })
                         .then(() => this.closeProfile())
                         .catch((e) =>
-                            this.$refs.form.$refs.form.setErrors(eHandler(e))
+                            this.$refs.form.validator.setErrors(eHandler(e))
                         );
                 }
             });

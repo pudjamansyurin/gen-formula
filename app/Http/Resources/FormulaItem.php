@@ -30,6 +30,10 @@ class FormulaItem extends JsonResource
             'revs' => $this->whenLoaded('revs'),
             'rev' => $this->whenLoaded('rev'),
 
+            'parents' => $this->whenLoaded('revs', function () {
+                return $this->getRecipe('parents', $this->id);
+            }),
+
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),
             'authorized' => Gate::allows('update', $this->resource)

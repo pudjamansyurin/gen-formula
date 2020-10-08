@@ -20,22 +20,17 @@ trait FormulaRoutine
         foreach ($recipes as $recipe) {
             $id = $recipe['recipeable_id'];
             $type = $recipe['recipeable_type'];
+            $data = [
+                'portion' => $recipe['portion'],
+            ];
 
             switch ($type) {
                 case Material::class:
-                    $materialRecipes[$id] = [
-                        'portion' => $recipe['portion'],
-                        'depth' => 0
-                    ];
+                    $materialRecipes[$id] = $data;
                     break;
 
                 case get_class($this):
-                    [, $depth] = $this->getRecipe('children', $id);
-
-                    $formulaRecipes[$id] = [
-                        'portion' => $recipe['portion'],
-                        'depth' => $depth
-                    ];
+                    $formulaRecipes[$id] = $data;
                     break;
 
                 default:
@@ -109,9 +104,13 @@ trait FormulaRoutine
         $flatten = [];
         $item = json_decode(json_encode($formula));
         $recipes = self::getRecursive($type, $item->{$type}, $flatten);
-        $maxDepth = self::maxRecursiveDepth($recipes) / 2;
+        // $maxDepth = self::maxRecursiveDepth($recipes) / 2;
 
-        return [$recipes, $maxDepth, $flatten];
+        return (object) [
+            'list' => $recipes,
+            'flatten' => $flatten,
+            // 'depth' => $maxDepth
+        ];
     }
 
     public static function getRecursive($type, $items, &$flatten)
@@ -132,14 +131,14 @@ trait FormulaRoutine
         }, []);
     }
 
-    public static function maxRecursiveDepth($arr, $n = 0)
-    {
-        $max = $n;
-        foreach ($arr as $item) {
-            if (is_array($item)) {
-                $max = max($max, self::maxRecursiveDepth($item, $n + 1));
-            }
-        }
-        return $max;
-    }
+    // public static function maxRecursiveDepth($arr, $n = 0)
+    // {
+    //     $max = $n;
+    //     foreach ($arr as $item) {
+    //         if (is_array($item)) {
+    //             $max = max($max, self::maxRecursiveDepth($item, $n + 1));
+    //         }
+    //     }
+    //     return $max;
+    // }
 }
