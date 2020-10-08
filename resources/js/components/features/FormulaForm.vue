@@ -131,157 +131,147 @@
                 class="my-3"
                 outlined
             >
-                <v-simple-table dense>
-                    <template v-slot:default>
-                        <thead>
-                            <tr>
-                                <th class="text-center" style="width: 50px">
-                                    No
-                                </th>
-                                <th class="text-left">Name</th>
-                                <th class="text-left" style="width: 100px">
-                                    Type
-                                </th>
-                                <th class="text-right" style="width: 200px">
-                                    Price
-                                </th>
-                                <th class="text-right" style="width: 120px">
-                                    Portion
-                                </th>
-                                <th class="text-right" style="width: 200px">
-                                    Total
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(recipe, index) in form._recipes"
-                                :key="recipe.id"
-                            >
-                                <td class="text-center">
-                                    {{ index + 1 }}
-                                </td>
-                                <td class="text-left">
-                                    <validation-provider
-                                        :name="`_recipes.${index}.recipeable_id`"
-                                        v-slot="{ errors, valid }"
+                <!-- <v-data-iterator
+                    v-if="mobile"
+                    :items="form._recipes"
+                    item-key="id"
+                    hide-default-footer
+                >
+                    <template v-slot:default="{ items }">
+                        <v-card
+                            v-for="(recipe, index) in items"
+                            :key="recipe.id"
+                        >
+                            <v-card-title>
+                                <h4>{{ recipe.name }}</h4>
+                            </v-card-title>
+                            <v-divider></v-divider>
+                            <v-list dense>
+                                <v-list-item>
+                                    <v-list-item-content
+                                        >Calories:</v-list-item-content
                                     >
-                                        <v-text-field
-                                            :value="recipe.name"
-                                            :error-messages="errors"
-                                            :success="valid"
-                                            readonly
-                                            hide-details="auto"
-                                            flat
-                                            dense
-                                        ></v-text-field>
-                                    </validation-provider>
-                                </td>
-                                <td class="text-left">
-                                    <validation-provider
-                                        :name="`_recipes.${index}.recipeable_type`"
-                                        v-slot="{ errors, valid }"
-                                    >
-                                        <v-text-field
-                                            :value="
-                                                stripRecipeClass(
-                                                    recipe.recipeable_type
-                                                )
-                                            "
-                                            :error-messages="errors"
-                                            :success="valid"
-                                            readonly
-                                            hide-details="auto"
-                                            flat
-                                            dense
-                                        ></v-text-field>
-                                    </validation-provider>
-                                </td>
-                                <td class="text-right">
-                                    {{ recipe.price | currency }}
-                                </td>
-                                <td>
-                                    <validation-provider
-                                        :name="`_recipes.${index}.portion`"
-                                        v-slot="{ errors, valid }"
-                                    >
-                                        <v-text-field
-                                            v-model.number="recipe.portion"
-                                            :error-messages="errors"
-                                            :success="valid"
-                                            :readonly="fieldDisabled"
-                                            :filled="fieldDisabled"
-                                            type="number"
-                                            prefix="Kg"
-                                            hide-details="auto"
-                                            reverse
-                                            flat
-                                            dense
-                                        ></v-text-field>
-                                    </validation-provider>
-                                </td>
-                                <td class="text-right">
-                                    {{
-                                        (recipe.price * recipe.portion)
-                                            | currency
-                                    }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-right" colspan="4">Total</td>
-                                <td
-                                    class="text-right"
-                                    :class="recipePortionColor"
-                                >
-                                    <validation-provider
-                                        vid="_recipes_portion"
-                                        name="Total portion"
-                                        v-slot="{ errors, valid }"
-                                    >
-                                        <v-text-field
-                                            :value="portionTotal"
-                                            :error-messages="errors"
-                                            :success="valid"
-                                            readonly
-                                            type="number"
-                                            prefix="Kg"
-                                            hide-details="auto"
-                                            reverse
-                                            flat
-                                            dense
-                                        ></v-text-field>
-                                    </validation-provider>
-                                </td>
-                                <td class="text-right">
-                                    {{ priceTotal | currency }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="5" class="text-right">RMC (Kg)</td>
-                                <td class="text-right">
-                                    {{ rmc | currency }}
-                                </td>
-                            </tr>
-                            <tr class="font-weight-black">
-                                <td colspan="5" class="text-right">
-                                    RMCS (Kg)
-                                </td>
-                                <td class="text-right">
-                                    {{ rmcs | currency }}
-                                </td>
-                            </tr>
-                            <tr class="font-weight-black">
-                                <td colspan="5" class="text-right">RMCS (L)</td>
-                                <td class="text-right">
-                                    {{ rmcsLiter | currency }}
-                                </td>
-                            </tr>
-                        </tbody>
+                                    <v-list-item-content class="align-end">
+                                        {{ item.calories }}
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                        </v-card>
                     </template>
-                </v-simple-table>
+                </v-data-iterator> -->
+                <the-simple-table :headers="headers" :items="form._recipes">
+                    <template v-slot:no="{ index }">
+                        {{ index + 1 }}
+                    </template>
+                    <template v-slot:name="{ item, index }">
+                        <validation-provider
+                            :name="`_recipes.${index}.recipeable_id`"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                :value="item.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                readonly
+                                hide-details="auto"
+                                flat
+                                dense
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                    <template v-slot:type="{ item, index }">
+                        <validation-provider
+                            :name="`_recipes.${index}.recipeable_type`"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                :value="stripRecipeClass(item.recipeable_type)"
+                                :error-messages="errors"
+                                :success="valid"
+                                readonly
+                                hide-details="auto"
+                                flat
+                                dense
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                    <template v-slot:price="{ item }">
+                        {{ item.price | currency }}
+                    </template>
+                    <template v-slot:portion="{ item, index }">
+                        <validation-provider
+                            :name="`_recipes.${index}.portion`"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model.number="item.portion"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
+                                type="number"
+                                prefix="Kg"
+                                hide-details="auto"
+                                reverse
+                                flat
+                                dense
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                    <template v-slot:total="{ item }">
+                        {{ (item.price * item.portion) | currency }}
+                    </template>
+
+                    <template v-slot:footer>
+                        <tr>
+                            <td colspan="6"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" colspan="4">Total</td>
+                            <td class="text-right" :class="recipePortionColor">
+                                <validation-provider
+                                    vid="_recipes_portion"
+                                    name="Total portion"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        :value="portionTotal"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        readonly
+                                        type="number"
+                                        prefix="Kg"
+                                        hide-details="auto"
+                                        reverse
+                                        flat
+                                        dense
+                                    ></v-text-field>
+                                </validation-provider>
+                            </td>
+                            <td class="text-right">
+                                {{ priceTotal | currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-right">RMC (Kg)</td>
+                            <td class="text-right">
+                                {{ rmc | currency }}
+                            </td>
+                        </tr>
+                        <tr class="font-weight-black">
+                            <td colspan="5" class="text-right">RMCS (Kg)</td>
+                            <td class="text-right">
+                                {{ rmcs | currency }}
+                            </td>
+                        </tr>
+                        <tr class="font-weight-black">
+                            <td colspan="5" class="text-right">RMCS (L)</td>
+                            <td class="text-right">
+                                {{ rmcsLiter | currency }}
+                            </td>
+                        </tr>
+                    </template>
+                </the-simple-table>
             </v-card>
         </validation-observer>
         <v-btn v-show="false" type="submit"></v-btn>
@@ -290,9 +280,13 @@
 
 <script>
 import { CommonMixin } from "../../mixins";
+import TheSimpleTable from "../TheSimpleTable";
 
 export default {
     mixins: [CommonMixin],
+    components: {
+        TheSimpleTable,
+    },
     props: {
         value: {
             type: Object,
@@ -306,6 +300,47 @@ export default {
             type: Array,
             default: () => [],
         },
+    },
+    data() {
+        return {
+            headers: [
+                {
+                    text: "No",
+                    value: "no",
+                    align: "center",
+                    width: 8,
+                },
+                {
+                    text: "Name",
+                    value: "name",
+                    align: "left",
+                },
+                {
+                    text: "Type",
+                    value: "type",
+                    align: "left",
+                    width: 100,
+                },
+                {
+                    text: "Price",
+                    value: "price",
+                    align: "right",
+                    width: 200,
+                },
+                {
+                    text: "Portion",
+                    value: "portion",
+                    align: "right",
+                    width: 120,
+                },
+                {
+                    text: "Total",
+                    value: "total",
+                    align: "right",
+                    width: 200,
+                },
+            ],
+        };
     },
     computed: {
         form: {
