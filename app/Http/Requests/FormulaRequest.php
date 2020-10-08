@@ -96,22 +96,38 @@ class FormulaRequest extends FormRequest
 
     private function validateParentAsRecipe($validator)
     {
+        if ($id = request('id')) {
+            if ($formula = Formula::find($id)) {
+                if ($recipes = request('_recipes')) {
+                    [,, $flatten] = $formula->getRecipe('parents', $formula->id);
+
+                    $recipeFormulas = $this->getRecipeableFormulas($recipes);
+
+                    foreach ($recipeFormulas as $key => $recipeFormula) {
+                        if (in_array($recipeFormula['recipeable_id'], $flatten)) {
+                            $target = "_recipes.{$key}.recipeable_id";
+                            $validator->errors()->add($target, "Can not use parent as recipe.");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private function validateSelfAsRecipe($validator)
     {
-        $id = request('id');
+        if ($id = request('id')) {
+            if ($formula = Formula::find($id)) {
+                if ($recipes = request('_recipes')) {
+                    $recipeFormulas = $this->getRecipeableFormulas($recipes);
 
-        if ($formula = Formula::find($id)) {
-            if ($recipes = request('_recipes')) {
-                $recipeFormulas = $this->getRecipeableFormulas($recipes);
-            }
-
-            foreach ($recipeFormulas as $key => $recipeFormula) {
-                if ($formula->id == $recipeFormula['recipeable_id']) {
-                    $target = "_recipes.{$key}.recipeable_id";
-                    $validator->errors()->add($target, "Can not use self as recipe.");
-                    break;
+                    foreach ($recipeFormulas as $key => $recipeFormula) {
+                        if ($formula->id == $recipeFormula['recipeable_id']) {
+                            $target = "_recipes.{$key}.recipeable_id";
+                            $validator->errors()->add($target, "Can not use self as recipe.");
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -119,12 +135,11 @@ class FormulaRequest extends FormRequest
 
     private function validateHasParentAsMain($validator)
     {
-        $id = request('id');
-        $main = request('main');
-
-        if ($main) {
-            if (Formula::has('parents')->find($id)) {
-                $validator->errors()->add("main", "Still used by other formulas.");
+        if ($id = request('id')) {
+            if ($main = request('main')) {
+                if (Formula::has('parents')->find($id)) {
+                    $validator->errors()->add("main", "Still used by other formulas.");
+                }
             }
         }
     }

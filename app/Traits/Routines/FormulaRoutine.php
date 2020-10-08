@@ -30,7 +30,7 @@ trait FormulaRoutine
                     break;
 
                 case get_class($this):
-                    [$children, $depth] = $this->getRecipe('children', $id);
+                    [, $depth] = $this->getRecipe('children', $id);
 
                     $formulaRecipes[$id] = [
                         'portion' => $recipe['portion'],
@@ -102,84 +102,42 @@ trait FormulaRoutine
         return [$rmcs, $rmcsLiter];
     }
 
-    public function getRecipe($type, $id = null)
+    public static function getRecipe($type, $id)
     {
-        if ($id) {
-            $formula = Formula::with($type)->find($id);
-        } else if ($this->exists()) {
-            $formula = $this->load($type);
-        }
+        $formula = Formula::with($type)->find($id);
 
-        // bad arguments
-        if (!$formula) {
-            return [];
-        }
-
+        $flatten = [];
         $item = json_decode(json_encode($formula));
-        $recipes = $this->getRecursive($type, $item->{$type});
-        // $flatten = $this->getFlatRecursive($type, $item->{$type});
-        $maxDepth = $this->maxRecursiveDepth($recipes) / 2;
+        $recipes = self::getRecursive($type, $item->{$type}, $flatten);
+        $maxDepth = self::maxRecursiveDepth($recipes) / 2;
 
-        return [$recipes, $maxDepth];
+        return [$recipes, $maxDepth, $flatten];
     }
 
-    public function getRecursive($type, $items)
+    public static function getRecursive($type, $items, &$flatten)
     {
-        return array_reduce($items, function ($carry, $item) use ($type, &$flattenId) {
+        return array_reduce($items, function ($carry, $item) use ($type, &$flatten) {
+            if (!in_array($item->id, $flatten)) {
+                $flatten[] = $item->id;
+            }
+
             $carry[] = [
                 'id' => $item->id,
                 'name' => $item->name,
                 'main' => $item->main,
-                $type => $this->getRecursive($type, $item->{$type}),
+                $type => self::getRecursive($type, $item->{$type}, $flatten),
             ];
 
             return $carry;
         }, []);
     }
 
-    public function getFlatRecursive($type, $items)
-    {
-        $flatten = [];
-
-        // array_walk_recursive($items, function ($item, $key) use (&$flatten) {
-        //     if (!in_array($item->id, $flatten)) {
-        //         $flatten[] = $item->id;
-        //     }
-        // });
-
-        foreach ($items as $item) {
-            if (!in_array($item->id, $flatten)) {
-                $flatten[] = $item->id;
-            }
-            if (is_array($item)) {
-                $max = $this->getFlatRecursive($type, $item);
-            }
-        }
-
-        return $flatten;
-
-        // return array_reduce($items, function ($carry, $item) use ($type) {
-        //     if (!in_array($item->id, $carry)) {
-        //         $carry[] = $item->id;
-        //     }
-
-        //     $carry[] = [
-        //         'id' => $item->id,
-        //         'name' => $item->name,
-        //         'main' => $item->main,
-        //         $type => $this->getFlatRecursive($type, $item->{$type}),
-        //     ];
-
-        //     return $carry;
-        // }, []);
-    }
-
-    public function maxRecursiveDepth($arr, $n = 0)
+    public static function maxRecursiveDepth($arr, $n = 0)
     {
         $max = $n;
         foreach ($arr as $item) {
             if (is_array($item)) {
-                $max = max($max, $this->maxRecursiveDepth($item, $n + 1));
+                $max = max($max, self::maxRecursiveDepth($item, $n + 1));
             }
         }
         return $max;
