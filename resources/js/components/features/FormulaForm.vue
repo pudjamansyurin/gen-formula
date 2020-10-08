@@ -131,35 +131,11 @@
                 class="my-3"
                 outlined
             >
-                <!-- <v-data-iterator
+                <the-data-iterator
                     v-if="mobile"
+                    :headers="headers"
                     :items="form._recipes"
-                    item-key="id"
-                    hide-default-footer
                 >
-                    <template v-slot:default="{ items }">
-                        <v-card
-                            v-for="(recipe, index) in items"
-                            :key="recipe.id"
-                        >
-                            <v-card-title>
-                                <h4>{{ recipe.name }}</h4>
-                            </v-card-title>
-                            <v-divider></v-divider>
-                            <v-list dense>
-                                <v-list-item>
-                                    <v-list-item-content
-                                        >Calories:</v-list-item-content
-                                    >
-                                    <v-list-item-content class="align-end">
-                                        {{ item.calories }}
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-list>
-                        </v-card>
-                    </template>
-                </v-data-iterator> -->
-                <the-simple-table :headers="headers" :items="form._recipes">
                     <template v-slot:no="{ index }">
                         {{ index + 1 }}
                     </template>
@@ -172,8 +148,8 @@
                                 :value="item.name"
                                 :error-messages="errors"
                                 :success="valid"
-                                readonly
                                 hide-details="auto"
+                                readonly
                                 flat
                                 dense
                             ></v-text-field>
@@ -188,8 +164,157 @@
                                 :value="stripRecipeClass(item.recipeable_type)"
                                 :error-messages="errors"
                                 :success="valid"
-                                readonly
                                 hide-details="auto"
+                                readonly
+                                flat
+                                dense
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                    <template v-slot:price="{ item }">
+                        {{ item.price | currency }}
+                    </template>
+                    <template v-slot:portion="{ item, index }">
+                        <validation-provider
+                            :name="`_recipes.${index}.portion`"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                v-model.number="item.portion"
+                                :error-messages="errors"
+                                :success="valid"
+                                :readonly="fieldDisabled"
+                                :filled="fieldDisabled"
+                                type="number"
+                                prefix="Kg"
+                                hide-details="auto"
+                                reverse
+                                flat
+                                dense
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                    <template v-slot:total="{ item }">
+                        {{ (item.price * item.portion) | currency }}
+                    </template>
+
+                    <template v-slot:footer>
+                        <v-list-item>
+                            <v-list-item-content>Portion</v-list-item-content>
+                            <v-list-item-content>
+                                <validation-provider
+                                    vid="_recipes_portion"
+                                    name="Total portion"
+                                    v-slot="{ errors, valid }"
+                                >
+                                    <v-text-field
+                                        :value="portionTotal"
+                                        :error-messages="errors"
+                                        :success="valid"
+                                        readonly
+                                        type="number"
+                                        prefix="Kg"
+                                        hide-details="auto"
+                                        reverse
+                                        flat
+                                        dense
+                                    ></v-text-field>
+                                </validation-provider>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-list-item-content>Total</v-list-item-content>
+                            <v-list-item-content class="align-end justify-end">
+                                {{ priceTotal | currency }}
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-list-item-content>RMC (Kg)</v-list-item-content>
+                            <v-list-item-content class="align-end justify-end">
+                                {{ rmc | currency }}
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item class="font-weight-bold">
+                            <v-list-item-content>RMCS (Kg)</v-list-item-content>
+                            <v-list-item-content class="align-end justify-end">
+                                {{ rmcs | currency }}
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item class="font-weight-bold">
+                            <v-list-item-content>RMCS (L)</v-list-item-content>
+                            <v-list-item-content class="align-end justify-end">
+                                {{ rmcsLiter | currency }}
+                            </v-list-item-content>
+                        </v-list-item>
+                    </template>
+                </the-data-iterator>
+
+                <!-- <v-data-iterator
+                    :items="form._recipes"
+                    item-key="id"
+                    hide-default-footer
+                >
+                    <template v-slot:default="{ items }">
+                        <v-card
+                            v-for="(item, index) in items"
+                            :key="item.id"
+                            class="mb-1"
+                        >
+                            <v-card-title>
+                                <h4>{{ item.name }}</h4>
+                            </v-card-title>
+                            <v-divider></v-divider>
+                            <v-list dense>
+                                <v-list-item
+                                    v-for="header in headers"
+                                    :key="header.value"
+                                >
+                                    <v-list-item-content>
+                                        {{ header.text }} :
+                                    </v-list-item-content>
+                                    <v-list-item-content class="align-end">
+                                        Lala poo
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list>
+                        </v-card>
+                    </template>
+                </v-data-iterator> -->
+                <the-simple-table
+                    v-else
+                    :headers="headers"
+                    :items="form._recipes"
+                >
+                    <template v-slot:no="{ index }">
+                        {{ index + 1 }}
+                    </template>
+                    <template v-slot:name="{ item, index }">
+                        <validation-provider
+                            :name="`_recipes.${index}.recipeable_id`"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                :value="item.name"
+                                :error-messages="errors"
+                                :success="valid"
+                                hide-details="auto"
+                                readonly
+                                flat
+                                dense
+                            ></v-text-field>
+                        </validation-provider>
+                    </template>
+                    <template v-slot:type="{ item, index }">
+                        <validation-provider
+                            :name="`_recipes.${index}.recipeable_type`"
+                            v-slot="{ errors, valid }"
+                        >
+                            <v-text-field
+                                :value="stripRecipeClass(item.recipeable_type)"
+                                :error-messages="errors"
+                                :success="valid"
+                                hide-details="auto"
+                                readonly
                                 flat
                                 dense
                             ></v-text-field>
@@ -281,11 +406,13 @@
 <script>
 import { CommonMixin } from "../../mixins";
 import TheSimpleTable from "../TheSimpleTable";
+import TheDataIterator from "../TheDataIterator";
 
 export default {
     mixins: [CommonMixin],
     components: {
         TheSimpleTable,
+        TheDataIterator,
     },
     props: {
         value: {
