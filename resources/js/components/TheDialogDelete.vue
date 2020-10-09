@@ -32,9 +32,8 @@
                     :disabled="!!loading"
                     @click="$emit('delete')"
                     color="red"
-                    dark
                 >
-                    Yes, sure
+                    <span class="white--text">Yes, sure</span>
                 </v-btn>
             </v-card-actions>
         </v-card>
