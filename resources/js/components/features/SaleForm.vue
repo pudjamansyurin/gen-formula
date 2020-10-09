@@ -54,11 +54,16 @@
             <v-divider class="mt-1"></v-divider>
 
             <v-row v-if="form._products">
-                <v-col v-for="(product, index) in form._products" :key="index">
+                <v-col
+                    cols="12"
+                    sm="6"
+                    v-for="(product, index) in form._products"
+                    :key="index"
+                >
                     <v-card outlined>
                         <v-card-text>
                             <v-row class="mb-3" no-gutters>
-                                <v-col cols="12">
+                                <v-col>
                                     <validation-provider
                                         :name="`_products.${index}.package_id`"
                                         v-slot="{ errors, valid }"
@@ -85,7 +90,7 @@
                                         ></v-autocomplete>
                                     </validation-provider>
                                 </v-col>
-                                <v-col cols="12" v-if="product.package">
+                                <v-col v-if="product.package">
                                     <v-chip color="primary" dark label>
                                         {{
                                             product.package.rev.price | currency
@@ -107,7 +112,7 @@
                                 class="mb-3"
                                 no-gutters
                             >
-                                <v-col cols="12">
+                                <v-col>
                                     <validation-provider
                                         :name="`_products.${index}.formula_id`"
                                         v-slot="{ errors, valid }"
@@ -134,7 +139,7 @@
                                         ></v-autocomplete>
                                     </validation-provider>
                                 </v-col>
-                                <v-col cols="12" v-if="product.formula">
+                                <v-col v-if="product.formula">
                                     <v-chip
                                         :color="
                                             saleUnitSymbol == 'KG'
@@ -172,7 +177,7 @@
                                 class="mb-3"
                                 no-gutters
                             >
-                                <v-col cols="12">
+                                <v-col>
                                     <validation-provider
                                         v-if="form._products.length > 1"
                                         :name="`_products.${index}.ratio`"
@@ -210,7 +215,7 @@
                                         ></v-text-field>
                                     </validation-provider>
                                 </v-col>
-                                <v-col cols="12" v-if="saleReady">
+                                <v-col v-if="saleReady">
                                     <v-chip color="primary" dark label>
                                         {{ calcProductRMP(product) | currency }}
                                     </v-chip>
