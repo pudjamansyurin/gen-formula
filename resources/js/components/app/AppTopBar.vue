@@ -147,7 +147,7 @@
                 </template>
                 <template v-else>
                     <v-btn
-                        v-if="selected.length"
+                        v-if="selected.length == 1"
                         @click="$emit('edit')"
                         :fab="mobile"
                         class="mr-2"
@@ -214,7 +214,7 @@ import { CommonMixin } from "../../mixins";
 import {
     TOGGLE_DRAWER,
     TOGGLE_FULLSCREEN,
-    TOGGLE_DENSE
+    TOGGLE_DENSE,
 } from "../../store/app/mutation-types";
 
 export default {
@@ -222,35 +222,35 @@ export default {
     props: {
         value: {
             type: Object,
-            default: () => {}
+            default: () => {},
         },
         page: {
             type: String,
-            default: ""
+            default: "",
         },
         selected: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         options: {
             type: Object,
-            default: () => {}
+            default: () => {},
         },
         crud: {
             type: Boolean,
-            default: false
+            default: false,
         },
         mineTab: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     data() {
         return {
             dialog: !ls.get("confirmedFullscreen"),
             searchBox: false,
             search: "",
-            tab: 0
+            tab: 0,
         };
     },
     computed: {
@@ -277,13 +277,13 @@ export default {
         },
         denseIcon() {
             return this.dense ? "mdi-table" : "mdi-table-large";
-        }
+        },
     },
     methods: {
         ...mapMutations("app", [
             TOGGLE_DENSE,
             TOGGLE_DRAWER,
-            TOGGLE_FULLSCREEN
+            TOGGLE_FULLSCREEN,
         ]),
         ...mapActions("app", [LOGOUT]),
         setSearch(state) {
@@ -293,7 +293,7 @@ export default {
         },
         toggleFs() {
             this.$fullscreen.toggle(document.body, {
-                callback: this.TOGGLE_FULLSCREEN()
+                callback: this.TOGGLE_FULLSCREEN(),
             });
         },
         confirmFs(state) {
@@ -306,25 +306,25 @@ export default {
         logout() {
             this.LOGOUT()
                 .then(() => this.$router.push({ name: "login" }))
-                .catch(e => eHandler(e));
-        }
+                .catch((e) => eHandler(e));
+        },
     },
     watch: {
-        search: debounce(function(term) {
+        search: debounce(function (term) {
             this.$emit("input", {
                 ...this.value,
                 page: 1,
-                search: term
+                search: term,
             });
         }, 500),
-        tab: function(mine) {
+        tab: function (mine) {
             this.$emit("input", {
                 ...this.value,
                 page: 1,
-                mine
+                mine,
             });
-        }
-    }
+        },
+    },
 };
 </script>
 

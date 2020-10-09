@@ -137,7 +137,7 @@ export default {
     components: {
         AppTopBar,
         FormulaForm,
-        RevTimeline
+        RevTimeline,
     },
     data() {
         return {
@@ -150,31 +150,31 @@ export default {
                 {
                     text: "Recipes",
                     value: "recipes_count",
-                    align: "center"
+                    align: "center",
                 },
                 {
                     text: "Main",
                     value: "main",
-                    align: "center"
+                    align: "center",
                 },
                 {
                     text: "Price (Kg)",
                     value: "rev.price",
                     align: "right",
                     sortable: false,
-                    width: 150
+                    width: 150,
                 },
                 {
                     text: "Rev",
                     value: "revs_count",
-                    align: "center"
+                    align: "center",
                 },
                 { text: "Creator", value: "user.name" },
-                { text: "UpdatedAt", value: "updated_at" }
+                { text: "UpdatedAt", value: "updated_at" },
             ],
 
             listRecipe: [],
-            listRecipeDefault: []
+            listRecipeDefault: [],
         };
     },
     computed: {
@@ -185,7 +185,7 @@ export default {
                 return 1000;
             }
             return 700;
-        }
+        },
     },
     methods: {
         change(item) {
@@ -209,22 +209,22 @@ export default {
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit: async function(item) {
+        onEdit: async function (item) {
             item = await this.fetchDetail(item);
             this.change(item || this.selected[0]);
         },
-        fetchDetail: async function({ id }) {
+        fetchDetail: async function ({ id }) {
             let item;
 
             await this.GET_MODEL({
                 model: this.model,
-                id
-            }).then(data => {
+                id,
+            }).then((data) => {
                 item = {
                     ...data,
                     shrink: Number(data.shrink),
                     density: Number(data.density),
-                    _recipes: this.makeRecipesDetail(data.recipes)
+                    _recipes: this.makeRecipesDetail(data.recipes),
                 };
             });
 
@@ -238,7 +238,7 @@ export default {
                     recipeable_type,
                     name: recipeable.name,
                     portion: Number(portion),
-                    price: Number(recipeable.rev.price)
+                    price: Number(recipeable.rev.price),
                 })
             );
         },
@@ -250,18 +250,18 @@ export default {
                     recipeable_type,
                     name,
                     portion: null,
-                    price: Number(price)
+                    price: Number(price),
                 })
             );
-        }
+        },
     },
     mounted() {
         this.fetchList("recipe")
-            .then(data => {
+            .then((data) => {
                 this.listRecipeDefault = this.makeListRecipes(data);
             })
-            .catch(e => eHandler(e));
-    }
+            .catch((e) => eHandler(e));
+    },
 };
 </script>
 
