@@ -20,12 +20,11 @@ export default {
     mixins: [NavigationMixin],
     computed: {
         items() {
-            console.warn(this.navs);
             return this.navs
                 .filter(({ bottomNav, children }) => !!bottomNav || !!children)
                 .map(el => {
                     if (el.children) {
-                        return el.children[0];
+                        return el.children.find(({ bottomNav }) => !!bottomNav);
                     }
                     return el;
                 });
