@@ -45,7 +45,7 @@
                 <v-icon>mdi-bell</v-icon>
             </v-btn> -->
 
-            <v-menu :nudge-width="200" offset-y>
+            <v-menu :nudge-width="150" offset-y>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn v-bind="attrs" v-on="on" icon>
                         <v-icon>mdi-apps</v-icon>
@@ -61,6 +61,17 @@
                             <v-list-item-content>
                                 <v-list-item-title>
                                     {{ fullscreenText }} fullscreen
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+
+                        <v-list-item v-if="!mobile" @click="TOGGLE_DENSE">
+                            <v-list-item-icon>
+                                <v-icon>{{ denseIcon }}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{ dense ? "Bigger" : "Smaller" }}
                                 </v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
@@ -120,19 +131,6 @@
                 <v-spacer></v-spacer>
 
                 <template v-if="!selected.length">
-                    <v-btn
-                        v-if="!mobile"
-                        @click="TOGGLE_DENSE"
-                        :fab="mobile"
-                        class="mr-2"
-                        text
-                        outlined
-                        small
-                        dark
-                    >
-                        <v-icon>{{ denseIcon }}</v-icon>
-                        <template v-if="!mobile">Dense</template>
-                    </v-btn>
                     <v-btn
                         @click="$emit('create')"
                         :fab="mobile"

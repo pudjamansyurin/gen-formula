@@ -21,11 +21,11 @@ trait ExtendedScope
         return $query->has($relation)->whereIn('id', $ids)->count();
     }
 
-    public function scopeRejectWhenHas($query, $ids, $relations = [])
+    public static function rejectWhenHas($ids, $relations = [])
     {
         foreach ($relations as $relation) {
             // check: Relation
-            if ($query->countRelation($ids, $relation)) {
+            if (self::countRelation($ids, $relation)) {
                 $relation = Str::upper($relation);
                 // failed
                 return response([
@@ -33,5 +33,6 @@ trait ExtendedScope
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
+        return;
     }
 }
