@@ -19,7 +19,9 @@ class PackObserver
         if ($updated = $pack->getOriginal('id')) {
             if ($packerId = request('packer_id')) {
                 if ($pack->getOriginal('packer_id') != $packerId) {
+                    // dispatch(function () use ($pack) {
                     $this->updatePackageRev($pack);
+                    // })->afterResponse();
                 }
             }
         }

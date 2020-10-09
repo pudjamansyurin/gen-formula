@@ -27,7 +27,7 @@ x Remove profile shortcut menu, instead simpliy the menus
 
 - Add Laravel Logging
 - Add Laravel Notifications
-- Add Laravel Queue for heavy observer & email task
+- Add Laravel Queue for heavy observer relation & email task
 - Add Laravel TaskScheduler for daily backup
 - Add i18n feature for billingual
 

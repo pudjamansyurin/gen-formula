@@ -21,7 +21,9 @@ class MaterialObserver
 
         // event:updated
         if ($updated = $material->getOriginal('id')) {
+            // dispatch(function () use ($material) {
             $this->updateFormulaRev($material);
+            // })->afterResponse();
         }
     }
 

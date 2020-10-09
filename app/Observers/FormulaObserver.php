@@ -23,8 +23,10 @@ class FormulaObserver
 
         // event:updated
         if ($updated = $formula->getOriginal('id')) {
-            $this->updateParentRecipe($formula);
+            // dispatch(function () use ($formula) {
             $this->updateSaleRev($formula);
+            $this->updateParentRecipe($formula);
+            // })->afterResponse();
         }
     }
 

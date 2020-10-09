@@ -142,7 +142,7 @@ export default {
     components: {
         AppTopBar,
         MaterialForm,
-        RevTimeline,
+        RevTimeline
     },
     data() {
         return {
@@ -157,32 +157,32 @@ export default {
                     value: "rev.price",
                     align: "right",
                     sortable: false,
-                    width: 150,
+                    width: 150
                 },
                 {
                     text: "Rev",
                     value: "revs_count",
-                    align: "center",
+                    align: "center"
                 },
                 {
                     text: "Formula",
                     value: "formulas_count",
-                    align: "center",
+                    align: "center"
                 },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",
-                    value: "updated_at",
-                },
+                    value: "updated_at"
+                }
             ],
 
             dialogDeleteRev: false,
             selectedRev: [],
-            listMatter: [],
+            listMatter: []
         };
     },
     computed: {
-        ...mapState("model", ["materials"]),
+        ...mapState("model", ["materials"])
     },
     methods: {
         change(item) {
@@ -192,18 +192,23 @@ export default {
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit: async function (item) {
+        onEdit: async function(item) {
             item = await this.fetchDetail(item);
             this.change(item || this.selected[0]);
         },
-        fetchDetail: async function ({ id }) {
+        fetchDetail: async function({ id }) {
             let item;
 
             await this.GET_MODEL({
                 model: this.model,
-                id,
-            }).then((data) => {
-                item = this.$_.cloneDeep(data);
+                id
+            }).then(data => {
+                item = {
+                    ...data,
+                    rev: {
+                        price: Number(data.rev.price)
+                    }
+                };
             });
 
             return item;
@@ -214,27 +219,27 @@ export default {
             this.selectedRev = [rev];
             this.$nextTick(() => (this.dialogDeleteRev = true));
         },
-        removeRev: async function () {
+        removeRev: async function() {
             this.START_LOADING();
             await this.DELETE_MODELS({
                 model: "material-rev",
-                ids: this.$_.map(this.selectedRev, "id"),
+                ids: this.$_.map(this.selectedRev, "id")
             })
-                .then(async (ids) => {
+                .then(async ids => {
                     this.form = await this.fetchDetail(this.form);
 
                     this.dialogDeleteRev = false;
                     this.$nextTick(() => (this.selectedRev = []));
                 })
-                .catch((e) => eHandler(e))
+                .catch(e => eHandler(e))
                 .then(() => this.STOP_LOADING());
-        },
+        }
     },
     mounted() {
         this.fetchList("matter")
-            .then((data) => (this.listMatter = data))
-            .catch((e) => eHandler(e));
-    },
+            .then(data => (this.listMatter = data))
+            .catch(e => eHandler(e));
+    }
 };
 </script>
 

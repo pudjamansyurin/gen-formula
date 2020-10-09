@@ -23,7 +23,9 @@ class PackageObserver
 
         // event:updated
         if ($updated = $package->getOriginal('id')) {
+            // dispatch(function () use ($package) {
             $this->updateSaleRev($package);
+            // })->afterResponse();
         }
     }
 

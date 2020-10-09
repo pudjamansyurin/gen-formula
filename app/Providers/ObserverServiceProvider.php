@@ -7,7 +7,6 @@ use App\Material;
 use App\Observers\FormulaObserver;
 use App\Observers\MaterialObserver;
 use App\Observers\PackageObserver;
-use App\Observers\PackerObserver;
 use App\Observers\PackObserver;
 use App\Observers\SaleObserver;
 use App\Observers\UserObserver;
