@@ -1,5 +1,5 @@
 <template>
-    <v-content>
+    <v-main>
         <v-container class="fill-height blue-grey lighten-5" fluid>
             <v-row align="center" justify="center">
                 <v-col cols="12" sm="8" md="4">
@@ -10,7 +10,7 @@
                 </v-col>
             </v-row>
         </v-container>
-    </v-content>
+    </v-main>
 </template>
 
 <script>
@@ -18,8 +18,8 @@ import { mapState } from "vuex";
 
 export default {
     computed: {
-        ...mapState("app", ["title"]),
-    },
+        ...mapState("app", ["title"])
+    }
 };
 </script>
 

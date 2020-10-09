@@ -12,3 +12,4 @@ export const CLEAR_PROFILE = "CLEAR_PROFILE";
 export const TOGGLE_DENSE = "TOGGLE_DENSE";
 export const TOGGLE_DARK = "TOGGLE_DARK";
 export const TOGGLE_FULLSCREEN = "TOGGLE_FULLSCREEN";
+export const SET_SIZE = "SET_SIZE";

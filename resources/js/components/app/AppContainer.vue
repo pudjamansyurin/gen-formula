@@ -1,5 +1,5 @@
 <template>
-    <v-content class="grey lighten-3">
+    <v-main class="grey lighten-3">
         <v-container fluid>
             <slot></slot>
             <!-- loading overlay -->
@@ -8,16 +8,15 @@
                 </v-progress-circular>
             </v-overlay>
         </v-container>
-    </v-content>
+    </v-main>
 </template>
 
 <script>
 import { CommonMixin } from "../../mixins";
 
 export default {
-    mixins: [CommonMixin],
+    mixins: [CommonMixin]
 };
 </script>
 
-<style>
-</style>
+<style></style>

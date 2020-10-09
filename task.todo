@@ -17,6 +17,7 @@ x Simplify this.$refs.form.$refs.$form
 x Add item-iterator for simple-table mobile version
 x Use vee-validate vid feature (fixed the Laravel FormRequest)
 
+- Use v-virtual-scroller for best performance
 - Card mobile is not paginated yet
 - Add relation tab to details
 - Table's column may hide-able

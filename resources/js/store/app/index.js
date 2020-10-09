@@ -21,7 +21,11 @@ const state = {
         text: ""
     },
     remember: ls.get("remember") || false,
-    profile: ls.get("profile") || cloneDeep(User)
+    profile: ls.get("profile") || cloneDeep(User),
+    size: {
+        width: 0,
+        height: 0
+    }
 };
 
 export default {

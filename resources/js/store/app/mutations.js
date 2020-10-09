@@ -69,5 +69,8 @@ export default {
     [mutations.CLEAR_PROFILE](state) {
         state.profile = cloneDeep(User);
         ls.remove("profile");
+    },
+    [mutations.SET_SIZE](state, { width, height }) {
+        state.size = { width, height };
     }
 };
