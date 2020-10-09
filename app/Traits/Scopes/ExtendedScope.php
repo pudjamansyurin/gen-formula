@@ -29,7 +29,7 @@ trait ExtendedScope
                 $relation = Str::upper($relation);
                 // failed
                 return response([
-                    'message' => "Still have '{$relation}' relation!"
+                    'message' => "Still used by {$relation}."
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }

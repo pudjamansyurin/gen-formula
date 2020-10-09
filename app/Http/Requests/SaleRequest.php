@@ -83,15 +83,15 @@ class SaleRequest extends FormRequest
     {
         if (!$validator->fails()) {
             $validator->after(function ($validator) {
-                $this->validateSingleRatio($validator);
-                $this->validateMultiFilled($validator);
-                $this->validateDifferentUnit($validator);
-                $this->validateMultiRatio($validator);
+                $this->validateRatioForSingle($validator);
+                $this->validateFilledForMultiple($validator);
+                $this->validateUnitAndCapacity($validator);
+                $this->validateFilledGreaterThanCapacity($validator);
             });
         }
     }
 
-    private function validateSingleRatio($validator)
+    private function validateRatioForSingle($validator)
     {
         if ($products = request('_products')) {
             if (count($products) == 1) {
@@ -103,7 +103,7 @@ class SaleRequest extends FormRequest
         }
     }
 
-    private function validateMultiFilled($validator)
+    private function validateFilledForMultiple($validator)
     {
         if ($products = request('_products')) {
             if (count($products) > 1) {
@@ -115,7 +115,7 @@ class SaleRequest extends FormRequest
         }
     }
 
-    private function validateDifferentUnit($validator)
+    private function validateUnitAndCapacity($validator)
     {
         if ($products = request('_products')) {
             if (count($products) > 1) {
@@ -125,13 +125,19 @@ class SaleRequest extends FormRequest
 
                 if ($package[1]->unit_id != $package[0]->unit_id) {
                     $validator->errors()
-                        ->add("_products.1.package_id", 'Second package unit may not different.');
+                        ->add("_products.1.package_id", 'Unit should not different.');
+                }
+
+
+                if ($package[1]->capacity > $package[0]->capacity) {
+                    $validator->errors()
+                        ->add("_products.1.package_id", 'Capacity should smaller than refference.');
                 }
             }
         }
     }
 
-    private function validateMultiRatio($validator)
+    private function validateFilledGreaterThanCapacity($validator)
     {
         if ($products = request('_products')) {
             if (count($products) > 1) {

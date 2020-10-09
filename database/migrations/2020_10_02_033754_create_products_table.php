@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('sale_id');
             $table->foreignId('formula_id');
             $table->foreignId('package_id');
-            $table->unsignedDecimal('ratio', 5, 2);
+            $table->integer('ratio');
             $table->timestamps();
         });
 

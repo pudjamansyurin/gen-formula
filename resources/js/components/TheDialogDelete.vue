@@ -3,7 +3,7 @@
         :value="value"
         @input="$emit('input', $event)"
         :fullscreen="mobile"
-        max-width="300"
+        max-width="400"
         persistent
         scrollable
     >
