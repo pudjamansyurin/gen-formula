@@ -10,11 +10,11 @@
                             :success="valid"
                             :readonly="fieldDisabled"
                             :filled="fieldDisabled"
+                            :autofocus="!mobile"
                             label="Sale name"
                             type="text"
                             hint="This is to identify the sale"
                             counter
-                            autofocus
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>

@@ -10,11 +10,11 @@
                             :success="valid"
                             :readonly="fieldDisabled"
                             :filled="fieldDisabled"
+                            :autofocus="!mobile"
                             label="Name"
                             type="text"
                             hint="The formula name"
                             counter
-                            autofocus
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>

@@ -7,10 +7,10 @@
                     :error-messages="errors"
                     :success="valid"
                     :counter="!profile"
+                    :autofocus="!mobile"
                     label="Name"
                     type="text"
                     hint="This should be unique name"
-                    autofocus
                     persistent-hint
                 ></v-text-field>
             </validation-provider>

@@ -8,11 +8,11 @@
                     :success="valid"
                     :readonly="fieldDisabled"
                     :filled="fieldDisabled"
+                    :autofocus="!mobile"
                     label="Material name"
                     type="text"
                     hint="This is to identify the material"
                     counter
-                    autofocus
                     persistent-hint
                 ></v-text-field>
             </validation-provider>

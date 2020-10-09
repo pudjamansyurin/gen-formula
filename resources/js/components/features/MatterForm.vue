@@ -8,11 +8,11 @@
                     :success="valid"
                     :readonly="fieldDisabled"
                     :filled="fieldDisabled"
+                    :autofocus="!mobile"
                     label="Name"
                     type="text"
                     hint="The matter's name"
                     counter
-                    autofocus
                     persistent-hint
                 ></v-text-field>
             </validation-provider>

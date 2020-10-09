@@ -21,13 +21,13 @@
                     v-if="searchBox || !mobile"
                     v-model="search"
                     :append-icon="searchBoxIcon"
+                    :autofocus="mobile"
                     @click:append="setSearch(false)"
                     label="Search"
                     dense
                     flat
                     solo-inverted
                     hide-details
-                    autofocus
                 ></v-text-field>
             </template>
 
