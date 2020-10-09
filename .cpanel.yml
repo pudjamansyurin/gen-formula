@@ -1,7 +1,8 @@
 ---
 deployment:
   tasks:
-    - export BACK_END_PATH=/home/genmotor/formula.genmotorcycles.com/laravel/
+    # - export BACK_END_PATH=/home/genmotor/formula.genmotorcycles.com/laravel/
+    - export BACK_END_PATH=/home/genmotor/formula_backend/
     - export FRONT_END_PATH=/home/genmotor/formula.genmotorcycles.com/
     - /bin/rsync -avr --exclude '.git/' --exclude 'public/' . $BACK_END_PATH
     - /bin/rsync -avr --exclude 'index.php' public/ $FRONT_END_PATH

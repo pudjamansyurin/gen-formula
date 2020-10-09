@@ -38,7 +38,9 @@ class AppServiceProvider extends ServiceProvider
 
             /* Fix laravel-mix manifest issue */
             $this->app->bind('path.public', function () {
-                return base_path() . '/../';
+                $domain = env('APP_PROD_DOMAIN');
+
+                return base_path() . "/../{$domain}";
             });
         }
 
