@@ -16,12 +16,12 @@ x User seeder role should be faked properly for each pages
 x Simplify this.$refs.form.$refs.$form
 x Add item-iterator for simple-table mobile version
 x Use vee-validate vid feature (fixed the Laravel FormRequest)
+x Check missing mdi icon
+x Use v-virtual-scroller for best performance
+x Card mobile is not paginated yet
 
-- Use v-virtual-scroller for best performance
-- Card mobile is not paginated yet
 - Add relation tab to details
 - Table's column may hide-able
-- Check missing mdi icon
 - Remove profile shortcut menu, instead simpliy the menus
 
 

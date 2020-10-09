@@ -9,16 +9,12 @@
         >
             <v-card :outlined="index === 0" elevation="2">
                 <v-card-subtitle class="py-2">
-                    <v-row no-gutters>
-                        <v-col>
-                            <b v-if="rev.user">
-                                {{ rev.user.name }}
-                            </b>
-                        </v-col>
-                        <v-col class="text-right">
-                            {{ rev.updated_at | moment("from") }}
-                        </v-col>
-                    </v-row>
+                    <b v-if="rev.user">
+                        {{ rev.user.name }}
+                    </b>
+                    <i class="text-right">
+                        - {{ rev.updated_at | moment("from") }}
+                    </i>
                 </v-card-subtitle>
                 <v-card-text>
                     <slot name="card-text" :item="{ rev, index }">
@@ -40,11 +36,10 @@ export default {
     props: {
         revs: {
             type: Array,
-            required: true,
-        },
-    },
+            required: true
+        }
+    }
 };
 </script>
 
-<style>
-</style>
+<style></style>

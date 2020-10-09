@@ -27,6 +27,7 @@
                     flat
                     solo-inverted
                     hide-details
+                    autofocus
                 ></v-text-field>
             </template>
 
@@ -40,43 +41,50 @@
                     <v-icon>mdi-magnify</v-icon>
                 </v-btn>
             </template>
-            <v-btn v-if="!webview" @click="toggleFs" icon>
-                <v-icon>{{ fullscreenIcon }}</v-icon>
-            </v-btn>
-            <v-btn icon>
-                <v-icon>mdi-apps</v-icon>
-            </v-btn>
             <!-- <v-btn icon>
                 <v-icon>mdi-bell</v-icon>
             </v-btn> -->
 
-            <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                    <v-btn icon large v-on="on">
-                        <v-avatar right size="32px" item>
-                            <v-img src="/img/unknown.png" alt="Profile"></v-img>
-                        </v-avatar>
+            <v-menu :nudge-width="200" offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn v-bind="attrs" v-on="on" icon>
+                        <v-icon>mdi-apps</v-icon>
                     </v-btn>
                 </template>
-                <v-list>
-                    <v-list-item :to="{ name: 'profile' }">
-                        <v-list-item-icon>
-                            <v-icon>mdi-face-profile</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                            <v-list-item-title>Profile</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-divider></v-divider>
-                    <v-list-item @click="logout">
-                        <v-list-item-icon>
-                            <v-icon>mdi-logout</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                            <v-list-item-title>Logout</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                </v-list>
+
+                <v-card>
+                    <v-list dense>
+                        <v-list-item v-if="!webview" @click="toggleFs">
+                            <v-list-item-icon>
+                                <v-icon>{{ fullscreenIcon }}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{ fullscreenText }} fullscreen
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+
+                        <v-list-item :to="{ name: 'profile' }">
+                            <v-list-item-icon>
+                                <v-icon>mdi-face-profile</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Profile</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+
+                        <!-- <v-divider></v-divider> -->
+                        <v-list-item @click="logout">
+                            <v-list-item-icon>
+                                <v-icon>mdi-logout</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>Logout</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
             </v-menu>
 
             <template v-slot:extension v-if="crud">
@@ -206,7 +214,7 @@ import { CommonMixin } from "../../mixins";
 import {
     TOGGLE_DRAWER,
     TOGGLE_FULLSCREEN,
-    TOGGLE_DENSE,
+    TOGGLE_DENSE
 } from "../../store/app/mutation-types";
 
 export default {
@@ -214,35 +222,35 @@ export default {
     props: {
         value: {
             type: Object,
-            default: () => {},
+            default: () => {}
         },
         page: {
             type: String,
-            default: "",
+            default: ""
         },
         selected: {
             type: Array,
-            default: () => [],
+            default: () => []
         },
         options: {
             type: Object,
-            default: () => {},
+            default: () => {}
         },
         crud: {
             type: Boolean,
-            default: false,
+            default: false
         },
         mineTab: {
             type: Boolean,
-            default: false,
-        },
+            default: false
+        }
     },
     data() {
         return {
             dialog: !ls.get("confirmedFullscreen"),
             searchBox: false,
             search: "",
-            tab: 0,
+            tab: 0
         };
     },
     computed: {
@@ -264,15 +272,18 @@ export default {
         fullscreenIcon() {
             return this.fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen";
         },
+        fullscreenText() {
+            return this.fullscreen ? "Disable" : "Enable";
+        },
         denseIcon() {
             return this.dense ? "mdi-table" : "mdi-table-large";
-        },
+        }
     },
     methods: {
         ...mapMutations("app", [
             TOGGLE_DENSE,
             TOGGLE_DRAWER,
-            TOGGLE_FULLSCREEN,
+            TOGGLE_FULLSCREEN
         ]),
         ...mapActions("app", [LOGOUT]),
         setSearch(state) {
@@ -282,7 +293,7 @@ export default {
         },
         toggleFs() {
             this.$fullscreen.toggle(document.body, {
-                callback: this.TOGGLE_FULLSCREEN(),
+                callback: this.TOGGLE_FULLSCREEN()
             });
         },
         confirmFs(state) {
@@ -295,25 +306,25 @@ export default {
         logout() {
             this.LOGOUT()
                 .then(() => this.$router.push({ name: "login" }))
-                .catch((e) => eHandler(e));
-        },
+                .catch(e => eHandler(e));
+        }
     },
     watch: {
-        search: debounce(function (term) {
+        search: debounce(function(term) {
             this.$emit("input", {
                 ...this.value,
                 page: 1,
-                search: term,
+                search: term
             });
         }, 500),
-        tab: function (mine) {
+        tab: function(mine) {
             this.$emit("input", {
                 ...this.value,
                 page: 1,
-                mine,
+                mine
             });
-        },
-    },
+        }
+    }
 };
 </script>
 
