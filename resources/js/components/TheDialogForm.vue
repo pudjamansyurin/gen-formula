@@ -13,7 +13,11 @@
                     <v-col cols="12" sm="5">
                         <span class="headline">{{ formTitle }}</span>
 
-                        <v-btn @click="fullscreen = !fullscreen" icon>
+                        <v-btn
+                            v-if="!webview"
+                            @click="fullscreen = !fullscreen"
+                            icon
+                        >
                             <v-icon>{{ fullscreenIcon }}</v-icon>
                         </v-btn>
                     </v-col>
