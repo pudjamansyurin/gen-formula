@@ -2,7 +2,7 @@
     <fragment>
         <v-row align="center" justify="center" dense>
             <v-virtual-scroll
-                :bench="0"
+                :bench="2"
                 :items="items"
                 :height="size.height - 190"
                 item-height="130"
