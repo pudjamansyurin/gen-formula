@@ -188,8 +188,8 @@ export default {
         onSave() {
             this.form._products = this.form._products.map((product) => ({
                 ...product,
-                package_id: this.$_.get(product.package, "id"),
-                formula_id: this.$_.get(product.formula, "id"),
+                package_id: this.$_.get(product.package, "id") || null,
+                formula_id: this.$_.get(product.formula, "id") || null,
                 ratio: Number(product.ratio),
             }));
         },

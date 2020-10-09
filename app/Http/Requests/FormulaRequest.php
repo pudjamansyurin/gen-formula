@@ -75,6 +75,16 @@ class FormulaRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+            '_recipes' => 'recipes',
+            '_recipes.*.recipeable_id' => 'recipe',
+            '_recipes.*.recipeable_type' => 'recipe type',
+            '_recipes.*.portion' => 'portion'
+        ];
+    }
+
     /**
      * Configure the validator instance.
      *
@@ -83,16 +93,18 @@ class FormulaRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
-            $this->validateSum($validator,  '_recipes', 'portion', 100);
-            $this->validatePolymorphicExist($validator, '_recipes', 'recipeable');
-            $this->validatePolymorphicDistinct($validator, '_recipes', 'recipeable');
-            $this->validateMainFormulaAsRecipe($validator);
-            $this->validateHasSaleChangeMain($validator);
-            $this->validateHasParentAsMain($validator);
-            $this->validateSelfAsRecipe($validator);
-            $this->validateParentAsRecipe($validator);
-        });
+        if (!$validator->fails()) {
+            $validator->after(function ($validator) {
+                $this->validateSum($validator,  '_recipes', 'portion', 100);
+                $this->validatePolymorphicExist($validator, '_recipes', 'recipeable');
+                $this->validatePolymorphicDistinct($validator, '_recipes', 'recipeable');
+                $this->validateMainFormulaAsRecipe($validator);
+                $this->validateHasSaleChangeMain($validator);
+                $this->validateHasParentAsMain($validator);
+                $this->validateSelfAsRecipe($validator);
+                $this->validateParentAsRecipe($validator);
+            });
+        }
     }
 
     private function validateHasSaleChangeMain($validator)

@@ -48,4 +48,11 @@ class UserRequest extends FormRequest
             ]
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'role_id' => 'role',
+        ];
+    }
 }

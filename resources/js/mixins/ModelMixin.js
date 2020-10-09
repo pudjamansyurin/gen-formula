@@ -94,6 +94,8 @@ export default {
         save: async function() {
             this.onSave();
 
+            console.log(this.form);
+
             this.$refs.form.validator.validate().then(async valid => {
                 if (valid) {
                     this.START_LOADING();

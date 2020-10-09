@@ -43,4 +43,12 @@ class MaterialRequest extends FormRequest
             ],
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'matter_id' => 'matter',
+            'rev.price' => 'price'
+        ];
+    }
 }

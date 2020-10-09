@@ -62,6 +62,16 @@ class SaleRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+            '_products' => 'products',
+            '_products.*.package_id' => 'package',
+            '_products.*.formula_id' => 'formula',
+            '_products.*.ratio' => 'ratio',
+        ];
+    }
+
 
     /**
      * Configure the validator instance.
@@ -71,12 +81,14 @@ class SaleRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
-            $this->validateSingleRatio($validator);
-            $this->validateMultiFilled($validator);
-            $this->validateMultiUnit($validator);
-            $this->validateMultiRatio($validator);
-        });
+        if (!$validator->fails()) {
+            $validator->after(function ($validator) {
+                $this->validateSingleRatio($validator);
+                $this->validateMultiFilled($validator);
+                $this->validateDifferentUnit($validator);
+                $this->validateMultiRatio($validator);
+            });
+        }
     }
 
     private function validateSingleRatio($validator)
@@ -103,7 +115,7 @@ class SaleRequest extends FormRequest
         }
     }
 
-    private function validateMultiUnit($validator)
+    private function validateDifferentUnit($validator)
     {
         if ($products = request('_products')) {
             if (count($products) > 1) {

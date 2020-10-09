@@ -76,6 +76,19 @@ class PackageRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+            'unit_id' => 'unit',
+            '_packers' => 'packers',
+            '_packers.*.id' => 'packer',
+            '_packers.*.content' => 'content',
+            '_packers.*.packs' => 'packs',
+            '_packers.*.packs.*.id' => 'pack',
+            '_packers.*.packs.*.price' => 'price',
+        ];
+    }
+
     /**
      * Configure the validator instance.
      *
@@ -84,12 +97,14 @@ class PackageRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
-            $this->validateHasPackageChangePacker($validator);
-        });
+        if (!$validator->fails()) {
+            $validator->after(function ($validator) {
+                $this->validateHasPackageChangeUnitAndCapacity($validator);
+            });
+        }
     }
 
-    private function validateHasPackageChangePacker($validator)
+    private function validateHasPackageChangeUnitAndCapacity($validator)
     {
         $unitId = request('unit_id');
         $capacity = request('capacity');

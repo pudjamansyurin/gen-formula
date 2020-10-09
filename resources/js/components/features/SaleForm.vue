@@ -291,9 +291,7 @@ export default {
             return this.listFormula;
         },
         salePackage() {
-            let { package: pkg } = this.form._products[0];
-
-            return pkg;
+            return this.form._products[0].package;
         },
         saleUnitSymbol() {
             if (this.salePackage) {

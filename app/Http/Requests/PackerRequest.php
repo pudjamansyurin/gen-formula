@@ -30,15 +30,6 @@ class PackerRequest extends FormRequest
                 'min:3',
                 Rule::unique('packers', 'name')->ignore($this->packer)
             ],
-            // 'packs' => [
-            //     'required',
-            //     'array'
-            // ],
-            // 'packs.*' => [
-            //     'min:3',
-            //     'distinct',
-            //     Rule::unique('packs', 'name')->ignore($this->pack)
-            // ],
         ];
     }
 }

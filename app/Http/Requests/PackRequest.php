@@ -39,6 +39,13 @@ class PackRequest extends FormRequest
         ];
     }
 
+    public function attributes()
+    {
+        return [
+            'packer_id' => 'packer',
+        ];
+    }
+
 
     /**
      * Configure the validator instance.
@@ -48,9 +55,11 @@ class PackRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
-            $this->validateHasPackageChangePacker($validator);
-        });
+        if (!$validator->fails()) {
+            $validator->after(function ($validator) {
+                $this->validateHasPackageChangePacker($validator);
+            });
+        }
     }
 
     private function validateHasPackageChangePacker($validator)
