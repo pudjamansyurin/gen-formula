@@ -21,6 +21,8 @@ x Use vee-validate vid feature (fixed the Laravel FormRequest)
 - Card mobile is not paginated yet
 - Add relation tab to details
 - Table's column may hide-able
+- Check missing mdi icon
+- Remove profile shortcut menu, instead simpliy the menus
 
 
 - Add Laravel Logging

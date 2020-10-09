@@ -14,8 +14,10 @@ import {
 import TheData from "../components/TheData";
 import TheDialogForm from "../components/TheDialogForm";
 import TheDialogDelete from "../components/TheDialogDelete";
+import CommonMixin from "./CommonMixin";
 
 export default {
+    mixins: [CommonMixin],
     components: {
         TheData,
         TheDialogForm,
@@ -94,8 +96,6 @@ export default {
         save: async function() {
             this.onSave();
 
-            console.log(this.form);
-
             this.$refs.form.validator.validate().then(async valid => {
                 if (valid) {
                     this.START_LOADING();
@@ -134,6 +134,19 @@ export default {
             },
             immediate: true,
             deep: true
+        },
+        mobile: {
+            handler(value) {
+                if (value) {
+                    this.options = cloneDeep({
+                        ...TABLE_OPTIONS,
+                        itemsPerPage: -1
+                    });
+                } else {
+                    this.options = cloneDeep(TABLE_OPTIONS);
+                }
+            },
+            immediate: true
         }
     }
 };

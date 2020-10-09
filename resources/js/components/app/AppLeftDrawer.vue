@@ -102,7 +102,7 @@
                 </v-list-group>
 
                 <v-list-item
-                    v-else-if="authPage(item.to)"
+                    v-else
                     :key="index"
                     :to="{ name: item.to }"
                     color="primary"
@@ -134,65 +134,19 @@
 import { mapState, mapMutations } from "vuex";
 import { SET_DRAWER } from "../../store/app/mutation-types";
 import { navigations } from "../../utils/navigation";
+import { NavigationMixin } from "../../mixins";
 
 export default {
+    mixins: [NavigationMixin],
     computed: {
         ...mapState("app", ["drawer", "profile"]),
         mini() {
             return !this.drawer && this.$vuetify.breakpoint.lgAndUp;
-        },
-        navs() {
-            let route = this.$route.name;
-            let navs = this.$_.cloneDeep(navigations);
-
-            // group menu
-            navs.forEach((nav, index) => {
-                if (nav.children) {
-                    nav.model = nav.children.some(({ to }) => to === route);
-
-                    // check pages role (at least 1 for group)
-                    if (nav.children) {
-                        let authNavs = nav.children.filter(({ to }) =>
-                            this.authPage(to)
-                        );
-
-                        // force replace group as single nav
-                        if (authNavs.length == 1) {
-                            navs[index] = authNavs[0];
-                        }
-                    }
-                }
-            });
-
-            return navs;
-        },
+        }
     },
     methods: {
-        ...mapMutations("app", [SET_DRAWER]),
-        authPage(name) {
-            let page = this.$router.resolve({ name });
-            let role = this.$_.get(this.profile, "role.name");
-
-            // valid page
-            if (page) {
-                // check authorization
-                let roles = page.route.meta.roles;
-                if (roles) {
-                    if (roles.includes(role)) {
-                        // user role is authorized
-                        return true;
-                    } else {
-                        // user role is un-authorized
-                        return false;
-                    }
-                }
-                // un-authorized page
-                return true;
-            }
-            // invalid page
-            return false;
-        },
-    },
+        ...mapMutations("app", [SET_DRAWER])
+    }
 };
 </script>
 

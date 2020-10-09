@@ -15,15 +15,21 @@ export const navigations = [
     {
         text: "Formula",
         to: "formula",
-        icon: "mdi-microsoft-excel",
+        icon: "mdi-dna",
         bottomNav: true
     },
     {
         text: "Materials",
         model: false,
         icon: "mdi-palette",
+        bottomNav: true,
         children: [
-            { text: "Material", to: "material", icon: "mdi-format-color-fill" },
+            {
+                text: "Material",
+                to: "material",
+                icon: "mdi-format-color-fill",
+                bottomNav: true
+            },
             {
                 text: "Matter",
                 to: "matter",
@@ -35,11 +41,13 @@ export const navigations = [
         text: "Packages",
         model: false,
         icon: "mdi-package",
+        bottomNav: true,
         children: [
             {
                 text: "Package",
                 to: "package",
-                icon: "mdi-package-variant-closed"
+                icon: "mdi-package-variant-closed",
+                bottomNav: true
             },
             {
                 text: "Packer",

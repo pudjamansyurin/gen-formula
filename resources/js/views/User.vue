@@ -34,15 +34,19 @@
                 </v-btn>
                 <v-card-text>
                     <div class="overline">
-                        {{ item.last_at | moment("from") }}
+                        <template v-if="item.last_at">
+                            {{ item.last_at | moment("from") }}
+                        </template>
+                        <template v-else>
+                            Never
+                        </template>
                     </div>
-                    <div class="overline mb-2">
-                        {{ item.role.name }}
+                    <div class="overline">
+                        {{ item.name }} ({{ item.role.name }})
                     </div>
                     <div class="subtitle-2 font-weight-bold">
-                        {{ item.name }}
+                        {{ item.email }}
                     </div>
-                    {{ item.email }}
                 </v-card-text>
             </template>
 
@@ -108,7 +112,7 @@ import {
     CommonMixin,
     ModelMixin,
     PasswordMixin,
-    FetchListMixin,
+    FetchListMixin
 } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
@@ -118,7 +122,7 @@ export default {
     mixins: [CommonMixin, ModelMixin, PasswordMixin, FetchListMixin],
     components: {
         AppTopBar,
-        UserForm,
+        UserForm
     },
     data() {
         return {
@@ -127,23 +131,23 @@ export default {
             form: {
                 ...this.$_.cloneDeep(User),
                 password: null,
-                password_confirmation: null,
+                password_confirmation: null
             },
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Email", value: "email" },
                 { text: "Role", value: "role.name", sortable: false },
                 { text: "LastAt", value: "last_at" },
-                { text: "LastIp", value: "last_ip" },
+                { text: "LastIp", value: "last_ip" }
             ],
 
             listRole: [],
-            changePassword: false,
+            changePassword: false
         };
     },
     computed: {
         ...mapState("app", ["profile"]),
-        ...mapState("model", ["users"]),
+        ...mapState("model", ["users"])
     },
     methods: {
         chipColor(item) {
@@ -170,19 +174,19 @@ export default {
         },
         onSave() {
             this.removeUnchangedPassword();
-        },
+        }
     },
     mounted() {
         this.fetchList("role")
             .then(
-                (data) =>
+                data =>
                     (this.listRole = data.map(({ id, name }) => ({
                         id,
-                        name: name.toUpperCase(),
+                        name: name.toUpperCase()
                     })))
             )
-            .catch((e) => eHandler(e));
-    },
+            .catch(e => eHandler(e));
+    }
 };
 </script>
 

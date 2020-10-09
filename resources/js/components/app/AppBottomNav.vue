@@ -14,17 +14,24 @@
 
 <script>
 import { navigations } from "../../utils/navigation";
+import { NavigationMixin } from "../../mixins";
 
 export default {
+    mixins: [NavigationMixin],
     computed: {
         items() {
-            return this.$_.cloneDeep(
-                navigations.filter((el) => el.icon && el.bottomNav)
-            );
-        },
-    },
+            console.warn(this.navs);
+            return this.navs
+                .filter(({ bottomNav, children }) => !!bottomNav || !!children)
+                .map(el => {
+                    if (el.children) {
+                        return el.children[0];
+                    }
+                    return el;
+                });
+        }
+    }
 };
 </script>
 
-<style>
-</style>
+<style></style>
