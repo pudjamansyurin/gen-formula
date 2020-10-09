@@ -43,7 +43,7 @@
                 name="role_id"
                 v-slot="{ errors, valid }"
             >
-                <v-autocomplete
+                <v-select
                     v-model="form.role_id"
                     :items="listRole"
                     :error-messages="errors"
@@ -54,7 +54,7 @@
                     hint="Role for this user"
                     chips
                     persistent-hint
-                ></v-autocomplete>
+                ></v-select>
             </validation-provider>
 
             <v-btn

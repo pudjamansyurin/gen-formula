@@ -105,6 +105,7 @@
                     item-text="name"
                     label="Recipes"
                     hint="The recipes list"
+                    attach
                     persistent-hint
                     multiple
                     return-object

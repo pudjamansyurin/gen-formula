@@ -11,7 +11,7 @@
                     @click.stop="TOGGLE_DRAWER"
                 ></v-app-bar-nav-icon>
                 <v-toolbar-title>
-                    <span>{{ title }}</span>
+                    <span>{{ theTitle }}</span>
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
             </template>
@@ -48,7 +48,7 @@
             <v-menu :nudge-width="150" offset-y>
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn v-bind="attrs" v-on="on" icon>
-                        <v-icon>mdi-apps</v-icon>
+                        <v-icon>mdi-dots-vertical</v-icon>
                     </v-btn>
                 </template>
 
@@ -60,7 +60,11 @@
                             </v-list-item-icon>
                             <v-list-item-content>
                                 <v-list-item-title>
-                                    {{ fullscreenText }} fullscreen
+                                    {{
+                                        fullscreen
+                                            ? "Normal-screen"
+                                            : "Full-screen"
+                                    }}
                                 </v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
@@ -123,7 +127,7 @@
                         {{ selected.length }} selected
                     </v-toolbar-title>
                     <v-tabs v-else v-model="tab" align-with-title>
-                        <v-tab>{{ theTitle }}</v-tab>
+                        <v-tab>Recent</v-tab>
                         <v-tab v-if="mineTab">Mine</v-tab>
                     </v-tabs>
                 </template>
@@ -265,9 +269,6 @@ export default {
         },
         fullscreenIcon() {
             return this.fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen";
-        },
-        fullscreenText() {
-            return this.fullscreen ? "Disable" : "Enable";
         },
         denseIcon() {
             return this.dense ? "mdi-table" : "mdi-table-large";

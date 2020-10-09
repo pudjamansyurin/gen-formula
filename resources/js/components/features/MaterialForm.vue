@@ -31,6 +31,7 @@
                     hint="The material's category"
                     persistent-hint
                     chips
+                    attach
                 ></v-autocomplete>
             </validation-provider>
 

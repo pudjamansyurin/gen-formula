@@ -80,6 +80,7 @@
                                             hint="The packages"
                                             persistent-hint
                                             chips
+                                            attach
                                             return-object
                                         ></v-autocomplete>
                                     </validation-provider>
@@ -128,6 +129,7 @@
                                             hint="The formulas"
                                             persistent-hint
                                             chips
+                                            attach
                                             return-object
                                         ></v-autocomplete>
                                     </validation-provider>

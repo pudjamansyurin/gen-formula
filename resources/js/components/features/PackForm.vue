@@ -31,6 +31,7 @@
                     hint="The packer"
                     persistent-hint
                     chips
+                    attach
                 ></v-autocomplete>
             </validation-provider>
         </validation-observer>

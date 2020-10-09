@@ -57,7 +57,7 @@
                         name="unit_id"
                         v-slot="{ errors, valid }"
                     >
-                        <v-autocomplete
+                        <v-select
                             v-model="form.unit_id"
                             :items="listUnit"
                             :error-messages="errors"
@@ -69,7 +69,8 @@
                             label="Unit"
                             hint="The package unit"
                             persistent-hint
-                        ></v-autocomplete>
+                            attach
+                        ></v-select>
                     </validation-provider>
                 </v-col>
             </v-row>
@@ -94,6 +95,7 @@
                     return-object
                     multiple
                     chips
+                    attach
                 ></v-autocomplete>
             </validation-provider>
 
