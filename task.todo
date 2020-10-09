@@ -1,0 +1,32 @@
+x Change terms: portion to formula_material
+x Category should CRUD-able
+x Material price should only editable for authorized user
+x Cache the fetched list data
+x Tab inside from on mobile has bugs when swiped left
+x Disable delete if has parent relation
+x Formula should not deleteable, if it has parents
+x Search & Mine error when table pagination not first page
+x Loading state glitch on multiple request (saving, removing)
+x User should not deleteable if it has relation, instead add disable feature
+x Handle pack's package relation properly
+x Add withValidator to custom request
+x Remove 'depth' from recipeables table
+x Add autofocus on first field when openning form
+x User seeder role should be faked properly for each pages
+x Simplify this.$refs.form.$refs.$form
+x Add item-iterator for simple-table mobile version
+x Use vee-validate vid feature (fixed the Laravel FormRequest)
+
+- Card mobile is not paginated yet
+- Add relation tab to details
+- Table's column may hide-able
+
+
+- Add Laravel Logging
+- Add Laravel Notifications
+- Add Laravel Queue for heavy observer & email task
+- Add Laravel TaskScheduler for daily backup
+- Add i18n feature for billingual
+
+
+
