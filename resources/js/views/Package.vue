@@ -120,7 +120,7 @@ export default {
     components: {
         AppTopBar,
         PackageForm,
-        RevTimeline
+        RevTimeline,
     },
     data() {
         return {
@@ -134,34 +134,34 @@ export default {
                 {
                     text: "Packer",
                     value: "packagers_count",
-                    align: "center"
+                    align: "center",
                 },
                 {
                     text: "Price",
                     value: "rev.price",
                     align: "right",
                     sortable: false,
-                    width: 150
+                    width: 150,
                 },
                 {
                     text: "Rev",
                     value: "revs_count",
-                    align: "center"
+                    align: "center",
                 },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",
-                    value: "updated_at"
-                }
+                    value: "updated_at",
+                },
             ],
 
             listUnit: [],
             listPacker: [],
-            listPackerDefault: []
+            listPackerDefault: [],
         };
     },
     computed: {
-        ...mapState("model", ["packages"])
+        ...mapState("model", ["packages"]),
     },
     methods: {
         change(item) {
@@ -172,20 +172,20 @@ export default {
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit: async function(item) {
-            item = await this.fetchDetail(item);
-            this.change(item || this.selected[0]);
+        onEdit: async function (item) {
+            item = await this.fetchDetail(item || this.selected[0]);
+            this.change(item);
         },
-        fetchDetail: async function({ id }) {
+        fetchDetail: async function ({ id }) {
             let item;
 
             await this.GET_MODEL({
                 model: this.model,
-                id
-            }).then(data => {
+                id,
+            }).then((data) => {
                 item = {
                     ...data,
-                    _packers: this.makePackersDetail(data.packagers)
+                    _packers: this.makePackersDetail(data.packagers),
                 };
             });
 
@@ -199,8 +199,8 @@ export default {
                 packs: packets.map(({ id, name, pivot }) => ({
                     id,
                     name,
-                    price: pivot.price
-                }))
+                    price: pivot.price,
+                })),
             }));
         },
         makeListPackers(data) {
@@ -211,21 +211,21 @@ export default {
                 packs: packs.map(({ id, name }) => ({
                     id,
                     name,
-                    price: null
-                }))
+                    price: null,
+                })),
             }));
-        }
+        },
     },
     mounted() {
         this.fetchList("unit")
-            .then(data => (this.listUnit = data))
-            .catch(e => eHandler(e));
+            .then((data) => (this.listUnit = data))
+            .catch((e) => eHandler(e));
         this.fetchList("packer")
-            .then(data => {
+            .then((data) => {
                 this.listPackerDefault = this.makeListPackers(data);
             })
-            .catch(e => eHandler(e));
-    }
+            .catch((e) => eHandler(e));
+    },
 };
 </script>
 

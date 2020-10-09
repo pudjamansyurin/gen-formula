@@ -210,8 +210,8 @@ export default {
             this.change(this.modelDefault);
         },
         onEdit: async function (item) {
-            item = await this.fetchDetail(item);
-            this.change(item || this.selected[0]);
+            item = await this.fetchDetail(item || this.selected[0]);
+            this.change(item);
         },
         fetchDetail: async function ({ id }) {
             let item;

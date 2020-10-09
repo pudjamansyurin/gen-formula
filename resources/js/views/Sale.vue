@@ -125,7 +125,7 @@ export default {
     components: {
         AppTopBar,
         SaleForm,
-        RevTimeline
+        RevTimeline,
     },
     data() {
         return {
@@ -139,28 +139,28 @@ export default {
                     value: "rev.price",
                     align: "right",
                     sortable: false,
-                    width: 150
+                    width: 150,
                 },
                 // { text: "Filled", align: "center", value: "filled" },
                 {
                     text: "Product",
                     value: "products_count",
-                    align: "center"
+                    align: "center",
                 },
                 {
                     text: "Rev",
                     value: "revs_count",
-                    align: "center"
+                    align: "center",
                 },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",
-                    value: "updated_at"
-                }
+                    value: "updated_at",
+                },
             ],
 
             listPackage: [],
-            listFormula: []
+            listFormula: [],
         };
     },
     computed: {
@@ -171,7 +171,7 @@ export default {
                 return 1000;
             }
             return 500;
-        }
+        },
     },
     methods: {
         change(item) {
@@ -181,28 +181,28 @@ export default {
         onCreate() {
             this.change(this.modelDefault);
         },
-        onEdit: async function(item) {
-            item = await this.fetchDetail(item);
-            this.change(item || this.selected[0]);
+        onEdit: async function (item) {
+            item = await this.fetchDetail(item || this.selected[0]);
+            this.change(item);
         },
         onSave() {
-            this.form._products = this.form._products.map(product => ({
+            this.form._products = this.form._products.map((product) => ({
                 ...product,
                 package_id: this.$_.get(product.package, "id") || null,
                 formula_id: this.$_.get(product.formula, "id") || null,
-                ratio: Number(product.ratio)
+                ratio: Number(product.ratio),
             }));
         },
-        fetchDetail: async function({ id }) {
+        fetchDetail: async function ({ id }) {
             let item;
 
             await this.GET_MODEL({
                 model: this.model,
-                id
-            }).then(data => {
+                id,
+            }).then((data) => {
                 item = {
                     ...data,
-                    _products: this.makeProductsDetail(data.products)
+                    _products: this.makeProductsDetail(data.products),
                 };
             });
 
@@ -212,18 +212,18 @@ export default {
             return products.map(({ formula, package: pkg, ratio }) => ({
                 formula,
                 package: pkg,
-                ratio: Number(ratio)
+                ratio: Number(ratio),
             }));
-        }
+        },
     },
     mounted() {
         this.fetchList("package")
-            .then(data => (this.listPackage = data))
-            .catch(e => eHandler(e));
+            .then((data) => (this.listPackage = data))
+            .catch((e) => eHandler(e));
         this.fetchList("formula")
-            .then(data => (this.listFormula = data))
-            .catch(e => eHandler(e));
-    }
+            .then((data) => (this.listFormula = data))
+            .catch((e) => eHandler(e));
+    },
 };
 </script>
 

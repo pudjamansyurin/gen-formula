@@ -204,7 +204,6 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { debounce } from "lodash";
 import pluralize from "pluralize";
-import isWebview from "is-ua-webview";
 
 import { LOGOUT } from "../../store/app/action-types";
 import { ls, eHandler } from "../../utils/helper";
@@ -253,9 +252,6 @@ export default {
     },
     computed: {
         ...mapState("app", ["title", "dense", "fullscreen"]),
-        webview() {
-            return isWebview(window.navigator.userAgent);
-        },
         theTitle() {
             return `${pluralize(this.$_.startCase(this.page))}`;
         },
