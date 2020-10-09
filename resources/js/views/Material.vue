@@ -21,7 +21,7 @@
         >
             <template v-slot:card="{ item }">
                 <v-btn
-                    @click="edit(item)"
+                    @click.stop="edit(item)"
                     :color="chipColor(item)"
                     :outlined="!item.selected"
                     absolute

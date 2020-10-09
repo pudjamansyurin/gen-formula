@@ -20,18 +20,18 @@
         >
             <template v-slot:card="{ item }">
                 <v-btn
-                    v-if="profile.id == item.id"
-                    :to="{ name: 'profile' }"
+                    @click.stop="me(item) ? toProfile() : edit(item)"
+                    :color="chipColor(item)"
                     :outlined="!item.selected"
-                    color="green"
                     absolute
                     top
                     right
                     small
                     tile
                 >
-                    Profile
+                    {{  me(item) ? 'Profile' : item.role.name  }}
                 </v-btn>
+
                 <v-card-text>
                     <div class="overline">
                         <template v-if="item.last_at">
@@ -42,7 +42,7 @@
                         </template>
                     </div>
                     <div class="overline">
-                        {{ item.name }} ({{ item.role.name }})
+                        {{ item.name }}
                     </div>
                     <div class="subtitle-2 font-weight-bold">
                         {{ item.email }}
@@ -52,7 +52,7 @@
 
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
-                    @click="edit(item)"
+                    @click="me(item) ? toProfile() : edit(item)"
                     :color="chipColor(item)"
                     :small="dense"
                     dark
@@ -150,8 +150,11 @@ export default {
         ...mapState("model", ["users"])
     },
     methods: {
+        me({id}) {
+            return this.profile.id == id
+        },
         chipColor(item) {
-            return this.profile.id == item.id ? "primary" : "green";
+            return this.me(item) ? "primary" : "green";
         },
         change(item) {
             this.changePassword = item.id === -1;
@@ -163,17 +166,11 @@ export default {
         onEdit(item) {
             this.change(item || this.selected[0]);
         },
-        onEdit(item) {
-            // redirect to profile for current logged-in user
-            if (this.profile.id == item.id) {
-                this.$router.push({ name: "profile" });
-                return;
-            }
-            // next for other users
-            this.change(item || this.selected[0]);
-        },
         onSave() {
             this.removeUnchangedPassword();
+        },
+        toProfile() {
+            this.$router.push({ name: "profile" });
         }
     },
     mounted() {

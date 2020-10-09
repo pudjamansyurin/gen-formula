@@ -74,7 +74,7 @@ export default {
             // manage selected item
             let index = this.selectedIndex(item);
             if (index > -1) {
-                this.selected.splice(index, 1, item);
+                this.selected.splice(index, 1);
             } else {
                 this.selected.push(item);
             }
