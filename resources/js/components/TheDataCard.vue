@@ -4,7 +4,7 @@
             <v-virtual-scroll
                 :bench="2"
                 :items="items"
-                :height="size.height - 200"
+                :height="size.height - 180"
                 item-height="130"
             >
                 <template v-slot="{ item }">
