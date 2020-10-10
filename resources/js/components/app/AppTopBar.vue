@@ -66,34 +66,38 @@
                             </v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
-                        <v-list-item v-if="!webview" @click="toggleFs">
-                            <v-list-item-icon>
-                                <v-icon>{{ fullscreenIcon }}</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title>
-                                    {{
-                                        fullscreen
-                                            ? "Normal-screen"
-                                            : "Full-screen"
-                                    }}
-                                </v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
 
-                        <v-divider></v-divider>
+                        <template v-if="!webview">
+                            <v-list-item @click="toggleFs">
+                                <v-list-item-icon>
+                                    <v-icon>{{ fullscreenIcon }}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{
+                                            fullscreen
+                                                ? "Normal-screen"
+                                                : "Full-screen"
+                                        }}
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-divider></v-divider>
+                        </template>
 
-                        <v-list-item v-if="!mobile" @click="TOGGLE_DENSE">
-                            <v-list-item-icon>
-                                <v-icon>{{ denseIcon }}</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title>
-                                    {{ dense ? "Bigger" : "Smaller" }}
-                                </v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-divider></v-divider>
+                        <template v-if="!mobile">
+                            <v-list-item @click="TOGGLE_DENSE">
+                                <v-list-item-icon>
+                                    <v-icon>{{ denseIcon }}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{ dense ? "Bigger" : "Smaller" }}
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-divider></v-divider>
+                        </template>
 
                         <v-list-item :to="{ name: 'profile' }">
                             <v-list-item-icon>
@@ -103,8 +107,8 @@
                                 <v-list-item-title>Profile</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
-
                         <v-divider></v-divider>
+
                         <v-list-item @click="logout">
                             <v-list-item-icon>
                                 <v-icon>mdi-logout</v-icon>
