@@ -11,16 +11,17 @@
                     <v-col cols="12">
                         <v-card
                             @click="toggleSelect(item)"
-                            :color="
-                                selectedIndex(item) > -1
-                                    ? 'primary darken-2'
-                                    : 'white'
-                            "
-                            :dark="selectedIndex(item) > -1"
                             :key="item.id"
-                            :ripple="false"
+                            :dark="dark"
                             tile
                         >
+                            <v-progress-linear
+                                v-if="selectedIndex(item) > -1"
+                                :value="100"
+                                :dark="dark"
+                                color="primary"
+                            ></v-progress-linear>
+
                             <slot :item="item"></slot>
                         </v-card>
                     </v-col>
@@ -41,16 +42,16 @@ export default {
     props: {
         value: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         items: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         options: {
             type: Object,
-            default: () => {}
-        }
+            default: () => {},
+        },
     },
     computed: {
         ...mapState("app", ["size"]),
@@ -60,8 +61,8 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            }
-        }
+            },
+        },
     },
     methods: {
         selectedIndex(item) {
@@ -78,8 +79,8 @@ export default {
             } else {
                 this.selected.push(item);
             }
-        }
-    }
+        },
+    },
 };
 </script>
 

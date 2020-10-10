@@ -4,7 +4,7 @@
 
         <v-row justify="center">
             <v-col cols="12" sm="10" md="8" lg="6">
-                <v-card v-show="!editting" :loading="!!loading">
+                <v-card v-show="!editting" :dark="dark" :loading="!!loading">
                     <v-list-item>
                         <v-list-item-avatar color="grey">
                             <v-img src="/img/unknown.png" alt="Profile"></v-img>
@@ -129,8 +129,8 @@
                     </v-list-item>
                 </v-card>
 
-                <v-card v-show="editting" :loading="!!loading">
-                    <v-card-title class="headline grey lighten-2" primary-title>
+                <v-card v-show="editting" :dark="dark" :loading="!!loading">
+                    <v-card-title primary-title>
                         <span class="headline"> Edit Profile </span>
                     </v-card-title>
 

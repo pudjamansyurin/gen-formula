@@ -1,22 +1,39 @@
 <template>
     <v-main>
-        <v-container class="fill-height blue-grey lighten-5" fluid>
+        <v-container
+            class="fill-height"
+            :class="dark ? 'black' : 'grey lighten-5'"
+            fluid
+        >
             <v-row align="center" justify="center">
                 <v-col cols="12" sm="8" md="4">
-                    <p class="display-2 font-weight-thin">{{ errorCode }}</p>
-                    <p class="display-1 font-weight-thin">{{ errorText }}</p>
-                    <div>
-                        <v-btn v-if="!direct" @click="handleBack" elevation="1">
-                            Back
-                        </v-btn>
-                        <v-btn
-                            :to="{ path: redirect.path }"
-                            elevation="1"
-                            color="primary"
-                        >
-                            {{ redirect.text }}
-                        </v-btn>
-                    </div>
+                    <v-card :dark="dark">
+                        <v-card-text>
+                            <span class="text-h1">{{ errorCode }}</span>
+                        </v-card-text>
+
+                        <v-card-subtitle>
+                            <span class="text-h3">{{ errorText }}</span>
+                        </v-card-subtitle>
+
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-btn
+                                v-if="!direct"
+                                @click="handleBack"
+                                elevation="1"
+                            >
+                                Back
+                            </v-btn>
+                            <v-btn
+                                :to="{ path: redirect.path }"
+                                elevation="1"
+                                color="primary"
+                            >
+                                {{ redirect.text }}
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
                 </v-col>
             </v-row>
         </v-container>
@@ -24,35 +41,37 @@
 </template>
 
 <script>
+import { CommonMixin } from "../../mixins";
 import { mapState, mapMutations } from "vuex";
 import { CLEAR_ERROR, CLEAR_MESSAGE } from "../../store/app/mutation-types";
 import { HTTP_NOT_FOUND, HTTP_UNAUTHORIZED } from "../../utils/response";
 
 export default {
+    mixins: [CommonMixin],
     props: {
         code: {
-            default: HTTP_NOT_FOUND
+            default: HTTP_NOT_FOUND,
         },
         text: {
-            default: null
-        }
+            default: null,
+        },
     },
     data() {
         return {
             errors: {
                 [HTTP_NOT_FOUND]: "Page not found",
-                [HTTP_UNAUTHORIZED]: "Unauthorized access"
-            }
+                [HTTP_UNAUTHORIZED]: "Unauthorized access",
+            },
         };
     },
     computed: {
         ...mapState("app", ["error", "profile"]),
-        errorCode: function() {
+        errorCode: function () {
             return (
                 this.error.code || (this.errors[this.code] ? this.code : null)
             );
         },
-        errorText: function() {
+        errorText: function () {
             return (
                 this.error.text ||
                 this.text ||
@@ -60,26 +79,26 @@ export default {
                 "Opps, something wrong."
             );
         },
-        direct: function() {
+        direct: function () {
             return window.history.length <= 2;
         },
         redirect() {
             return {
                 path: this.profile.id > -1 ? "/app" : "/",
-                text: this.profile.id > -1 ? "Dashboard" : "Login"
+                text: this.profile.id > -1 ? "Dashboard" : "Login",
             };
-        }
+        },
     },
     methods: {
         ...mapMutations("app", [CLEAR_ERROR, CLEAR_MESSAGE]),
         handleBack() {
             this.$router.go(-1);
-        }
+        },
     },
     beforeDestroy() {
         this.CLEAR_MESSAGE();
         this.CLEAR_ERROR();
-    }
+    },
 };
 </script>
 

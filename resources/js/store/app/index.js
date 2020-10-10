@@ -1,4 +1,3 @@
-
 import { cloneDeep } from "lodash";
 
 // import getters from "./getters";
@@ -11,11 +10,11 @@ import { TABLE_OPTIONS } from "../../utils/config";
 const state = {
     title: "GEN Formula",
     drawer: null,
-    dense: false,
-    dark: false,
+    dense: ls.get("dense") || false,
+    dark: ls.get("dark") || false,
     fullscreen: false,
     loading: 0,
-    perPage: TABLE_OPTIONS.itemsPerPage,
+    perPage: ls.get("perPage") || TABLE_OPTIONS.itemsPerPage,
     remember: ls.get("remember") || false,
     profile: ls.get("profile") || cloneDeep(User),
     size: {
@@ -29,7 +28,7 @@ const state = {
     error: {
         code: null,
         text: ""
-    },
+    }
 };
 
 export default {

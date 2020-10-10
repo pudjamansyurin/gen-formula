@@ -9,6 +9,7 @@
         :server-items-length="total"
         :loading="!!loading"
         :dense="dense"
+        :dark="dark"
         :page="1"
         :items-per-page="10"
         :footer-props="{

@@ -1,5 +1,5 @@
 <template>
-    <v-bottom-navigation color="primary" app>
+    <v-bottom-navigation :dark="dark" color="primary" app>
         <v-btn
             v-for="(item, index) in items"
             :key="index"
@@ -14,22 +14,22 @@
 
 <script>
 import { navigations } from "../../utils/navigation";
-import { NavigationMixin } from "../../mixins";
+import { CommonMixin, NavigationMixin } from "../../mixins";
 
 export default {
-    mixins: [NavigationMixin],
+    mixins: [CommonMixin, NavigationMixin],
     computed: {
         items() {
             return this.navs
                 .filter(({ bottomNav, children }) => !!bottomNav || !!children)
-                .map(el => {
+                .map((el) => {
                     if (el.children) {
                         return el.children.find(({ bottomNav }) => !!bottomNav);
                     }
                     return el;
                 });
-        }
-    }
+        },
+    },
 };
 </script>
 

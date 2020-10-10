@@ -108,10 +108,16 @@
             <template v-slot:REV>
                 <rev-timeline v-if="form.revs" :revs="form.revs">
                     <template v-slot:card-text="{ item: { rev, index } }">
-                        <v-chip :color="index === 0 ? 'primary' : ''">
+                        <v-chip
+                            class="ma-1"
+                            :color="index === 0 ? 'primary' : ''"
+                        >
                             {{ rev.price | currency }} / Kg
                         </v-chip>
-                        <v-chip :color="index === 0 ? 'primary' : ''">
+                        <v-chip
+                            class="ma-1"
+                            :color="index === 0 ? 'primary' : ''"
+                        >
                             {{ rev.price_liter | currency }} / L
                         </v-chip>
                     </template>

@@ -15,9 +15,18 @@ export default {
     },
     [mutations.TOGGLE_DENSE](state) {
         state.dense = !state.dense;
+        ls.set("dense", state.dense);
     },
     [mutations.TOGGLE_DARK](state) {
         state.dark = !state.dark;
+        ls.set("dark", state.dark);
+    },
+    [mutations.SET_SIZE](state, { width, height }) {
+        state.size = { width, height };
+    },
+    [mutations.SET_PER_PAGE](state, count) {
+        state.perPage = count;
+        ls.set("perPage", count);
     },
     [mutations.START_LOADING](state) {
         state.loading += 1;
@@ -69,11 +78,5 @@ export default {
     [mutations.CLEAR_PROFILE](state) {
         state.profile = cloneDeep(User);
         ls.remove("profile");
-    },
-    [mutations.SET_SIZE](state, { width, height }) {
-        state.size = { width, height };
-    },
-    [mutations.SET_PER_PAGE](state, count) {
-        state.perPage = count;
     }
 };

@@ -1,5 +1,5 @@
 <template>
-    <v-main class="grey lighten-3">
+    <v-main :class="dark ? 'black' : 'grey lighten-3'">
         <v-container fluid>
             <slot></slot>
             <!-- loading overlay -->
@@ -15,7 +15,7 @@
 import { CommonMixin } from "../../mixins";
 
 export default {
-    mixins: [CommonMixin]
+    mixins: [CommonMixin],
 };
 </script>
 

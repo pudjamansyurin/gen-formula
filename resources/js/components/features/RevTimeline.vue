@@ -3,11 +3,10 @@
         <v-timeline-item
             v-for="(rev, index) in revs"
             :key="rev.id"
-            :color="index === 0 ? 'primary' : 'grey'"
             :fill-dot="index === 0"
             small
         >
-            <v-card :outlined="index === 0" elevation="2">
+            <v-card outlined elevation="2">
                 <v-card-subtitle class="py-2">
                     <b v-if="rev.user">
                         {{ rev.user.name }}
@@ -32,13 +31,16 @@
 </template>
 
 <script>
+import { CommonMixin } from "../../mixins";
+
 export default {
+    mixins: [CommonMixin],
     props: {
         revs: {
             type: Array,
-            required: true
-        }
-    }
+            required: true,
+        },
+    },
 };
 </script>
 

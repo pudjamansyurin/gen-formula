@@ -23,6 +23,7 @@
                     :append-icon="searchBoxIcon"
                     :autofocus="mobile"
                     @click:append="setSearch(false)"
+                    :dark="dark"
                     label="Search"
                     dense
                     flat
@@ -52,8 +53,19 @@
                     </v-btn>
                 </template>
 
-                <v-card>
-                    <v-list dense>
+                <v-card :dark="dark">
+                    <v-list class="py-0" dense>
+                        <v-list-item @click="TOGGLE_DARK">
+                            <v-list-item-icon>
+                                <v-icon>{{ darkIcon }}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{ dark ? "Lighter" : "Darker" }}
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
                         <v-list-item v-if="!webview" @click="toggleFs">
                             <v-list-item-icon>
                                 <v-icon>{{ fullscreenIcon }}</v-icon>
@@ -69,6 +81,8 @@
                             </v-list-item-content>
                         </v-list-item>
 
+                        <v-divider></v-divider>
+
                         <v-list-item v-if="!mobile" @click="TOGGLE_DENSE">
                             <v-list-item-icon>
                                 <v-icon>{{ denseIcon }}</v-icon>
@@ -79,6 +93,7 @@
                                 </v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-divider></v-divider>
 
                         <v-list-item :to="{ name: 'profile' }">
                             <v-list-item-icon>
@@ -89,7 +104,7 @@
                             </v-list-item-content>
                         </v-list-item>
 
-                        <!-- <v-divider></v-divider> -->
+                        <v-divider></v-divider>
                         <v-list-item @click="logout">
                             <v-list-item-icon>
                                 <v-icon>mdi-logout</v-icon>
@@ -178,10 +193,8 @@
 
         <!-- fullscreen confirmation -->
         <v-dialog v-if="mobile && !webview" v-model="dialog" max-width="290">
-            <v-card>
-                <v-card-title class="headline">
-                    Use fullscreen mode ?
-                </v-card-title>
+            <v-card :dark="dark">
+                <v-card-title class="headline"> Use fullscreen? </v-card-title>
                 <v-card-text>
                     You are using small device screen, we can help you navigate
                     easier using fullscreen mode.
@@ -216,6 +229,7 @@ import {
     TOGGLE_DRAWER,
     TOGGLE_FULLSCREEN,
     TOGGLE_DENSE,
+    TOGGLE_DARK,
 } from "../../store/app/mutation-types";
 
 export default {
@@ -255,17 +269,20 @@ export default {
         };
     },
     computed: {
-        ...mapState("app", ["title", "dense", "fullscreen"]),
+        ...mapState("app", ["title", "dark", "dense", "fullscreen"]),
         theTitle() {
             return `${pluralize(startCase(this.page))}`;
         },
         appBarColor() {
-            return this.selected.length ? "black" : "primary";
+            return this.dark ? "grey darken-3" : "primary";
         },
         searchBoxIcon() {
             return this.mobile || this.search
                 ? "mdi-magnify-close"
                 : "mdi-magnify";
+        },
+        darkIcon() {
+            return this.dark ? "mdi-brightness-1" : "mdi-brightness-3";
         },
         fullscreenIcon() {
             return this.fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen";
@@ -278,6 +295,7 @@ export default {
         ...mapMutations("app", [
             TOGGLE_DENSE,
             TOGGLE_DRAWER,
+            TOGGLE_DARK,
             TOGGLE_FULLSCREEN,
         ]),
         ...mapActions("app", [LOGOUT]),

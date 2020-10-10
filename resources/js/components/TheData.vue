@@ -3,6 +3,7 @@
         <!-- loading desktop -->
         <v-skeleton-loader
             v-show="items.length == 0 && !!loading && !mobile"
+            :dark="dark"
             type="table"
         >
         </v-skeleton-loader>
@@ -11,12 +12,14 @@
             v-show="items.length == 0 && !!loading && mobile"
             v-for="n in 10"
             :key="n"
+            :dark="dark"
             type="article"
             class="my-3"
         ></v-skeleton-loader>
         <!-- no data -->
         <v-alert
             v-show="items.length == 0 && !!!loading"
+            :dark="dark"
             type="info"
             border="top"
         >

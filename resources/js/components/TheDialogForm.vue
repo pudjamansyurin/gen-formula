@@ -4,11 +4,12 @@
         @input="$emit('input', $event)"
         :fullscreen="mobile || fullscreen"
         :max-width="width"
+        :dark="dark"
         persistent
         scrollable
     >
         <v-card :loading="!!loading">
-            <v-card-title class="headline grey lighten-2">
+            <v-card-title>
                 <v-row no-gutters>
                     <v-col cols="12" sm="5">
                         <span class="headline">{{ formTitle }}</span>
@@ -46,6 +47,7 @@
                     :value="tab"
                     @input="$emit('update:tab', $event)"
                     touchless
+                    :dark="dark"
                 >
                     <v-tab-item v-for="item in tabs" :key="item">
                         <slot :name="item"> </slot>

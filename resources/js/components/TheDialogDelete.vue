@@ -3,14 +3,13 @@
         :value="value"
         @input="$emit('input', $event)"
         :fullscreen="mobile"
+        :dark="dark"
         max-width="400"
         persistent
         scrollable
     >
         <v-card :loading="!!loading">
-            <v-card-title class="headline grey lighten-2">
-                Confirmation
-            </v-card-title>
+            <v-card-title> Confirmation </v-card-title>
             <v-divider></v-divider>
 
             <v-card-text class="pt-2" :style="cardTextHeight">
