@@ -77,7 +77,7 @@ export default {
                 model: this.model,
                 params: {
                     ...this.options,
-                    itemsPerPage: this.perPage
+                    itemsPerPage: this.mobile ? -1 : this.perPage
                 }
             })
                 .then(({ total }) => (this.total = total))
@@ -145,22 +145,6 @@ export default {
             },
             immediate: true,
             deep: true
-        },
-        mobile: {
-            handler(value) {
-                if (value) {
-                    this.options = cloneDeep({
-                        ...TABLE_OPTIONS,
-                        itemsPerPage: -1
-                    });
-                } else {
-                    this.options = cloneDeep({
-                        ...TABLE_OPTIONS,
-                        itemsPerPage: this.perPage
-                    });
-                }
-            },
-            immediate: true
         }
     }
 };
