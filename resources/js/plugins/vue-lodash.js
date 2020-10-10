@@ -13,5 +13,7 @@ import {
 
 Vue.use(VueLodash, {
     name: "$_",
-    lodash: { get, map, find, reduce, pick, cloneDeep, startCase, isEqual }
+    lodash: { get,
+         map, find, reduce, pick, cloneDeep, startCase, isEqual
+    }
 });

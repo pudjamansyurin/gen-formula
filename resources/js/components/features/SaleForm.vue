@@ -242,6 +242,7 @@
 
 <script>
 import { CommonMixin } from "../../mixins";
+import { cloneDeep } from "lodash";
 
 export default {
     mixins: [CommonMixin],
@@ -362,7 +363,7 @@ export default {
         },
         onComponentChange(value) {
             if (value > 1) {
-                let data = this.$_.cloneDeep(this.modelDefault._products[0]);
+                let data = cloneDeep(this.modelDefault._products[0]);
 
                 this.form.filled = 100;
                 this.form._products.push(data);

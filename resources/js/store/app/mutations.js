@@ -72,5 +72,8 @@ export default {
     },
     [mutations.SET_SIZE](state, { width, height }) {
         state.size = { width, height };
+    },
+    [mutations.SET_PER_PAGE](state, count) {
+        state.perPage = count;
     }
 };

@@ -1,5 +1,5 @@
 import { map, cloneDeep } from "lodash";
-import { mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 import { eHandler } from "../utils/helper";
 import { TABLE_OPTIONS } from "../utils/config";
@@ -15,6 +15,7 @@ import TheData from "../components/TheData";
 import TheDialogForm from "../components/TheDialogForm";
 import TheDialogDelete from "../components/TheDialogDelete";
 import CommonMixin from "./CommonMixin";
+import { SET_PER_PAGE } from "../store/app/mutation-types";
 
 export default {
     mixins: [CommonMixin],
@@ -33,6 +34,7 @@ export default {
         };
     },
     computed: {
+        ...mapState("app", ["perPage"]),
         creating() {
             return this.form.id === -1;
         },
@@ -41,6 +43,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations("app", [SET_PER_PAGE]),
         ...mapMutations("model", [UPDATE_MODEL]),
         ...mapActions("model", [
             GET_MODEL,
@@ -72,7 +75,10 @@ export default {
         fetchAll: async function() {
             await this.GET_MODELS({
                 model: this.model,
-                params: this.options
+                params: {
+                    ...this.options,
+                    itemsPerPage: this.perPage
+                }
             })
                 .then(({ total }) => (this.total = total))
                 .catch(e => eHandler(e));
@@ -129,7 +135,12 @@ export default {
     },
     watch: {
         options: {
-            handler() {
+            handler(newVal, oldVal) {
+                if (!this.mobile && oldVal) {
+                    if (oldVal.itemsPerPage != newVal.itemsPerPage) {
+                        this.SET_PER_PAGE(newVal.itemsPerPage);
+                    }
+                }
                 this.fetchAll();
             },
             immediate: true,
@@ -143,7 +154,10 @@ export default {
                         itemsPerPage: -1
                     });
                 } else {
-                    this.options = cloneDeep(TABLE_OPTIONS);
+                    this.options = cloneDeep({
+                        ...TABLE_OPTIONS,
+                        itemsPerPage: this.perPage
+                    });
                 }
             },
             immediate: true

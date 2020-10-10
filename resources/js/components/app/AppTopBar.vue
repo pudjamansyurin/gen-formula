@@ -206,7 +206,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { debounce } from "lodash";
+import { debounce, startCase } from "lodash";
 import pluralize from "pluralize";
 
 import { LOGOUT } from "../../store/app/action-types";
@@ -257,7 +257,7 @@ export default {
     computed: {
         ...mapState("app", ["title", "dense", "fullscreen"]),
         theTitle() {
-            return `${pluralize(this.$_.startCase(this.page))}`;
+            return `${pluralize(startCase(this.page))}`;
         },
         appBarColor() {
             return this.selected.length ? "black" : "primary";

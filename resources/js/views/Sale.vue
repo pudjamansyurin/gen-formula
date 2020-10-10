@@ -110,6 +110,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import { cloneDeep, get } from "lodash";
 import pluralize from "pluralize";
 
 import { Sale } from "../models";
@@ -131,7 +132,7 @@ export default {
         return {
             model: "sale",
             modelDefault: Sale,
-            form: this.$_.cloneDeep(Sale),
+            form: cloneDeep(Sale),
             headers: [
                 { text: "Name", value: "name" },
                 {
@@ -176,7 +177,7 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(item);
+            this.form = cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);
@@ -188,8 +189,8 @@ export default {
         onSave() {
             this.form._products = this.form._products.map((product) => ({
                 ...product,
-                package_id: this.$_.get(product.package, "id") || null,
-                formula_id: this.$_.get(product.formula, "id") || null,
+                package_id: get(product.package, "id") || null,
+                formula_id: get(product.formula, "id") || null,
                 ratio: Number(product.ratio),
             }));
         },

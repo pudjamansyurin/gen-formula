@@ -79,6 +79,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import { cloneDeep } from "lodash";
 
 import { Matter } from "../models";
 import { eHandler } from "../utils/helper";
@@ -97,7 +98,7 @@ export default {
         return {
             model: "matter",
             modelDefault: Matter,
-            form: this.$_.cloneDeep(Matter),
+            form: cloneDeep(Matter),
             headers: [
                 { text: "Name", value: "name" },
                 {

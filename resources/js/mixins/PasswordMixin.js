@@ -20,11 +20,11 @@ export default {
     },
     methods: {
         copyWithPassword(item) {
-            return {
-                ...cloneDeep(item),
+            return cloneDeep({
+                ...item,
                 password: null,
                 password_confirmation: null
-            };
+            });
         },
         removeUnchangedPassword() {
             if (!this.changePassword) {

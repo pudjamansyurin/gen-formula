@@ -60,6 +60,7 @@
 
 <script>
 import { CommonMixin } from "../mixins";
+import { isEqual } from "lodash";
 
 import TheDataCard from "../components/TheDataCard";
 import TheDataTable from "../components/TheDataTable";
@@ -98,7 +99,7 @@ export default {
     },
     methods: {
         fetch(options) {
-            if (!this.$_.isEqual(this.options, options)) {
+            if (!isEqual(this.options, options)) {
                 this.$emit("update:options", options);
             }
         },

@@ -1,5 +1,5 @@
 import { mapState } from "vuex";
-import { cloneDeep } from "lodash";
+import { get, cloneDeep } from "lodash";
 
 import { navigations } from "../utils/navigation";
 
@@ -43,7 +43,7 @@ export default {
     methods: {
         authPage(name) {
             let page = this.$router.resolve({ name });
-            let role = this.$_.get(this.profile, "role.name");
+            let role = get(this.profile, "role.name");
 
             // valid page
             if (page) {

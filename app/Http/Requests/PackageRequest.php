@@ -72,6 +72,7 @@ class PackageRequest extends FormRequest
                 'numeric',
                 'min:0',
                 'not_in:0',
+                'max:9999999999999.99'
             ]
         ];
     }

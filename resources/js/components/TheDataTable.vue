@@ -26,7 +26,7 @@
             v-slot:[`item.${header.value}`]="{ item }"
         >
             <slot :name="`item.${header.value}`" :item="item">
-                {{ $_.get(item, header.value) }}
+                {{ getItemValue(item, header) }}
             </slot>
         </template>
     </v-data-table>
@@ -34,6 +34,7 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { get } from "lodash";
 
 import { CommonMixin } from "../mixins";
 
@@ -59,6 +60,11 @@ export default {
         total: {
             type: Number,
             default: 0,
+        },
+    },
+    methods: {
+        getItemValue(item, header) {
+            return get(item, header.value);
         },
     },
 };

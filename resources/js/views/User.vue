@@ -29,7 +29,7 @@
                     small
                     tile
                 >
-                    {{  me(item) ? 'Profile' : item.role.name  }}
+                    {{ me(item) ? "Profile" : item.role.name }}
                 </v-btn>
 
                 <v-card-text>
@@ -37,9 +37,7 @@
                         <template v-if="item.last_at">
                             {{ item.last_at | moment("from") }}
                         </template>
-                        <template v-else>
-                            Never
-                        </template>
+                        <template v-else> Never </template>
                     </div>
                     <div class="overline">
                         {{ item.name }}
@@ -105,6 +103,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import { cloneDeep } from "lodash";
 
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
@@ -112,7 +111,7 @@ import {
     CommonMixin,
     ModelMixin,
     PasswordMixin,
-    FetchListMixin
+    FetchListMixin,
 } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";
@@ -122,36 +121,36 @@ export default {
     mixins: [CommonMixin, ModelMixin, PasswordMixin, FetchListMixin],
     components: {
         AppTopBar,
-        UserForm
+        UserForm,
     },
     data() {
         return {
             model: "user",
             modelDefault: User,
-            form: {
-                ...this.$_.cloneDeep(User),
+            form: cloneDeep({
+                ...User,
                 password: null,
-                password_confirmation: null
-            },
+                password_confirmation: null,
+            }),
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Email", value: "email" },
                 { text: "Role", value: "role.name", sortable: false },
                 { text: "LastAt", value: "last_at" },
-                { text: "LastIp", value: "last_ip" }
+                { text: "LastIp", value: "last_ip" },
             ],
 
             listRole: [],
-            changePassword: false
+            changePassword: false,
         };
     },
     computed: {
         ...mapState("app", ["profile"]),
-        ...mapState("model", ["users"])
+        ...mapState("model", ["users"]),
     },
     methods: {
-        me({id}) {
-            return this.profile.id == id
+        me({ id }) {
+            return this.profile.id == id;
         },
         chipColor(item) {
             return this.me(item) ? "primary" : "green";
@@ -171,19 +170,19 @@ export default {
         },
         toProfile() {
             this.$router.push({ name: "profile" });
-        }
+        },
     },
     mounted() {
         this.fetchList("role")
             .then(
-                data =>
+                (data) =>
                     (this.listRole = data.map(({ id, name }) => ({
                         id,
-                        name: name.toUpperCase()
+                        name: name.toUpperCase(),
                     })))
             )
-            .catch(e => eHandler(e));
-    }
+            .catch((e) => eHandler(e));
+    },
 };
 </script>
 

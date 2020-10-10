@@ -123,6 +123,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import { cloneDeep } from "lodash";
 
 import { Formula } from "../models";
 import { eHandler } from "../utils/helper";
@@ -143,7 +144,7 @@ export default {
         return {
             model: "formula",
             modelDefault: Formula,
-            form: this.$_.cloneDeep(Formula),
+            form: cloneDeep(Formula),
             headers: [
                 { text: "Name", value: "name" },
                 // { text: "Description", value: "description" },
@@ -190,7 +191,7 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.listRecipe = this.$_.cloneDeep(
+            this.listRecipe = cloneDeep(
                 this.listRecipeDefault
                     .filter(({ id }) => id != `App\\Formula-${item.id}`)
                     .filter(({ recipeable_id, recipeable_type }) => {
@@ -204,7 +205,7 @@ export default {
                         return true;
                     })
             );
-            this.form = this.$_.cloneDeep(item);
+            this.form = cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);

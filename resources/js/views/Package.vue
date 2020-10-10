@@ -106,6 +106,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import { cloneDeep } from "lodash";
 
 import { Package } from "../models";
 import { eHandler } from "../utils/helper";
@@ -126,7 +127,7 @@ export default {
         return {
             model: "package",
             modelDefault: Package,
-            form: this.$_.cloneDeep(Package),
+            form: cloneDeep(Package),
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Capacity", value: "capacity", align: "center" },
@@ -166,8 +167,8 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.listPacker = this.$_.cloneDeep(this.listPackerDefault);
-            this.form = this.$_.cloneDeep(item);
+            this.listPacker = cloneDeep(this.listPackerDefault);
+            this.form = cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);

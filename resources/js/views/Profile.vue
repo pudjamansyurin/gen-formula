@@ -167,6 +167,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
+import { cloneDeep } from "lodash";
 
 import { User } from "../models";
 import { eHandler } from "../utils/helper";
@@ -187,11 +188,11 @@ export default {
         return {
             model: "profile",
             modelDefault: User,
-            form: {
-                ...this.$_.cloneDeep(User),
+            form: cloneDeep({
+                ...User,
                 password: null,
                 password_confirmation: null,
-            },
+            }),
 
             editting: false,
             changePassword: false,

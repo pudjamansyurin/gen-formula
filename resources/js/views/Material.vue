@@ -127,6 +127,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
+import { cloneDeep, map } from "lodash";
 import pluralize from "pluralize";
 
 import { Material } from "../models";
@@ -148,7 +149,7 @@ export default {
         return {
             model: "material",
             modelDefault: Material,
-            form: this.$_.cloneDeep(Material),
+            form: cloneDeep(Material),
             headers: [
                 { text: "Name", value: "name" },
                 { text: "Matter", value: "matter.name" },
@@ -187,7 +188,7 @@ export default {
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.form = this.$_.cloneDeep(item);
+            this.form = cloneDeep(item);
         },
         onCreate() {
             this.change(this.modelDefault);
@@ -223,7 +224,7 @@ export default {
             this.START_LOADING();
             await this.DELETE_MODELS({
                 model: "material-rev",
-                ids: this.$_.map(this.selectedRev, "id"),
+                ids: map(this.selectedRev, "id"),
             })
                 .then(async (ids) => {
                     this.form = await this.fetchDetail(this.form);
