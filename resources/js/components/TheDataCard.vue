@@ -4,13 +4,13 @@
             <v-virtual-scroll
                 :bench="2"
                 :items="items"
-                :height="size.height - 190"
+                :height="size.height - 200"
                 item-height="130"
             >
                 <template v-slot="{ item }">
                     <v-col cols="12">
                         <v-card
-                            v-long-press="1000"
+                            v-long-press="2000"
                             @long-press-start="toggleSelect(item)"
                             @click="selected.length > 0 && toggleSelect(item)"
                             :key="item.id"
