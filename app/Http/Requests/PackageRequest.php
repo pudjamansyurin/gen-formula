@@ -29,6 +29,7 @@ class PackageRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
+                'max:25',
                 Rule::unique('packages', 'name')->ignore($this->package)
             ],
             'unit_id' => [

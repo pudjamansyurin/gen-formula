@@ -29,6 +29,7 @@ class ProfileRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
+                'max:25',
                 Rule::unique('users', 'name')->ignore(auth()->user())
             ],
             'email'   => [
@@ -39,6 +40,7 @@ class ProfileRequest extends FormRequest
             'password' => [
                 'sometimes',
                 'min:8',
+                'max:25',
                 'confirmed'
             ]
         ];

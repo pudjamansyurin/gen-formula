@@ -28,6 +28,7 @@ class MaterialRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
+                'max:25',
                 Rule::unique('materials', 'name')->ignore($this->material)
             ],
             'matter_id' => [

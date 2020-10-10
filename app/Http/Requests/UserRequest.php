@@ -29,6 +29,7 @@ class UserRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
+                'max:25',
                 Rule::unique('users', 'name')->ignore($this->user)
             ],
             'email'   => [
@@ -44,6 +45,7 @@ class UserRequest extends FormRequest
                 Rule::requiredIf(request()->isMethod('post')),
                 'sometimes',
                 'min:8',
+                'max:25',
                 'confirmed'
             ]
         ];

@@ -29,6 +29,7 @@ class SaleRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
+                'max:25',
                 Rule::unique('sales', 'name')->ignore($this->sale)
             ],
             'filled' => [

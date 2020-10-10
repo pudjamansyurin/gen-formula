@@ -28,6 +28,7 @@ class PackerRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
+                'max:25',
                 Rule::unique('packers', 'name')->ignore($this->packer)
             ],
         ];
