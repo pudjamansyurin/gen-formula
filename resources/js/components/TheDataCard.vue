@@ -2,9 +2,9 @@
     <fragment>
         <v-row align="center" justify="center" dense>
             <v-virtual-scroll
-                :bench="2"
+                :bench="1"
                 :items="items"
-                :height="size.height - 180"
+                :height="size.height - 190"
                 item-height="130"
             >
                 <template v-slot="{ item }">
