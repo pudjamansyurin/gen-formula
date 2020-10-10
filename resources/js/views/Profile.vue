@@ -3,7 +3,7 @@
         <app-top-bar page="Profile"></app-top-bar>
 
         <v-row justify="center">
-            <v-col cols="12" sm="10" md="8" lg="6">
+            <v-col cols="12" sm="10" md="9">
                 <v-card v-show="!editting" :dark="dark" :loading="!!loading">
                     <v-list-item>
                         <v-list-item-avatar color="grey">

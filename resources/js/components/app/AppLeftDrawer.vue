@@ -10,7 +10,6 @@
             <v-list-item
                 v-if="profile.id > -1"
                 :to="{ name: 'profile' }"
-                color="red"
                 :dark="dark"
                 link
                 two-line

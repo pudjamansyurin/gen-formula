@@ -147,10 +147,11 @@
                                             :readonly="fieldDisabled"
                                             :filled="fieldDisabled"
                                             :label="pack.name"
-                                            prefix="Rp"
+                                            suffix="Rp"
                                             type="number"
                                             hint="The pack price"
                                             counter
+                                            reverse
                                             persistent-hint
                                         ></v-text-field>
                                     </validation-provider>

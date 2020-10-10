@@ -44,9 +44,10 @@
                     :filled="fieldDisabled"
                     label="Material price"
                     type="number"
-                    prefix="Rp"
+                    suffix="Rp"
                     hint="The updated material price"
                     counter
+                    reverse
                     persistent-hint
                 ></v-text-field>
             </validation-provider>

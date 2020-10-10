@@ -199,7 +199,7 @@ export default {
                 packs: packets.map(({ id, name, pivot }) => ({
                     id,
                     name,
-                    price: pivot.price,
+                    price: Number(pivot.price),
                 })),
             }));
         },
