@@ -196,7 +196,11 @@
         </v-app-bar>
 
         <!-- fullscreen confirmation -->
-        <v-dialog v-if="mobile && !webview" v-model="dialog" max-width="290">
+        <v-dialog
+            v-if="mobile && !webview"
+            v-model="dialogFullscreen"
+            max-width="290"
+        >
             <v-card :dark="dark">
                 <v-card-title class="headline"> Use fullscreen? </v-card-title>
                 <v-card-text>
@@ -228,16 +232,15 @@ import pluralize from "pluralize";
 
 import { LOGOUT } from "../../store/app/action-types";
 import { ls, eHandler } from "../../utils/helper";
-import { CommonMixin } from "../../mixins";
+import { CommonMixin, FullscreenMixin } from "../../mixins";
 import {
     TOGGLE_DRAWER,
-    TOGGLE_FULLSCREEN,
     TOGGLE_DENSE,
     TOGGLE_DARK,
 } from "../../store/app/mutation-types";
 
 export default {
-    mixins: [CommonMixin],
+    mixins: [CommonMixin, FullscreenMixin],
     props: {
         value: {
             type: Object,
@@ -266,14 +269,13 @@ export default {
     },
     data() {
         return {
-            dialog: !ls.get("confirmedFullscreen"),
             searchBox: false,
             search: "",
             tab: 0,
         };
     },
     computed: {
-        ...mapState("app", ["title", "dark", "dense", "fullscreen"]),
+        ...mapState("app", ["title", "dark", "dense"]),
         theTitle() {
             return `${pluralize(startCase(this.page))}`;
         },
@@ -288,37 +290,17 @@ export default {
         darkIcon() {
             return this.dark ? "mdi-brightness-1" : "mdi-brightness-3";
         },
-        fullscreenIcon() {
-            return this.fullscreen ? "mdi-fullscreen-exit" : "mdi-fullscreen";
-        },
         denseIcon() {
             return this.dense ? "mdi-table" : "mdi-table-large";
         },
     },
     methods: {
-        ...mapMutations("app", [
-            TOGGLE_DENSE,
-            TOGGLE_DRAWER,
-            TOGGLE_DARK,
-            TOGGLE_FULLSCREEN,
-        ]),
+        ...mapMutations("app", [TOGGLE_DENSE, TOGGLE_DRAWER, TOGGLE_DARK]),
         ...mapActions("app", [LOGOUT]),
         setSearch(state) {
             if (!state) this.search = "";
 
             this.searchBox = state;
-        },
-        toggleFs() {
-            this.$fullscreen.toggle(document.body, {
-                callback: this.TOGGLE_FULLSCREEN(),
-            });
-        },
-        confirmFs(state) {
-            if (state) this.toggleFs();
-
-            ls.set("confirmedFullscreen", true);
-
-            this.$nextTick(() => (this.dialog = false));
         },
         logout() {
             this.LOGOUT()

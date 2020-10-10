@@ -4,6 +4,7 @@ import ModelMixin from "./ModelMixin";
 import TabMixin from "./TabMixin";
 import FetchListMixin from "./FetchListMixin";
 import NavigationMixin from "./NavigationMixin";
+import FullscreenMixin from "./FullscreenMixin";
 
 export {
     CommonMixin,
@@ -11,5 +12,6 @@ export {
     ModelMixin,
     TabMixin,
     FetchListMixin,
-    NavigationMixin
+    NavigationMixin,
+    FullscreenMixin
 };

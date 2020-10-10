@@ -15,7 +15,7 @@
                         <span class="headline">{{ formTitle }}</span>
 
                         <v-btn
-                            v-if="!webview"
+                            v-if="!mobile"
                             @click="fullscreen = !fullscreen"
                             icon
                         >
