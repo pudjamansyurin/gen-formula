@@ -40,7 +40,8 @@ class Formula extends Model
             'user.name'
         ],
         'sorter' =>  [
-            'user.name' => 'user_id'
+            'user.name' => 'user_id',
+            // 'rev.price' => 'rev.price'
         ]
     ];
 

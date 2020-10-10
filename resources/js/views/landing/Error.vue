@@ -13,7 +13,7 @@
                         </v-card-text>
 
                         <v-card-subtitle>
-                            <span class="text-h3">{{ errorText }}</span>
+                            <span class="text-h5">{{ errorText }}</span>
                         </v-card-subtitle>
 
                         <v-divider></v-divider>
