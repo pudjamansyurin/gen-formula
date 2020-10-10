@@ -20,7 +20,6 @@
         >
             <template v-slot:card="{ item }">
                 <v-btn
-                    @click.stop="me(item) ? toProfile() : edit(item)"
                     :color="chipColor(item)"
                     :outlined="!item.selected"
                     absolute
@@ -32,7 +31,7 @@
                     {{ me(item) ? "Profile" : item.role.name }}
                 </v-btn>
 
-                <v-card-text>
+                <v-card-text @click="!me(item) && edit(item)">
                     <div class="overline">
                         <template v-if="item.last_at">
                             {{ item.last_at | moment("from") }}
@@ -50,7 +49,7 @@
 
             <template v-slot:[`item.name`]="{ item }">
                 <v-chip
-                    @click="me(item) ? toProfile() : edit(item)"
+                    @click="!me(item) && edit(item)"
                     :color="chipColor(item)"
                     :small="dense"
                     dark

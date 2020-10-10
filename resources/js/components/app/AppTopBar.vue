@@ -167,7 +167,7 @@
                     </v-btn>
                 </template>
                 <template v-else>
-                    <v-btn
+                    <!-- <v-btn
                         v-if="selected.length == 1"
                         @click="$emit('edit')"
                         :fab="mobile"
@@ -179,7 +179,7 @@
                     >
                         <v-icon>mdi-pencil</v-icon>
                         <template v-if="!mobile">Edit</template>
-                    </v-btn>
+                    </v-btn> -->
                     <v-btn
                         @click="$emit('delete')"
                         :fab="mobile"

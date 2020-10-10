@@ -14,11 +14,12 @@
 
             <v-card-text class="pt-2" :style="cardTextHeight">
                 Are you sure to delete {{ question }}
-                <v-chip-group column small active-class="primary--text">
-                    <v-chip v-for="item in selected" :key="item.id">
-                        <slot :item="item"></slot>
-                    </v-chip>
-                </v-chip-group>
+                <br />
+                <!-- <v-chip-group column small active-class="primary--text"> -->
+                <v-chip v-for="item in selected" class="ma-1" :key="item.id">
+                    <slot :item="item"></slot>
+                </v-chip>
+                <!-- </v-chip-group> -->
             </v-card-text>
 
             <v-divider></v-divider>

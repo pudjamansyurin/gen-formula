@@ -72,6 +72,9 @@ export default {
             this.$nextTick(() => (this.dialog = true));
         },
         edit: async function(item) {
+            if (this.selected.length > 0) {
+                return;
+            }
             await this.onEdit(item);
             this.$nextTick(() => (this.dialog = true));
         },

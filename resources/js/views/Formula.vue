@@ -21,7 +21,6 @@
         >
             <template v-slot:card="{ item }">
                 <v-btn
-                    @click.stop="edit(item)"
                     :color="chipColor(item)"
                     :outlined="!item.selected"
                     absolute
@@ -33,7 +32,7 @@
                     {{ item.rev.price | currency }} / Kg
                 </v-btn>
 
-                <v-card-text>
+                <v-card-text @click="edit(item)">
                     <div class="overline">
                         {{ item.updated_at | moment("from") }}
                     </div>

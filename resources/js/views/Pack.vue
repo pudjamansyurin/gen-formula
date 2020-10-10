@@ -20,7 +20,7 @@
             :model="model"
         >
             <template v-slot:card="{ item }">
-                <v-card-text>
+                <v-card-text @click="edit(item)">
                     <div class="overline">
                         {{ item.updated_at | moment("from") }}
                     </div>

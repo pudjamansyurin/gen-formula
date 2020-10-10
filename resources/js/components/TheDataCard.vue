@@ -10,7 +10,9 @@
                 <template v-slot="{ item }">
                     <v-col cols="12">
                         <v-card
-                            @click="toggleSelect(item)"
+                            v-long-press="1000"
+                            @long-press-start="toggleSelect(item)"
+                            @click="selected.length > 0 && toggleSelect(item)"
                             :key="item.id"
                             :dark="dark"
                             tile
