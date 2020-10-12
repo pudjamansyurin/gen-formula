@@ -12,6 +12,6 @@ $factory->define(Pack::class, function (Faker $faker) {
         'name' => $faker->unique()->word,
         'packer_id' => Packer::inRandomOrder()->first('id'),
         'updated_at' => $faker->dateTimeBetween('-1 year', 'now'),
-        'user_id' => User::role(['admin', 'manager'])->inRandomOrder()->first('id'),
+        'user_id' => User::inRandomOrder()->first('id'),
     ];
 });

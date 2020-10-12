@@ -107,9 +107,7 @@ export default [
                 path: "matter",
                 name: "matter",
                 component: Matter,
-                meta: {
-                    roles: ["admin", "manager"]
-                }
+                meta: {}
             },
             {
                 path: "package",
@@ -121,18 +119,14 @@ export default [
                 path: "packer",
                 name: "packer",
                 component: Packer,
-                meta: {
-                    roles: ["admin", "manager"]
-                }
+                meta: {}
             },
             {
                 path: "pack/:id?",
                 name: "pack",
                 component: Pack,
                 props: true,
-                meta: {
-                    roles: ["admin", "manager"]
-                }
+                meta: {}
             },
             // {
             //     path: "report",

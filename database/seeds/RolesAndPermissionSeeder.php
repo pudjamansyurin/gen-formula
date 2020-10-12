@@ -39,10 +39,10 @@ class RolesAndPermissionSeeder extends Seeder
         $roles = [
             'inputor' => [
                 'unit' => ['view'],
-                'pack' => ['view'],
-                'packer' => ['view'],
+                'pack' => '*',
+                'packer' => '*',
                 'package' => '*',
-                'matter' => ['view'],
+                'matter' => '*',
                 'material' => '*',
                 'material-rev' => '*'
             ],

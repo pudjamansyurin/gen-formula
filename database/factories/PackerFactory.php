@@ -10,6 +10,6 @@ $factory->define(Packer::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->word,
         'updated_at' => $faker->dateTimeBetween('-1 year', 'now'),
-        'user_id' => User::role(['admin', 'manager'])->inRandomOrder()->first('id'),
+        'user_id' => User::inRandomOrder()->first('id'),
     ];
 });

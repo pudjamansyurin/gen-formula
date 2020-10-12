@@ -60,8 +60,8 @@
                             :readonly="fieldDisabled"
                             :filled="fieldDisabled"
                             prefix="Kg/L"
-                            label="Density"
-                            hint="The formula density"
+                            label="Density Factor"
+                            hint="The formula density factor"
                             type="number"
                             reverse
                             persistent-hint

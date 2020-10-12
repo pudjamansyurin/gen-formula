@@ -29,6 +29,13 @@
                     >
                         <span class="caption">Total RMP</span><br />
                         <b>{{ priceTotal.toFixed(2) | currency }}</b>
+                        <span v-if="priceTotal">
+                            / ( {{ saleCapacity }} {{ saleUnitSymbol }}
+                            <template v-if="form._products.length > 1">
+                                {{ "Set" }}
+                            </template>
+                            )
+                        </span>
                     </v-alert>
                 </v-col>
             </v-row>

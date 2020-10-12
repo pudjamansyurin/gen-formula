@@ -13,16 +13,18 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionSeeder::class,
-            UserSeeder::class,
+
             UnitSeeder::class,
-            PackerAndPackSeeder::class,
             MatterSeeder::class,
 
-            DummyUserSeeder::class,
-            DummyPackageSeeder::class,
-            DummyMaterialSeeder::class,
-            DummyFormulaSeeder::class,
-            DummySaleSeeder::class
+            // UserSeeder::class,
+            // PackerAndPackSeeder::class,
+
+            // DummyUserSeeder::class,
+            // DummyPackageSeeder::class,
+            // DummyMaterialSeeder::class,
+            // DummyFormulaSeeder::class,
+            // DummySaleSeeder::class
         ]);
     }
 }

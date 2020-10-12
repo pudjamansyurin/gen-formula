@@ -260,13 +260,21 @@ export default {
                 })
             );
         },
+        fetchListRecipe() {
+            this.fetchList("recipe")
+                .then((data) => {
+                    this.listRecipeDefault = this.makeListRecipes(data);
+                })
+                .catch((e) => eHandler(e));
+        },
     },
     mounted() {
-        this.fetchList("recipe")
-            .then((data) => {
-                this.listRecipeDefault = this.makeListRecipes(data);
-            })
-            .catch((e) => eHandler(e));
+        this.fetchListRecipe();
+    },
+    watch: {
+        "form.main": function (newVal, oldVal) {
+            console.warn(newVal, oldVal);
+        },
     },
 };
 </script>

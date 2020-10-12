@@ -46,7 +46,7 @@ class PackerPolicy
             return true;
         }
         // above role can update all
-        return $user->hasRole('admin');
+        return $user->hasRole(['manager', 'admin']);
     }
 
     /**
@@ -66,6 +66,6 @@ class PackerPolicy
             return true;
         }
         // above role can delete all
-        return $user->hasRole('admin');
+        return $user->hasRole(['manager', 'admin']);
     }
 }

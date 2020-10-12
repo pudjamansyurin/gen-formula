@@ -112,7 +112,7 @@ export default {
     },
     data() {
         return {
-            fullscreen: false,
+            fullscreen: true,
         };
     },
     computed: {
