@@ -105,10 +105,11 @@ export default {
                 .then(() => this.STOP_LOADING());
         },
         onSave() {},
+        onSaved(data) {},
         save: async function() {
             this.onSave();
 
-            this.$refs.form.validator.validate().then(async valid => {
+            await this.$refs.form.validator.validate().then(async valid => {
                 if (valid) {
                     this.START_LOADING();
                     await this.SAVE_MODEL({
@@ -117,7 +118,7 @@ export default {
                     })
                         .then(async data => {
                             this.updateOrFetchAll(data);
-
+                            this.onSaved(data);
                             this.selected = [];
                             this.close();
                         })
@@ -132,7 +133,7 @@ export default {
             if (this.creating) {
                 await this.fetchAll();
             } else {
-                this.UPDATE_MODEL({
+                await this.UPDATE_MODEL({
                     model: this.model,
                     data
                 });

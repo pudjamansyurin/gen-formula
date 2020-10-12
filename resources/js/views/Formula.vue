@@ -181,6 +181,7 @@ export default {
 
             listRecipe: [],
             listRecipeDefault: [],
+            prevIsMain: null,
         };
     },
     computed: {
@@ -211,6 +212,7 @@ export default {
                     })
             );
             this.form = cloneDeep(item);
+            this.prevIsMain = cloneDeep(item.main);
         },
         onCreate() {
             this.change(this.modelDefault);
@@ -218,6 +220,13 @@ export default {
         onEdit: async function (item) {
             item = await this.fetchDetail(item || this.selected[0]);
             this.change(item);
+        },
+        onSaved({ main }) {
+            if (!this.creating) {
+                if (this.prevIsMain != main) {
+                    this.fetchListRecipe();
+                }
+            }
         },
         fetchDetail: async function ({ id }) {
             let item;
@@ -270,11 +279,6 @@ export default {
     },
     mounted() {
         this.fetchListRecipe();
-    },
-    watch: {
-        "form.main": function (newVal, oldVal) {
-            console.warn(newVal, oldVal);
-        },
     },
 };
 </script>
