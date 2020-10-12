@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionSeeder::class,
 
+            UserSeeder::class,
             UnitSeeder::class,
             MatterSeeder::class,
 
-            // UserSeeder::class,
             // PackerAndPackSeeder::class,
 
             // DummyUserSeeder::class,
