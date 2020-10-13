@@ -8,7 +8,7 @@ import { User } from "../../models";
 import { TABLE_OPTIONS } from "../../utils/config";
 
 const state = {
-    title: "GEN Formula",
+    title: "CIWI Formula",
     drawer: null,
     dense: ls.get("dense") || false,
     dark: ls.get("dark") || false,

@@ -17,8 +17,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UnitSeeder::class,
             MatterSeeder::class,
-
-            // PackerAndPackSeeder::class,
+            PackerAndPackSeeder::class,
 
             // DummyUserSeeder::class,
             // DummyPackageSeeder::class,
