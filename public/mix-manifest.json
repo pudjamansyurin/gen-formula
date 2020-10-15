@@ -1,6 +1,6 @@
 {
-    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~error~formula~material~matter~pack~package~p~3fcb84eb.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~error~formula~material~matter~pack~package~p~3fcb84eb.js?id=2839c908a95c0efd6fda",
-    "/js/app.js": "/js/app.js?id=ab6890e2d9c0fd36a7af",
+    "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~error~formula~material~matter~pack~package~p~3fcb84eb.js": "/js/auth.forget~auth.login~auth.reset~auth.verify~dashboard~error~formula~material~matter~pack~package~p~3fcb84eb.js?id=3e5f9375b420eff6344c",
+    "/js/app.js": "/js/app.js?id=e243c8c80cdda7aac500",
     "/css/app.css": "/css/app.css?id=ffcbf4e2bd292e6df83f",
     "/js/auth.forget.js": "/js/auth.forget.js?id=efa4285c8e2c587dd30b",
     "/js/auth.login.js": "/js/auth.login.js?id=fa8126a78259766f90eb",
@@ -8,15 +8,15 @@
     "/js/auth.verify.js": "/js/auth.verify.js?id=db49422ca54499a47504",
     "/js/dashboard.js": "/js/dashboard.js?id=4b670d046716da574f3e",
     "/js/error.js": "/js/error.js?id=4a55af0b7fa89a94e734",
-    "/js/formula.js": "/js/formula.js?id=7c504f9a34029ba58e4e",
+    "/js/formula.js": "/js/formula.js?id=6c427a5aa43be144aca9",
     "/js/landing.js": "/js/landing.js?id=2f921af60820ed4b3aff",
-    "/js/material.js": "/js/material.js?id=c6ab57decd18244842f3",
-    "/js/matter.js": "/js/matter.js?id=1508154ef183fae9953d",
-    "/js/pack.js": "/js/pack.js?id=969580f63daa7984d7e5",
-    "/js/package.js": "/js/package.js?id=676fae7185ce3f2ac954",
-    "/js/packer.js": "/js/packer.js?id=be806c8e3eb47f8bdb1d",
+    "/js/material.js": "/js/material.js?id=91e0e538a70eeec08ae2",
+    "/js/matter.js": "/js/matter.js?id=4efe72dfb4051ba246f3",
+    "/js/pack.js": "/js/pack.js?id=47e00a54ff63bcd8c170",
+    "/js/package.js": "/js/package.js?id=c1bae35dd838ba37b9df",
+    "/js/packer.js": "/js/packer.js?id=0b57731cfe5aaf76a01e",
     "/js/policy.js": "/js/policy.js?id=cbe5a95e0714caf5ff9b",
     "/js/profile.js": "/js/profile.js?id=1c2a501c5bdede9127d1",
-    "/js/sale.js": "/js/sale.js?id=db459945748f7a94e8bf",
-    "/js/user.js": "/js/user.js?id=edd31709eddc080886c7"
+    "/js/sale.js": "/js/sale.js?id=5b49da29ae26cb9863c4",
+    "/js/user.js": "/js/user.js?id=ab5ad2fe5a6360c74749"
 }

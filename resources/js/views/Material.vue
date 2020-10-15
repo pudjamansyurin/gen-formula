@@ -89,6 +89,7 @@
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :title="model"
             :tabs="formTabs"
             :tab.sync="formTabIndex"
             :readonly="fieldDisabled"

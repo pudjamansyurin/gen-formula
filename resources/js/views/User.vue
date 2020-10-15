@@ -84,6 +84,7 @@
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :title="model"
             @close="close"
             @submit="save"
         >
