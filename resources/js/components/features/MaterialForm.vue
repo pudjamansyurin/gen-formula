@@ -49,7 +49,6 @@
                     hint="The updated material price"
                     counter
                     reverse
-                    outlined
                     filled
                     persistent-hint
                 ></v-text-field>
