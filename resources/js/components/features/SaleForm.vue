@@ -42,7 +42,7 @@
             </v-row>
 
             <validation-provider name="_products" v-slot="{ errors, valid }">
-                <v-alert outlined>
+                <v-alert color="green" outlined>
                     <v-radio-group
                         :value="form._products.length"
                         @change="onComponentChange"
@@ -52,6 +52,7 @@
                         :filled="fieldDisabled"
                         :row="!mobile"
                         hide-details="auto"
+                        dense
                     >
                         <template v-slot:label>
                             <div class="caption">Component :</div>
