@@ -64,7 +64,7 @@
                 v-if="!creating || profile"
                 @click="changePassword = !changePassword"
                 color="red"
-                class="mt-3"
+                class="my-3"
                 dark
                 small
                 outlined
@@ -123,28 +123,28 @@ export default {
     props: {
         value: {
             type: Object,
-            required: true,
+            required: true
         },
         fieldDisabled: {
             type: Boolean,
-            default: false,
+            default: false
         },
         listRole: {
             type: Array,
-            default: () => [],
+            default: () => []
         },
         profile: {
             type: Boolean,
-            default: false,
+            default: false
         },
         changePass: {
             type: Boolean,
-            default: false,
+            default: false
         },
         creating: {
             type: Boolean,
-            default: true,
-        },
+            default: true
+        }
     },
     computed: {
         form: {
@@ -153,7 +153,7 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            },
+            }
         },
         validator() {
             return this.$refs.form;
@@ -164,11 +164,10 @@ export default {
             },
             set(value) {
                 this.$emit("update:change-pass", value);
-            },
-        },
-    },
+            }
+        }
+    }
 };
 </script>
 
-<style>
-</style>
+<style></style>
