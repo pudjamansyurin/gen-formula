@@ -15,6 +15,7 @@
                             type="text"
                             hint="The formula name"
                             counter
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -37,6 +38,7 @@
                     :filled="fieldDisabled"
                     :row="!mobile"
                     hide-details="auto"
+                    outlined
                 >
                     <template v-slot:label>
                         <div class="caption">Type :</div>
@@ -64,6 +66,7 @@
                             hint="The formula density factor"
                             type="number"
                             reverse
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -84,6 +87,7 @@
                             hint="The formula shrink factor"
                             type="number"
                             reverse
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -110,6 +114,7 @@
                     multiple
                     return-object
                     chips
+                    outlined
                     deletable-chips
                 >
                     <template v-slot:item="{ item }">
@@ -150,6 +155,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -166,6 +172,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -189,6 +196,7 @@
                                 hide-details="auto"
                                 reverse
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -215,6 +223,7 @@
                                         hide-details="auto"
                                         reverse
                                         flat
+                                        outlined
                                         dense
                                     ></v-text-field>
                                 </validation-provider>
@@ -266,6 +275,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -282,6 +292,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -305,6 +316,7 @@
                                 hide-details="auto"
                                 reverse
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -334,6 +346,7 @@
                                         hide-details="auto"
                                         reverse
                                         flat
+                                        outlined
                                         dense
                                     ></v-text-field>
                                 </validation-provider>
