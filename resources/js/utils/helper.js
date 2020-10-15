@@ -24,9 +24,9 @@ export const castId = value => {
 };
 
 export const logger = (message, type = "log") => {
-    if (config.DEBUG) {
-        console[type](message);
-    }
+    // if (config.DEBUG) {
+    console[type](message);
+    // }
 };
 
 export const eHandler = e => {

@@ -43,7 +43,6 @@
                     :error-messages="errors"
                     :success="valid"
                     :readonly="fieldDisabled"
-                    :filled="fieldDisabled"
                     label="Material price"
                     type="number"
                     suffix="Rp"
@@ -51,6 +50,7 @@
                     counter
                     reverse
                     outlined
+                    filled
                     persistent-hint
                 ></v-text-field>
             </validation-provider>
