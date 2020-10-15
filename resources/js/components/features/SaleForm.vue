@@ -65,7 +65,6 @@
                     </v-radio-group>
                 </v-alert>
             </validation-provider>
-            <v-divider class="mt-1"></v-divider>
 
             <v-row v-if="form._products">
                 <v-col
