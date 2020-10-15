@@ -38,7 +38,6 @@
                     :filled="fieldDisabled"
                     :row="!mobile"
                     hide-details="auto"
-                    outlined
                 >
                     <template v-slot:label>
                         <div class="caption">Type :</div>
@@ -65,7 +64,6 @@
                             label="Density Factor"
                             hint="The formula density factor"
                             type="number"
-                            reverse
                             outlined
                             persistent-hint
                         ></v-text-field>
@@ -86,7 +84,6 @@
                             label="Shrink Factor"
                             hint="The formula shrink factor"
                             type="number"
-                            reverse
                             outlined
                             persistent-hint
                         ></v-text-field>
@@ -424,7 +421,7 @@ export default {
                     text: "Type",
                     value: "type",
                     align: "left",
-                    width: 100,
+                    width: 150,
                 },
                 {
                     text: "Price",
