@@ -46,7 +46,7 @@
                     :filled="fieldDisabled"
                     label="Material price"
                     type="number"
-                    suffix="Rp"
+                    prefix="Rp"
                     hint="The updated material price"
                     counter
                     outlined

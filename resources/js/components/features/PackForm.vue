@@ -13,6 +13,7 @@
                     type="text"
                     hint="The pack's name"
                     counter
+                    outlined
                     persistent-hint
                 ></v-text-field>
             </validation-provider>
@@ -31,6 +32,7 @@
                     hint="The packer"
                     persistent-hint
                     chips
+                    outlined
                     attach
                 ></v-autocomplete>
             </validation-provider>

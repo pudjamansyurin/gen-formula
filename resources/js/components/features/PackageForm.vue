@@ -15,6 +15,7 @@
                             type="text"
                             hint="The package name"
                             counter
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -49,6 +50,7 @@
                             type="number"
                             hint="The package capacity"
                             persistent-hint
+                            outlined
                         ></v-text-field>
                     </validation-provider>
                 </v-col>
@@ -70,6 +72,7 @@
                             hint="The package unit"
                             persistent-hint
                             attach
+                            outlined
                         ></v-select>
                     </validation-provider>
                 </v-col>
@@ -94,6 +97,7 @@
                     deletable-chips
                     return-object
                     multiple
+                    outlined
                     chips
                     attach
                 ></v-autocomplete>
@@ -125,6 +129,7 @@
                                         hint="The packer content"
                                         type="number"
                                         persistent-hint
+                                        outlined
                                     ></v-text-field>
                                 </validation-provider>
                             </v-col>
@@ -147,11 +152,11 @@
                                             :readonly="fieldDisabled"
                                             :filled="fieldDisabled"
                                             :label="pack.name"
-                                            suffix="Rp"
+                                            prefix="Rp"
                                             type="number"
                                             hint="The pack price"
                                             counter
-                                            reverse
+                                            outlined
                                             persistent-hint
                                         ></v-text-field>
                                     </validation-provider>
