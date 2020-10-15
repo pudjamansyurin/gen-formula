@@ -117,8 +117,10 @@ export default {
     },
     computed: {
         formTitle() {
-            if (this.readonly) return `Detail ${this.title}`;
-            return `${this.form.id === -1 ? "New" : "Edit"} ${this.title}`;
+            let title = this.title.toUpperCase();
+
+            if (this.readonly) return `Detail ${title}`;
+            return `${this.form.id === -1 ? "New" : "Edit"} ${title}`;
         },
         cardTextHeight() {
             if (!this.mobile && !this.fullscreen) return "max-height: 500px;";
