@@ -27,7 +27,7 @@ window.Vue = require("vue");
 import App from "./App";
 import store from "./store";
 import router from "./router";
-import config from "./utils/config";
+import { config } from "./utils/config";
 import { vuetify } from "./plugins";
 
 Vue.config.productionTip = config.DEBUG;

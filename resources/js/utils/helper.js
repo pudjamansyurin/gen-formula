@@ -1,6 +1,6 @@
 import store from "../store";
 import router from "../router";
-import { DEBUG } from "../utils/config";
+import { config } from "../utils/config";
 import { CLEAR_PROFILE, SET_ERROR } from "../store/app/mutation-types";
 import {
     HTTP_UNPROCESSABLE_ENTITY,
@@ -24,9 +24,9 @@ export const castId = value => {
 };
 
 export const logger = (message, type = "log") => {
-    // if (DEBUG) {
-    console[type](message);
-    // }
+    if (config.DEBUG) {
+        console[type](message);
+    }
 };
 
 export const eHandler = e => {

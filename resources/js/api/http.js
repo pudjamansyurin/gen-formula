@@ -8,7 +8,7 @@
 
 import axios from "axios";
 import store from "../store";
-import config from "../utils/config";
+import { config } from "../utils/config";
 import { ns, logger } from "../utils/helper";
 import {
     START_LOADING,

@@ -5,7 +5,7 @@ import actions from "./actions";
 import mutations from "./mutations";
 import { ls } from "../../utils/helper";
 import { User } from "../../models";
-import { TABLE_OPTIONS } from "../../utils/config";
+import { tableOptions } from "../../utils/config";
 
 const state = {
     title: "CIWI Formula",
@@ -14,7 +14,7 @@ const state = {
     dark: ls.get("dark") || false,
     fullscreen: false,
     loading: 0,
-    perPage: ls.get("perPage") || TABLE_OPTIONS.itemsPerPage,
+    perPage: ls.get("perPage") || tableOptions.itemsPerPage,
     remember: ls.get("remember") || false,
     profile: ls.get("profile") || cloneDeep(User),
     size: {

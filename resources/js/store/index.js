@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import config from "../utils/config";
+import { config } from "../utils/config";
 import app from "./app";
 import model from "./model";
 
