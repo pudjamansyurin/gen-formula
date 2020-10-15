@@ -30,21 +30,27 @@
             </v-row>
 
             <validation-provider name="main" v-slot="{ errors, valid }">
-                <v-radio-group
-                    v-model="form.main"
-                    :error-messages="errors"
-                    :success="valid"
-                    :readonly="fieldDisabled"
-                    :filled="fieldDisabled"
-                    :row="!mobile"
-                    hide-details="auto"
+                <v-alert
+                    :color="errors.length > 0 ? 'red' : 'green'"
+                    class="pt-0"
+                    outlined
                 >
-                    <template v-slot:label>
-                        <div class="caption">Type :</div>
-                    </template>
-                    <v-radio label="Main formula" :value="1"></v-radio>
-                    <v-radio label="Sub formula" :value="0"></v-radio>
-                </v-radio-group>
+                    <v-radio-group
+                        v-model="form.main"
+                        :error-messages="errors"
+                        :success="valid"
+                        :readonly="fieldDisabled"
+                        :filled="fieldDisabled"
+                        :row="!mobile"
+                        hide-details="auto"
+                    >
+                        <template v-slot:label>
+                            <div class="caption">Type :</div>
+                        </template>
+                        <v-radio label="Main formula" :value="1"></v-radio>
+                        <v-radio label="Sub formula" :value="0"></v-radio>
+                    </v-radio-group>
+                </v-alert>
             </validation-provider>
             <v-divider class="mt-1"></v-divider>
 
