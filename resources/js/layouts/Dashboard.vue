@@ -10,6 +10,7 @@
 
 <script>
 import { CommonMixin } from "../mixins";
+import { logger } from "../utils/helper";
 
 import AppTopBar from "../components/app/AppTopBar";
 import AppContainer from "../components/app/AppContainer";
@@ -25,7 +26,7 @@ export default {
         AppLeftDrawer,
     },
     mounted() {
-        console.log("Session credebility should be checked!");
+        logger("Session credebility should be checked!");
     },
 };
 </script>

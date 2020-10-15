@@ -9,7 +9,7 @@
 import axios from "axios";
 import store from "../store";
 import config from "../utils/config";
-import { ns } from "../utils/helper";
+import { ns, logger } from "../utils/helper";
 import {
     START_LOADING,
     STOP_LOADING,
@@ -44,7 +44,7 @@ http.interceptors.request.use(
     },
     error => {
         if (config.DEBUG) {
-            console.warn(error);
+            logger(error, "warn");
         }
         store.commit(ns("app", STOP_LOADING));
         return Promise.reject(error);
@@ -60,7 +60,7 @@ http.interceptors.response.use(
         const { message } = data;
 
         if (config.DEBUG) {
-            console.info(response);
+            logger(response, "info");
         }
         store.commit(ns("app", STOP_LOADING));
 
@@ -79,7 +79,7 @@ http.interceptors.response.use(
         const { message } = data;
 
         if (config.DEBUG) {
-            console.error(e);
+            logger(e, "error");
         }
         store.commit(ns("app", STOP_LOADING));
 
