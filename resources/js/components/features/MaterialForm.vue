@@ -43,13 +43,13 @@
                     :error-messages="errors"
                     :success="valid"
                     :readonly="fieldDisabled"
+                    :filled="fieldDisabled"
                     label="Material price"
                     type="number"
                     suffix="Rp"
                     hint="The updated material price"
                     counter
-                    reverse
-                    filled
+                    outlined
                     persistent-hint
                 ></v-text-field>
             </validation-provider>
