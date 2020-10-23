@@ -31,8 +31,6 @@ class AppServiceProvider extends ServiceProvider
     {
         /* Production condition */
         if (App::environment('production')) {
-            Debugbar::disable();
-
             /* Fix cpanel mysql issue */
             Builder::defaultStringLength(191);
 

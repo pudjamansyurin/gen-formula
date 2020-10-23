@@ -106,7 +106,6 @@ trait ClientQueryScope
         if (array_key_exists($sortBy, $sorter)) {
             $sortBy = $sorter[$sortBy];
         }
-        debug($sortBy, $sortDesc);
         $q = $q->orderBy($sortBy, $sortDesc ? 'desc' : 'asc');
 
         return $q;

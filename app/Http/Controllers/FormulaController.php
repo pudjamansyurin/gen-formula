@@ -100,7 +100,6 @@ class FormulaController extends Controller
 
         // check
         if ($response = Formula::rejectWhenHas($formulasId, ['sales', 'parents'])) {
-            debug($response);
             return $response;
         }
 
