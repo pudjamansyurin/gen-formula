@@ -231,7 +231,7 @@ import { debounce, startCase } from "lodash";
 import pluralize from "pluralize";
 
 import { LOGOUT } from "../../store/app/action-types";
-import { ls, eHandler } from "../../utils/helper";
+import { ls, eHandler } from "../../utils";
 import { CommonMixin, FullscreenMixin } from "../../mixins";
 import {
     TOGGLE_DRAWER,

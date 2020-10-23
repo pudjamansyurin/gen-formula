@@ -1,11 +1,5 @@
-export const navigations = [
+export const menu = [
     { heading: "DASHBOARD" },
-    // {
-    //     icon: "mdi-chart-areaspline",
-    //     text: "Report",
-    //     to: "report",
-    //     bottomNav: true
-    // },
     {
         text: "Sale",
         to: "sale",
@@ -62,6 +56,12 @@ export const navigations = [
         ]
     },
     { text: "User", to: "user", icon: "mdi-account-group" }
+    // {
+    //     icon: "mdi-chart-areaspline",
+    //     text: "Report",
+    //     to: "report",
+    //     bottomNav: true
+    // },
     // { icon: "mdi-account-cog", text: "Profile", to: "profile" }
     // { icon: "mdi-cogs", text: "Setting", to: "setting" }
     //     { icon: "mdi-content-copy", text: "Duplicates" }

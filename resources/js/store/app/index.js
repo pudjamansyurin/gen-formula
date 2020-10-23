@@ -3,9 +3,9 @@ import { cloneDeep } from "lodash";
 // import getters from "./getters";
 import actions from "./actions";
 import mutations from "./mutations";
-import { ls } from "../../utils/helper";
+import { ls } from "../../utils";
 import { User } from "../../models";
-import { tableOptions } from "../../utils/config";
+import { table } from "../../config";
 
 const state = {
     title: "CIWI Formula",
@@ -14,7 +14,7 @@ const state = {
     dark: ls.get("dark") || false,
     fullscreen: false,
     loading: 0,
-    perPage: ls.get("perPage") || tableOptions.itemsPerPage,
+    perPage: ls.get("perPage") || table.options.itemsPerPage,
     remember: ls.get("remember") || false,
     profile: ls.get("profile") || cloneDeep(User),
     size: {

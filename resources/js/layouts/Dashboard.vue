@@ -10,7 +10,7 @@
 
 <script>
 import { CommonMixin } from "../mixins";
-import { logger } from "../utils/helper";
+import { logger } from "../utils";
 
 import AppTopBar from "../components/app/AppTopBar";
 import AppContainer from "../components/app/AppContainer";

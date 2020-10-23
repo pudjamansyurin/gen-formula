@@ -39,7 +39,7 @@
 import { mapActions } from "vuex";
 
 import { FORGET } from "../../store/app/action-types";
-import { eHandler } from "../../utils/helper";
+import { eHandler } from "../../utils";
 import { CommonMixin } from "../../mixins";
 
 export default {

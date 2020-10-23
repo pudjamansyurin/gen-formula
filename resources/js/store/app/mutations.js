@@ -1,4 +1,4 @@
-import { ls } from "../../utils/helper";
+import { ls } from "../../utils";
 import { User } from "../../models";
 import { cloneDeep } from "lodash";
 import * as mutations from "./mutation-types";

@@ -83,7 +83,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
 
 import { Packer } from "../models";
-import { eHandler } from "../utils/helper";
+import { eHandler } from "../utils";
 import { CommonMixin, ModelMixin } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";

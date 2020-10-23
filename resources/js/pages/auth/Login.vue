@@ -70,7 +70,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 
 import { CommonMixin, PasswordMixin } from "../../mixins";
 import { LOGIN } from "../../store/app/action-types";
-import { ls, eHandler } from "../../utils/helper";
+import { ls, eHandler } from "../../utils";
 
 export default {
     mixins: [CommonMixin, PasswordMixin],

@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import { navigations } from "../../utils/navigation";
 import { CommonMixin, NavigationMixin } from "../../mixins";
 
 export default {

@@ -1,14 +1,14 @@
 import { mapState } from "vuex";
 import { get, cloneDeep } from "lodash";
 
-import { navigations } from "../utils/navigation";
+import { menu } from "../config/navs";
 
 export default {
     computed: {
         ...mapState("app", ["profile"]),
         navs() {
             let route = this.$route.name;
-            let navs = cloneDeep(navigations);
+            let navs = cloneDeep(menu);
 
             // group menu
             navs.forEach((nav, index) => {

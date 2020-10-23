@@ -83,7 +83,7 @@
 import { mapActions } from "vuex";
 
 import { RESET } from "../../store/app/action-types";
-import { eHandler } from "../../utils/helper";
+import { eHandler } from "../../utils";
 import { CommonMixin, PasswordMixin } from "../../mixins";
 
 export default {

@@ -106,7 +106,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
 
 import { User } from "../models";
-import { eHandler } from "../utils/helper";
+import { eHandler } from "../utils";
 import {
     CommonMixin,
     ModelMixin,

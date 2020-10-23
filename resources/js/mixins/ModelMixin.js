@@ -1,8 +1,8 @@
 import { map, cloneDeep } from "lodash";
 import { mapState, mapActions, mapMutations } from "vuex";
 
-import { eHandler, ls } from "../utils/helper";
-import { tableOptions } from "../utils/config";
+import { eHandler, ls } from "../utils";
+import { table } from "../config";
 import { UPDATE_MODEL } from "../store/model/mutation-types";
 import {
     GET_MODEL,
@@ -27,8 +27,8 @@ export default {
     data() {
         return {
             options: cloneDeep({
-                ...tableOptions,
-                itemsPerPage: ls.get("perPage") || tableOptions.itemsPerPage
+                ...table.options,
+                itemsPerPage: ls.get("perPage") || table.options.itemsPerPage
             }),
             total: 0,
             selected: [],

@@ -132,7 +132,7 @@ import { cloneDeep, map } from "lodash";
 import pluralize from "pluralize";
 
 import { Material } from "../models";
-import { eHandler } from "../utils/helper";
+import { eHandler } from "../utils";
 import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "../mixins";
 
 import AppTopBar from "../components/app/AppTopBar";

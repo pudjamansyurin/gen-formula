@@ -27,10 +27,10 @@ window.Vue = require("vue");
 import App from "./App";
 import store from "./store";
 import router from "./router";
-import { config } from "./utils/config";
+import { APP_DEBUG } from "./config/app";
 import { vuetify } from "./plugins";
 
-Vue.config.productionTip = config.DEBUG;
+Vue.config.productionTip = APP_DEBUG;
 
 window.app = new Vue({
     el: "#app",

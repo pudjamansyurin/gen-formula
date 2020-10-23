@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { config } from "../utils/config";
+import { APP_DEBUG } from "../config/app";
 import app from "./app";
 import model from "./model";
 
@@ -12,5 +12,5 @@ export default new Vuex.Store({
         app,
         model
     },
-    strict: config.DEBUG
+    strict: APP_DEBUG
 });

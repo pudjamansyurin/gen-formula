@@ -1,11 +1,10 @@
 import store from "../store";
 import router from "../router";
-import { config } from "../utils/config";
 import { CLEAR_PROFILE, SET_ERROR } from "../store/app/mutation-types";
 import {
     HTTP_UNPROCESSABLE_ENTITY,
     HTTP_UNAUTHORIZED
-} from "../utils/response";
+} from "../config/responses";
 
 export const ns = (namespace, definition) =>
     `${namespace.toLowerCase()}/${definition}`;
@@ -24,9 +23,7 @@ export const castId = value => {
 };
 
 export const logger = (message, type = "log") => {
-    // if (config.DEBUG) {
     console[type](message);
-    // }
 };
 
 export const eHandler = e => {

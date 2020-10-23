@@ -1,7 +1,7 @@
 import { mapMutations, mapState } from "vuex";
 
 import { TOGGLE_FULLSCREEN } from "../store/app/mutation-types";
-import { ls } from "../utils/helper";
+import { ls } from "../utils";
 
 export default {
     data() {

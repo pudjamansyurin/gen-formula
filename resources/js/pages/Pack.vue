@@ -85,7 +85,7 @@ import { cloneDeep } from "lodash";
 
 import { Pack } from "../models";
 import { CommonMixin, ModelMixin, FetchListMixin } from "../mixins";
-import { eHandler, castId } from "../utils/helper";
+import { eHandler, castId } from "../utils";
 
 import AppTopBar from "../components/app/AppTopBar";
 import PackForm from "../components/features/PackForm";

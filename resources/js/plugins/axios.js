@@ -2,8 +2,8 @@
 import axios from "axios";
 
 import store from "../store";
-import { config } from "../utils/config";
-import { ns, logger } from "../utils/helper";
+import { APP_URL, APP_DEBUG } from "../config/app";
+import { ns, logger } from "../utils";
 import {
     START_LOADING,
     STOP_LOADING,
@@ -14,7 +14,7 @@ import {
 
 // Create axios instance
 const instance = axios.create({
-    baseURL: `${config.APP_URL}/`,
+    baseURL: `${APP_URL}/`,
     // required to handle the CSRF token
     withCredentials: true
 });
@@ -40,7 +40,7 @@ instance.interceptors.request.use(
         return config;
     },
     error => {
-        if (config.DEBUG) {
+        if (APP_DEBUG) {
             logger(error, "warn");
         }
         store.commit(ns("app", STOP_LOADING));
@@ -57,7 +57,7 @@ instance.interceptors.response.use(
             data: { message }
         } = response;
 
-        if (config.DEBUG) {
+        if (APP_DEBUG) {
             logger(response, "info");
         }
         store.commit(ns("app", STOP_LOADING));
@@ -76,7 +76,7 @@ instance.interceptors.response.use(
         const { data } = e;
         const { message } = data;
 
-        if (config.DEBUG) {
+        if (APP_DEBUG) {
             logger(e, "error");
         }
         store.commit(ns("app", STOP_LOADING));

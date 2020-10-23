@@ -44,7 +44,7 @@
 import { CommonMixin } from "../../mixins";
 import { mapState, mapMutations } from "vuex";
 import { CLEAR_ERROR, CLEAR_MESSAGE } from "../../store/app/mutation-types";
-import { HTTP_NOT_FOUND, HTTP_UNAUTHORIZED } from "../../utils/response";
+import { HTTP_NOT_FOUND, HTTP_UNAUTHORIZED } from "../../config/responses";
 
 export default {
     mixins: [CommonMixin],
