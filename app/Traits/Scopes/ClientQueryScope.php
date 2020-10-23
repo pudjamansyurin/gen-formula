@@ -19,26 +19,26 @@ trait ClientQueryScope
     {
         return $this
             ->load(array_merge(
-                $this->_relations ?? [],
-                $this->_details ?? []
+                $this->client_relations ?? [],
+                $this->client_details ?? []
             ))
-            ->loadCount($this->_counts ?? []);
+            ->loadCount($this->client_counts ?? []);
     }
 
     public function scopeLoadRelation()
     {
         return $this
             ->load(array_merge(
-                $this->_relations ?? [],
-            ))->loadCount($this->_counts ?? []);
+                $this->client_relations ?? [],
+            ))->loadCount($this->client_counts ?? []);
     }
 
     protected function scopeWithRelation()
     {
         return $this
             ->with(array_merge(
-                $this->_relations ?? [],
-            ))->withCount($this->_counts ?? []);
+                $this->client_relations ?? [],
+            ))->withCount($this->client_counts ?? []);
     }
 
     protected function scopeGetQueried()

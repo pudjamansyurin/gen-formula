@@ -12,9 +12,9 @@ class Packer extends Model
 
     protected $table = 'packers';
 
-    protected $_relations = ['user:id,name'];
-    protected $_details = ['packs'];
-    protected $_counts = ['packs'];
+    protected $client_relations = ['user:id,name'];
+    protected $client_details = ['packs'];
+    protected $client_counts = ['packs'];
 
     /**
      * The attributes that are mass assignable.

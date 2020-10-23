@@ -14,9 +14,9 @@ class Material extends Model
 
     protected $table = 'materials';
 
-    protected $_relations = ['user:id,name', 'matter:id,name', 'rev'];
-    protected $_details = ['revs', 'revs.user:id,name'];
-    protected $_counts = ['revs', 'formulas'];
+    protected $client_relations = ['user:id,name', 'matter:id,name', 'rev'];
+    protected $client_details = ['revs', 'revs.user:id,name'];
+    protected $client_counts = ['revs', 'formulas'];
 
     /**
      * The attributes that are mass assignable.

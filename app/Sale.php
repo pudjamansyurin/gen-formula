@@ -14,9 +14,9 @@ class Sale extends Model
 
     protected $table = 'sales';
 
-    protected $_relations = ['user:id,name', 'rev'];
-    protected $_details = ['revs', 'revs.user:id,name', 'products', 'products.formula', 'products.formula.rev', 'products.package', 'products.package.unit', 'products.package.rev'];
-    protected $_counts = ['revs', 'products'];
+    protected $client_relations = ['user:id,name', 'rev'];
+    protected $client_details = ['revs', 'revs.user:id,name', 'products', 'products.formula', 'products.formula.rev', 'products.package', 'products.package.unit', 'products.package.rev'];
+    protected $client_counts = ['revs', 'products'];
 
     /**
      * The attributes that are mass assignable.

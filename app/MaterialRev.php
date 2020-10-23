@@ -8,7 +8,7 @@ class MaterialRev extends Model
 {
     protected $table = 'material_revs';
 
-    protected $_relations = ['material', 'material.revs'];
+    protected $client_relations = ['material', 'material.revs'];
 
     /**
      * The attributes that are mass assignable.

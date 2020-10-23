@@ -21,7 +21,7 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-    protected $_relations = ['roles:id,name'];
+    protected $client_relations = ['roles:id,name'];
 
     /**
      * The attributes that are mass assignable.

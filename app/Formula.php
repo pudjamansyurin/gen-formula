@@ -14,9 +14,9 @@ class Formula extends Model
 
     protected $table = 'formulas';
 
-    protected $_relations = ['user:id,name', 'rev'];
-    protected $_details = ['revs', 'revs.user:id,name', 'recipes', 'recipes.recipeable', 'recipes.recipeable.rev'];
-    protected $_counts = ['revs', 'recipes'];
+    protected $client_relations = ['user:id,name', 'rev'];
+    protected $client_details = ['revs', 'revs.user:id,name', 'recipes', 'recipes.recipeable', 'recipes.recipeable.rev'];
+    protected $client_counts = ['revs', 'recipes'];
 
     /**
      * The attributes that are mass assignable.
