@@ -1,10 +1,10 @@
-import * as auth from "../../api/auth";
+import { auth as api } from "../../api";
 import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 
 export default {
     [actions.LOGIN]({ commit }, payload) {
-        return auth.login(payload).then(({ data }) => {
+        return api.login(payload).then(({ data }) => {
             const { user } = data;
 
             commit(mutations.SET_PROFILE, user);
@@ -12,10 +12,10 @@ export default {
         });
     },
     [actions.LOGOUT]({ commit }) {
-        return auth.logout().then(() => commit(mutations.CLEAR_PROFILE));
+        return api.logout().then(() => commit(mutations.CLEAR_PROFILE));
     },
     [actions.FORGET]({ commit }, payload) {
-        return auth.forget(payload).then(() =>
+        return api.forget(payload).then(() =>
             commit(mutations.SET_MESSAGE, {
                 text: "Check your email",
                 type: "success"
@@ -23,12 +23,12 @@ export default {
         );
     },
     [actions.RESET]({ commit }, payload) {
-        return auth
+        return api
             .reset(payload)
             .then(({ data }) => commit(mutations.SET_PROFILE, data.user));
     },
     [actions.RESEND]({ commit }) {
-        return auth.resend().then(() =>
+        return api.resend().then(() =>
             commit(mutations.SET_MESSAGE, {
                 text: "Check your email",
                 type: "success"
@@ -36,15 +36,15 @@ export default {
         );
     },
     [actions.VERIFY]({ commit }, url) {
-        return auth.verify(url);
+        return api.verify(url);
     },
     [actions.GET_PROFILE]({ commit }) {
-        return auth.getProfile().then(data => {
+        return api.getProfile().then(data => {
             commit(mutations.SET_PROFILE, data);
         });
     },
     [actions.UPDATE_PROFILE]({ commit }, { payload }) {
-        return auth.updateProfile(payload).then(data => {
+        return api.updateProfile(payload).then(data => {
             commit(mutations.SET_PROFILE, data);
             commit(mutations.SET_MESSAGE, {
                 text: "Profile udpated successfully",

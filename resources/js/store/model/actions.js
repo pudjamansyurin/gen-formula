@@ -1,4 +1,4 @@
-import * as api from "../../api/model";
+import { model as api } from "../../api";
 import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 

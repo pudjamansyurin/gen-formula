@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('user', 'UserController', ['except' => ['show']]);
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('', 'ProfileController@show');
+        Route::put('update', 'ProfileController@update');
+    });
+
     Route::apiResource('matter', 'MatterController', ['except' => ['show']]);
     Route::apiResource('material-rev', 'MaterialRevController', ['only' => ['destroy']]);
     Route::apiResource('material', 'MaterialController');
@@ -25,13 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('formula', 'FormulaController');
 
     Route::apiResource('sale', 'SaleController');
-
-    Route::apiResource('user', 'UserController', ['except' => ['show']]);
-
-    Route::group(['prefix' => 'profile'], function () {
-        Route::get('', 'ProfileController@show');
-        Route::put('update', 'ProfileController@update');
-    });
 
     Route::group(['prefix' => 'list'], function () {
         Route::get('matter', 'MatterController@list');

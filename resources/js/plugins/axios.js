@@ -1,12 +1,6 @@
-/*
- * This is the initial API interface
- * we set the base URL for the API
- * append the token to all requests
- ? Both request & response are logged to the console.
- ! Remove the console logs for production.
-*/
-
+// import Vue from "vue";
 import axios from "axios";
+
 import store from "../store";
 import { config } from "../utils/config";
 import { ns, logger } from "../utils/helper";
@@ -18,20 +12,23 @@ import {
     CLEAR_MESSAGE
 } from "../store/app/mutation-types";
 
-export const http = axios.create({
+// Create axios instance
+const instance = axios.create({
     baseURL: `${config.APP_URL}/`,
-    withCredentials: true // required to handle the CSRF token
+    // required to handle the CSRF token
+    withCredentials: true
 });
 
-// http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-http.defaults.headers.common["Content-Type"] = "application/json";
-http.defaults.headers.common["Accept"] = "application/json";
+// instance.defaults.headers.common["Authorization"] =  "Token" + localStorage.getItem("authToken");
+// instance.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+instance.defaults.headers.common["Content-Type"] = "application/json";
+instance.defaults.headers.common["Accept"] = "application/json";
 
 /*
  * Add a request interceptor
  @param config
 */
-http.interceptors.request.use(
+instance.interceptors.request.use(
     config => {
         // get token, if user doesn't logout yet
         // const { token } = store.state.app;
@@ -54,9 +51,8 @@ http.interceptors.request.use(
 /*
  * Add a response interceptor
  */
-http.interceptors.response.use(
-    response => {
-        const { data } = response;
+instance.interceptors.response.use(
+    ({ data }) => {
         const { message } = data;
 
         if (config.DEBUG) {
@@ -94,3 +90,6 @@ http.interceptors.response.use(
         return Promise.reject(e);
     }
 );
+
+// Vue.prototype.$http = instance;
+export default instance;
