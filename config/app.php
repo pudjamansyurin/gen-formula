@@ -174,9 +174,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\ObserverServiceProvider::class,
 
         // Added manually
+        App\Providers\ObserverServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
     ],

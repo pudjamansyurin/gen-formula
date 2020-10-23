@@ -12,7 +12,6 @@ use App\Observers\SaleObserver;
 use App\Observers\UserObserver;
 use App\Pack;
 use App\Package;
-use App\Packer;
 use App\Sale;
 use App\User;
 use Illuminate\Support\ServiceProvider;
