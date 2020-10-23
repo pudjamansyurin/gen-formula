@@ -4,34 +4,34 @@ const Dashboard = () =>
     import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
 
 const Error = () =>
-    import(/* webpackChunkName: "error" */ "../views/landing/Error");
+    import(/* webpackChunkName: "error" */ "../pages/landing/Error");
 const Policy = () =>
-    import(/* webpackChunkName: "policy" */ "../views/landing/Policy");
+    import(/* webpackChunkName: "policy" */ "../pages/landing/Policy");
 
 const Login = () =>
-    import(/* webpackChunkName: "auth.login" */ "../views/auth/Login");
+    import(/* webpackChunkName: "auth.login" */ "../pages/auth/Login");
 const Forget = () =>
-    import(/* webpackChunkName: "auth.forget" */ "../views/auth/Forget");
+    import(/* webpackChunkName: "auth.forget" */ "../pages/auth/Forget");
 const Reset = () =>
-    import(/* webpackChunkName: "auth.reset" */ "../views/auth/Reset");
+    import(/* webpackChunkName: "auth.reset" */ "../pages/auth/Reset");
 const Verify = () =>
-    import(/* webpackChunkName: "auth.verify" */ "../views/auth/Verify");
+    import(/* webpackChunkName: "auth.verify" */ "../pages/auth/Verify");
 
 const Profile = () =>
-    import(/* webpackChunkName: "profile" */ "../views/Profile");
-const Pack = () => import(/* webpackChunkName: "pack" */ "../views/Pack");
-const Packer = () => import(/* webpackChunkName: "packer" */ "../views/Packer");
+    import(/* webpackChunkName: "profile" */ "../pages/Profile");
+const Pack = () => import(/* webpackChunkName: "pack" */ "../pages/Pack");
+const Packer = () => import(/* webpackChunkName: "packer" */ "../pages/Packer");
 const Package = () =>
-    import(/* webpackChunkName: "package" */ "../views/Package");
-const Matter = () => import(/* webpackChunkName: "matter" */ "../views/Matter");
+    import(/* webpackChunkName: "package" */ "../pages/Package");
+const Matter = () => import(/* webpackChunkName: "matter" */ "../pages/Matter");
 const Material = () =>
-    import(/* webpackChunkName: "material" */ "../views/Material");
+    import(/* webpackChunkName: "material" */ "../pages/Material");
 const Formula = () =>
-    import(/* webpackChunkName: "formula" */ "../views/Formula");
-const Sale = () => import(/* webpackChunkName: "sale" */ "../views/Sale");
-const User = () => import(/* webpackChunkName: "user" */ "../views/User");
-// const Report = () => import(/* webpackChunkName: "report" */ "../views/Report");
-// const Setting = () => import(/* webpackChunkName: "setting" */ "../views/Setting");
+    import(/* webpackChunkName: "formula" */ "../pages/Formula");
+const Sale = () => import(/* webpackChunkName: "sale" */ "../pages/Sale");
+const User = () => import(/* webpackChunkName: "user" */ "../pages/User");
+// const Report = () => import(/* webpackChunkName: "report" */ "../pages/Report");
+// const Setting = () => import(/* webpackChunkName: "setting" */ "../pages/Setting");
 
 import store from "../store";
 
