@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\PackageRequest;
-use App\Http\Resources\PackageCollection;
 use App\Http\Resources\PackageItem;
 use App\Package;
 use App\Unit;
@@ -26,7 +25,7 @@ class PackageController extends Controller
         [$packages, $total] = Package::queried();
 
         // Response
-        return (new PackageCollection($packages))
+        return (PackageItem::collection($packages))
             ->additional(['total' => $total]);
     }
 

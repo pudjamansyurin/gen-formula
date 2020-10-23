@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Formula;
 use App\Http\Requests\FormulaRequest;
 use App\Http\Requests\DeleteSomeRequest;
-use App\Http\Resources\FormulaCollection;
 use App\Http\Resources\FormulaItem;
 use App\Material;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class FormulaController extends Controller
         [$formulas, $total] = Formula::queried();
 
         // Response
-        return (new FormulaCollection($formulas))
+        return (FormulaItem::collection($formulas))
             ->additional(['total' => $total]);
     }
 

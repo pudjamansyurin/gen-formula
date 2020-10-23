@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\SaleRequest;
-use App\Http\Resources\SaleCollection;
 use App\Http\Resources\SaleItem;
 use App\Sale;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ class SaleController extends Controller
         [$sales, $total] = Sale::queried();
 
         // Response
-        return (new SaleCollection($sales))
+        return (SaleItem::collection($sales))
             ->additional(['total' => $total]);
     }
 

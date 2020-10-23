@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\PackerRequest;
-use App\Http\Resources\PackerCollection;
 use App\Http\Resources\PackerItem;
 use App\Packer;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class PackerController extends Controller
         [$packers, $total] = Packer::queried();
 
         // Response
-        return (new PackerCollection($packers))
+        return (PackerItem::collection($packers))
             ->additional(['total' => $total]);
     }
 

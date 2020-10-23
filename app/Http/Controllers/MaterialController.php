@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\MaterialRequest;
-use App\Http\Resources\MaterialCollection;
 use App\Http\Resources\MaterialItem;
 use App\Material;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ class MaterialController extends Controller
         [$materials, $total] = Material::queried();
 
         // Response
-        return (new MaterialCollection($materials))
+        return (MaterialItem::collection($materials))
             ->additional(['total' => $total]);
     }
 

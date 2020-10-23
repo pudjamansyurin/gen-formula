@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserItem;
 use Illuminate\Http\Request;
 use App\User;
@@ -26,7 +25,7 @@ class UserController extends Controller
         [$users, $total] = User::queried();
 
         // Response
-        return (new UserCollection($users))
+        return (UserItem::collection($users))
             ->additional(['total' => $total]);
     }
 

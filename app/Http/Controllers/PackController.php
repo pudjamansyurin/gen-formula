@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\PackRequest;
-use App\Http\Resources\PackCollection;
 use App\Http\Resources\PackItem;
 use App\Pack;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ class PackController extends Controller
         [$packs, $total] = Pack::queried();
 
         // Response
-        return (new PackCollection($packs))
+        return (PackItem::collection($packs))
             ->additional(['total' => $total]);
     }
 

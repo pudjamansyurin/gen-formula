@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSomeRequest;
 use App\Http\Requests\MatterRequest;
-use App\Http\Resources\MatterCollection;
 use App\Http\Resources\MatterItem;
 use App\Matter;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ class MatterController extends Controller
         [$matters, $total] = Matter::queried();
 
         // Response
-        return (new MatterCollection($matters))
+        return (MatterItem::collection($matters))
             ->additional(['total' => $total]);
     }
 
