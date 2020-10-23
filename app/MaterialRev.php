@@ -21,20 +21,6 @@ class MaterialRev extends Model
         'user_id'
     ];
 
-    // /**
-    //  * Client query scope
-    //  */
-    // protected $clientQuery = [
-    //     'filter' => [
-    //         'material.name',
-    //         'user.name'
-    //     ],
-    //     'sorter' =>  [
-    //         'material.name' => 'material_id',
-    //         'user.name' => 'user_id'
-    //     ]
-    // ];
-
     /**
      * Get the associated table.
      */

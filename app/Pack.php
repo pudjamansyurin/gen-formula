@@ -49,7 +49,6 @@ class Pack extends Model
         return strtoupper($value);
     }
 
-
     /**
      * Set relation tables.
      */

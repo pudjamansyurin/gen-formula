@@ -2,21 +2,22 @@
 
 namespace App;
 
+use App\Traits\Routines\UserRoutine;
 use App\Traits\Scopes\ClientQueryScope;
-use App\Notifications\VerifyEmail;
 use App\Traits\Scopes\ExtendedScope;
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Traits\HasRoles;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 // use Laravel\Sanctum\HasApiTokens;
 // use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasRoles, Notifiable;
     use ClientQueryScope, ExtendedScope;
+    use UserRoutine;
 
     protected $table = 'users';
 
@@ -102,25 +103,5 @@ class User extends Authenticatable
     public function sales()
     {
         return $this->hasMany(Sale::class);
-    }
-
-    /**
-     * Send the email verification notification.
-     *
-     * @return void
-     */
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new VerifyEmail());
-    }
-
-    public function recordLoginInfo()
-    {
-        $this->withoutEvents(function () {
-            $this->forceFill([
-                'last_at' => now(),
-                'last_ip' => request()->getClientIp()
-            ])->save();
-        });
     }
 }
