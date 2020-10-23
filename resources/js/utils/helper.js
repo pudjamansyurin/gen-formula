@@ -1,11 +1,11 @@
 import store from "../store";
 import router from "../router";
-import { get } from "lodash";
+import { config } from "../utils/config";
+import { CLEAR_PROFILE, SET_ERROR } from "../store/app/mutation-types";
 import {
     HTTP_UNPROCESSABLE_ENTITY,
     HTTP_UNAUTHORIZED
 } from "../utils/response";
-import { CLEAR_PROFILE, SET_ERROR } from "../store/app/mutation-types";
 
 export const ns = (namespace, definition) =>
     `${namespace.toLowerCase()}/${definition}`;
@@ -21,6 +21,12 @@ export const castId = value => {
     let id = Number(value);
 
     return Number.isInteger(id) ? id : -1;
+};
+
+export const logger = (message, type = "log") => {
+    // if (config.DEBUG) {
+    console[type](message);
+    // }
 };
 
 export const eHandler = e => {

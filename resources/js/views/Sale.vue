@@ -81,12 +81,13 @@
         <the-dialog-form
             v-model="dialog"
             :form="form"
+            :title="model"
             :tabs="formTabs"
             :tab.sync="formTabIndex"
             :readonly="fieldDisabled"
+            :width="formWidth"
             @close="close"
             @submit="save"
-            :width="formWidth"
         >
             <template v-slot:DATA>
                 <sale-form

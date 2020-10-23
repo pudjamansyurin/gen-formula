@@ -13,6 +13,7 @@
                     type="text"
                     hint="This is to identify the material"
                     counter
+                    outlined
                     persistent-hint
                 ></v-text-field>
             </validation-provider>
@@ -31,6 +32,7 @@
                     hint="The material's category"
                     persistent-hint
                     chips
+                    outlined
                     attach
                 ></v-autocomplete>
             </validation-provider>
@@ -44,10 +46,10 @@
                     :filled="fieldDisabled"
                     label="Material price"
                     type="number"
-                    suffix="Rp"
+                    prefix="Rp"
                     hint="The updated material price"
                     counter
-                    reverse
+                    outlined
                     persistent-hint
                 ></v-text-field>
             </validation-provider>

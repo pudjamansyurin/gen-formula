@@ -95,7 +95,7 @@ export default {
         },
         title: {
             type: String,
-            default: "",
+            default: "Item",
         },
         width: {
             type: [String, Number],
@@ -117,9 +117,13 @@ export default {
     },
     computed: {
         formTitle() {
-            if (this.title) return this.title;
-            if (this.readonly) return "Detail Item";
-            return `${this.form.id === -1 ? "New" : "Edit"} Item`;
+            let title = this.title.toUpperCase();
+            let action = "Detail";
+
+            if (!this.readonly) {
+                action = this.form.id === -1 ? "New" : "Edit";
+            }
+            return `${action} ${title}`;
         },
         cardTextHeight() {
             if (!this.mobile && !this.fullscreen) return "max-height: 500px;";

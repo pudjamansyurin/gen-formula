@@ -12,6 +12,7 @@
                     type="text"
                     hint="This should be unique name"
                     persistent-hint
+                    outlined
                 ></v-text-field>
             </validation-provider>
 
@@ -25,6 +26,7 @@
                     type="email"
                     hint="This email is for recovery"
                     persistent-hint
+                    outlined
                 ></v-text-field>
             </validation-provider>
 
@@ -33,11 +35,11 @@
                 v-model="form.role.name"
                 type="text"
                 label="Role"
-                hint="Role for this user"
+                hint="Your current role"
                 persistent-hint
+                outlined
                 readonly
             ></v-text-field>
-
             <validation-provider
                 v-else
                 name="role_id"
@@ -54,6 +56,7 @@
                     hint="Role for this user"
                     chips
                     persistent-hint
+                    outlined
                 ></v-select>
             </validation-provider>
 
@@ -61,7 +64,7 @@
                 v-if="!creating || profile"
                 @click="changePassword = !changePassword"
                 color="red"
-                class="mt-3"
+                class="my-3"
                 dark
                 small
                 outlined
@@ -82,6 +85,7 @@
                         hint="Password for this user"
                         autocomplete="off"
                         persistent-hint
+                        outlined
                         counter
                     ></v-text-field>
                 </validation-provider>
@@ -101,6 +105,7 @@
                         hint="Fill again the password"
                         autocomplete="off"
                         persistent-hint
+                        outlined
                         counter
                     ></v-text-field>
                 </validation-provider>
@@ -118,28 +123,28 @@ export default {
     props: {
         value: {
             type: Object,
-            required: true,
+            required: true
         },
         fieldDisabled: {
             type: Boolean,
-            default: false,
+            default: false
         },
         listRole: {
             type: Array,
-            default: () => [],
+            default: () => []
         },
         profile: {
             type: Boolean,
-            default: false,
+            default: false
         },
         changePass: {
             type: Boolean,
-            default: false,
+            default: false
         },
         creating: {
             type: Boolean,
-            default: true,
-        },
+            default: true
+        }
     },
     computed: {
         form: {
@@ -148,7 +153,7 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            },
+            }
         },
         validator() {
             return this.$refs.form;
@@ -159,11 +164,10 @@ export default {
             },
             set(value) {
                 this.$emit("update:change-pass", value);
-            },
-        },
-    },
+            }
+        }
+    }
 };
 </script>
 
-<style>
-</style>
+<style></style>

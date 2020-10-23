@@ -15,6 +15,7 @@
                             type="text"
                             hint="The formula name"
                             counter
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -29,23 +30,28 @@
             </v-row>
 
             <validation-provider name="main" v-slot="{ errors, valid }">
-                <v-radio-group
-                    v-model="form.main"
-                    :error-messages="errors"
-                    :success="valid"
-                    :readonly="fieldDisabled"
-                    :filled="fieldDisabled"
-                    :row="!mobile"
-                    hide-details="auto"
+                <v-alert
+                    :color="errors.length > 0 ? 'red' : 'green'"
+                    class="pt-0"
+                    outlined
                 >
-                    <template v-slot:label>
-                        <div class="caption">Type :</div>
-                    </template>
-                    <v-radio label="Main formula" :value="1"></v-radio>
-                    <v-radio label="Sub formula" :value="0"></v-radio>
-                </v-radio-group>
+                    <v-radio-group
+                        v-model="form.main"
+                        :error-messages="errors"
+                        :success="valid"
+                        :readonly="fieldDisabled"
+                        :filled="fieldDisabled"
+                        :row="!mobile"
+                        hide-details="auto"
+                    >
+                        <template v-slot:label>
+                            <div class="caption">Type :</div>
+                        </template>
+                        <v-radio label="Main formula" :value="1"></v-radio>
+                        <v-radio label="Sub formula" :value="0"></v-radio>
+                    </v-radio-group>
+                </v-alert>
             </validation-provider>
-            <v-divider class="mt-1"></v-divider>
 
             <v-row>
                 <v-col>
@@ -59,11 +65,11 @@
                             :success="valid"
                             :readonly="fieldDisabled"
                             :filled="fieldDisabled"
-                            prefix="Kg/L"
+                            suffix="Kg/L"
                             label="Density Factor"
                             hint="The formula density factor"
                             type="number"
-                            reverse
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -79,11 +85,11 @@
                             :success="valid"
                             :readonly="fieldDisabled"
                             :filled="fieldDisabled"
-                            prefix="%"
+                            suffix="%"
                             label="Shrink Factor"
                             hint="The formula shrink factor"
                             type="number"
-                            reverse
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -110,6 +116,7 @@
                     multiple
                     return-object
                     chips
+                    outlined
                     deletable-chips
                 >
                     <template v-slot:item="{ item }">
@@ -150,6 +157,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -166,6 +174,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -189,6 +198,7 @@
                                 hide-details="auto"
                                 reverse
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -215,6 +225,7 @@
                                         hide-details="auto"
                                         reverse
                                         flat
+                                        outlined
                                         dense
                                     ></v-text-field>
                                 </validation-provider>
@@ -266,6 +277,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -282,6 +294,7 @@
                                 hide-details="auto"
                                 readonly
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -305,6 +318,7 @@
                                 hide-details="auto"
                                 reverse
                                 flat
+                                outlined
                                 dense
                             ></v-text-field>
                         </validation-provider>
@@ -334,6 +348,7 @@
                                         hide-details="auto"
                                         reverse
                                         flat
+                                        outlined
                                         dense
                                     ></v-text-field>
                                 </validation-provider>
@@ -411,7 +426,7 @@ export default {
                     text: "Type",
                     value: "type",
                     align: "left",
-                    width: 100,
+                    width: 150,
                 },
                 {
                     text: "Price",

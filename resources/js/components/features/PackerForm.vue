@@ -13,6 +13,7 @@
                     type="text"
                     hint="The packer's name"
                     counter
+                    outlined
                     persistent-hint
                 ></v-text-field>
             </validation-provider>

@@ -15,6 +15,7 @@
                             type="text"
                             hint="This is to identify the sale"
                             counter
+                            outlined
                             persistent-hint
                         ></v-text-field>
                     </validation-provider>
@@ -41,24 +42,29 @@
             </v-row>
 
             <validation-provider name="_products" v-slot="{ errors, valid }">
-                <v-radio-group
-                    :value="form._products.length"
-                    @change="onComponentChange"
-                    :error-messages="errors"
-                    :success="valid"
-                    :readonly="fieldDisabled"
-                    :filled="fieldDisabled"
-                    :row="!mobile"
-                    hide-details="auto"
+                <v-alert
+                    :color="errors.length > 0 ? 'red' : 'green'"
+                    class="pt-0"
+                    outlined
                 >
-                    <template v-slot:label>
-                        <div class="caption">Component :</div>
-                    </template>
-                    <v-radio label="1 Product" :value="1"></v-radio>
-                    <v-radio label="2 Product" :value="2"></v-radio>
-                </v-radio-group>
+                    <v-radio-group
+                        :value="form._products.length"
+                        @change="onComponentChange"
+                        :error-messages="errors"
+                        :success="valid"
+                        :readonly="fieldDisabled"
+                        :filled="fieldDisabled"
+                        :row="!mobile"
+                        hide-details="auto"
+                    >
+                        <template v-slot:label>
+                            <div class="caption">Component :</div>
+                        </template>
+                        <v-radio label="1 Product" :value="1"></v-radio>
+                        <v-radio label="2 Product" :value="2"></v-radio>
+                    </v-radio-group>
+                </v-alert>
             </validation-provider>
-            <v-divider class="mt-1"></v-divider>
 
             <v-row v-if="form._products">
                 <v-col
@@ -94,6 +100,7 @@
                                             chips
                                             attach
                                             return-object
+                                            outlined
                                         ></v-autocomplete>
                                     </validation-provider>
                                 </v-col>
@@ -143,6 +150,7 @@
                                             chips
                                             attach
                                             return-object
+                                            outlined
                                         ></v-autocomplete>
                                     </validation-provider>
                                 </v-col>
@@ -200,6 +208,7 @@
                                             type="number"
                                             hint="The product filled ratio"
                                             persistent-hint
+                                            outlined
                                         ></v-text-field>
                                     </validation-provider>
                                     <validation-provider
@@ -215,10 +224,10 @@
                                             :filled="fieldDisabled"
                                             label="Filled Percentage"
                                             type="number"
-                                            prefix="%"
+                                            suffix="%"
                                             hint="The product filled percentage"
                                             persistent-hint
-                                            reverse
+                                            outlined
                                         ></v-text-field>
                                     </validation-provider>
                                 </v-col>
