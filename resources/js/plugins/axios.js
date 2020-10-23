@@ -52,8 +52,10 @@ instance.interceptors.request.use(
  * Add a response interceptor
  */
 instance.interceptors.response.use(
-    ({ data }) => {
-        const { message } = data;
+    response => {
+        const {
+            data: { message }
+        } = response;
 
         if (config.DEBUG) {
             logger(response, "info");
