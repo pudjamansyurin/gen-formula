@@ -19,23 +19,20 @@ mix.config.webpackConfig.output = {
 
 mix.js("resources/js/app.js", "public/js");
 mix.sass("resources/sass/app.scss", "public/css");
-
 mix.version();
 
-if (mix.inProduction()) {
-    // mix.version();
-} else {
+if (!mix.inProduction()) {
     mix.sourceMaps();
 
-    const domain = "gen-formula.test";
-    mix.browserSync({
-        proxy: "https://" + domain,
-        host: domain,
-        open: "external",
-        port: 3000,
-        https: {
-            key: homedir + "/.valet/Certificates/" + domain + ".key",
-            cert: homedir + "/.valet/Certificates/" + domain + ".crt"
-        }
-    });
+    // const domain = "gen-formula.test";
+    // mix.browserSync({
+    //     proxy: "https://" + domain,
+    //     host: domain,
+    //     open: "external",
+    //     port: 3000,
+    //     https: {
+    //         key: homedir + "/.valet/Certificates/" + domain + ".key",
+    //         cert: homedir + "/.valet/Certificates/" + domain + ".crt"
+    //     }
+    // });
 }
