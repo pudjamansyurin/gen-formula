@@ -13,7 +13,7 @@
 
         <the-data
             v-model="selected"
-            :items="sales"
+            :items="materials"
             :options.sync="options"
             :headers="headers"
             :total="total"
@@ -55,9 +55,6 @@
                     {{ item.name }}
                 </v-chip>
             </template>
-            <template v-slot:[`item.filled`]="{ item }">
-                {{ item.filled }} %
-            </template>
             <template v-slot:[`item.rev.price`]="{ item }">
                 {{ item.rev.price | currency }}
             </template>
@@ -73,8 +70,19 @@
             @delete="remove"
             @close="dialogDelete = false"
         >
+            <template v-slot="{ item }">{{ item.name }}</template>
+        </the-dialog-delete>
+
+        <the-dialog-delete
+            v-model="dialogDeleteRev"
+            :selected="selectedRev"
+            model="revision"
+            @delete="removeRev"
+            @close="dialogDeleteRev = false"
+        >
             <template v-slot="{ item }">
-                {{ item.name }}
+                {{ item.price | currency }} |
+                {{ item.updated_at | moment("from") }}
             </template>
         </the-dialog-delete>
 
@@ -85,24 +93,33 @@
             :tabs="formTabs"
             :tab.sync="formTabIndex"
             :readonly="fieldDisabled"
-            :width="formWidth"
             @close="close"
             @submit="save"
         >
             <template v-slot:DATA>
-                <sale-form
+                <material-form
                     ref="form"
                     v-model="form"
                     @save="save"
-                    :model-default="modelDefault"
                     :field-disabled="fieldDisabled"
-                    :list-package="listPackage"
-                    :list-formula="listFormula"
-                ></sale-form>
+                    :list-matter="listMatter"
+                ></material-form>
             </template>
 
             <template v-slot:REV>
                 <rev-timeline v-if="form.revs" :revs="form.revs">
+                    <template v-slot:card-actions="{ item: { rev } }">
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            v-if="form.revs.length > 1 && rev.authorized"
+                            @click="confirmRev(rev)"
+                            color="red"
+                            small
+                            text
+                        >
+                            Delete
+                        </v-btn>
+                    </template>
                 </rev-timeline>
             </template>
         </the-dialog-form>
@@ -111,31 +128,37 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { cloneDeep, get } from "lodash";
+import { cloneDeep, map } from "lodash";
 import pluralize from "pluralize";
 
-import { Sale } from "../models";
-import { eHandler } from "../utils";
-import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "../mixins";
+import { Material } from "../../models";
+import { eHandler } from "../../utils";
+import {
+    CommonMixin,
+    ModelMixin,
+    TabMixin,
+    FetchListMixin,
+} from "../../mixins";
 
-import AppTopBar from "../components/app/AppTopBar";
-import SaleForm from "../components/features/SaleForm";
-import RevTimeline from "../components/features/RevTimeline";
+import AppTopBar from "../../components/AppTopBar";
+import MaterialForm from "./MaterialForm";
+import RevTimeline from "../../components/RevTimeline";
 
 export default {
     mixins: [CommonMixin, ModelMixin, TabMixin, FetchListMixin],
     components: {
         AppTopBar,
-        SaleForm,
+        MaterialForm,
         RevTimeline,
     },
     data() {
         return {
-            model: "sale",
-            modelDefault: Sale,
-            form: cloneDeep(Sale),
+            model: "material",
+            modelDefault: Material,
+            form: cloneDeep(Material),
             headers: [
                 { text: "Name", value: "name" },
+                { text: "Matter", value: "matter.name" },
                 {
                     text: "Price",
                     value: "rev.price",
@@ -143,15 +166,14 @@ export default {
                     sortable: false,
                     width: 150,
                 },
-                // { text: "Filled", align: "center", value: "filled" },
-                {
-                    text: "Product",
-                    value: "products_count",
-                    align: "center",
-                },
                 {
                     text: "Rev",
                     value: "revs_count",
+                    align: "center",
+                },
+                {
+                    text: "Formula",
+                    value: "formulas_count",
                     align: "center",
                 },
                 { text: "Creator", value: "user.name" },
@@ -161,19 +183,13 @@ export default {
                 },
             ],
 
-            listPackage: [],
-            listFormula: [],
+            dialogDeleteRev: false,
+            selectedRev: [],
+            listMatter: [],
         };
     },
     computed: {
-        ...mapState("model", ["sales"]),
-        formWidth() {
-            let { _products } = this.form;
-            if (_products && _products.length > 1) {
-                return 1000;
-            }
-            return 500;
-        },
+        ...mapState("model", ["materials"]),
     },
     methods: {
         change(item) {
@@ -187,14 +203,6 @@ export default {
             item = await this.fetchDetail(item || this.selected[0]);
             this.change(item);
         },
-        onSave() {
-            this.form._products = this.form._products.map((product) => ({
-                ...product,
-                package_id: get(product.package, "id") || null,
-                formula_id: get(product.formula, "id") || null,
-                ratio: Number(product.ratio),
-            }));
-        },
         fetchDetail: async function ({ id }) {
             let item;
 
@@ -204,26 +212,39 @@ export default {
             }).then((data) => {
                 item = {
                     ...data,
-                    _products: this.makeProductsDetail(data.products),
+                    rev: {
+                        price: Number(data.rev.price),
+                    },
                 };
             });
 
             return item;
         },
-        makeProductsDetail(products) {
-            return products.map(({ formula, package: pkg, ratio }) => ({
-                formula,
-                package: pkg,
-                ratio: Number(ratio),
-            }));
+
+        // revision related routines
+        confirmRev(rev) {
+            this.selectedRev = [rev];
+            this.$nextTick(() => (this.dialogDeleteRev = true));
+        },
+        removeRev: async function () {
+            this.START_LOADING();
+            await this.DELETE_MODELS({
+                model: "material-rev",
+                ids: map(this.selectedRev, "id"),
+            })
+                .then(async (ids) => {
+                    this.form = await this.fetchDetail(this.form);
+
+                    this.dialogDeleteRev = false;
+                    this.$nextTick(() => (this.selectedRev = []));
+                })
+                .catch((e) => eHandler(e))
+                .then(() => this.STOP_LOADING());
         },
     },
     mounted() {
-        this.fetchList("package")
-            .then((data) => (this.listPackage = data))
-            .catch((e) => eHandler(e));
-        this.fetchList("formula")
-            .then((data) => (this.listFormula = data))
+        this.fetchList("matter")
+            .then((data) => (this.listMatter = data))
             .catch((e) => eHandler(e));
     },
 };

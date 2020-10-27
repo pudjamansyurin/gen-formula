@@ -175,8 +175,8 @@ import { CommonMixin, PasswordMixin } from "../mixins";
 import { RESEND, GET_PROFILE, UPDATE_PROFILE } from "../store/app/action-types";
 import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
 
-import AppTopBar from "../components/app/AppTopBar";
-import UserForm from "../components/features/UserForm";
+import AppTopBar from "../components/AppTopBar";
+import UserForm from "./User/UserForm";
 
 export default {
     mixins: [CommonMixin, PasswordMixin],

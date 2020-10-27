@@ -13,7 +13,7 @@
 
         <the-data
             v-model="selected"
-            :items="materials"
+            :items="packages"
             :options.sync="options"
             :headers="headers"
             :total="total"
@@ -70,19 +70,8 @@
             @delete="remove"
             @close="dialogDelete = false"
         >
-            <template v-slot="{ item }">{{ item.name }}</template>
-        </the-dialog-delete>
-
-        <the-dialog-delete
-            v-model="dialogDeleteRev"
-            :selected="selectedRev"
-            model="revision"
-            @delete="removeRev"
-            @close="dialogDeleteRev = false"
-        >
             <template v-slot="{ item }">
-                {{ item.price | currency }} |
-                {{ item.updated_at | moment("from") }}
+                {{ item.name }}
             </template>
         </the-dialog-delete>
 
@@ -97,29 +86,18 @@
             @submit="save"
         >
             <template v-slot:DATA>
-                <material-form
+                <package-form
                     ref="form"
                     v-model="form"
                     @save="save"
                     :field-disabled="fieldDisabled"
-                    :list-matter="listMatter"
-                ></material-form>
+                    :list-unit="listUnit"
+                    :list-packer="listPacker"
+                ></package-form>
             </template>
 
             <template v-slot:REV>
                 <rev-timeline v-if="form.revs" :revs="form.revs">
-                    <template v-slot:card-actions="{ item: { rev } }">
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            v-if="form.revs.length > 1 && rev.authorized"
-                            @click="confirmRev(rev)"
-                            color="red"
-                            small
-                            text
-                        >
-                            Delete
-                        </v-btn>
-                    </template>
                 </rev-timeline>
             </template>
         </the-dialog-form>
@@ -128,32 +106,42 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { cloneDeep, map } from "lodash";
-import pluralize from "pluralize";
+import { cloneDeep } from "lodash";
 
-import { Material } from "../models";
-import { eHandler } from "../utils";
-import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "../mixins";
+import { Package } from "../../models";
+import { eHandler } from "../../utils";
+import {
+    CommonMixin,
+    ModelMixin,
+    TabMixin,
+    FetchListMixin,
+} from "../../mixins";
 
-import AppTopBar from "../components/app/AppTopBar";
-import MaterialForm from "../components/features/MaterialForm";
-import RevTimeline from "../components/features/RevTimeline";
+import AppTopBar from "../../components/AppTopBar";
+import PackageForm from "./PackageForm";
+import RevTimeline from "../../components/RevTimeline";
 
 export default {
     mixins: [CommonMixin, ModelMixin, TabMixin, FetchListMixin],
     components: {
         AppTopBar,
-        MaterialForm,
+        PackageForm,
         RevTimeline,
     },
     data() {
         return {
-            model: "material",
-            modelDefault: Material,
-            form: cloneDeep(Material),
+            model: "package",
+            modelDefault: Package,
+            form: cloneDeep(Package),
             headers: [
                 { text: "Name", value: "name" },
-                { text: "Matter", value: "matter.name" },
+                { text: "Capacity", value: "capacity", align: "center" },
+                { text: "Unit", value: "unit.symbol", align: "center" },
+                {
+                    text: "Packer",
+                    value: "packagers_count",
+                    align: "center",
+                },
                 {
                     text: "Price",
                     value: "rev.price",
@@ -166,11 +154,6 @@ export default {
                     value: "revs_count",
                     align: "center",
                 },
-                {
-                    text: "Formula",
-                    value: "formulas_count",
-                    align: "center",
-                },
                 { text: "Creator", value: "user.name" },
                 {
                     text: "UpdatedAt",
@@ -178,17 +161,18 @@ export default {
                 },
             ],
 
-            dialogDeleteRev: false,
-            selectedRev: [],
-            listMatter: [],
+            listUnit: [],
+            listPacker: [],
+            listPackerDefault: [],
         };
     },
     computed: {
-        ...mapState("model", ["materials"]),
+        ...mapState("model", ["packages"]),
     },
     methods: {
         change(item) {
             this.formTabIndex = 0;
+            this.listPacker = cloneDeep(this.listPackerDefault);
             this.form = cloneDeep(item);
         },
         onCreate() {
@@ -207,39 +191,45 @@ export default {
             }).then((data) => {
                 item = {
                     ...data,
-                    rev: {
-                        price: Number(data.rev.price),
-                    },
+                    _packers: this.makePackersDetail(data.packagers),
                 };
             });
 
             return item;
         },
-
-        // revision related routines
-        confirmRev(rev) {
-            this.selectedRev = [rev];
-            this.$nextTick(() => (this.dialogDeleteRev = true));
+        makePackersDetail(packagers) {
+            return packagers.map(({ packer, content, packets }) => ({
+                id: packer.id,
+                name: packer.name,
+                content,
+                packs: packets.map(({ id, name, pivot }) => ({
+                    id,
+                    name,
+                    price: Number(pivot.price),
+                })),
+            }));
         },
-        removeRev: async function () {
-            this.START_LOADING();
-            await this.DELETE_MODELS({
-                model: "material-rev",
-                ids: map(this.selectedRev, "id"),
-            })
-                .then(async (ids) => {
-                    this.form = await this.fetchDetail(this.form);
-
-                    this.dialogDeleteRev = false;
-                    this.$nextTick(() => (this.selectedRev = []));
-                })
-                .catch((e) => eHandler(e))
-                .then(() => this.STOP_LOADING());
+        makeListPackers(data) {
+            return data.map(({ id, name, packs }) => ({
+                id,
+                name,
+                content: null,
+                packs: packs.map(({ id, name }) => ({
+                    id,
+                    name,
+                    price: null,
+                })),
+            }));
         },
     },
     mounted() {
-        this.fetchList("matter")
-            .then((data) => (this.listMatter = data))
+        this.fetchList("unit")
+            .then((data) => (this.listUnit = data))
+            .catch((e) => eHandler(e));
+        this.fetchList("packer")
+            .then((data) => {
+                this.listPackerDefault = this.makeListPackers(data);
+            })
             .catch((e) => eHandler(e));
     },
 };

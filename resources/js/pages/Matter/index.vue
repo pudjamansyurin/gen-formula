@@ -13,7 +13,7 @@
 
         <the-data
             v-model="selected"
-            :items="packers"
+            :items="matters"
             :options.sync="options"
             :headers="headers"
             :total="total"
@@ -68,12 +68,12 @@
             @close="close"
             @submit="save"
         >
-            <packer-form
+            <matter-form
                 ref="form"
                 v-model="form"
                 @save="save"
                 :field-disabled="fieldDisabled"
-            ></packer-form>
+            ></matter-form>
         </the-dialog-form>
     </fragment>
 </template>
@@ -82,29 +82,29 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
 
-import { Packer } from "../models";
-import { eHandler } from "../utils";
-import { CommonMixin, ModelMixin } from "../mixins";
+import { Matter } from "../../models";
+import { eHandler } from "../../utils";
+import { CommonMixin, ModelMixin } from "../../mixins";
 
-import AppTopBar from "../components/app/AppTopBar";
-import PackerForm from "../components/features/PackerForm";
+import AppTopBar from "../../components/AppTopBar";
+import MatterForm from "./MatterForm";
 
 export default {
     mixins: [CommonMixin, ModelMixin],
     components: {
         AppTopBar,
-        PackerForm,
+        MatterForm,
     },
     data() {
         return {
-            model: "packer",
-            modelDefault: Packer,
-            form: cloneDeep(Packer),
+            model: "matter",
+            modelDefault: Matter,
+            form: cloneDeep(Matter),
             headers: [
                 { text: "Name", value: "name" },
                 {
-                    text: "Pack",
-                    value: "packs_count",
+                    text: "Material",
+                    value: "materials_count",
                     align: "center",
                 },
                 { text: "Creator", value: "user.name" },
@@ -116,7 +116,7 @@ export default {
         };
     },
     computed: {
-        ...mapState("model", ["packers"]),
+        ...mapState("model", ["matters"]),
     },
 };
 </script>

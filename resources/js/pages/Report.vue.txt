@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import AppTopBar from "../components/app/AppTopBar";
+import AppTopBar from "../components/AppTopBar";
 
 const exhale = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

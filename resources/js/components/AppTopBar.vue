@@ -230,14 +230,14 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { debounce, startCase } from "lodash";
 import pluralize from "pluralize";
 
-import { LOGOUT } from "../../store/app/action-types";
-import { ls, eHandler } from "../../utils";
-import { CommonMixin, FullscreenMixin } from "../../mixins";
+import { LOGOUT } from "../store/app/action-types";
+import { ls, eHandler } from "../utils";
+import { CommonMixin, FullscreenMixin } from "../mixins";
 import {
     TOGGLE_DRAWER,
     TOGGLE_DENSE,
     TOGGLE_DARK,
-} from "../../store/app/mutation-types";
+} from "../store/app/mutation-types";
 
 export default {
     mixins: [CommonMixin, FullscreenMixin],

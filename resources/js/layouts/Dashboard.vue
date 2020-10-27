@@ -12,10 +12,10 @@
 import { CommonMixin } from "../mixins";
 import { logger } from "../utils";
 
-import AppTopBar from "../components/app/AppTopBar";
-import AppContainer from "../components/app/AppContainer";
-import AppBottomNav from "../components/app/AppBottomNav";
-import AppLeftDrawer from "../components/app/AppLeftDrawer";
+import AppTopBar from "../components/AppTopBar";
+import AppContainer from "../components/AppContainer";
+import AppBottomNav from "../components/AppBottomNav";
+import AppLeftDrawer from "../components/AppLeftDrawer";
 
 export default {
     mixins: [CommonMixin],

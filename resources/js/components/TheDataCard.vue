@@ -1,33 +1,34 @@
 <template>
     <fragment>
         <v-row align="center" justify="center" dense>
-            <v-virtual-scroll
+            <!-- <v-virtual-scroll
                 :bench="1"
                 :items="items"
                 :height="size.height - 190"
                 item-height="130"
             >
                 <template v-slot="{ item }">
-                    <v-col cols="12">
-                        <v-card
-                            v-longclick="() => toggleSelect(item)"
-                            @click="selected.length > 0 && toggleSelect(item)"
-                            :key="item.id"
-                            :dark="dark"
-                            tile
-                        >
-                            <v-progress-linear
-                                v-if="selectedIndex(item) > -1"
-                                :value="100"
-                                :dark="dark"
-                                color="primary"
-                            ></v-progress-linear>
+                    <v-col cols="12"> -->
+            <v-col v-for="item in items" :key="item.id" cols="12">
+                <v-card
+                    v-longclick="() => toggleSelect(item)"
+                    @click="selected.length > 0 && toggleSelect(item)"
+                    :key="item.id"
+                    :dark="dark"
+                    tile
+                >
+                    <v-progress-linear
+                        v-if="selectedIndex(item) > -1"
+                        :value="100"
+                        :dark="dark"
+                        color="primary"
+                    ></v-progress-linear>
 
-                            <slot :item="item"></slot>
-                        </v-card>
-                    </v-col>
-                </template>
-            </v-virtual-scroll>
+                    <slot :item="item"></slot>
+                </v-card>
+            </v-col>
+            <!-- </template>
+            </v-virtual-scroll> -->
         </v-row>
     </fragment>
 </template>

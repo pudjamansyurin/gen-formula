@@ -131,13 +131,18 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
 
-import { Formula } from "../models";
-import { eHandler } from "../utils";
-import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "../mixins";
+import { Formula } from "../../models";
+import { eHandler } from "../../utils";
+import {
+    CommonMixin,
+    ModelMixin,
+    TabMixin,
+    FetchListMixin,
+} from "../../mixins";
 
-import AppTopBar from "../components/app/AppTopBar";
-import FormulaForm from "../components/features/FormulaForm";
-import RevTimeline from "../components/features/RevTimeline";
+import AppTopBar from "../../components/AppTopBar";
+import FormulaForm from "./FormulaForm";
+import RevTimeline from "../../components/RevTimeline";
 
 export default {
     mixins: [CommonMixin, ModelMixin, TabMixin, FetchListMixin],

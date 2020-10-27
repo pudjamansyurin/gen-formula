@@ -13,7 +13,7 @@
 
         <the-data
             v-model="selected"
-            :items="packages"
+            :items="sales"
             :options.sync="options"
             :headers="headers"
             :total="total"
@@ -55,6 +55,9 @@
                     {{ item.name }}
                 </v-chip>
             </template>
+            <template v-slot:[`item.filled`]="{ item }">
+                {{ item.filled }} %
+            </template>
             <template v-slot:[`item.rev.price`]="{ item }">
                 {{ item.rev.price | currency }}
             </template>
@@ -82,18 +85,20 @@
             :tabs="formTabs"
             :tab.sync="formTabIndex"
             :readonly="fieldDisabled"
+            :width="formWidth"
             @close="close"
             @submit="save"
         >
             <template v-slot:DATA>
-                <package-form
+                <sale-form
                     ref="form"
                     v-model="form"
                     @save="save"
+                    :model-default="modelDefault"
                     :field-disabled="fieldDisabled"
-                    :list-unit="listUnit"
-                    :list-packer="listPacker"
-                ></package-form>
+                    :list-package="listPackage"
+                    :list-formula="listFormula"
+                ></sale-form>
             </template>
 
             <template v-slot:REV>
@@ -106,43 +111,48 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { cloneDeep } from "lodash";
+import { cloneDeep, get } from "lodash";
+import pluralize from "pluralize";
 
-import { Package } from "../models";
-import { eHandler } from "../utils";
-import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "../mixins";
+import { Sale } from "../../models";
+import { eHandler } from "../../utils";
+import {
+    CommonMixin,
+    ModelMixin,
+    TabMixin,
+    FetchListMixin,
+} from "../../mixins";
 
-import AppTopBar from "../components/app/AppTopBar";
-import PackageForm from "../components/features/PackageForm";
-import RevTimeline from "../components/features/RevTimeline";
+import AppTopBar from "../../components/AppTopBar";
+import SaleForm from "./SaleForm";
+import RevTimeline from "../../components/RevTimeline";
 
 export default {
     mixins: [CommonMixin, ModelMixin, TabMixin, FetchListMixin],
     components: {
         AppTopBar,
-        PackageForm,
+        SaleForm,
         RevTimeline,
     },
     data() {
         return {
-            model: "package",
-            modelDefault: Package,
-            form: cloneDeep(Package),
+            model: "sale",
+            modelDefault: Sale,
+            form: cloneDeep(Sale),
             headers: [
                 { text: "Name", value: "name" },
-                { text: "Capacity", value: "capacity", align: "center" },
-                { text: "Unit", value: "unit.symbol", align: "center" },
-                {
-                    text: "Packer",
-                    value: "packagers_count",
-                    align: "center",
-                },
                 {
                     text: "Price",
                     value: "rev.price",
                     align: "right",
                     sortable: false,
                     width: 150,
+                },
+                // { text: "Filled", align: "center", value: "filled" },
+                {
+                    text: "Product",
+                    value: "products_count",
+                    align: "center",
                 },
                 {
                     text: "Rev",
@@ -156,18 +166,23 @@ export default {
                 },
             ],
 
-            listUnit: [],
-            listPacker: [],
-            listPackerDefault: [],
+            listPackage: [],
+            listFormula: [],
         };
     },
     computed: {
-        ...mapState("model", ["packages"]),
+        ...mapState("model", ["sales"]),
+        formWidth() {
+            let { _products } = this.form;
+            if (_products && _products.length > 1) {
+                return 1000;
+            }
+            return 500;
+        },
     },
     methods: {
         change(item) {
             this.formTabIndex = 0;
-            this.listPacker = cloneDeep(this.listPackerDefault);
             this.form = cloneDeep(item);
         },
         onCreate() {
@@ -176,6 +191,14 @@ export default {
         onEdit: async function (item) {
             item = await this.fetchDetail(item || this.selected[0]);
             this.change(item);
+        },
+        onSave() {
+            this.form._products = this.form._products.map((product) => ({
+                ...product,
+                package_id: get(product.package, "id") || null,
+                formula_id: get(product.formula, "id") || null,
+                ratio: Number(product.ratio),
+            }));
         },
         fetchDetail: async function ({ id }) {
             let item;
@@ -186,45 +209,26 @@ export default {
             }).then((data) => {
                 item = {
                     ...data,
-                    _packers: this.makePackersDetail(data.packagers),
+                    _products: this.makeProductsDetail(data.products),
                 };
             });
 
             return item;
         },
-        makePackersDetail(packagers) {
-            return packagers.map(({ packer, content, packets }) => ({
-                id: packer.id,
-                name: packer.name,
-                content,
-                packs: packets.map(({ id, name, pivot }) => ({
-                    id,
-                    name,
-                    price: Number(pivot.price),
-                })),
-            }));
-        },
-        makeListPackers(data) {
-            return data.map(({ id, name, packs }) => ({
-                id,
-                name,
-                content: null,
-                packs: packs.map(({ id, name }) => ({
-                    id,
-                    name,
-                    price: null,
-                })),
+        makeProductsDetail(products) {
+            return products.map(({ formula, package: pkg, ratio }) => ({
+                formula,
+                package: pkg,
+                ratio: Number(ratio),
             }));
         },
     },
     mounted() {
-        this.fetchList("unit")
-            .then((data) => (this.listUnit = data))
+        this.fetchList("package")
+            .then((data) => (this.listPackage = data))
             .catch((e) => eHandler(e));
-        this.fetchList("packer")
-            .then((data) => {
-                this.listPackerDefault = this.makeListPackers(data);
-            })
+        this.fetchList("formula")
+            .then((data) => (this.listFormula = data))
             .catch((e) => eHandler(e));
     },
 };
