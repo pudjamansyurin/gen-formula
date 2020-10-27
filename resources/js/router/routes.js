@@ -1,39 +1,39 @@
 const Landing = () =>
-    import(/* webpackChunkName: "landing" */ "../layouts/Landing");
+    import(/* webpackChunkName: "landing" */ "@/layouts/Landing");
 const Dashboard = () =>
-    import(/* webpackChunkName: "dashboard" */ "../layouts/Dashboard");
+    import(/* webpackChunkName: "dashboard" */ "@/layouts/Dashboard");
 
 const Error = () =>
-    import(/* webpackChunkName: "error" */ "../pages/landing/Error");
+    import(/* webpackChunkName: "error" */ "@/pages/landing/Error");
 const Policy = () =>
-    import(/* webpackChunkName: "policy" */ "../pages/landing/Policy");
+    import(/* webpackChunkName: "policy" */ "@/pages/landing/Policy");
 
 const Login = () =>
-    import(/* webpackChunkName: "auth.login" */ "../pages/auth/Login");
+    import(/* webpackChunkName: "auth.login" */ "@/pages/auth/Login");
 const Forget = () =>
-    import(/* webpackChunkName: "auth.forget" */ "../pages/auth/Forget");
+    import(/* webpackChunkName: "auth.forget" */ "@/pages/auth/Forget");
 const Reset = () =>
-    import(/* webpackChunkName: "auth.reset" */ "../pages/auth/Reset");
+    import(/* webpackChunkName: "auth.reset" */ "@/pages/auth/Reset");
 const Verify = () =>
-    import(/* webpackChunkName: "auth.verify" */ "../pages/auth/Verify");
+    import(/* webpackChunkName: "auth.verify" */ "@/pages/auth/Verify");
 
 const Profile = () =>
-    import(/* webpackChunkName: "profile" */ "../pages/Profile");
-const Pack = () => import(/* webpackChunkName: "pack" */ "../pages/Pack");
-const Packer = () => import(/* webpackChunkName: "packer" */ "../pages/Packer");
+    import(/* webpackChunkName: "profile" */ "@/pages/Profile");
+const Pack = () => import(/* webpackChunkName: "pack" */ "@/pages/Pack");
+const Packer = () => import(/* webpackChunkName: "packer" */ "@/pages/Packer");
 const Package = () =>
-    import(/* webpackChunkName: "package" */ "../pages/Package");
-const Matter = () => import(/* webpackChunkName: "matter" */ "../pages/Matter");
+    import(/* webpackChunkName: "package" */ "@/pages/Package");
+const Matter = () => import(/* webpackChunkName: "matter" */ "@/pages/Matter");
 const Material = () =>
-    import(/* webpackChunkName: "material" */ "../pages/Material");
+    import(/* webpackChunkName: "material" */ "@/pages/Material");
 const Formula = () =>
-    import(/* webpackChunkName: "formula" */ "../pages/Formula");
-const Sale = () => import(/* webpackChunkName: "sale" */ "../pages/Sale");
-const User = () => import(/* webpackChunkName: "user" */ "../pages/User");
-// const Report = () => import(/* webpackChunkName: "report" */ "../pages/Report");
-// const Setting = () => import(/* webpackChunkName: "setting" */ "../pages/Setting");
+    import(/* webpackChunkName: "formula" */ "@/pages/Formula");
+const Sale = () => import(/* webpackChunkName: "sale" */ "@/pages/Sale");
+const User = () => import(/* webpackChunkName: "user" */ "@/pages/User");
+// const Report = () => import(/* webpackChunkName: "report" */ "@/pages/Report");
+// const Setting = () => import(/* webpackChunkName: "setting" */ "@/pages/Setting");
 
-import store from "../store";
+import store from "@/store";
 
 export default [
     {

@@ -3,9 +3,9 @@ import { cloneDeep } from "lodash";
 // import getters from "./getters";
 import actions from "./actions";
 import mutations from "./mutations";
-import { ls } from "../../utils";
-import { User } from "../../models";
-import { table } from "../../config";
+import { ls } from "@/utils";
+import { User } from "@/config/models";
+import { table } from "@/config";
 
 const state = {
     title: "CIWI Formula",

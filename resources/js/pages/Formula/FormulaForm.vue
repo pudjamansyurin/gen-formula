@@ -384,9 +384,9 @@
 </template>
 
 <script>
-import { CommonMixin } from "../../mixins";
-import TheSimpleTable from "../../components/TheSimpleTable";
-import TheDataIterator from "../../components/TheDataIterator";
+import { CommonMixin } from "@/mixins";
+import TheSimpleTable from "@/components/TheSimpleTable";
+import TheDataIterator from "@/components/TheDataIterator";
 
 export default {
     mixins: [CommonMixin],

@@ -105,16 +105,16 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
 
-import { User } from "../../models";
-import { eHandler } from "../../utils";
+import { User } from "@/config/models";
+import { eHandler } from "@/utils";
 import {
     CommonMixin,
     ModelMixin,
     PasswordMixin,
     FetchListMixin,
-} from "../../mixins";
+} from "@/mixins";
 
-import AppTopBar from "../../components/AppTopBar";
+import AppTopBar from "@/components/AppTopBar";
 import UserForm from "./UserForm";
 
 export default {

@@ -83,11 +83,11 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
 
-import { Pack } from "../../models";
-import { CommonMixin, ModelMixin, FetchListMixin } from "../../mixins";
-import { eHandler, castId } from "../../utils";
+import { Pack } from "@/config/models";
+import { eHandler, castId } from "@/utils";
+import { CommonMixin, ModelMixin, FetchListMixin } from "@/mixins";
 
-import AppTopBar from "../../components/AppTopBar";
+import AppTopBar from "@/components/AppTopBar";
 import PackForm from "./PackForm";
 
 export default {

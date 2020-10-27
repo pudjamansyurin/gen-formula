@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { CommonMixin } from "../../mixins";
+import { CommonMixin } from "@/mixins";
 
 export default {
     mixins: [CommonMixin],

@@ -1,10 +1,10 @@
-import store from "../store";
-import router from "../router";
-import { CLEAR_PROFILE, SET_ERROR } from "../store/app/mutation-types";
+import store from "@/store";
+import router from "@/router";
+import { CLEAR_PROFILE, SET_ERROR } from "@/store/app/mutation-types";
 import {
     HTTP_UNPROCESSABLE_ENTITY,
     HTTP_UNAUTHORIZED
-} from "../config/responses";
+} from "@/config/responses";
 
 export const ns = (namespace, definition) =>
     `${namespace.toLowerCase()}/${definition}`;

@@ -257,8 +257,9 @@
 </template>
 
 <script>
-import { CommonMixin } from "../../mixins";
 import { cloneDeep } from "lodash";
+
+import { CommonMixin } from "@/mixins";
 
 export default {
     mixins: [CommonMixin],

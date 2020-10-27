@@ -1,4 +1,4 @@
-import http from "../plugins/axios";
+import http from "@/plugins/axios";
 
 export const login = async payload => {
     await http.get("api/csrf-cookie");

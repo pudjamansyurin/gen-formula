@@ -19,7 +19,7 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
-import { SET_SIZE } from "./store/app/mutation-types";
+import { SET_SIZE } from "@/store/app/mutation-types";
 
 export default {
     data() {

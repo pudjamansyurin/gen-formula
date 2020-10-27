@@ -136,8 +136,8 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { SET_DRAWER } from "../store/app/mutation-types";
-import { CommonMixin, NavigationMixin } from "../mixins";
+import { SET_DRAWER } from "@/store/app/mutation-types";
+import { CommonMixin, NavigationMixin } from "@/mixins";
 
 export default {
     mixins: [CommonMixin, NavigationMixin],

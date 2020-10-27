@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { CommonMixin, NavigationMixin } from "../mixins";
+import { CommonMixin, NavigationMixin } from "@/mixins";
 
 export default {
     mixins: [CommonMixin, NavigationMixin],

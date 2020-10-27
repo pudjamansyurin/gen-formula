@@ -82,11 +82,11 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep } from "lodash";
 
-import { Matter } from "../../models";
-import { eHandler } from "../../utils";
-import { CommonMixin, ModelMixin } from "../../mixins";
+import { eHandler } from "@/utils";
+import { Matter } from "@/config/models";
+import { CommonMixin, ModelMixin } from "@/mixins";
 
-import AppTopBar from "../../components/AppTopBar";
+import AppTopBar from "@/components/AppTopBar";
 import MatterForm from "./MatterForm";
 
 export default {

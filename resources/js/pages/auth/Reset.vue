@@ -82,9 +82,9 @@
 <script>
 import { mapActions } from "vuex";
 
-import { RESET } from "../../store/app/action-types";
-import { eHandler } from "../../utils";
-import { CommonMixin, PasswordMixin } from "../../mixins";
+import { CommonMixin, PasswordMixin } from "@/mixins";
+import { RESET } from "@/store/app/action-types";
+import { eHandler } from "@/utils";
 
 export default {
     mixins: [CommonMixin, PasswordMixin],

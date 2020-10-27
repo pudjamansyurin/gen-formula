@@ -35,9 +35,9 @@
 
 <script>
 import pluralize from "pluralize";
-
-import { CommonMixin } from "../mixins";
 import { mapState } from "vuex";
+
+import { CommonMixin } from "@/mixins";
 
 export default {
     mixins: [CommonMixin],

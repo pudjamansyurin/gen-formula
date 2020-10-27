@@ -1,6 +1,7 @@
-import { ls } from "../../utils";
-import { User } from "../../models";
 import { cloneDeep } from "lodash";
+
+import { ls } from "@/utils";
+import { User } from "@/config/models";
 import * as mutations from "./mutation-types";
 
 export default {

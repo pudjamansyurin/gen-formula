@@ -1,16 +1,16 @@
 // import Vue from "vue";
 import axios from "axios";
 
-import store from "../store";
-import { APP_URL, APP_DEBUG } from "../config/app";
-import { ns, logger } from "../utils";
+import store from "@/store";
+import { ns, logger } from "@/utils";
+import { APP_URL, APP_DEBUG } from "@/config/app";
 import {
     START_LOADING,
     STOP_LOADING,
     SET_MESSAGE,
     CLEAR_ERROR,
     CLEAR_MESSAGE
-} from "../store/app/mutation-types";
+} from "@/store/app/mutation-types";
 
 // Create axios instance
 const instance = axios.create({

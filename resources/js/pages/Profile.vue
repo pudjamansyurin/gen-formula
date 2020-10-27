@@ -169,13 +169,13 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 import { cloneDeep } from "lodash";
 
-import { User } from "../models";
-import { eHandler } from "../utils";
-import { CommonMixin, PasswordMixin } from "../mixins";
-import { RESEND, GET_PROFILE, UPDATE_PROFILE } from "../store/app/action-types";
-import { SET_PROFILE, SET_MESSAGE } from "../store/app/mutation-types";
+import { eHandler } from "@/utils";
+import { User } from "@/config/models";
+import { CommonMixin, PasswordMixin } from "@/mixins";
+import { SET_PROFILE, SET_MESSAGE } from "@/store/app/mutation-types";
+import { RESEND, GET_PROFILE, UPDATE_PROFILE } from "@/store/app/action-types";
 
-import AppTopBar from "../components/AppTopBar";
+import AppTopBar from "@/components/AppTopBar";
 import UserForm from "./User/UserForm";
 
 export default {

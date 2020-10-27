@@ -12,14 +12,15 @@ const homedir = require("os").homedir();
  |
  */
 
-mix.config.webpackConfig.output = {
-    chunkFilename: "js/[name].js?id=[chunkhash]",
-    publicPath: "/"
-};
+// mix.config.webpackConfig.output = {
+//     chunkFilename: "js/[name].js?id=[chunkhash]",
+//     publicPath: "/"
+// };
 
-mix.js("resources/js/app.js", "public/js");
-mix.sass("resources/sass/app.scss", "public/css");
-mix.version();
+mix.js("resources/js/app.js", "public/js")
+    .sass("resources/sass/app.scss", "public/css")
+    .version()
+    .webpackConfig(require("./webpack.config"));
 
 if (!mix.inProduction()) {
     mix.sourceMaps();

@@ -1,6 +1,6 @@
 import { mapActions } from "vuex";
 
-import { GET_LIST } from "../store/model/action-types";
+import { GET_LIST } from "@/store/model/action-types";
 
 export default {
     methods: {

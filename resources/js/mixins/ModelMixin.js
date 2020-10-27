@@ -1,21 +1,21 @@
 import { map, cloneDeep } from "lodash";
 import { mapState, mapActions, mapMutations } from "vuex";
 
-import { eHandler, ls } from "../utils";
-import { table } from "../config";
-import { UPDATE_MODEL } from "../store/model/mutation-types";
+import { eHandler, ls } from "@/utils";
+import { table } from "@/config";
+import { UPDATE_MODEL } from "@/store/model/mutation-types";
 import {
     GET_MODEL,
     GET_MODELS,
     SAVE_MODEL,
     DELETE_MODELS
-} from "../store/model/action-types";
+} from "@/store/model/action-types";
 
-import TheData from "../components/TheData";
-import TheDialogForm from "../components/TheDialogForm";
-import TheDialogDelete from "../components/TheDialogDelete";
+import TheData from "@/components/TheData";
+import TheDialogForm from "@/components/TheDialogForm";
+import TheDialogDelete from "@/components/TheDialogDelete";
+import { SET_PER_PAGE } from "@/store/app/mutation-types";
 import CommonMixin from "./CommonMixin";
-import { SET_PER_PAGE } from "../store/app/mutation-types";
 
 export default {
     mixins: [CommonMixin],

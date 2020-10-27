@@ -62,11 +62,11 @@
 </template>
 
 <script>
-import { CommonMixin } from "../mixins";
 import { isEqual } from "lodash";
+import { CommonMixin } from "@/mixins";
 
-import TheDataCard from "../components/TheDataCard";
-import TheDataTable from "../components/TheDataTable";
+import TheDataCard from "@/components/TheDataCard";
+import TheDataTable from "@/components/TheDataTable";
 
 export default {
     mixins: [CommonMixin],

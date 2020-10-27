@@ -1,4 +1,4 @@
-import http from "../plugins/axios";
+import http from "@/plugins/axios";
 
 export const viewAny = async (model, params) =>
     await http.get(`api/${model}`, { params }).then(({ data }) => data);

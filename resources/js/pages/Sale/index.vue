@@ -114,18 +114,13 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { cloneDeep, get } from "lodash";
 import pluralize from "pluralize";
 
-import { Sale } from "../../models";
-import { eHandler } from "../../utils";
-import {
-    CommonMixin,
-    ModelMixin,
-    TabMixin,
-    FetchListMixin,
-} from "../../mixins";
+import { eHandler } from "@/utils";
+import { Sale } from "@/config/models";
+import { CommonMixin, ModelMixin, TabMixin, FetchListMixin } from "@/mixins";
 
-import AppTopBar from "../../components/AppTopBar";
+import AppTopBar from "@/components/AppTopBar";
+import RevTimeline from "@/components/RevTimeline";
 import SaleForm from "./SaleForm";
-import RevTimeline from "../../components/RevTimeline";
 
 export default {
     mixins: [CommonMixin, ModelMixin, TabMixin, FetchListMixin],

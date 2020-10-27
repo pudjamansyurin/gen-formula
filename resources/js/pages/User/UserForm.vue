@@ -116,35 +116,35 @@
 </template>
 
 <script>
-import { CommonMixin, PasswordMixin } from "../../mixins";
+import { CommonMixin, PasswordMixin } from "@/mixins";
 
 export default {
     mixins: [CommonMixin, PasswordMixin],
     props: {
         value: {
             type: Object,
-            required: true
+            required: true,
         },
         fieldDisabled: {
             type: Boolean,
-            default: false
+            default: false,
         },
         listRole: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         profile: {
             type: Boolean,
-            default: false
+            default: false,
         },
         changePass: {
             type: Boolean,
-            default: false
+            default: false,
         },
         creating: {
             type: Boolean,
-            default: true
-        }
+            default: true,
+        },
     },
     computed: {
         form: {
@@ -153,7 +153,7 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            }
+            },
         },
         validator() {
             return this.$refs.form;
@@ -164,9 +164,9 @@ export default {
             },
             set(value) {
                 this.$emit("update:change-pass", value);
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>
 

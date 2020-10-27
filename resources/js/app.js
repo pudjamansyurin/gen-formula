@@ -25,10 +25,10 @@ window.Vue = require("vue");
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 import App from "./App";
-import store from "./store";
-import router from "./router";
-import { APP_DEBUG } from "./config/app";
-import { vuetify } from "./plugins";
+import store from "@/store";
+import router from "@/router";
+import { APP_DEBUG } from "@/config/app";
+import { vuetify } from "@/plugins";
 
 Vue.config.productionTip = APP_DEBUG;
 

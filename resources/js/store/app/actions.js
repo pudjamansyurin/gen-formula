@@ -1,4 +1,4 @@
-import { auth as api } from "../../api";
+import { auth as api } from "@/api";
 import * as actions from "./action-types";
 import * as mutations from "./mutation-types";
 
