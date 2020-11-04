@@ -22,7 +22,7 @@
             <template v-slot:card="{ item }">
                 <v-btn
                     :color="chipColor(item)"
-                    :outlined="!item.selected"
+                    outlined
                     absolute
                     top
                     right
