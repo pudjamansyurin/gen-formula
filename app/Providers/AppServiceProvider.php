@@ -29,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /* Production condition */
         if (App::environment('production')) {
             /* Fix cpanel mysql issue */
             Builder::defaultStringLength(191);
