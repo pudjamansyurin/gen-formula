@@ -1,9 +1,6 @@
 ---
 deployment:
   tasks:
-    # - export BACK_END_PATH=/home/genmotor/formula_backend/
-    # - export FRONT_END_PATH=/home/genmotor/formula.garda-energi.com/
-    # - /bin/rsync -avr --exclude '.git/' --exclude 'public/' . $BACK_END_PATH
-    # - /bin/rsync -avr --exclude 'index.php' public/ $FRONT_END_PATH
-    - export HOSTING_PATH=/home/genmotor/formula.garda-energi.com/
-    - /bin/rsync -avr --exclude '.git/' . $HOSTING_PATH
+    - export BACKEND_PATH=/home/genmotor/formula.garda-energi.com
+    - /bin/rsync -vr --exclude '.git/' --exclude 'public/' . $BACKEND_PATH
+    - /bin/rsync -vr ./public/* $BACKEND_PATH/public
