@@ -1,7 +1,7 @@
 <template>
-    <fragment>
-        <v-row align="center" justify="center" dense>
-            <!-- <v-virtual-scroll
+  <fragment>
+    <v-row align="center" justify="center" dense>
+      <!-- <v-virtual-scroll
                 :bench="1"
                 :items="items"
                 :height="size.height - 190"
@@ -9,32 +9,31 @@
             >
                 <template v-slot="{ item }">
                     <v-col cols="12"> -->
-            <v-col v-for="item in items" :key="item.id" cols="12">
-                <v-card
-                    v-longclick="() => toggleSelect(item)"
-                    @click="selected.length > 0 && toggleSelect(item)"
-                    :key="item.id"
-                    :dark="dark"
-                    tile
-                >
-                    <v-progress-linear
-                        v-if="selectedIndex(item) > -1"
-                        :value="100"
-                        :dark="dark"
-                        color="primary"
-                    ></v-progress-linear>
+      <v-col v-for="item in items" :key="item.id" cols="12">
+        <v-card
+          v-longclick="() => toggleSelect(item)"
+          @click="selected.length > 0 && toggleSelect(item)"
+          :key="item.id"
+          :dark="dark"
+          tile
+        >
+          <v-progress-linear
+            v-if="selectedIndex(item) > -1"
+            :value="100"
+            :dark="dark"
+            color="primary"
+          ></v-progress-linear>
 
-                    <slot :item="item"></slot>
-                </v-card>
-            </v-col>
-            <!-- </template>
+          <slot :item="item"></slot>
+        </v-card>
+      </v-col>
+      <!-- </template>
             </v-virtual-scroll> -->
-        </v-row>
-    </fragment>
+    </v-row>
+  </fragment>
 </template>
 
 <script>
-import pluralize from "pluralize";
 import { mapState } from "vuex";
 
 import { CommonMixin } from "@/mixins";
@@ -44,16 +43,16 @@ export default {
     props: {
         value: {
             type: Array,
-            default: () => [],
+            default: () => []
         },
         items: {
             type: Array,
-            default: () => [],
+            default: () => []
         },
         options: {
             type: Object,
-            default: () => {},
-        },
+            default: () => {}
+        }
     },
     computed: {
         ...mapState("app", ["size"]),
@@ -63,8 +62,8 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            },
-        },
+            }
+        }
     },
     methods: {
         selectedIndex(item) {
@@ -81,8 +80,8 @@ export default {
             } else {
                 this.selected.push(item);
             }
-        },
-    },
+        }
+    }
 };
 </script>
 
