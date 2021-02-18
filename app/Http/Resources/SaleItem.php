@@ -16,14 +16,14 @@ class SaleItem extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => (int) $this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'filled' => $this->filled,
 
-            'products_count' => (int) $this->products_count,
+            'products_count' => $this->products_count,
             'products' => $this->whenLoaded('products'),
 
-            'revs_count' => (int) $this->revs_count,
+            'revs_count' => $this->revs_count,
             'revs' => MaterialRevItem::collection($this->whenLoaded('revs')),
             'rev' => $this->whenLoaded('rev'),
 

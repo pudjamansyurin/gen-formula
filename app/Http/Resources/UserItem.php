@@ -17,14 +17,14 @@ class UserItem extends JsonResource
         $role = $this->roles->first();
 
         return [
-            'id' => (int) $this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'last_at' => $this->last_at,
             'last_ip' => $this->last_ip,
             'email_verified_at' => $this->email_verified_at,
 
-            'role_id' => (int) $role->id,
+            'role_id' => $role->id,
             'role' => $role,
 
             'created_at' => $this->created_at,

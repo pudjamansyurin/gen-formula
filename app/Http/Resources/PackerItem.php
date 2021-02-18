@@ -18,10 +18,10 @@ class PackerItem extends JsonResource
         // return parent::toArray($request);
 
         return [
-            'id' => (int) $this->id,
+            'id' => $this->id,
             'name' => $this->name,
 
-            'packs_count' => (int) $this->packs_count,
+            'packs_count' => $this->packs_count,
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

@@ -18,17 +18,17 @@ class PackageItem extends JsonResource
         // return parent::toArray($request);
 
         return [
-            'id' => (int) $this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'capacity' => $this->capacity,
 
-            'unit_id' => (int) $this->unit_id,
+            'unit_id' => $this->unit_id,
             'unit' => $this->whenLoaded('unit'),
 
-            'packagers_count' => (int) $this->packagers_count,
+            'packagers_count' => $this->packagers_count,
             'packagers' => $this->whenLoaded('packagers'),
 
-            'revs_count' => (int) $this->revs_count,
+            'revs_count' => $this->revs_count,
             'revs' => $this->whenLoaded('revs'),
             'rev' => $this->whenLoaded('rev'),
 

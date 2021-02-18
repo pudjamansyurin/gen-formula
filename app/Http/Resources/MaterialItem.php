@@ -16,15 +16,15 @@ class MaterialItem extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => (int) $this->id,
+            'id' => $this->id,
             'name' => $this->name,
 
-            'formulas_count' => (int) $this->formulas_count,
+            'formulas_count' => $this->formulas_count,
 
-            'matter_id' => (int) $this->matter_id,
+            'matter_id' => $this->matter_id,
             'matter' => new MatterItem($this->whenLoaded('matter')),
 
-            'revs_count' => (int) $this->revs_count,
+            'revs_count' => $this->revs_count,
             'revs' => MaterialRevItem::collection($this->whenLoaded('revs')),
             'rev' => $this->whenLoaded('rev'),
 
