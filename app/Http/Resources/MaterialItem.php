@@ -21,7 +21,7 @@ class MaterialItem extends JsonResource
 
             'formulas_count' => $this->formulas_count,
 
-            'matter_id' => $this->matter_id,
+            'matter_id' => (int) $this->matter_id,
             'matter' => new MatterItem($this->whenLoaded('matter')),
 
             'revs_count' => $this->revs_count,
