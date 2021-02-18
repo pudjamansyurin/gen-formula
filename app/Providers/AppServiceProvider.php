@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
         /* Fix reset password api endpoint */
         ResetPassword::createUrlUsing(function ($notifiable, $token) {
             $email = $notifiable->getEmailForPasswordReset();
-            return env('VUE_URL') . "/reset/{$token}/{$email}";
+            return env('APP_URL') . "/reset/{$token}/{$email}";
         });
     }
 }

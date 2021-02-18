@@ -18,7 +18,7 @@ export const resend = async () => await http.post("email/resend");
 export const verify = async url => await http.get(url);
 
 export const getProfile = async () =>
-    await http.get(`api/profile`).then(({ data }) => data);
+    await http.get("api/profile").then(({ data }) => data);
 
 export const updateProfile = async payload =>
-    await http.put(`api/profile/update`, payload).then(({ data }) => data);
+    await http.put("api/profile/update", payload).then(({ data }) => data);
