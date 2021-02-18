@@ -19,7 +19,7 @@ class FormulaItem extends JsonResource
             'id' => (int) $this->id,
             'name' => $this->name,
             // 'description' => $this->description,
-            'main' => $this->main,
+            'main' => (int) $this->main,
             'density' => $this->density,
             'shrink' => $this->shrink,
 
