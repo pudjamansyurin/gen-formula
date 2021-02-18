@@ -18,10 +18,10 @@ class MatterItem extends JsonResource
         // return parent::toArray($request);
 
         return [
-            'id' => $this->id,
+            'id' => (int) $this->id,
             'name' => $this->name,
 
-            'materials_count' => $this->materials_count,
+            'materials_count' => (int) $this->materials_count,
 
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user'),

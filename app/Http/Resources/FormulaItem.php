@@ -16,17 +16,17 @@ class FormulaItem extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => (int) $this->id,
             'name' => $this->name,
             // 'description' => $this->description,
             'main' => $this->main,
             'density' => $this->density,
             'shrink' => $this->shrink,
 
-            'recipes_count' => $this->recipes_count,
+            'recipes_count' => (int) $this->recipes_count,
             'recipes' => $this->whenLoaded('recipes'),
 
-            'revs_count' => $this->revs_count,
+            'revs_count' => (int) $this->revs_count,
             'revs' => $this->whenLoaded('revs'),
             'rev' => $this->whenLoaded('rev'),
 
