@@ -22,7 +22,7 @@
     "dependencies": {
         "axios": "^0.19.2",
         "is-ua-webview": "^1.0.5",
-        "lodash": "^4.17.20",
+        "lodash": "^4.17.21",
         "pluralize": "^8.0.0",
         "vee-validate": "^3.4.0",
         "vue": "^2.6.12",
